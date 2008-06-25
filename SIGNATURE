@@ -1,0 +1,40 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.55.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 8624bcdae55baeef00cd11d5dfcfa60f68710a02 COPYING
+SHA1 ec3e3e8fa5b991e9230e581acfcfd36ed1ee9220 MANIFEST
+SHA1 177dedf2b788eb6446b3481cc57cea3894fc5faf META.yml
+SHA1 fe5e94a9f48d03fc0d4ab4aa8256974cbf793c7e Makefile.PL
+SHA1 dc05d58b03171abf2fe00daa779372084e51a937 README
+SHA1 e67e3b2ffcc87081f822cfcd1e68864a6e82e684 debian/changelog
+SHA1 1b6453892473a467d07372d45eb05abc2031647a debian/compat
+SHA1 498842064711564673820c2aea9348ec69782622 debian/control
+SHA1 81732942f3305264cd535676fd02b3e4b8abe739 debian/copyright
+SHA1 0b9d5d7b397159a6bffdebba33549f9e88e23fa8 debian/rules
+SHA1 10368fa2748b421178eea94adff96c06a49f4bf6 debian/watch
+SHA1 dcd1bb30d55a81c457e942cc29beb9769706bbf2 devel/churn.pl
+SHA1 ff15d4e2f5e288f11c5b7cf05fff752dddf5ec2a lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+SHA1 7ca8f0881c47bb4dfd7cc8a49cf072c0ce05532b lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+SHA1 47ab4d3ac9f6774d2036a71ebc52e61882f256fd t/ConstantBeforeLt.t
+SHA1 48e9d89df936ce09ac67eaac6be8039c4cef741b t/ProhibitNullStatements.t
+SHA1 a661a39e55a4127aecb1b97a631c4f01f7dce8c6 t/pod.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iD8DBQFIYZGhLFMCIV9q3ToRAs7TAKCcVmIafRxa1mzNtIGTx5spJqpitQCdH9RX
+WQrBHSsPdxtV3K8wuYBdmUw=
+=7XGo
+-----END PGP SIGNATURE-----

@@ -1,0 +1,17 @@
+Source: libperl-critic-pulp-perl
+Section: perl
+Priority: optional
+Build-Depends: cdbs, debhelper (>= 4)
+Maintainer: Kevin Ryde <user42@zip.com.au>
+Standards-Version: 3.8.0
+Homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
+Bugs: mailto:user42@zip.com.au
+
+Package: libperl-critic-pulp-perl
+Architecture: all
+Depends: libperl-critic-perl
+Description: Some add-on policies for perlcritic
+ This is a couple of further policies for perlcritic:
+ .
+ * ConstantBeforeLt -- avoiding problems with "FOO < 123"
+ * ProhibitNullStatements -- find stray semicolons

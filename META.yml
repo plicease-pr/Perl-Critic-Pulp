@@ -1,0 +1,14 @@
+--- #YAML:1.0
+name:                Perl-Critic-Pulp
+version:             1
+abstract:            Some add-on policies for Perl::Critic.
+license:             gpl
+author:              
+    - Kevin Ryde <user42@zip.com.au>
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
+    Perl::Critic:                  1.082
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
