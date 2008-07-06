@@ -22,3 +22,6 @@ Version 1,  June 2008
 Version 2,  July 2008
     - add a toplevel Perl::Critic::Pulp module
     - ConstantBeforeLt depends on prototyping, not perl version
+
+Version 3,  July 2008
+    - fixes for CPAN indexing

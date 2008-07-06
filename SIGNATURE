@@ -15,12 +15,12 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 8624bcdae55baeef00cd11d5dfcfa60f68710a02 COPYING
-SHA1 f8bcfab94ce086bc44c240626bc5164fd6145555 Changes
+SHA1 bdcd926ba27134067a639757b76dac7977afa908 Changes
 SHA1 a33ae49e49ffdf55b062ba2072f88c4b694e7542 MANIFEST
-SHA1 720121cbca6551c4699407d0e8f67b50227bed5c META.yml
-SHA1 47a704292a76420028276eb45f1952847099c2d2 Makefile.PL
+SHA1 27fea4a3c9095cdb5bb261cb6feefe2c8470ecb5 META.yml
+SHA1 ea9c571650e2a95a4690c39f792f60d43ee2f5f1 Makefile.PL
 SHA1 1300a06386dc80b110a044a40ad65db95b063458 README
-SHA1 efc77bb8d03f13872885078f743f2ad81333e4fe debian/changelog
+SHA1 f0419cfbc5127f345f2b63e427df25855eb045cb debian/changelog
 SHA1 1b6453892473a467d07372d45eb05abc2031647a debian/compat
 SHA1 3d74fb936b79df9a6f30616f629a021553ad4ca1 debian/control
 SHA1 81732942f3305264cd535676fd02b3e4b8abe739 debian/copyright
@@ -36,16 +36,16 @@ SHA1 2b29ab77cf1090274e00a98ab463cd91077dd394 devel/h2xs/PostModule.pm
 SHA1 cd47e4c617774ab80e772570c303dffa376a0212 devel/h2xs/TestConstFoo.h
 SHA1 f78b9248ec887c737eaac7e4a5235ad056c214b4 devel/h2xs/run.pl
 SHA1 20969e5dc961c315802983076cf42477ff4e2ec2 devel/posix-user.pl
-SHA1 7e2cbb45bd0a614872b8f807a096e18bfef4f131 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
-SHA1 327f492e28ab81a6cf10484ce4cc69cd012cf476 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
-SHA1 a81e90e76de6add310901777ad8b142905049e75 lib/Perl/Critic/Pulp.pm
+SHA1 c50247a594aee3c7b1a1d085f2255872ac39186d lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+SHA1 40996497fd281b92f23885324e7b6dd20c58d76f lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+SHA1 a1e97618aca5bd2e103b11f79d581ba2b523bb9b lib/Perl/Critic/Pulp.pm
 SHA1 3a846d55ee1c55d54ca6a12ee9ea030013bb27ae t/ConstantBeforeLt.t
 SHA1 b40e2558067f79b612ae911b309a8135ee5b6591 t/ProhibitNullStatements.t
 SHA1 a661a39e55a4127aecb1b97a631c4f01f7dce8c6 t/pod.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iD8DBQFIcBRqLFMCIV9q3ToRAnzjAJ9dnTHhyiVeASBIxI8QGYSBpMjavgCfR+15
-RuVhi23fqi3VfNRWZo+Q8NI=
-=pIx4
+iD8DBQFIcCIDLFMCIV9q3ToRAjJxAJ9vUI8La8MGwXCEHSr1sGqZbdI2FgCgh+RU
+1YCmICldtOlBzAejBYxuf5k=
+=OKph
 -----END PGP SIGNATURE-----

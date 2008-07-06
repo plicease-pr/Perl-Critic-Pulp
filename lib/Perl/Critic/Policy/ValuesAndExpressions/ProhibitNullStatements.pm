@@ -20,9 +20,8 @@ use warnings;
 
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
-use Perl::Critic::Pulp;
 
-our $VERSION = Perl::Critic::Pulp->VERSION;
+our $VERSION = 3;
 
 
 sub supported_parameters {

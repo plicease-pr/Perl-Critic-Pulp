@@ -34,12 +34,17 @@ WriteMakefile
                     # 1.082 or some such for new style parameter specs
                     'Perl::Critic' => '1.082',
                    },
+   EXTRA_META => <<'HERE',
+no_index:
+    directory:
+    - devel
+HERE
   );
 
 sub MY::postamble {
   return <<'MAKE_FRAG';
 
-CHECKFILES = $(TO_INST_PM) t/*.t devel/*.pl
+CHECKFILES = $(TO_INST_PM) t/*.t devel/churn.pl
 lint:
 	for i in $(CHECKFILES); do perl -MO=Lint $$i; done
 	podchecker    $(CHECKFILES)

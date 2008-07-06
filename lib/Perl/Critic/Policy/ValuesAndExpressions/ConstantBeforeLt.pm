@@ -24,9 +24,8 @@ use Perl::Critic::Utils qw(:severities
                            is_method_call
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
-use Perl::Critic::Pulp;
 
-our $VERSION = Perl::Critic::Pulp->VERSION;
+our $VERSION = 3;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
