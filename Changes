@@ -16,16 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 1,  June 2008
+    - the first version
 
-This is a couple of add-on policies for Perl::Critic,
-
-* ConstantBeforeLt -- avoiding problems with "FOO < 123"
-
-* ProhibitNullStatements -- find stray semicolons
-
-The only prerequisite is Perl::Critic itself.  The Perl-Critic-Pulp
-home page is
-
-    http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
-
-Bug reports to the author at user42@zip.com.au please.
+Version 2,  July 2008
+    - add a toplevel Perl::Critic::Pulp module
+    - ConstantBeforeLt depends on prototyping, not perl version

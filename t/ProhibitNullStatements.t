@@ -20,7 +20,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 18;
 use Perl::Critic;
 use PPI;
 
@@ -30,6 +30,9 @@ my $critic = Perl::Critic->new
 { my @p = $critic->policies;
   is (scalar @p, 1);
 }
+
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= 2);
+ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= 2);
 
 foreach my $data ([ 1, ';' ],
                   [ 1, 'use Foo;;' ],

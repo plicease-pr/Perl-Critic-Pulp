@@ -1,3 +1,4 @@
+Changes
 COPYING
 debian/changelog
 debian/compat
@@ -6,8 +7,18 @@ debian/copyright
 debian/rules
 debian/watch
 devel/churn.pl
+devel/const-autoload.pl
+devel/const-noproto.pl
+devel/const-post.pl
+devel/h2xs/PostModule.pm
+devel/h2xs/run.pl
+devel/h2xs/TestConstFoo.h
+devel/posix-user.pl
+devel/PosixUser.pm
+devel/TestAutoload.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+lib/Perl/Critic/Pulp.pm
 Makefile.PL
 MANIFEST			This list of files
 README

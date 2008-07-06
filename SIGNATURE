@@ -15,26 +15,37 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 8624bcdae55baeef00cd11d5dfcfa60f68710a02 COPYING
-SHA1 ec3e3e8fa5b991e9230e581acfcfd36ed1ee9220 MANIFEST
-SHA1 177dedf2b788eb6446b3481cc57cea3894fc5faf META.yml
-SHA1 fe5e94a9f48d03fc0d4ab4aa8256974cbf793c7e Makefile.PL
-SHA1 dc05d58b03171abf2fe00daa779372084e51a937 README
-SHA1 e67e3b2ffcc87081f822cfcd1e68864a6e82e684 debian/changelog
+SHA1 f8bcfab94ce086bc44c240626bc5164fd6145555 Changes
+SHA1 a33ae49e49ffdf55b062ba2072f88c4b694e7542 MANIFEST
+SHA1 720121cbca6551c4699407d0e8f67b50227bed5c META.yml
+SHA1 47a704292a76420028276eb45f1952847099c2d2 Makefile.PL
+SHA1 1300a06386dc80b110a044a40ad65db95b063458 README
+SHA1 efc77bb8d03f13872885078f743f2ad81333e4fe debian/changelog
 SHA1 1b6453892473a467d07372d45eb05abc2031647a debian/compat
-SHA1 498842064711564673820c2aea9348ec69782622 debian/control
+SHA1 3d74fb936b79df9a6f30616f629a021553ad4ca1 debian/control
 SHA1 81732942f3305264cd535676fd02b3e4b8abe739 debian/copyright
 SHA1 0b9d5d7b397159a6bffdebba33549f9e88e23fa8 debian/rules
 SHA1 10368fa2748b421178eea94adff96c06a49f4bf6 debian/watch
-SHA1 dcd1bb30d55a81c457e942cc29beb9769706bbf2 devel/churn.pl
-SHA1 ff15d4e2f5e288f11c5b7cf05fff752dddf5ec2a lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
-SHA1 7ca8f0881c47bb4dfd7cc8a49cf072c0ce05532b lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
-SHA1 47ab4d3ac9f6774d2036a71ebc52e61882f256fd t/ConstantBeforeLt.t
-SHA1 48e9d89df936ce09ac67eaac6be8039c4cef741b t/ProhibitNullStatements.t
+SHA1 debef76a86bfae20b2647fae4589127eaea23a5e devel/PosixUser.pm
+SHA1 9fb2b666f1aac067f999a28417b635317a830bd1 devel/TestAutoload.pm
+SHA1 f8e5817cb6a7bcf047f8331f35fc9bc19a9d002e devel/churn.pl
+SHA1 3796cd957dca01aea28750770f8771a10c51a15d devel/const-autoload.pl
+SHA1 ac0c84baf2758fa48ce4e8e640a226c23c2cb323 devel/const-noproto.pl
+SHA1 13f54ea9fdc7f946f6d86f30e968347d12ed919d devel/const-post.pl
+SHA1 2b29ab77cf1090274e00a98ab463cd91077dd394 devel/h2xs/PostModule.pm
+SHA1 cd47e4c617774ab80e772570c303dffa376a0212 devel/h2xs/TestConstFoo.h
+SHA1 f78b9248ec887c737eaac7e4a5235ad056c214b4 devel/h2xs/run.pl
+SHA1 20969e5dc961c315802983076cf42477ff4e2ec2 devel/posix-user.pl
+SHA1 7e2cbb45bd0a614872b8f807a096e18bfef4f131 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+SHA1 327f492e28ab81a6cf10484ce4cc69cd012cf476 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+SHA1 a81e90e76de6add310901777ad8b142905049e75 lib/Perl/Critic/Pulp.pm
+SHA1 3a846d55ee1c55d54ca6a12ee9ea030013bb27ae t/ConstantBeforeLt.t
+SHA1 b40e2558067f79b612ae911b309a8135ee5b6591 t/ProhibitNullStatements.t
 SHA1 a661a39e55a4127aecb1b97a631c4f01f7dce8c6 t/pod.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iD8DBQFIYZGhLFMCIV9q3ToRAs7TAKCcVmIafRxa1mzNtIGTx5spJqpitQCdH9RX
-WQrBHSsPdxtV3K8wuYBdmUw=
-=7XGo
+iD8DBQFIcBRqLFMCIV9q3ToRAnzjAJ9dnTHhyiVeASBIxI8QGYSBpMjavgCfR+15
+RuVhi23fqi3VfNRWZo+Q8NI=
+=pIx4
 -----END PGP SIGNATURE-----

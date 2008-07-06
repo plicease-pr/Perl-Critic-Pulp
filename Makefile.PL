@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+use 5.006; # for "our" in the various modules
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -24,13 +25,13 @@ use ExtUtils::MakeMaker;
 WriteMakefile
   (NAME         => 'Perl-Critic-Pulp',
    ABSTRACT     => 'Some add-on policies for Perl::Critic.',
-   VERSION      => 1,
+   VERSION_FROM => 'lib/Perl/Critic/Pulp.pm',
    AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
    LICENSE      => 'gpl',
    SIGN         => 1,
 
    PREREQ_PM    => {
-                    # think 1.082 for the new style parameter specs
+                    # 1.082 or some such for new style parameter specs
                     'Perl::Critic' => '1.082',
                    },
   );
@@ -38,11 +39,12 @@ WriteMakefile
 sub MY::postamble {
   return <<'MAKE_FRAG';
 
+CHECKFILES = $(TO_INST_PM) t/*.t devel/*.pl
 lint:
-	perl -MO=Lint $(TO_INST_PM)
-	podchecker    $(TO_INST_PM)
+	for i in $(CHECKFILES); do perl -MO=Lint $$i; done
+	podchecker    $(CHECKFILES)
 pc:
-	perlcritic $(TO_INST_PM)
+	perlcritic $(CHECKFILES)
 
 myman:
 	mv MANIFEST MANIFEST.old
@@ -77,6 +79,16 @@ copyright-years-check: Perl-Critic-Pulp-$(VERSION).tar.gz
 
 debug-constants-check:
 	if egrep -n 'DEBUG => [^0]' $(TO_INST_PM); then exit 1; else exit 0; fi
+
+diff-prev:
+	rm -rf diff.tmp
+	mkdir diff.tmp
+	cd diff.tmp \
+	&& tar xfz ../$(NAME)-`expr $(VERSION) - 1`.tar.gz \
+	&& tar xfz ../$(NAME)-$(VERSION).tar.gz
+	-cd diff.tmp; diff -ur $(NAME)-`expr $(VERSION) - 1` \
+	                       $(NAME)-$(VERSION) >tree.diff
+	-less diff.tmp/tree.diff
 
 MAKE_FRAG
 }

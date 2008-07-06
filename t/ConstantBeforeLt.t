@@ -20,13 +20,19 @@
 
 use strict;
 use warnings;
-use Test::More tests => 41;
+use Test::More tests => 39;
 use Perl::Critic;
 use PPI;
 
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');
+{ my @p = $critic->policies;
+  is (scalar @p, 1);
+}
+
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= 2);
+ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= 2);
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',
@@ -85,27 +91,29 @@ foreach my $str (
 
 # not ok stuff
 #
-foreach my $data ([ 'DBL_MANT_DIG < 10', 1 ],
-                  [ 'use constant FOO => 123; FOO < 10; DBL_MANT_DIG < 10', 1 ],
-                  [ 'DBL_MANT_DIG < 10; DBL_MANT_DIG < 10', 2 ],
+foreach my $data ([ 1, 'DBL_MANT_DIG < 10' ],
+                  [ 1, 'use constant FOO => 123;
+                        FOO < 10;
+                        DBL_MANT_DIG < 10' ],
+                  [ 2, 'DBL_MANT_DIG < 10; DBL_MANT_DIG < 10' ],
+
+                  # The first FOO here provokes ConstantBeforeLt because
+                  # we're only sure of prototyped constant subs from "use
+                  # constant".  In practice that first is likely to be a
+                  # mistaken placement and will either tickle an error from
+                  # "use strict", or a warning about non-numeric from "use
+                  # warnings".
+                  #
+                  [ 1, 'FOO < 10;
+                        use constant FOO => 123;
+                        FOO < 10' ],
                  ) {
-  my ($str, $want_count) = @$data;
+  my ($want_count, $str) = @$data;
 
   {
     my @violations = $critic->critique (\$str);
     my $got_count = scalar @violations;
     is ($got_count, $want_count, $str);
-  }
-  {
-    my $str = 'use 5.008; ' . $str;
-    my @violations = $critic->critique (\$str);
-    my $got_count = scalar @violations;
-    is ($got_count, $want_count, $str);
-  }
-  {
-    my $str = 'use 5.010; ' . $str;
-    my @violations = $critic->critique (\$str);
-    is_deeply (\@violations, [], $str);
   }
 }
 

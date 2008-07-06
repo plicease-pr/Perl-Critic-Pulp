@@ -17,10 +17,17 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+use strict;
+use warnings;
 use Perl::Critic;
 use Perl::Critic::Utils;
 use Perl::Critic::Violation;
 
+my $option_const = 0;
+if (($ARGV[0]||'') eq '--const') {  # ConstantBeforeLt policy only
+  shift @ARGV;
+  $option_const = 1;
+}
 my @dirs = @ARGV;
 if (! @dirs) {
   @dirs = ('/usr/share/perl5', </usr/share/perl/*.*.*>);
@@ -37,21 +44,30 @@ print "Files: ",scalar(@files),"\n";
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');
+if (! $option_const) {
+  $critic->add_policy
+    (-policy => 'ValuesAndExpressions::ProhibitNullStatements',
+     -params => { allow_perl4_semihash => 1 });
+}
+print "Policies:\n";
+foreach my $p ($critic->policies) {
+  print "  ",$p->get_short_name,"\n";
+}
 
-$critic->add_policy (-policy => 'ValuesAndExpressions::ProhibitNullStatements',
-                     -params => { allow_perl4_semihash => 1 });
 
+# "%f:%l:%c:" is good for emacs compilation-mode
 Perl::Critic::Violation::set_format ("%f:%l:%c:\n %P\n %m\n");
 
 foreach my $file (@files) {
+  print "$file\n";
   eval {
     my @violations = $critic->critique ($file);
     print @violations;
   };
-  if ( my $exception = Perl::Critic::Exception::Parse->caught() ) {
-    print "Warning in \"$file\": $EVAL_ERROR\n";
+  if (my $exception = Perl::Critic::Exception::Parse->caught) {
+    print "Warning in \"$file\": $exception\n";
   } elsif ($@) {
-    print "Error in \"$file\": $EVAL_ERROR\n";
+    print "Error in \"$file\": $@\n";
   }
 }
 

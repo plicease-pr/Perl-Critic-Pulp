@@ -20,8 +20,10 @@ use warnings;
 
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Pulp;
 
-our $VERSION = 1;
+our $VERSION = Perl::Critic::Pulp->VERSION;
+
 
 sub supported_parameters {
   return ({ name           => 'allow_perl4_semihash',
@@ -150,7 +152,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements - disallow em
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl-Critic-Pulp addon.  It prohibits empty
+This policy is part of the Perl::Critic::Pulp addon.  It prohibits empty
 statements, ie. bare C<;> semicolons.  This can be a typo doubling up a semi
 like
 
@@ -164,9 +166,9 @@ Or a stray left at the end of a control structure like
     };           # bad
 
 An empty statement is of course completely harmless, so this policy is only
-under the "cosmetic" theme.  It's surprisingly easy to leave a semi behind
-when chopping code around, especially when changing a statement to a loop or
-a conditional.
+under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).  It's
+surprisingly easy to leave a semi behind when chopping code around,
+especially when changing a statement to a loop or a conditional.
 
 =head2 Allowed forms
 
@@ -214,7 +216,7 @@ enable it by adding to your F<.perlcriticrc> file
 
 =head1 SEE ALSO
 
-L<Perl::Critic>
+L<Perl::Critic::Pulp>, L<Perl::Critic>
 
 =head1 COPYRIGHT
 
