@@ -36,8 +36,10 @@ WriteMakefile
                    },
    EXTRA_META => <<'HERE',
 no_index:
-    directory:
+  directory:
     - devel
+resources:
+  homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
 HERE
   );
 

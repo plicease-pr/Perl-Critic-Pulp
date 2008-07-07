@@ -18,8 +18,10 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-# version numbers in ConstantBeforeLt.pm and ProhibitNullStatements.pm too
-our $VERSION = 3;
+# version numbers also in
+#   Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+#   Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+our $VERSION = 4;
 
 1;
 __END__

@@ -21,7 +21,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 3;
+our $VERSION = 4;
 
 
 sub supported_parameters {
@@ -216,6 +216,10 @@ enable it by adding to your F<.perlcriticrc> file
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>, L<Perl::Critic>
+
+=head1 HOME PAGE
+
+L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

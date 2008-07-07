@@ -15,12 +15,12 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 8624bcdae55baeef00cd11d5dfcfa60f68710a02 COPYING
-SHA1 bdcd926ba27134067a639757b76dac7977afa908 Changes
+SHA1 3c21c7e3fcd946538351c93727b394a16fca525e Changes
 SHA1 a33ae49e49ffdf55b062ba2072f88c4b694e7542 MANIFEST
-SHA1 27fea4a3c9095cdb5bb261cb6feefe2c8470ecb5 META.yml
-SHA1 ea9c571650e2a95a4690c39f792f60d43ee2f5f1 Makefile.PL
+SHA1 27ff03d3f9cc4e0437f4d76573cef2349e0c3730 META.yml
+SHA1 74ab5712199875b1b4977e9eaa1665b22f018544 Makefile.PL
 SHA1 1300a06386dc80b110a044a40ad65db95b063458 README
-SHA1 f0419cfbc5127f345f2b63e427df25855eb045cb debian/changelog
+SHA1 c8a2f35bfdd44afd9bb3af4c46cd042d7bb71df1 debian/changelog
 SHA1 1b6453892473a467d07372d45eb05abc2031647a debian/compat
 SHA1 3d74fb936b79df9a6f30616f629a021553ad4ca1 debian/control
 SHA1 81732942f3305264cd535676fd02b3e4b8abe739 debian/copyright
@@ -30,22 +30,22 @@ SHA1 debef76a86bfae20b2647fae4589127eaea23a5e devel/PosixUser.pm
 SHA1 9fb2b666f1aac067f999a28417b635317a830bd1 devel/TestAutoload.pm
 SHA1 f8e5817cb6a7bcf047f8331f35fc9bc19a9d002e devel/churn.pl
 SHA1 3796cd957dca01aea28750770f8771a10c51a15d devel/const-autoload.pl
-SHA1 ac0c84baf2758fa48ce4e8e640a226c23c2cb323 devel/const-noproto.pl
+SHA1 fea186ca89f89afddaff7536d7f0fdd8fd86c2f9 devel/const-noproto.pl
 SHA1 13f54ea9fdc7f946f6d86f30e968347d12ed919d devel/const-post.pl
 SHA1 2b29ab77cf1090274e00a98ab463cd91077dd394 devel/h2xs/PostModule.pm
 SHA1 cd47e4c617774ab80e772570c303dffa376a0212 devel/h2xs/TestConstFoo.h
 SHA1 f78b9248ec887c737eaac7e4a5235ad056c214b4 devel/h2xs/run.pl
 SHA1 20969e5dc961c315802983076cf42477ff4e2ec2 devel/posix-user.pl
-SHA1 c50247a594aee3c7b1a1d085f2255872ac39186d lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
-SHA1 40996497fd281b92f23885324e7b6dd20c58d76f lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
-SHA1 a1e97618aca5bd2e103b11f79d581ba2b523bb9b lib/Perl/Critic/Pulp.pm
+SHA1 bbc9b3573f3fdf5f71ef6badf61bb5f9109c044d lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+SHA1 b382f50f8f3e2f1fa18e28f36b9ee110fa06e905 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+SHA1 81dbf71bd971000c5c7f7bc94809f6420103e780 lib/Perl/Critic/Pulp.pm
 SHA1 3a846d55ee1c55d54ca6a12ee9ea030013bb27ae t/ConstantBeforeLt.t
 SHA1 b40e2558067f79b612ae911b309a8135ee5b6591 t/ProhibitNullStatements.t
 SHA1 a661a39e55a4127aecb1b97a631c4f01f7dce8c6 t/pod.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iD8DBQFIcCIDLFMCIV9q3ToRAjJxAJ9vUI8La8MGwXCEHSr1sGqZbdI2FgCgh+RU
-1YCmICldtOlBzAejBYxuf5k=
-=OKph
+iD8DBQFIcWfmLFMCIV9q3ToRAv4eAJkBmnoc3a4QooUsP6NImBakK8PRXwCghMU+
+YF+p1O5ShjVAqAPptEKwhyA=
+=DsCF
 -----END PGP SIGNATURE-----

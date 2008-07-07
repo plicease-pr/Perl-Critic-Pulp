@@ -19,8 +19,14 @@
 
 use strict;
 use warnings;
+use Data::Dumper;
 
-# bad
+use Socket;
+my $p = prototype('Socket::SOCK_DGRAM');
+print "SOCK_DGRAM ",Dumper($p);
+
+
 sub FOO { return 123; }
-if (FOO < 456) { print "yes\n"; } else { print "no\n"; }
+# bad
+# if (FOO < 456) { print "yes\n"; } else { print "no\n"; }
 exit 0
