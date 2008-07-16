@@ -18,10 +18,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-# version numbers also in
-#   Policy/ValuesAndExpressions/ConstantBeforeLt.pm
-#   Policy/ValuesAndExpressions/ProhibitNullStatements.pm
-our $VERSION = 4;
+our $VERSION = 5;
 
 1;
 __END__
@@ -32,13 +29,17 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a couple of add-on policies for Perl::Critic,
+This is some add-on policies for Perl::Critic,
 
 =over 4
 
 =item ConstantBeforeLt -- avoiding problems with C<< FOO < 123 >>
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>.
+
+=item NotWithCompare -- avoiding problems with C<! $x == $y>
+
+See L<Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>.
 
 =item ProhibitNullStatements -- find stray semicolons
 

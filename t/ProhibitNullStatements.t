@@ -31,10 +31,11 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= 2);
-ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= 2);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= 5);
+ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= 5);
 
-foreach my $data ([ 1, ';' ],
+foreach my $data (## no critic (RequireInterpolationOfMetachars)
+                  [ 1, ';' ],
                   [ 1, 'use Foo;;' ],
                   [ 1, 'if (1) {};' ],
                   [ 0, 'for (;;) { }' ],
@@ -49,6 +50,7 @@ foreach my $data ([ 1, ';' ],
                   [ 0, 'grep {# this is a block
                               ;
                               length $_ and $something } @some_list;' ],
+                  ## use critic
                  ) {
   my ($want_count, $str) = @$data;
   {

@@ -31,5 +31,6 @@ Depends: libperl-critic-perl (>= 1.082)
 Description: Some add-on policies for perlcritic
  This is a couple of further policies for perlcritic:
  .
- * ConstantBeforeLt -- avoid problems with "FOO < 123"
- * ProhibitNullStatements -- find stray semicolons
+  * ConstantBeforeLt -- avoid problems with "FOO < 123"
+  * NotWithCompare -- avoiding problems with "! $x == $y"
+  * ProhibitNullStatements -- find stray semicolons

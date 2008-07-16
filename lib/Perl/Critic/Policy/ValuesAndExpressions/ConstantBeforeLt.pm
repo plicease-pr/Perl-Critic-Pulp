@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 4;
+our $VERSION = 5;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -37,10 +37,10 @@ use constant DEBUG => 0;
 # or if it does then leave it to another policy to address.
 #
 
-sub supported_parameters { return ();                 }
-sub default_severity     { return $SEVERITY_MEDIUM;   }
-sub default_themes       { return qw(bugs);           }
-sub applies_to           { return 'PPI::Document'; }
+sub supported_parameters { return ();               }
+sub default_severity     { return $SEVERITY_MEDIUM; }
+sub default_themes       { return qw(pulp bugs);    }
+sub applies_to           { return 'PPI::Document';  }
 
 sub violates {
   my ($self, $document) = @_;
@@ -105,8 +105,18 @@ sub _one_violate {
 #
 sub _use_constants {
   my ($elem) = @_;
-  if (! $elem->isa ('PPI::Statement::Include')) { return; }
 
+  if ($elem->isa ('PPI::Statement::Sub')) {
+    if ($elem->prototype eq '()') {
+      if (my $name = $elem->name) {
+        return $name;
+      }
+    }
+    # anonymous sub or without prototype
+    return;
+  }
+
+  if (! $elem->isa ('PPI::Statement::Include')) { return; }
   if ($elem->type ne 'use') { return; }
   if (($elem->module || '') ne 'constant') { return; }
 
@@ -199,7 +209,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt - disallow bareword
 This policy is part of the Perl::Critic::Pulp addon.  It prohibits a
 bareword before a C<E<lt>> to keep you out of trouble with autoloaded or
 unprototyped constant subs since a C<E<lt>> in that case is interpreted as
-the start of a C<E<lt>..E<gt>> glob or readline, instead of a less-than.
+the start of a C<E<lt>..E<gt>> glob or readline instead of a less-than.
 This policy is under the C<bugs> theme (see L<Perl::Critic/POLICY THEMES>).
 
     use POSIX;
@@ -211,14 +221,17 @@ This policy is under the C<bugs> theme (see L<Perl::Critic/POLICY THEMES>).
     use constant FOO => 16;
     FOO < 32            # ok, your own const
 
+    sub BAR () { 64 }
+    BAR < 32            # ok, your own prototyped sub
+
 The fix for something like C<DBL_MANT_DIG E<lt> 10> is parens either around
 or after, like C<(DBL_MANT_DIG) E<lt> 10> or C<DBL_MANT_DIG() E<lt> 10>.
 Probably the latter is less worse, emphasising it's really a sub.
 
 The key issue is whether the constant sub in question is defined and has a
 prototype at the time the code is compiled.  ConstantBeforeLt makes the
-pessimistic assumption that anything except C<use constant> in your own file
-shouldn't be relied on.
+pessimistic assumption that anything except C<use constant> and prototyped
+subs in your own file shouldn't be relied on.
 
 In practice the most likely problems are with the C<POSIX> module constants
 of Perl 5.8.x and earlier, since they were unprototyped.  The default code

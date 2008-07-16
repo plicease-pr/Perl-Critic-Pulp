@@ -21,6 +21,8 @@ This is a couple of add-on policies for Perl::Critic,
 
 * ConstantBeforeLt -- avoiding problems with "FOO < 123"
 
+* NotWithCompare -- avoiding problems with "! $x == $y"
+
 * ProhibitNullStatements -- find stray semicolons
 
 The only prerequisite is Perl::Critic itself.  The Perl-Critic-Pulp

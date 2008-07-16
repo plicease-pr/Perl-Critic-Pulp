@@ -20,7 +20,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 39;
+use Test::More tests => 45;
 use Perl::Critic;
 use PPI;
 
@@ -31,8 +31,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= 2);
-ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= 2);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= 5);
+ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= 5);
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',
@@ -55,6 +55,19 @@ foreach my $data ([ 'use constant' ],
                     'FOO', 'BAR' ],
                   [ 'use constant FOO => 123; if (FOO < 123) {}',
                     'FOO' ],
+
+                  [ 'sub FOO { 123; }'],
+                  [ 'sub FOO () { 123; }',
+                    'FOO'  ],
+                  ## no critic (RequireInterpolationOfMetachars)
+                  [ 'sub FOO ($) { 123; }' ],
+                  ## use critic
+
+                  # these don't parse as PPI::Statement::Sub
+                  # [ 'sub { 123; }' ],
+                  # [ 'sub () { 123; }' ],
+                  # [ 'sub ($) { 123; }' ],
+
                  ) {
   my ($str, @want_constants) = @$data;
 
@@ -63,8 +76,10 @@ foreach my $data ([ 'use constant' ],
 
     my $document = PPI::Document->new (\$str)
       or die "oops, no parse: $str";
-    my $includes = $document->find ('PPI::Statement::Include');
-    my $elem = $includes->[0] or die "oops, no Include element";
+    my $elems = ($document->find ('PPI::Statement::Include')
+                    || $document->find ('PPI::Statement::Sub')
+                    || die "oops, no target statement in '$str'");
+    my $elem = $elems->[0] or die "oops, no Include element";
     my @got_constants = Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::_use_constants ($elem);
     is_deeply (\@got_constants, \@want_constants, $str);
   }

@@ -33,13 +33,16 @@ WriteMakefile
    PREREQ_PM    => {
                     # 1.082 or some such for new style parameter specs
                     'Perl::Critic' => '1.082',
+
+                    # builtin in recent perl anyway
+                    'List::Util' => 0,
                    },
    EXTRA_META => <<'HERE',
 no_index:
-  directory:
-    - devel
+    directory:
+        - devel
 resources:
-  homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
+    homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
 HERE
   );
 
@@ -60,7 +63,7 @@ myman:
 
 # find files in the dist with mod times this year, but without this year in
 # the copyright line
-copyright-years-check: Perl-Critic-Pulp-$(VERSION).tar.gz
+copyright-years-check:
 	year=`date +%Y`; \
 	tar tvfz Perl-Critic-Pulp-$(VERSION).tar.gz \
 	| grep $$year- \

@@ -13,10 +13,13 @@ devel/const-post.pl
 devel/h2xs/PostModule.pm
 devel/h2xs/run.pl
 devel/h2xs/TestConstFoo.h
+devel/not.sh
+devel/notwithcompare.pl
 devel/posix-user.pl
 devel/PosixUser.pm
 devel/TestAutoload.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Pulp.pm
 Makefile.PL
@@ -24,6 +27,7 @@ MANIFEST			This list of files
 README
 SIGNATURE
 t/ConstantBeforeLt.t
+t/NotWithCompare.t
 t/pod.t
 t/ProhibitNullStatements.t
 META.yml                                 Module meta-data (added by MakeMaker)
