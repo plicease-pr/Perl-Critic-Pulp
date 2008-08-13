@@ -22,7 +22,6 @@ use strict;
 use warnings;
 use Test::More tests => 108;
 use Perl::Critic;
-use PPI;
 
 my $critic = Perl::Critic->new
   ('-profile' => '',
@@ -31,8 +30,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 5);
-ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 5);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 6);
+ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 6);
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

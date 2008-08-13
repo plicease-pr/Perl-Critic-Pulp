@@ -18,7 +18,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 5;
+our $VERSION = 6;
 
 1;
 __END__
@@ -44,6 +44,10 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>.
 =item ProhibitNullStatements -- find stray semicolons
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>.
+
+=item TextDomainPlaceholders -- check args to C<__x> and C<__nx>
+
+See L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>.
 
 =back
 

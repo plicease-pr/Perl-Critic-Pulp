@@ -17,13 +17,15 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-This is a couple of add-on policies for Perl::Critic,
+This is some add-on policies for Perl::Critic,
 
 * ConstantBeforeLt -- avoiding problems with "FOO < 123"
 
 * NotWithCompare -- avoiding problems with "! $x == $y"
 
 * ProhibitNullStatements -- find stray semicolons
+
+* TextDomainPlaceholders -- check args to __x and __nx
 
 The only prerequisite is Perl::Critic itself.  The Perl-Critic-Pulp
 home page is

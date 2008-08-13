@@ -99,6 +99,7 @@ diff-prev:
 	-cd diff.tmp; diff -ur $(NAME)-`expr $(VERSION) - 1` \
 	                       $(NAME)-$(VERSION) >tree.diff
 	-less diff.tmp/tree.diff
+	rm -rf diff.tmp
 
 MAKE_FRAG
 }
