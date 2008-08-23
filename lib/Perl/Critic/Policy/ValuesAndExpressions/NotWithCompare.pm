@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 6;
+our $VERSION = 7;
 
 
 sub supported_parameters { return (); }
@@ -283,7 +283,7 @@ __END__
 
 =head1 NAME
 
-Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare - logical not used as a value
+Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare - logical not used with compare
 
 =head1 DESCRIPTION
 
@@ -294,24 +294,33 @@ of logical not C<!> used with a comparison, like
     ! $x + $y >= $z   # bad
 
 In each case Perl parses this as C<< (!$x) >>, not a negated comparison.
-Usually writing something like that is an oversight or mistake, and for that
-reason this policy is under the "bugs" theme (see L<Perl::Critic/POLICY
-THEMES>).
+Usually if you write this it's a mistake, so the policy is under the "bugs"
+theme (see L<Perl::Critic/POLICY THEMES>).
 
-As a special case, C<!> is on both sides of C<< == >> or C<< != >> is
-allowed, since it's a reasonable way to test for the same (or different) as
-booleans.
+As a special case, C<!> on both sides of C<< == >> or C<< != >> is allowed,
+since it's a reasonable way to test for the same (or different) as booleans.
 
     !$x == !$y   # ok
     !$x != !$y   # ok
 
 =head1 LIMITATIONS
 
-User functions called without parentheses are assumed to be the usual
-varargs style, but a prototype can mean that's not true, letting a bad
-C<!>-with-compare expression go undetected.  Constant subs created with
-C<use constant> (or C<sub FOO () {...}>) in the file under test are
-recognised, hopefully anything else too weird is rare.
+User functions called without parentheses are assumed to be usual varargs
+style, but a prototype can mean that's not true, allowing a bad
+C<!>-with-compare expression to go undetected.
+
+    ! userfunc $x == 123   # indeterminate
+    # without prototype would be [ok]:  ! (userfunc ($x==123))
+    # with prototype would be [bad]:    (! userfunc($x)) == 123
+
+Perl builtins with no args, and constant subs created with C<use constant>
+(or C<sub FOO () {...}>) in the file under test are recognised, hopefully
+anything else too weird is rare.
+
+    ! time == 1   # bad
+
+    use constant FIVE => 5;
+    ! FIVE == 1   # bad
 
 =head1 SEE ALSO
 

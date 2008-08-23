@@ -27,10 +27,11 @@ Bugs: mailto:user42@zip.com.au
 
 Package: libperl-critic-pulp-perl
 Architecture: all
-Depends: libperl-critic-perl (>= 1.082)
+Depends: perl (>= 5.8), libperl-critic-perl (>= 1.082)
 Description: Some add-on policies for perlcritic
  This is a couple of further policies for perlcritic:
  .
   * ConstantBeforeLt -- avoid problems with "FOO < 123"
   * NotWithCompare -- avoiding problems with "! $x == $y"
   * ProhibitNullStatements -- find stray semicolons
+  * TextDomainPlaceholders -- check args to __x and __nx

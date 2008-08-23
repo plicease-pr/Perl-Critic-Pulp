@@ -20,7 +20,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 108;
+use Test::More tests => 111;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -30,8 +30,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 6);
-ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 6);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 7);
+ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 7);
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
@@ -39,13 +39,18 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 0, '$foo = ! $foo if $bar < 123' ],
 
                   # examples in the POD
+                  [ 0, '!$x == !$y' ],
+                  [ 0, '!$x != !$y' ],
                   [ 1, '! $x == $y   # bad' ],
                   [ 0, '!$x || $y || !$z   # ok' ],
                   [ 0, '(!$x) + 1 == $y   # ok' ],
                   [ 0, '(!$x)+1 == $y   # ok' ],
                   [ 1, '! $x+1 == $y    # not ok' ],
+                  [ 1, '! time == 1' ],
+                  [ 1, 'use constant FIVE => 5;
+                        ! FIVE == 1' ],
 
-                  [ 0, '! $x == ! $y' ],
+
                   [ 1, '! ($x ~= /x/) + 1 >= 0' ],
                   [ 0, '! $x + $y =~ /y/' ],  # "+" below "=~"
                   [ 1, '! $x ** $y =~ /y/' ], # "**" above "=~"
@@ -77,12 +82,12 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, '! &userfunc() == 1' ],
                   [ 1, '! &userfunc(123) == 1' ],
 
-                  [ 1, '! \$x == 123' ],
                   [ 1, '! \\$x == 123' ],
-                  [ 1, '! \\\$x == 123' ],
-                  [ 1, '! \&func == 123' ],
-                  [ 1, '! \\&func == 123' ],
-                  [ 1, '! \\\&func == 123' ],
+                  [ 1, '! \\ \\ $x == 123' ],
+                  [ 1, '! \\ \\ \\ $x == 123' ],
+                  [ 1, '! \\ &func == 123' ],
+                  [ 1, '! \\ \\ &func == 123' ],
+                  [ 1, '! \\ \\ \\ &func == 123' ],
 
                   [ 1, '! -$x == 1' ],
                   [ 1, '! +$x == 1' ],
@@ -104,14 +109,20 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, '! ++$x == 1' ],
                   [ 1, '! $x =~ /xx/' ],
                   [ 0, '! foo() + 1' ],
-                  [ 0, '! time() + 1' ],
-                  [ 0, '! time + 1' ],  # builtin
                   [ 0, '! ($x+$y) + 1' ],
-                  [ 0, '! (time)' ],
-                  [ 0, '(! time)' ],
                   [ 0, '! -f $x + 1' ],
                   [ 1, '! ($x) == 1' ],
                   [ 1, '! ($x+$y) == 1' ],
+
+                  # builtin no args
+                  [ 0, '! time() + 1' ],
+                  [ 0, '! time + 1' ],  # builtin
+                  [ 0, '! (time)' ],
+                  [ 0, '(! time)' ],
+
+                  # builtin one arg
+                  # not handled yet
+                  # [ 1, '! fileno FH == 1' ],
 
                   # "**" is higher precedence
                   [ 0, '! 2**32 + 1' ],

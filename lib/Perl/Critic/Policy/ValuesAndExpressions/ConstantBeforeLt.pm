@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 6;
+our $VERSION = 7;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;

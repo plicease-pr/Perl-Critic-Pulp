@@ -31,8 +31,10 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= 6);
-ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= 6);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
+    >= 7);
+ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
+    >= 7);
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',

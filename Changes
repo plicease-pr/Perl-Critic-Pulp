@@ -16,21 +16,24 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Version 6,  August 2008
-    - new policy Miscellanea::TextDomainPlaceholders
+Version 7, August 2008
+    - new policy "LiteralSpecialLiteral"
 
-Version 5,  July 2008
-    - new policy ValuesAndExpressions::NotWithCompare
+Version 6, August 2008
+    - new policy "TextDomainPlaceholders"
 
-Version 4,  July 2008
+Version 5, July 2008
+    - new policy "NotWithCompare"
+
+Version 4, July 2008
     - another go at the CPAN indexing
 
-Version 3,  July 2008
+Version 3, July 2008
     - fixes for CPAN indexing
 
-Version 2,  July 2008
+Version 2, July 2008
     - add a toplevel Perl::Critic::Pulp module
-    - ConstantBeforeLt depends on prototyping, not perl version
+    - "ConstantBeforeLt" depends on prototyping, not perl version
 
-Version 1,  June 2008
+Version 1, June 2008
     - the first version

@@ -30,8 +30,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 6);
-ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 6);
+ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 7);
+ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 7);
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

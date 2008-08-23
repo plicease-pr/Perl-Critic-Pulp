@@ -21,6 +21,7 @@ devel/PosixUser.pm
 devel/TestAutoload.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/LiteralSpecialLiteral.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Pulp.pm
@@ -29,6 +30,7 @@ MANIFEST			This list of files
 README
 SIGNATURE
 t/ConstantBeforeLt.t
+t/LiteralSpecialLiteral.t
 t/NotWithCompare.t
 t/pod.t
 t/ProhibitNullStatements.t

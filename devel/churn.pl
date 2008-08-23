@@ -45,6 +45,10 @@ if (($ARGV[0]||'') eq '--null') {
   shift @ARGV;
   $option_single_policy = 'ValuesAndExpressions::ProhibitNullStatements';
 }
+if (($ARGV[0]||'') eq '--special') {
+  shift @ARGV;
+  $option_single_policy = 'ValuesAndExpressions::LiteralSpecialLiteral';
+}
 
 my @dirs = @ARGV;
 if (! @dirs) {

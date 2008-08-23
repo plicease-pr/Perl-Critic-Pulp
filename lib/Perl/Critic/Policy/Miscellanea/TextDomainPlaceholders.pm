@@ -23,7 +23,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 6;
+our $VERSION = 7;
 
 use constant DEBUG => 0;
 
@@ -187,16 +187,15 @@ the args, or args which are unused by the format, are reported.
                count => 123);
 
 This sort of thing is usually a mistake, so this policy is under the C<bugs>
-theme.  An error can fairly easily go unnoticed since (as of TextDomain
-version 1.16) a placeholder without a corresponding arg merely goes through
-unexpanded and any extra args are ignored.
+theme (see L<Perl::Critic/POLICY THEMES>).  An error can fairly easily go
+unnoticed since (in TextDomain version 1.16 at least) a placeholder without
+a corresponding arg goes through unexpanded and any extra args are ignored.
 
 The way TextDomain is setup actually allows anything between
 S<< "C<< { } >>" >> as a key string, but for the purposes of this policy
 only symbol characters "a-zA-Z0-9_" are taken to be a key.  This is almost
-certainly what you'll want to use anyway, and it makes it possible to
-include literal braces in the string without tickling this policy all the
-time.
+certainly what you'll want to use, and it makes it possible to include
+literal braces in a format string without tickling this policy all the time.
 
 =head1 LIMITATIONS
 
@@ -206,7 +205,7 @@ considered used.
     # ok, 'datum' might be used
     __x($my_format, datum => 123);
 
-Literal portions of the format are still checked.
+But literal portions of the format can still be checked.
 
     # bad, 'foo' not present in args
     __x("{foo} $bar, datum => 123);
@@ -217,13 +216,13 @@ so everything in the format string is considered present.
     # ok, $something might be 'world'
     __x('hello {world}', $something => 123);
 
-Literal args are still checked.
+And again if some args are literals they can be checked.
 
     # bad, 'blah' is not used
     __x('hello {world}', $something => 123, blah => 456);
 
-If there's both a non-literal in the format and in the args then nothing is
-checked, since it could match up fine at runtime.
+If there's non-literals both in the format and in the args then nothing is
+checked, since it could all match up fine at runtime.
 
 =head1 SEE ALSO
 

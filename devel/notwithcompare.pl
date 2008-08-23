@@ -21,6 +21,15 @@ use strict;
 use warnings;
 use Data::Dumper;
 
+{
+  sub func1     { print "func1 $_[0]\n" }
+  sub func2 ($) { print "func2 $_[0]\n" }
+  my $x = 123;
+  if (! func1 $x == 123) { print "yes\n"; } else { print "no\n"; }
+  if (! func2 $x == 123) { print "yes\n"; } else { print "no\n"; }
+  exit 0;
+}
+
 { my $x = 'b';
   if (! $x eq 'a') { print "yes\n"; } else { print "no\n"; }
 }
