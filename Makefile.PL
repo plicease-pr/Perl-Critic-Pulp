@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-use 5.006; # for "our" in the various modules
+use 5.006;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Perl-Critic-Pulp
-version:             7
+version:             8
 abstract:            Some add-on policies for Perl::Critic.
 license:             gpl
 author:              

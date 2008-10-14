@@ -14,7 +14,7 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-package Perl::Critic::Policy::ValuesAndExpressions::LiteralSpecialLiteral;
+package Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
 use strict;
 use warnings;
 use List::Util qw(min max);
@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 
 sub supported_parameters { return (); }
@@ -34,19 +34,19 @@ sub default_themes       { return qw(pulp bugs);          }
 sub applies_to           { return 'PPI::Token::Word'; }
 
 my %specials = ('__FILE__'    => 1,
-               '__LINE__'    => 1,
-               '__PACKAGE__' => 1);
+                '__LINE__'    => 1,
+                '__PACKAGE__' => 1);
 
 sub violates {
   my ($self, $elem, $document) = @_;
   $specials{$elem} or return;
 
-  if (_is_left_of_big_comma ($elem)) {
+  if (is_left_of_big_comma ($elem)) {
     return $self->violation
       ("$elem is the literal string '$elem' on the left of a =>",
        '', $elem);
   }
-  if (_is_solo_subscript ($elem)) {
+  if (is_solo_subscript ($elem)) {
     return $self->violation
       ("$elem is the literal string '$elem' in a hash subscript",
        '', $elem);
@@ -54,14 +54,17 @@ sub violates {
   return;
 }
 
-# There's some similar stuff in Perl::Critic::Utils::is_hash_key(), but here
-# want to distinguish => from subscript, and to check for a solitary word as
-# the subscript or constructor.
+# Perl::Critic::Utils::is_hash_key() does a similar this to the following
+# tests, identifying something on the left of "=>", or in a "{}" subscript.
+# But here want to distinguish those two cases since the subscript is only a
+# violation if $elem also has no siblings.  (Separate cases allow a custom
+# error message too.)
 #
+
 # { __FILE__ => 123 }
 # ( __FILE__ => 123 )
 #
-sub _is_left_of_big_comma {
+sub is_left_of_big_comma {
   my ($elem) = @_;
 
   my $next = $elem->snext_sibling
@@ -83,7 +86,7 @@ sub _is_left_of_big_comma {
 #       PPI::Token::Operator    ','
 #       PPI::Token::Number      '123'
 #
-sub _is_solo_subscript {
+sub is_solo_subscript {
   my ($elem) = @_;
 
   # must be sole elem
@@ -102,47 +105,85 @@ __END__
 
 =head1 NAME
 
-Perl::Critic::Policy::ValuesAndExpressions::LiteralSpecialLiteral - specials like __PACKAGE__ used literally
+Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral - specials like __PACKAGE__ used literally
 
 =head1 DESCRIPTION
 
 This policy is part of the Perl::Critic::Pulp addon.  It picks up some cases
-where the special literals C<__FILE__>, C<__LINE__> and C<__PACKAGE__> are
-used with C<< => >> or as a hash subscript and don't expand to the
-respective filename, line number or package name.
+where the special literals C<__FILE__>, C<__LINE__> and C<__PACKAGE__> (see
+L<perldata/Special Literals>) are used with C<< => >> or as a hash subscript
+and so don't expand to the respective filename, line number or package name.
 
-    my $seen = { __FILE__ => 1 };        # bad
-    $obj->{__PACKAGE__}{myextra} = 123;  # bad
+    my $seen = { __FILE__ => 1 };          # bad
+    return ('At:'.__LINE__ => 123);        # bad
+    $obj->{__PACKAGE__}->{myextra} = 123;  # bad
 
-Here you end up with the string C<"__FILE__"> or C<"__PACKAGE__">, like
+In each case you get a string C<"__FILE__">, C<"__LINE__"> or
+C<"__PACKAGE__">, like
 
     my $seen = { '__FILE__' => 1 };
+    return ('At:__LINE__' => 123);
     $obj->{'__PACKAGE__'}->{'myextra'} = 123;
 
-whereas you almost certainly wanted to expand to the filename or package
-name.  On that basis this policy is under the "bugs" theme (see
-L<Perl::Critic/POLICY THEMES>).
+where you almost certainly meant it to expand to the filename etc.  On that
+basis this policy is under the "bugs" theme (see L<Perl::Critic/POLICY
+THEMES>).
+
+Expression forms like
+
+    'MyExtra::'.__PACKAGE__ => 123    # bad
+
+are still bad because the word immediately to the left of any C<< => >> is
+quoted even that word is part of an expression.
+
+If you really do want a string C<"__FILE__"> etc then the suggestion is to
+write the quotes, even if you're not in the habit of using quotes in hash
+constructors etc.  It'll pass this policy and make it clear to everyone that
+you really did want the string.
+
+=head2 Class Data
 
 C<< $obj->{__PACKAGE__} >> can arise when you're trying to hang extra data
-on an object, using your package name to hopefully avoid clashes with the
-object's native fields.  An unexpanded C<__PACKAGE__> like this is a mistake
-you'll probably only make once, after that the irritation of writing extra
-parens or similar will keep it fresh in your mind!
+on an object using your package name to hopefully avoid clashes with the
+object's native fields.  An unexpanded C<__PACKAGE__> is a mistake you'll
+probably only make once; after that the irritation of writing extra parens
+or similar will keep it fresh in your mind!
 
-    $obj->{(__PACKAGE__)}->{myfield}  # good
-    $obj->{__PACKAGE__.'.myfield'}    # good
+As usual there's more than one way to do it when adding extra data to an
+object.  As a crib here are some ways,
 
-Don't forget that it's any time a word is immediately to the left of a
-C<< => >> that it's quoted, so even in expressions like the following
-C<__FILE__> and C<__PACKAGE__> are still not expanded,
+=over 4
 
-    my $hash = { 'Foo'.__FILE__ => 123 };     # bad
-    return ('MyExtra::'.__PACKAGE__ => 123);  # bad
+=item Subhash C<< $obj->{(__PACKAGE__)}->{myfield} >>
 
-If you really do want the string C<"__FILE__"> etc then the suggestion is to
-write the quotes, even if you're not in the habit of using quotes in hash
-constructors.  It'll pass this policy and make it clear to everyone that you
-really did want the string, not an expanded name.
+The extra parens ensure expansion, and you get a sub-hash (or sub-array or
+whatever) to yourself.  It's easy to delete the single entry from C<$obj>
+if/when you later want to cleanup.
+
+=item Subscript C<< $obj->{__PACKAGE__,'myfield'} >>
+
+This makes entries in C<$obj>, with the C<$;> separator emulating
+multidimensional arrays/hashes (see L<perlvar/$;>).
+
+=item Concated key C<< $obj->{__PACKAGE__.'--myfield'} >>
+
+Again entries in C<$obj>, but key formed by concatenation and an explicit
+unlikely separator.  The advantage over C<,> is that the key is a constant
+(after constant folding), instead of a C<join> call on every access (for
+possible changes to C<$;>).
+
+=item Separate C<Tie::HashRef::Weak>
+
+The object as hash key and the value whatever data you want to associate.
+Keeps completely out of the object's hair.
+
+=item Inside-Out C<Hash::Util::FieldHash>
+
+Similar to HashRef with object as key and any value you want as the data,
+outside the object, hence the jargon "inside out".  If you're not into OOP
+you'll have to read a few times to understand what's going on!
+
+=back
 
 =head1 SEE ALSO
 

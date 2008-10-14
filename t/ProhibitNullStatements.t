@@ -20,6 +20,7 @@
 
 use strict;
 use warnings;
+use Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
 use Test::More tests => 18;
 use Perl::Critic;
 
@@ -30,10 +31,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION
-    >= 7);
-ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION
-    >= 7);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= 8);
+ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= 8);
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, ';' ],

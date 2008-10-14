@@ -23,18 +23,23 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 use constant DEBUG => 0;
 
 sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_MEDIUM;       }
+sub default_severity { return $SEVERITY_MEDIUM;   }
 sub default_themes   { return qw(pulp bugs);      }
 sub applies_to       { return 'PPI::Token::Word'; }
 
 my %funcs = (__x  => [ 1, 0 ],
              __nx => [ 2, 1 ],
-             __xn => [ 2, 1 ]);
+             __xn => [ 2, 1 ],
+
+             # the same with fully qualified names
+             'Locale::TextDomain::__x'  => [ 1, 0 ],
+             'Locale::TextDomain::__nx' => [ 2, 1 ],
+             'Locale::TextDomain::__xn' => [ 2, 1 ]);
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -175,23 +180,24 @@ Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders - check placeholder na
 
 This policy is part of the Perl::Critic::Pulp addon.  It checks the
 placeholder arguments in format strings to the C<__x>, C<__nx> and C<__xn>
-functions from C<Locale::TextDomain>.  Any formats with a key missing from
-the args, or args which are unused by the format, are reported.
+functions from C<Locale::TextDomain>.  Calls with a key missing from the
+args or args unused by the format are reported.
 
     print __x('Searching for {data}',  # bad
               datum => 123);
 
-    print __nx('Read one file',    # bad
+    print __nx('Read one file',     # bad
                'Read {num} files',
                $n,
                count => 123);
 
-This sort of thing is usually a mistake, so this policy is under the C<bugs>
-theme (see L<Perl::Critic/POLICY THEMES>).  An error can fairly easily go
-unnoticed since (in TextDomain version 1.16 at least) a placeholder without
-a corresponding arg goes through unexpanded and any extra args are ignored.
+This sort of thing is normally a mistake, so this policy is under the
+C<bugs> theme (see L<Perl::Critic/POLICY THEMES>).  An error can fairly
+easily go unnoticed because (as of TextDomain version 1.16) a placeholder
+without a corresponding arg goes through unexpanded and any extra args are
+ignored.
 
-The way TextDomain is setup actually allows anything between
+The way TextDomain parses the format allows anything between
 S<< "C<< { } >>" >> as a key string, but for the purposes of this policy
 only symbol characters "a-zA-Z0-9_" are taken to be a key.  This is almost
 certainly what you'll want to use, and it makes it possible to include
@@ -205,18 +211,18 @@ considered used.
     # ok, 'datum' might be used
     __x($my_format, datum => 123);
 
-But literal portions of the format can still be checked.
+Literal portions of the format are still be checked.
 
     # bad, 'foo' not present in args
-    __x("{foo} $bar, datum => 123);
+    __x("{foo} $bar", datum => 123);
 
-Conversely, if the args have some non-literals then they could be anything,
+Conversely if the args have some non-literals then they could be anything,
 so everything in the format string is considered present.
 
     # ok, $something might be 'world'
     __x('hello {world}', $something => 123);
 
-And again if some args are literals they can be checked.
+But again if some args are literals they can be checked.
 
     # bad, 'blah' is not used
     __x('hello {world}', $something => 123, blah => 456);

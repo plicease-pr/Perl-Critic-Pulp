@@ -19,16 +19,16 @@
 
 use strict;
 use warnings;
-use Locale::TextDomain;
+use Data::Dumper;
 
-print __x(<<'HERE', bar => 123);
-foo $a {xbar}
-HERE
+my @x = 1 .. 5;
+my @y = map {1=>2}, @x;
+print Dumper(\@y);
 
-print Locale::TextDomain::__x('foo {bar}');
-print __x('foo {bar}');
+@y = map {;1=>2} @x;
+print Dumper(\@y);
 
-print __x('foo {bar} {zz}', bar => 123, zz => 456);
-print __x('foo ' . '{bar}', bar => 123, zz => 456);
+@y = map {1=>$_}, @x;
+print Dumper(\@y);
 
 exit 0;

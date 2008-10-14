@@ -21,7 +21,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 
 sub supported_parameters {
@@ -164,10 +164,10 @@ Or a stray left at the end of a control structure like
       return;
     };           # bad
 
-An empty statement is of course completely harmless, so this policy is only
-under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).  It's
-surprisingly easy to leave a semi behind when chopping code around,
-especially when changing a statement to a loop or a conditional.
+An empty statement is completely harmless, so this policy is only under the
+"cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).  It's surprisingly
+easy to leave a semi behind when chopping code around, especially when
+changing a statement to a loop or a conditional.
 
 =head2 Allowed forms
 
@@ -179,7 +179,10 @@ separators and empties are quite usual.
     }
 
 A semicolon at the start of a C<map> or C<grep> block is allowed.  It's
-commonly used to ensure Perl takes it as a block not an expression.
+commonly used to ensure Perl parses it as a block, not an anonymous hash
+expression.  (Perl decides at the point it parses the C<{>.  The C<;> forces
+block when the guess might otherwise be wrong.  See L<perlfunc/map> for more
+on this.)
 
     map {; $_, 123} @some_list;      # ok
 

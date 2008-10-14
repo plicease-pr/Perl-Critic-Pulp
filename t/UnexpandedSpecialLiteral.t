@@ -20,20 +20,19 @@
 
 use strict;
 use warnings;
+use Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
 use Test::More tests => 33;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => 'ValuesAndExpressions::LiteralSpecialLiteral');
+   '-single-policy' => 'ValuesAndExpressions::UnexpandedSpecialLiteral');
 { my @p = $critic->policies;
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::LiteralSpecialLiteral::VERSION
-    >= 7);
-ok (Perl::Critic::Policy::ValuesAndExpressions::LiteralSpecialLiteral->VERSION
-    >= 7);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION >= 8);
+ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION  >= 8);
 
 
 # confirming what's claimed in the POD and subject to critiquing ...

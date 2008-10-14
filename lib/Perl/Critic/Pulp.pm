@@ -18,7 +18,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 1;
 __END__
@@ -29,19 +29,15 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-C<Perl::Critic::Pulp> is a little collection of the following add-on
-policies for C<Perl::Critic>.  A new policy theme "pulp" contains them all
-(see L<Perl::Critic/POLICY THEMES>).
+This is a little collection of the following add-on policies for
+C<Perl::Critic>.  They're under the "pulp" theme plus other themes according
+to their function (see L<Perl::Critic/POLICY THEMES>).
 
 =over 4
 
 =item ConstantBeforeLt -- avoiding problems with C<< FOO < 123 >>
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>.
-
-=item LiteralSpecialLiteral -- literal use of __PACKAGE__ etc
-
-See L<Perl::Critic::Policy::ValuesAndExpressions::LiteralSpecialLiteral>.
 
 =item NotWithCompare -- avoiding problems with C<! $x == $y>
 
@@ -54,6 +50,10 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>.
 =item TextDomainPlaceholders -- check args to C<__x> and C<__nx>
 
 See L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>.
+
+=item UnexpandedSpecialLiteral -- literal use of __PACKAGE__ etc
+
+See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
 
 =back
 

@@ -20,7 +20,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 111;
+use Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare;
+use Test::More tests => 112;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -30,8 +31,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 7);
-ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 7);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 8);
+ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 8);
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
@@ -49,7 +50,8 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, '! time == 1' ],
                   [ 1, 'use constant FIVE => 5;
                         ! FIVE == 1' ],
-
+                  [ 1, 'sub name () { "foo" }
+                            ! name =~ /bar/' ],
 
                   [ 1, '! ($x ~= /x/) + 1 >= 0' ],
                   [ 0, '! $x + $y =~ /y/' ],  # "+" below "=~"

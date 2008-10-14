@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 7;
+our $VERSION = 8;
 
 
 sub supported_parameters { return (); }
@@ -293,12 +293,16 @@ of logical not C<!> used with a comparison, like
     ! $x =~ /^[123]/  # bad
     ! $x + $y >= $z   # bad
 
-In each case Perl parses this as C<< (!$x) >>, not a negated comparison.
-Usually if you write this it's a mistake, so the policy is under the "bugs"
-theme (see L<Perl::Critic/POLICY THEMES>).
+In each case Perl parses this as C<< (!$x) >>, like
+
+    (! $x) =~ /^[123]/
+    (! $x) + $y >= $z
+
+rather than a negated comparison.  Usually this is a mistake, so this policy
+is under the "bugs" theme (see L<Perl::Critic/POLICY THEMES>).
 
 As a special case, C<!> on both sides of C<< == >> or C<< != >> is allowed,
-since it's a reasonable way to test for the same (or different) as booleans.
+since it's quite a good way to compare booleans.
 
     !$x == !$y   # ok
     !$x != !$y   # ok
@@ -306,21 +310,25 @@ since it's a reasonable way to test for the same (or different) as booleans.
 =head1 LIMITATIONS
 
 User functions called without parentheses are assumed to be usual varargs
-style, but a prototype can mean that's not true, allowing a bad
+style.  A prototype can mean that's not the case, allowing a bad
 C<!>-with-compare expression to go undetected.
 
     ! userfunc $x == 123   # indeterminate
-    # without prototype would be [ok]:  ! (userfunc ($x==123))
-    # with prototype would be [bad]:    (! userfunc($x)) == 123
+
+    # without prototype would be ok:   ! (userfunc ($x==123))
+    # with ($) prototype would be bad: (! userfunc($x)) == 123
 
 Perl builtins with no args, and constant subs created with C<use constant>
-(or C<sub FOO () {...}>) in the file under test are recognised, hopefully
+or C<sub FOO () {...}> in the file under test are recognised.  Hopefully
 anything else too weird is rare.
 
     ! time == 1   # bad
 
     use constant FIVE => 5;
-    ! FIVE == 1   # bad
+    ! FIVE < 1    # bad
+
+    sub name () { "foo" }
+    ! name =~ /bar/    # bad
 
 =head1 SEE ALSO
 

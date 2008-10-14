@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 8, October 2008
+    - call it "UnexpandedSpecialLiteral" for clarity
+
 Version 7, August 2008
     - new policy "LiteralSpecialLiteral"
 

@@ -20,7 +20,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
+use Test::More tests => 23;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -30,8 +31,8 @@ my $critic = Perl::Critic->new
   is (scalar @p, 1);
 }
 
-ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 7);
-ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 7);
+ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 8);
+ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 8);
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
@@ -67,7 +68,10 @@ HERE' ],
                   [ 0, '__x(\'{foo}\' . \'{bar}\',
                             foo => 123, bar => 456)' ],
 
-                  ## use critic
+                  [ 1, 'Locale::TextDomain::__x(\'{foo}\')' ],
+                  [ 0, '__x(\'{foo}\', @args)' ],
+                  [ 1, '__x(\'{foo}\', bar => 123, @args)' ],
+
                  ) {
   my ($want_count, $str) = @$data;
   my @violations = $critic->critique (\$str);

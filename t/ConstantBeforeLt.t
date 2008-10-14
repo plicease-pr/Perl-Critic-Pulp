@@ -20,9 +20,10 @@
 
 use strict;
 use warnings;
-use Test::More tests => 45;
-use Perl::Critic;
+use Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
 use PPI;
+use Perl::Critic;
+use Test::More tests => 45;
 
 my $critic = Perl::Critic->new
   ('-profile' => '',
@@ -32,9 +33,9 @@ my $critic = Perl::Critic->new
 }
 
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
-    >= 7);
+    >= 8);
 ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
-    >= 7);
+    >= 8);
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',

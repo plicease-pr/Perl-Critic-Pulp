@@ -21,13 +21,13 @@ This is some add-on policies for Perl::Critic,
 
 * ConstantBeforeLt -- avoiding problems with "FOO < 123"
 
-* LiteralSpecialLiteral -- using __PACKAGE__ etc unexpanded
-
 * NotWithCompare -- avoiding problems with "! $x == $y"
 
 * ProhibitNullStatements -- find stray semicolons
 
 * TextDomainPlaceholders -- check args to __x and __nx
+
+* UnexpandedSpecialLiteral -- using __PACKAGE__ etc unexpanded
 
 
 The only prerequisite is Perl::Critic itself.  The Perl-Critic-Pulp
