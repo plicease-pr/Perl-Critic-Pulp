@@ -18,7 +18,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 8;
+our $VERSION = 9;
 
 1;
 __END__
@@ -30,8 +30,8 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 =head1 DESCRIPTION
 
 This is a little collection of the following add-on policies for
-C<Perl::Critic>.  They're under the "pulp" theme plus other themes according
-to their function (see L<Perl::Critic/POLICY THEMES>).
+C<Perl::Critic>.  They're under a new "pulp" theme, plus other themes
+according to their function (see L<Perl::Critic/POLICY THEMES>).
 
 =over 4
 
@@ -42,6 +42,10 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>.
 =item NotWithCompare -- avoiding problems with C<! $x == $y>
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>.
+
+=item ProhibitEmptyCommas -- consecutive commas
+
+See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>.
 
 =item ProhibitNullStatements -- find stray semicolons
 
@@ -56,6 +60,13 @@ See L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>.
 See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
 
 =back
+
+ProhibitEmptyCommas and ProhibitNullStatements are cosmetic, the rest are
+about bugs.  You can always enable or disable the ones you do or don't want.
+If you haven't realized it yet the various perlcritic builtin and add-on
+policies range from the sublime to the bizarre and in some cases are even
+mutually contradictory, so it's quite normal to pick and choose what you
+want reported!
 
 =head1 SEE ALSO
 

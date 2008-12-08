@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 8;
+our $VERSION = 9;
 
 
 sub supported_parameters { return (); }
@@ -134,17 +134,17 @@ Expression forms like
     'MyExtra::'.__PACKAGE__ => 123    # bad
 
 are still bad because the word immediately to the left of any C<< => >> is
-quoted even that word is part of an expression.
+quoted even when the word is part of an expression.
 
 If you really do want a string C<"__FILE__"> etc then the suggestion is to
 write the quotes, even if you're not in the habit of using quotes in hash
 constructors etc.  It'll pass this policy and make it clear to everyone that
-you really did want the string.
+you really did want the literal string.
 
 =head2 Class Data
 
 C<< $obj->{__PACKAGE__} >> can arise when you're trying to hang extra data
-on an object using your package name to hopefully avoid clashes with the
+on an object with your package name hopefully avoiding clashes with the
 object's native fields.  An unexpanded C<__PACKAGE__> is a mistake you'll
 probably only make once; after that the irritation of writing extra parens
 or similar will keep it fresh in your mind!
@@ -169,13 +169,13 @@ multidimensional arrays/hashes (see L<perlvar/$;>).
 
 Again entries in C<$obj>, but key formed by concatenation and an explicit
 unlikely separator.  The advantage over C<,> is that the key is a constant
-(after constant folding), instead of a C<join> call on every access (for
-possible changes to C<$;>).
+(after constant folding), instead of a C<join> on every access (due to
+possible new C<$;>).
 
 =item Separate C<Tie::HashRef::Weak>
 
-The object as hash key and the value whatever data you want to associate.
-Keeps completely out of the object's hair.
+Use the object as a hash key and the value whatever data you want to
+associate.  Keeps completely out of the object's hair.
 
 =item Inside-Out C<Hash::Util::FieldHash>
 

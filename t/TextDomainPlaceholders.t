@@ -28,11 +28,14 @@ my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'Miscellanea::TextDomainPlaceholders');
 { my @p = $critic->policies;
-  is (scalar @p, 1);
+  is (scalar @p, 1,
+      'single policy TextDomainPlaceholders');
 }
 
-ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 8);
-ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 8);
+ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 9,
+    'VERSION variable');
+ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 9,
+    'VERSION method');
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

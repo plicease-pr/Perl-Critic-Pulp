@@ -23,6 +23,7 @@ devel/TestAutoload.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
@@ -33,6 +34,7 @@ SIGNATURE
 t/ConstantBeforeLt.t
 t/NotWithCompare.t
 t/pod.t
+t/ProhibitEmptyCommas.t
 t/ProhibitNullStatements.t
 t/TextDomainPlaceholders.t
 t/UnexpandedSpecialLiteral.t

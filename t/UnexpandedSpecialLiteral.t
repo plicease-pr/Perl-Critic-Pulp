@@ -28,11 +28,14 @@ my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::UnexpandedSpecialLiteral');
 { my @p = $critic->policies;
-  is (scalar @p, 1);
+  is (scalar @p, 1,
+     'single policy UnexpandedSpecialLiteral');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION >= 8);
-ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION  >= 8);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION >= 9,
+    'VERSION variable');
+ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION  >= 9,
+    'VERSION method');
 
 
 # confirming what's claimed in the POD and subject to critiquing ...

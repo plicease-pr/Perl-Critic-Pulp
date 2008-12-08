@@ -29,13 +29,16 @@ my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');
 { my @p = $critic->policies;
-  is (scalar @p, 1);
+  is (scalar @p, 1,
+     'single policy ConstantBeforeLt');
 }
 
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
-    >= 8);
+    >= 9,
+    'VERSION variable');
 ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
-    >= 8);
+    >= 9,
+    'VERSION method');
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',

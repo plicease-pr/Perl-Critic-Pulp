@@ -23,6 +23,8 @@ This is some add-on policies for Perl::Critic,
 
 * NotWithCompare -- avoiding problems with "! $x == $y"
 
+* ProhibitEmptyCommas -- consecutive commas
+
 * ProhibitNullStatements -- find stray semicolons
 
 * TextDomainPlaceholders -- check args to __x and __nx

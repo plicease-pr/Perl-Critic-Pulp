@@ -49,6 +49,14 @@ if (($ARGV[0]||'') eq '--literals') {
   shift @ARGV;
   $option_single_policy = 'ValuesAndExpressions::UnexpandedSpecialLiteral';
 }
+if (($ARGV[0]||'') eq '--commas') {
+  shift @ARGV;
+  $option_single_policy = 'ValuesAndExpressions::ProhibitEmptyCommas';
+}
+if (($ARGV[0]||'') eq '--gtk2') {
+  shift @ARGV;
+  $option_single_policy = 'Modules::Gtk2Version';
+}
 
 my @dirs = @ARGV;
 if (! @dirs) {

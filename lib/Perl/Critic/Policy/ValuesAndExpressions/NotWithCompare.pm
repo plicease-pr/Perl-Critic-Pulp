@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 8;
+our $VERSION = 9;
 
 
 sub supported_parameters { return (); }
@@ -310,11 +310,10 @@ since it's quite a good way to compare booleans.
 =head1 LIMITATIONS
 
 User functions called without parentheses are assumed to be usual varargs
-style.  A prototype can mean that's not the case, allowing a bad
+style.  A prototype may mean that's not the case, letting a bad
 C<!>-with-compare expression to go undetected.
 
     ! userfunc $x == 123   # indeterminate
-
     # without prototype would be ok:   ! (userfunc ($x==123))
     # with ($) prototype would be bad: (! userfunc($x)) == 123
 

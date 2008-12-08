@@ -21,7 +21,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 8;
+our $VERSION = 9;
 
 
 sub supported_parameters {
@@ -179,10 +179,10 @@ separators and empties are quite usual.
     }
 
 A semicolon at the start of a C<map> or C<grep> block is allowed.  It's
-commonly used to ensure Perl parses it as a block, not an anonymous hash
-expression.  (Perl decides at the point it parses the C<{>.  The C<;> forces
-block when the guess might otherwise be wrong.  See L<perlfunc/map> for more
-on this.)
+commonly used to ensure Perl parses it as a block, not an anonymous hash.
+(Perl decides at the point it parses the C<{>.  A C<;> there forces a block
+when it might otherwise guess wrongly.  See L<perlfunc/map> for more on
+this.)
 
     map {; $_, 123} @some_list;      # ok
 
@@ -190,9 +190,9 @@ on this.)
           ;                          # ok
           length $_ and $something } @some_list;
 
-The C<map> usage is much more common than the C<grep>, but both in principle
-suffer similar ambiguity.  C<grep> doesn't normally inspire people to quite
-such wildly convoluted forms as C<map> does.
+The C<map> form is much more common than the C<grep>, but both suffer the
+same ambiguity.  C<grep> doesn't normally inspire people to quite such
+wildly convoluted forms as C<map> does.
 
 =head1 CONFIGURATION
 

@@ -28,11 +28,14 @@ my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::NotWithCompare');
 { my @p = $critic->policies;
-  is (scalar @p, 1);
+  is (scalar @p, 1,
+     'single policy NotWithCompare');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 8);
-ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 8);
+ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 9,
+    'VERSION variable');
+ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 9,
+    'VERSION method');
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
