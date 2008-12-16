@@ -20,6 +20,7 @@ devel/notwithcompare.pl
 devel/posix-user.pl
 devel/PosixUser.pm
 devel/TestAutoload.pm
+lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
@@ -36,6 +37,7 @@ t/NotWithCompare.t
 t/pod.t
 t/ProhibitEmptyCommas.t
 t/ProhibitNullStatements.t
+t/RequireEndBeforeLastPod.t
 t/TextDomainPlaceholders.t
 t/UnexpandedSpecialLiteral.t
 META.yml                                 Module meta-data (added by MakeMaker)

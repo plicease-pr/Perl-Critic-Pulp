@@ -28,39 +28,42 @@
 
 use strict;
 use warnings;
+use Getopt::Long;
 use Perl::Critic;
 use Perl::Critic::Utils;
 use Perl::Critic::Violation;
 
-my $option_single_policy;
-if (($ARGV[0]||'') eq '--const') {
-  shift @ARGV;
-  $option_single_policy = 'ValuesAndExpressions::ConstantBeforeLt';
-}
-if (($ARGV[0]||'') eq '--not') {
-  shift @ARGV;
-  $option_single_policy = 'ValuesAndExpressions::NotWithCompare';
-}
-if (($ARGV[0]||'') eq '--null') {
-  shift @ARGV;
-  $option_single_policy = 'ValuesAndExpressions::ProhibitNullStatements';
-}
-if (($ARGV[0]||'') eq '--literals') {
-  shift @ARGV;
-  $option_single_policy = 'ValuesAndExpressions::UnexpandedSpecialLiteral';
-}
-if (($ARGV[0]||'') eq '--commas') {
-  shift @ARGV;
-  $option_single_policy = 'ValuesAndExpressions::ProhibitEmptyCommas';
-}
-if (($ARGV[0]||'') eq '--gtk2') {
-  shift @ARGV;
-  $option_single_policy = 'Modules::Gtk2Version';
-}
+my @option_policies;
+GetOptions
+  (require_order => 1,
+   const => sub {
+     push @option_policies, 'ValuesAndExpressions::ConstantBeforeLt';
+   },
+   not => sub {
+     push @option_policies, 'ValuesAndExpressions::NotWithCompare';
+   },
+   null => sub {
+     push @option_policies, 'ValuesAndExpressions::ProhibitNullStatements';
+   },
+   literals => sub {
+     push @option_policies, 'ValuesAndExpressions::UnexpandedSpecialLiteral';
+   },
+   commas => sub {
+     push @option_policies, 'ValuesAndExpressions::ProhibitEmptyCommas';
+   },
+   gtk2 => sub {
+     push @option_policies, 'Modules::Gtk2Version';
+   },
+   lastpod => sub {
+     push @option_policies, 'Documentation::RequireEndBeforeLastPod';
+   });
 
 my @dirs = @ARGV;
 if (! @dirs) {
-  @dirs = ('/usr/share/perl5', glob('/usr/share/perl/*.*.*'));
+  @dirs = ('/bin',
+           '/usr/bin',
+           '/usr/share/perl5',
+           glob('/usr/share/perl/*.*.*'));
 }
 print "Directories:\n";
 foreach (@dirs) {
@@ -68,13 +71,28 @@ foreach (@dirs) {
 }
 
 my @files = map { -d $_ ? Perl::Critic::Utils::all_perl_files($_) : $_ } @dirs;
+@files = uniq_by_func (\&stat_dev_ino, @files);
 print "Files: ",scalar(@files),"\n";
+
+sub stat_dev_ino {
+  my ($filename) = @_;
+  my ($dev, $ino) = stat ($filename);
+  return "$dev,$ino";
+}
+sub uniq_by_func {
+  my $func = shift;
+  my %seen;
+  return grep { $seen{$func->($_)}++ == 0 } @_;
+}
 
 
 my $critic;
-if ($option_single_policy) {
+if (@option_policies) {
   $critic = Perl::Critic->new ('-profile' => '',
-                               '-single-policy' => $option_single_policy);
+                               '-single-policy' => shift @option_policies);
+  foreach my $policy (@option_policies) {
+    $critic->add_policy (-policy => $policy);
+  }
 } else {
   $critic = Perl::Critic->new ('-profile' => '',
                                '-theme' => 'pulp');
@@ -97,11 +115,11 @@ foreach my $file (@files) {
   my @violations;
   if (! eval { @violations = $critic->critique ($file); 1 }) {
     print "Died in \"$file\": $@\n";
-  } else {
-    print @violations;
-    if (my $exception = Perl::Critic::Exception::Parse->caught) {
-      print "Caught exception in \"$file\": $exception\n";
-    }
+    next;
+  }
+  print @violations;
+  if (my $exception = Perl::Critic::Exception::Parse->caught) {
+    print "Caught exception in \"$file\": $exception\n";
   }
 }
 

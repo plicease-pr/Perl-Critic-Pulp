@@ -32,9 +32,9 @@ my $critic = Perl::Critic->new
      'single policy NotWithCompare');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 9,
+ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 10,
     'VERSION variable');
-ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 9,
+ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 10,
     'VERSION method');
 
 

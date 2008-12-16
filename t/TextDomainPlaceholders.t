@@ -32,9 +32,9 @@ my $critic = Perl::Critic->new
       'single policy TextDomainPlaceholders');
 }
 
-ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 9,
+ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION >= 10,
     'VERSION variable');
-ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 9,
+ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION  >= 10,
     'VERSION method');
 
 

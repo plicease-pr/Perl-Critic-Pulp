@@ -35,5 +35,6 @@ Description: Some add-on policies for perlcritic
   * NotWithCompare -- avoiding problems with "! $x == $y"
   * ProhibitEmptyCommas -- consecutive commas
   * ProhibitNullStatements -- find stray semicolons
+  * RequireEndBeforeLastPod -- __END__ before POD at end of file
   * TextDomainPlaceholders -- check args to __x and __nx
   * UnexpandedSpecialLiteral -- check __PACKAGE__ etc unexpanded

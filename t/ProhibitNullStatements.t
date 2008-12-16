@@ -32,9 +32,9 @@ my $critic = Perl::Critic->new
       'single policy ProhibitNullStatements');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= 9,
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= 10,
     'VERSION variable');
-ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= 9,
+ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= 10,
     'VERSION method');
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

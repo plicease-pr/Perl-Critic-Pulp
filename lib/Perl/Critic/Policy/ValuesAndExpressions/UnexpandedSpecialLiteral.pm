@@ -1,5 +1,7 @@
 # Copyright 2008 Kevin Ryde
 
+# This file is part of Perl-Critic-Pulp.
+
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
@@ -25,7 +27,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 9;
+our $VERSION = 10;
 
 
 sub supported_parameters { return (); }

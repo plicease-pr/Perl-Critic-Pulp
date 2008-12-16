@@ -1,5 +1,7 @@
 # Copyright 2008 Kevin Ryde
 
+# This file is part of Perl-Critic-Pulp.
+
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
@@ -18,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 9;
+our $VERSION = 10;
 
 1;
 __END__
@@ -43,13 +45,17 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>.
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>.
 
-=item ProhibitEmptyCommas -- consecutive commas
+=item ProhibitEmptyCommas -- stray consecutive commas
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>.
 
-=item ProhibitNullStatements -- find stray semicolons
+=item ProhibitNullStatements -- stray semicolons
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>.
+
+=item RequireEndBeforeLastPod -- __END__ before POD at end of file
+
+See L<Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>.
 
 =item TextDomainPlaceholders -- check args to C<__x> and C<__nx>
 

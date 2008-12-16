@@ -32,9 +32,9 @@ my $critic = Perl::Critic->new
      'single policy UnexpandedSpecialLiteral');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION >= 9,
+ok ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION >= 10,
     'VERSION variable');
-ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION  >= 9,
+ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION  >= 10,
     'VERSION method');
 
 
@@ -49,10 +49,10 @@ ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSIO
   is_deeply (\@h, [ 'Foo__FILE__', 123 ],
              'hash constructor literal on right of a . expression');
 }
-                   
+
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
-  
+
                   # from the POD
                   [ 1, 'my $seen = { __FILE__ => 1 };' ],
                   [ 1, '$obj->{__PACKAGE__}{myextra} = 123;' ],

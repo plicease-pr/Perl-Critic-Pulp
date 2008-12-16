@@ -1,0 +1,162 @@
+# Copyright 2008 Kevin Ryde
+
+# This file is part of Perl-Critic-Pulp.
+
+# Perl-Critic-Pulp is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# Perl-Critic-Pulp is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
+
+
+package Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod;
+use strict;
+use warnings;
+use base 'Perl::Critic::Policy';
+use Perl::Critic::Utils qw(:severities);
+
+our $VERSION = 10;
+
+sub supported_parameters { return; }
+sub default_severity { return $SEVERITY_LOWEST;  }
+sub default_themes   { return qw(pulp cosmetic); }
+sub applies_to       { return 'PPI::Document';   }
+
+sub violates {
+  my ($self, $elem, $document) = @_;
+
+  $elem = $elem->last_element
+    || return;  # empty file
+
+  if ($elem->isa('PPI::Statement::End')
+      || $elem->isa('PPI::Statement::Data')) {
+    # $document ends with __END__, ok
+    # or ends with __DATA__, in which case you can't use __END__ after last
+    # code, so ok
+    return;
+  }
+
+  for (;;) {
+    if ($elem->significant) {
+      # document ends with code, ie. no pod after the last code, so ok
+      return;
+    }
+    if ($elem->isa('PPI::Token::Pod')) {
+      # found the last pod
+      last;
+    }
+    # otherwise skip PPI::Token::Comment and possibly PPI::Token::Whitespace
+    $elem = $elem->previous_sibling
+      || return; # $document is empty, or only comments and whitespace, so ok
+  }
+
+  if (! $elem->sprevious_sibling) {
+    # there's no code before the last pod, either a pod-only file, or pod
+    # plus comments etc, so ok
+    return;
+  }
+
+  return $self->violation
+    ('Put __END__ before POD at the end of a file.',
+     '',
+     $elem);
+}
+
+1;
+__END__
+
+=head1 NAME
+
+Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod - require __END__ before POD at end of file
+
+=head1 DESCRIPTION
+
+This policy is part of the Perl::Critic::Pulp addon.  It requires that you
+put an C<__END__> before POD at the end of a file.  For example,
+
+    program_code();
+    1;
+    __END__     # good
+
+    =head1 NAME
+    ...
+
+and not merely
+
+    program_code();
+    1;          # bad
+
+    =head1 NAME
+    ...
+
+
+This is primarily a matter of personal preference, so the policy is low
+priority and only under the "cosmetic" theme (see L<Perl::Critic/POLICY
+THEMES>).  An C<__END__> like this has no effect on execution, but it's a
+fairly common convention since it's a good human indication you mean the
+code to end there, and it stops Perl parsing through the POD which may save
+a few nanoseconds.
+
+This policy is looser than C<Documentation::RequirePodAtEnd> insofar as
+you're allowed to have POD anywhere in among the code.  The requirement is
+only that if the file ends with POD then you should have an C<__END__>
+between the last code and last POD.
+
+A file of all POD, or all code, or which ends with code, is ok.  Ending with
+code is usual if you write your POD at the start of the file or in among the
+functions etc,
+
+    =pod
+
+    And that's all.
+
+    =cut
+
+    cleanup ();
+    exit 0;     # good
+
+A file using C<__DATA__> is always ok, since you can't have C<__END__>
+followed by C<__DATA__>.  If the C<__DATA__> is in fact C<SelfLoader> code
+then it could helpfully have a C<__END__> in the style of this policy, but
+as of C<perlcritic> version 1.092 no checks at all are applied to SelfLoader
+sections.
+
+As always if you don't care about C<__END__> you can always disable
+C<RequireEndBeforeLastPod> from your F<.perlcriticrc> in the usual way,
+
+    [-Documentation::RequireEndBeforeLastPod]
+
+=head1 SEE ALSO
+
+L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Policy::Documentation::RequirePodAtEnd>
+
+=head1 HOME PAGE
+
+L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+
+=head1 COPYRIGHT
+
+Copyright 2008 Kevin Ryde
+
+Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Perl-Critic-Pulp is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses>.
+
+=cut

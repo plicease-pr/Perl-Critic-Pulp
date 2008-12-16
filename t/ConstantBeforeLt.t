@@ -34,10 +34,10 @@ my $critic = Perl::Critic->new
 }
 
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
-    >= 9,
+    >= 10,
     'VERSION variable');
 ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
-    >= 9,
+    >= 10,
     'VERSION method');
 
 foreach my $data ([ 'use constant' ],

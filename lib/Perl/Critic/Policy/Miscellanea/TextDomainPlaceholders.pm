@@ -1,5 +1,7 @@
 # Copyright 2008 Kevin Ryde
 
+# This file is part of Perl-Critic-Pulp.
+
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
@@ -23,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 9;
+our $VERSION = 10;
 
 use constant DEBUG => 0;
 
@@ -211,7 +213,7 @@ considered used.
     # ok, 'datum' might be used
     __x($my_format, datum => 123);
 
-Literal portions of the format are still be checked.
+Literal portions of the format are still checked.
 
     # bad, 'foo' not present in args
     __x("{foo} $bar", datum => 123);

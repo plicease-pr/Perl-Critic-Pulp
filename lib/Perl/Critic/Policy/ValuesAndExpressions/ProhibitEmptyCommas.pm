@@ -1,5 +1,7 @@
 # Copyright 2008 Kevin Ryde
 
+# This file is part of Perl-Critic-Pulp.
+
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
@@ -20,7 +22,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 9;
+our $VERSION = 10;
 
 
 sub supported_parameters { return; }
@@ -58,10 +60,10 @@ sub violates {
   #         PPI::Token::Operator    ','
   #         PPI::Token::Symbol      '$class'
   #
-  # so the "{@_}" bit not as an immediate predecessor of the "," operator.
+  # so the "{@_}" bit is not an immediate predecessor of the "," operator.
   # If our $elem has no $prev then also look outwards to see if it's at the
-  # start of an expression in a list and there's something preceding in the
-  # list.
+  # start of an expression which is in a list and there's something
+  # preceding in the list.
   #
   if (! $prev) {
     my $parent = $elem->parent;
