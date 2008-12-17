@@ -16,6 +16,12 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# libversion-perl on older perl, or perl-modules from 5.10 has it
+# included, same as libperl-critic-perl dependencies.  But have
+# libversion-perl first in case that makes apt etc inclined to
+# download that rather than upgrade perl.
+#
+
 Source: libperl-critic-pulp-perl
 Section: perl
 Priority: optional
@@ -27,7 +33,7 @@ Bugs: mailto:user42@zip.com.au
 
 Package: libperl-critic-pulp-perl
 Architecture: all
-Depends: perl (>= 5.6), libperl-critic-perl (>= 1.082), ${misc:Depends}
+Depends: perl (>= 5.6), libperl-critic-perl (>= 1.082), libversion-perl | perl-modules (>= 5.10), ${misc:Depends}
 Description: Some add-on policies for perlcritic
  This is some further policies for perlcritic:
  .

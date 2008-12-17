@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 
 sub supported_parameters { return (); }
@@ -295,7 +295,7 @@ of logical not C<!> used with a comparison, like
     ! $x =~ /^[123]/  # bad
     ! $x + $y >= $z   # bad
 
-In each case Perl parses this as C<< (!$x) >>, like
+In each case precedence means Perl parses this as C<< (!$x) >>, like
 
     (! $x) =~ /^[123]/
     (! $x) + $y >= $z
@@ -312,7 +312,7 @@ since it's quite a good way to compare booleans.
 =head1 LIMITATIONS
 
 User functions called without parentheses are assumed to be usual varargs
-style.  A prototype may mean that's not the case, letting a bad
+style.  But a prototype may mean that's not the case, letting a bad
 C<!>-with-compare expression to go undetected.
 
     ! userfunc $x == 123   # indeterminate

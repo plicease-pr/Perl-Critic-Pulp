@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Perl-Critic-Pulp
-version:             10
+version:             11
 abstract:            Some add-on policies for Perl::Critic.
 license:             gpl
 author:              
@@ -11,6 +11,7 @@ requires:
     List::Util:                    0
     Perl::Critic:                  1.082
     Test::More:                    0
+    version:                       0
 meta-spec:
     url:     http://module-build.sourceforge.net/META-spec-v1.3.html
     version: 1.3

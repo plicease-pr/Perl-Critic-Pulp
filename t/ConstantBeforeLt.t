@@ -30,14 +30,14 @@ my $critic = Perl::Critic->new
    '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-     'single policy ConstantBeforeLt');
+      'single policy ConstantBeforeLt');
 }
 
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
-    >= 10,
+    >= 11,
     'VERSION variable');
 ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
-    >= 10,
+    >= 11,
     'VERSION method');
 
 foreach my $data ([ 'use constant' ],
@@ -83,8 +83,8 @@ foreach my $data ([ 'use constant' ],
     my $document = PPI::Document->new (\$str)
       or die "oops, no parse: $str";
     my $elems = ($document->find ('PPI::Statement::Include')
-                    || $document->find ('PPI::Statement::Sub')
-                    || die "oops, no target statement in '$str'");
+                 || $document->find ('PPI::Statement::Sub')
+                 || die "oops, no target statement in '$str'");
     my $elem = $elems->[0] or die "oops, no Include element";
     my @got_constants = Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::_use_constants ($elem);
     is_deeply (\@got_constants, \@want_constants, $str);
@@ -133,6 +133,9 @@ foreach my $data ([ 1, 'DBL_MANT_DIG < 10' ],
 
   {
     my @violations = $critic->critique (\$str);
+    foreach (@violations) {
+      diag ($_->description);
+    }
     my $got_count = scalar @violations;
     is ($got_count, $want_count, $str);
   }

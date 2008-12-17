@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod;
-use Test::More tests => 16;
+use Test::More tests => 17;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -29,20 +29,20 @@ my $critic = Perl::Critic->new
    '-single-policy' => 'Documentation::RequireEndBeforeLastPod');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-     'single policy RequireEndBeforeLastPod');
+      'single policy RequireEndBeforeLastPod');
 }
 
-ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION >= 10,
+ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION >= 11,
     'VERSION variable');
-ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION  >= 10,
+ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION  >= 11,
     'VERSION method');
 
 # ^Z is equivalent to __END__, but don't exercise that because PPI 1.204
 # doesn't support it
 #
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
-
-                  # examples from the POD
+                  
+                  # from the POD, ok
                   [ 0, '
 program_code();
 
@@ -53,9 +53,20 @@ __END__
 ...' ],
 
 #---------------------------------
+                  # from the POD, bad
+                  [ 1, '
+program_code();
+1;
+
+=head1 NAME
+...
+' ],
+
+#---------------------------------
                   [ 0, '1;' ],
                   [ 0, '__END__' ],
-                  [ 0, '' ],
+                  # note PPI doesn't like a completely empty '' until 1.204_01
+                  [ 0, ' ' ],
 
 #---------------------------------
 # end with code
@@ -165,6 +176,9 @@ something
   my ($want_count, $str) = @$data;
 
   my @violations = $critic->critique (\$str);
+  foreach (@violations) {
+    diag ($_->description);
+  }
   my $got_count = scalar @violations;
   is ($got_count, $want_count, $str);
 }

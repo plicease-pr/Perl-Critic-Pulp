@@ -22,7 +22,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 
 sub supported_parameters { return; }
@@ -108,10 +108,10 @@ over-enthusiastic column layout.  Occasionally it can be something more
 dubious,
 
     # did you mean 1..6 range operator?
-    @a = (1,,6);         # bad
+    @a = (1,,6);        # bad
 
     # this is two args, did you want three?
-    foo (1, , 2);        # bad
+    foo (1, , 2);       # bad
 
     # this is three args, probably you forgot a value
     bar (abc => ,       # bad

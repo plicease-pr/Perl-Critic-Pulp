@@ -37,6 +37,10 @@ WriteMakefile
                     # builtin in recent perl anyway
                     'List::Util' => 0,
                     'Test::More' => 0,
+
+                    # demanded by Perl::Critic itself anyway,
+                    # and comes with perl 5.10 anyway too
+                    'version' => 0,
                    },
    EXTRA_META => <<'HERE',
 no_index:

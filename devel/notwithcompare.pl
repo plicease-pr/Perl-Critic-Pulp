@@ -24,9 +24,9 @@ use Data::Dumper;
 {
   sub func1     { print "func1 $_[0]\n" }
   sub func2 ($) { print "func2 $_[0]\n" }
-  my $x = 123;
-  if (! func1 $x == 123) { print "yes\n"; } else { print "no\n"; }
-  if (! func2 $x == 123) { print "yes\n"; } else { print "no\n"; }
+  my $x = 0;
+  if (! func1 $x != 123) { print "yes\n"; } else { print "no\n"; }
+  if (! func2 $x != 123) { print "yes\n"; } else { print "no\n"; }
   exit 0;
 }
 

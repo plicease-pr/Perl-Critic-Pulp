@@ -22,7 +22,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 sub supported_parameters { return; }
 sub default_severity { return $SEVERITY_LOWEST;  }
@@ -96,7 +96,6 @@ and not merely
     =head1 NAME
     ...
 
-
 This is primarily a matter of personal preference, so the policy is low
 priority and only under the "cosmetic" theme (see L<Perl::Critic/POLICY
 THEMES>).  An C<__END__> like this has no effect on execution, but it's a
@@ -123,12 +122,12 @@ functions etc,
     exit 0;     # good
 
 A file using C<__DATA__> is always ok, since you can't have C<__END__>
-followed by C<__DATA__>.  If the C<__DATA__> is in fact C<SelfLoader> code
-then it could helpfully have a C<__END__> in the style of this policy, but
-as of C<perlcritic> version 1.092 no checks at all are applied to SelfLoader
-sections.
+followed by C<__DATA__>, wherever you want your POD.  If the C<__DATA__> is
+in fact C<SelfLoader> code then it can helpfully have an C<__END__> within
+it like this policy, but as of C<perlcritic> version 1.092 no checks at all
+are applied to SelfLoader sections.
 
-As always if you don't care about C<__END__> you can always disable
+As always if you don't care about C<__END__> you can disable
 C<RequireEndBeforeLastPod> from your F<.perlcriticrc> in the usual way,
 
     [-Documentation::RequireEndBeforeLastPod]

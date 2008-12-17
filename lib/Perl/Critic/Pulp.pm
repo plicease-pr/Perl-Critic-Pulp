@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 1;
 __END__
@@ -67,12 +67,11 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
 
 =back
 
-ProhibitEmptyCommas and ProhibitNullStatements are cosmetic, the rest are
-about bugs.  You can always enable or disable the ones you do or don't want.
-If you haven't realized it yet the various perlcritic builtin and add-on
-policies range from the sublime to the bizarre and in some cases are even
-mutually contradictory, so it's quite normal to pick and choose what you
-want reported!
+Half are about bugs and half cosmetic.  You can always enable or disable the
+ones you do or don't want.  You'll have realized the various perlcritic
+builtin and add-on policies range from the sublime to the bizarre and in
+some cases are even mutually contradictory, so it's quite normal to pick and
+choose what you want reported!
 
 =head1 SEE ALSO
 

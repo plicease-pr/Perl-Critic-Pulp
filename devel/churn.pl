@@ -34,6 +34,8 @@ use Perl::Critic::Utils;
 use Perl::Critic::Violation;
 
 my @option_policies;
+my $option_t_files = 0;
+
 GetOptions
   (require_order => 1,
    const => sub {
@@ -56,14 +58,26 @@ GetOptions
    },
    lastpod => sub {
      push @option_policies, 'Documentation::RequireEndBeforeLastPod';
-   });
+   },
+   qrm => sub {
+     push @option_policies, 'Compatibility::RegexpQrm';
+   },
+   morelike => sub {
+     push @option_policies, 'Compatibility::TestMoreLikeModifiers';
+     $option_t_files = 1;
+   },
+  );
 
 my @dirs = @ARGV;
 if (! @dirs) {
-  @dirs = ('/bin',
-           '/usr/bin',
-           '/usr/share/perl5',
-           glob('/usr/share/perl/*.*.*'));
+  if ($option_t_files) {
+    @dirs = split /\n/, `locate '*.t'`;
+  } else {
+    @dirs = ('/bin',
+             '/usr/bin',
+             '/usr/share/perl5',
+             glob('/usr/share/perl/*.*.*'));
+  }
 }
 print "Directories:\n";
 foreach (@dirs) {

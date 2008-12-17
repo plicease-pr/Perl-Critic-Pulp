@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 10;
+our $VERSION = 11;
 
 
 sub supported_parameters { return (); }
@@ -171,8 +171,8 @@ multidimensional arrays/hashes (see L<perlvar/$;>).
 
 Again entries in C<$obj>, but key formed by concatenation and an explicit
 unlikely separator.  The advantage over C<,> is that the key is a constant
-(after constant folding), instead of a C<join> on every access (due to
-possible new C<$;>).
+(after constant folding), instead of a C<join> on every access (for possible
+new C<$;>).
 
 =item Separate C<Tie::HashRef::Weak>
 
