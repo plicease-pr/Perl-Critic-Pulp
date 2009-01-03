@@ -1,4 +1,4 @@
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 11;
+our $VERSION = 12;
 
 1;
 __END__
@@ -31,15 +31,19 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a little collection of the following add-on policies for
-C<Perl::Critic>.  They're under a new "pulp" theme, plus other themes
-according to their function (see L<Perl::Critic/POLICY THEMES>).
+This is a collection of the following add-on policies for C<Perl::Critic>.
+They're under a new "pulp" theme, plus other themes according to their
+function (see L<Perl::Critic/POLICY THEMES>).
 
 =over 4
 
 =item ConstantBeforeLt -- avoiding problems with C<< FOO < 123 >>
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>.
+
+=item ConstantPragmaHash -- version declaration for hash style multi-constants
+
+See L<Perl::Critic::Policy::Compatibility::ConstantPragmaHash>.
 
 =item NotWithCompare -- avoiding problems with C<! $x == $y>
 
@@ -67,11 +71,11 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
 
 =back
 
-Half are about bugs and half cosmetic.  You can always enable or disable the
-ones you do or don't want.  You'll have realized the various perlcritic
-builtin and add-on policies range from the sublime to the bizarre and in
-some cases are even mutually contradictory, so it's quite normal to pick and
-choose what you want reported!
+Roughly half are about bugs and half cosmetic.  You can always enable or
+disable the ones you do or don't want.  You'll have realized there's a lot
+of perlcritic builtin and add-on policies and they range from the sublime to
+the bizarre.  In some cases they're even mutually contradictory.  So it's
+quite normal to pick and choose what you want reported!
 
 =head1 SEE ALSO
 
@@ -83,7 +87,7 @@ L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2008 Kevin Ryde
+Copyright 2008, 2009 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

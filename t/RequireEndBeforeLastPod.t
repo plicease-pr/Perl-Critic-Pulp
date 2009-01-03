@@ -32,16 +32,17 @@ my $critic = Perl::Critic->new
       'single policy RequireEndBeforeLastPod');
 }
 
-ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION >= 11,
-    'VERSION variable');
-ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION  >= 11,
-    'VERSION method');
+my $want_version = 12;
+ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION >= $want_version, 'VERSION variable');
+ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION  >= $want_version, 'VERSION class method');
+Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION($want_version);
+
 
 # ^Z is equivalent to __END__, but don't exercise that because PPI 1.204
 # doesn't support it
 #
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
-                  
+
                   # from the POD, ok
                   [ 0, '
 program_code();
@@ -180,7 +181,7 @@ something
     diag ($_->description);
   }
   my $got_count = scalar @violations;
-  is ($got_count, $want_count, $str);
+  is ($got_count, $want_count, "str: $str");
 }
 
 exit 0;

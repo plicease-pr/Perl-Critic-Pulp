@@ -1,12 +1,12 @@
 #!/usr/bin/perl
 
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
 # Perl-Critic-Pulp is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation; either version 2, or (at your option) any
+# by the Free Software Foundation; either version 3, or (at your option) any
 # later version.
 #
 # Perl-Critic-Pulp is distributed in the hope that it will be useful,
@@ -38,6 +38,7 @@ my $option_t_files = 0;
 
 GetOptions
   (require_order => 1,
+   t => \$option_t_files,
    const => sub {
      push @option_policies, 'ValuesAndExpressions::ConstantBeforeLt';
    },
@@ -59,12 +60,13 @@ GetOptions
    lastpod => sub {
      push @option_policies, 'Documentation::RequireEndBeforeLastPod';
    },
+   consthash => sub {
+     push @option_policies, 'Compatibility::ConstantPragmaHash';
+   },
+
+   # secret extras ...
    qrm => sub {
      push @option_policies, 'Compatibility::RegexpQrm';
-   },
-   morelike => sub {
-     push @option_policies, 'Compatibility::TestMoreLikeModifiers';
-     $option_t_files = 1;
    },
   );
 
@@ -88,15 +90,16 @@ my @files = map { -d $_ ? Perl::Critic::Utils::all_perl_files($_) : $_ } @dirs;
 @files = uniq_by_func (\&stat_dev_ino, @files);
 print "Files: ",scalar(@files),"\n";
 
-sub stat_dev_ino {
-  my ($filename) = @_;
-  my ($dev, $ino) = stat ($filename);
-  return "$dev,$ino";
-}
+# @list = uniq_by_func ($func, @list)
 sub uniq_by_func {
   my $func = shift;
   my %seen;
   return grep { $seen{$func->($_)}++ == 0 } @_;
+}
+sub stat_dev_ino {
+  my ($filename) = @_;
+  my ($dev, $ino) = stat ($filename);
+  return "$dev,$ino";
 }
 
 

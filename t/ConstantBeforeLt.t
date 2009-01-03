@@ -33,12 +33,10 @@ my $critic = Perl::Critic->new
       'single policy ConstantBeforeLt');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
-    >= 11,
-    'VERSION variable');
-ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
-    >= 11,
-    'VERSION method');
+my $want_version = 12;
+ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= $want_version, 'VERSION variable');
+ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= $want_version, 'VERSION class method');
+Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION($want_version);
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',
@@ -107,7 +105,7 @@ foreach my $str (
                  'time < 2e9',
                 ) {
   my @violations = $critic->critique (\$str);
-  is_deeply (\@violations, [], $str);
+  is_deeply (\@violations, [], "str: $str");
 }
 
 # not ok stuff
@@ -137,7 +135,7 @@ foreach my $data ([ 1, 'DBL_MANT_DIG < 10' ],
       diag ($_->description);
     }
     my $got_count = scalar @violations;
-    is ($got_count, $want_count, $str);
+    is ($got_count, $want_count, "str: $str");
   }
 }
 

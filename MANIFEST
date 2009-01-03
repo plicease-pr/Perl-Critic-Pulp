@@ -19,7 +19,9 @@ devel/not.sh
 devel/notwithcompare.pl
 devel/posix-user.pl
 devel/PosixUser.pm
+devel/qrmgrep.pl
 devel/TestAutoload.pm
+lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
@@ -33,6 +35,7 @@ MANIFEST			This list of files
 README
 SIGNATURE
 t/ConstantBeforeLt.t
+t/ConstantPragmaHash.t
 t/NotWithCompare.t
 t/pod.t
 t/ProhibitEmptyCommas.t

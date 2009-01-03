@@ -32,10 +32,10 @@ my $critic = Perl::Critic->new
      'single policy NotWithCompare');
 }
 
-ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= 11,
-    'VERSION variable');
-ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= 11,
-    'VERSION method');
+my $want_version = 12;
+ok ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION >= $want_version, 'VERSION variable');
+ok (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION  >= $want_version, 'VERSION class method');
+Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION($want_version);
 
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
@@ -197,7 +197,7 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
     diag ($_->description);
   }
   my $got_count = scalar @violations;
-  is ($got_count, $want_count, "$str");
+  is ($got_count, $want_count, "str: $str");
 }
 
 exit 0;

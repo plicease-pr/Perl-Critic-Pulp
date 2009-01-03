@@ -43,11 +43,14 @@ WriteMakefile
                     'version' => 0,
                    },
    EXTRA_META => <<'HERE',
+recommends:
+    Test::Pod: 1.00
 no_index:
     directory:
         - devel
 resources:
     homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
+    license: http://www.gnu.org/licenses/#GPL
 HERE
   );
 
