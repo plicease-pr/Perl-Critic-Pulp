@@ -21,6 +21,7 @@ devel/posix-user.pl
 devel/PosixUser.pm
 devel/qrmgrep.pl
 devel/TestAutoload.pm
+devel/use-quoted-grep.pl
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm

@@ -21,7 +21,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use version;
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 use constant DEBUG => 0;
 
@@ -78,11 +78,11 @@ sub violates {
 
     if (_use_constant_is_multi ($inc)) {
       push @violations, $self->violation
-        ("'use constant' with multi-constant hash requires perl 5.8 or constant 1.03 (to this point have "
+        ("'use constant' with multi-constant hash requires perl 5.8 or constant 1.03 (at this point have "
          . (defined $perlver ? "perl $perlver" : "no perl version")
          . (defined $modver ? ", constant $modver)" : ", no constant version)"),
          '',
-         $elem);
+         $inc);
     }
   }
 
@@ -200,7 +200,7 @@ Perl::Critic::Policy::Compatibility::ConstantPragmaHash - new enough "constant" 
 
 This policy is part of the C<Perl::Critic::Pulp> addon.  It requires that
 when you use the hash style multiple constants with C<use constant> you
-explicitly declare either Perl 5.8 or C<constant> 1.03 (or higher).
+explicitly declare either Perl 5.8 or C<constant> 1.03, or higher.
 
     use constant { AA => 1, BB => 2 };       # bad
 
@@ -225,14 +225,13 @@ all!
 =head2 Details
 
 A version declaration must be before the first multi-constant, so it's
-checked runs before the multi-constant is attempted (and gives an obscure
-error).
+checked before the multi-constant is attempted (and gives an obscure error).
 
     use constant { X => 1, Y => 2 };       # bad
     use 5.008;
 
 A C<require> for the perl version is not adequate since the C<use constant>
-runs at C<BEGIN> time, before plain code.
+is at C<BEGIN> time, before plain code.
 
     require 5.008;
     use constant { X => 1, Y => 2 };       # bad
@@ -250,7 +249,7 @@ occasionally).
     use constant { X => 1, Y => 2 };       # ok
 
 Currently ConstantPragmaHash pays no attention to any conditionals within
-the C<BEGIN>, it assumes that any C<require> there always runs.  It could be
+the C<BEGIN>, it assumes any C<require> there always runs.  It could be
 tricked by some obscure tests but hopefully anything like that is rare.
 
 A quoted version number like
@@ -259,7 +258,7 @@ A quoted version number like
 
 is no good, only a bare number is recognised by C<use> and acted on by
 ConstantPragmaHash.  A string like that goes through to C<constant> as if a
-name to define (which you'll see as soon as you try run it).
+name to define (which you'll see it objects to as soon as you try run it).
 
 =head2 Drawbacks
 

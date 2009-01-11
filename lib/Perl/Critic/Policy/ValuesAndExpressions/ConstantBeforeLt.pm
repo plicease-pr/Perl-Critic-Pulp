@@ -1,4 +1,4 @@
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -98,8 +98,9 @@ sub _one_violate {
                            '', $elem);
 }
 
-# Return a list of the names (strings) of constants defined by a "use
-# constants" in $elem, or return an empty list if $elem isn't a "constants".
+# $elem is any element.  If it's a "use constants" or a "sub foo () { ...}"
+# then return the name or names of the constants so created.  Otherwise
+# return an empty list.
 #
 # Perl::Critic::StricterSubs::Utils::find_declared_constant_names() does
 # some similar stuff, but it crunches the whole document at once, instead of
@@ -172,11 +173,11 @@ sub _use_constants {
   for (my $i = 0; $i < @arefs; $i += 2) {
     my $aref = $arefs[$i];
     if (@$aref == 1) {
-      my $elem = $aref->[0];
-      if (! $elem->isa ('PPI::Token::Structure')) {  # not final ";"
-        push @constants, ($elem->can('string')
-                          ? $elem->string
-                          : $elem->content);
+      my $name_elem = $aref->[0];
+      if (! $name_elem->isa ('PPI::Token::Structure')) {  # not final ";"
+        push @constants, ($name_elem->can('string')
+                          ? $name_elem->string
+                          : $name_elem->content);
         next;
       }
     }
@@ -277,7 +278,7 @@ L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2008 Kevin Ryde
+Copyright 2008, 2009 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

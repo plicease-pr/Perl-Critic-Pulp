@@ -1,4 +1,4 @@
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 use constant DEBUG => 0;
 
@@ -242,7 +242,7 @@ L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2008 Kevin Ryde
+Copyright 2008, 2009 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

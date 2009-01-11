@@ -54,9 +54,6 @@ GetOptions
    commas => sub {
      push @option_policies, 'ValuesAndExpressions::ProhibitEmptyCommas';
    },
-   gtk2 => sub {
-     push @option_policies, 'Modules::Gtk2Version';
-   },
    lastpod => sub {
      push @option_policies, 'Documentation::RequireEndBeforeLastPod';
    },
@@ -65,8 +62,14 @@ GetOptions
    },
 
    # secret extras ...
+   usever => sub {
+     push @option_policies, 'Modules::ProhibitUseQuotedVersion';
+   },
    qrm => sub {
      push @option_policies, 'Compatibility::RegexpQrm';
+   },
+   gtk2 => sub {
+     push @option_policies, 'Modules::Gtk2Version';
    },
   );
 

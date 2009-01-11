@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008 Kevin Ryde
+# Copyright 2008, 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -33,7 +33,7 @@ my $critic = Perl::Critic->new
       'single policy ConstantBeforeLt');
 }
 
-my $want_version = 12;
+my $want_version = 13;
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= $want_version, 'VERSION variable');
 ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= $want_version, 'VERSION class method');
 Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION($want_version);

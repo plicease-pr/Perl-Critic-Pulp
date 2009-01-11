@@ -21,33 +21,34 @@ use strict;
 use warnings;
 use Perl6::Slurp;
 
-my @files = split /\n/, `locate \*.t \*.pm \*.pl`;
+my @files = ($0, split /\n/, `locate \*.t \*.pm \*.pl`);
 
 print scalar(@files),"\n";
 foreach my $filename (@files) {
   my $str = eval { Perl6::Slurp::slurp ($filename) }
     || do { # print "Cannot read $filename: $!\n";
-            next;
-          };
-  
-  while ($str =~ m%(qr([/].*?[/]
-                      |[|].*?[|]
-                      |'.*?'
-                      |!.*?!
-                      |[{].*?[}]
-                      |[(].*?[)]
-                      |<.*?>
-                      |\[.*?]
-                      )([a-z]*))%gsx) {
-    my $qr = $1;
-    my $mods = $3;
-    if ($mods =~ /m/ && $qr =~ /[\$^]/) {
-      my $pos = pos($str);
-      my $tmp = substr ($str, 0, $pos);
-      my $count = ($tmp =~ tr/\n//) + 1;
-      print "$filename:$count:1:  $qr\n";
-    }
+      next;
+    };
+
+  while ($str =~ /((use|no)[ \t]+
+                   [A-Za-z0-9_:]+[ \t]+
+                   (['"]|qq?.?])
+                   (v?[0-9][0-9.]*)
+                   ['"}][ \t]*
+                   ;.*
+                  )/gx) {
+    my $line = $1;
+    my $pos = pos($str);
+    # $3 =~ /[0-9]/ or next; # not '..' for use lib etc
+    my $tmp = substr ($str, 0, $pos);
+    my $count = ($tmp =~ tr/\n//) + 1;
+    print "$filename:$count:1:  $line\n";
   }
 }
 
-exit 0;
+__END__
+
+use foo '123';
+use Foo::Bar '123';
+{ no Foo::Bar '123'; }
+use foo 'v1.5';

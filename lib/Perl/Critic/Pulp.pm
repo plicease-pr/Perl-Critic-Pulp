@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 12;
+our $VERSION = 13;
 
 1;
 __END__
@@ -71,11 +71,37 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
 
 =back
 
-Roughly half are about bugs and half cosmetic.  You can always enable or
-disable the ones you do or don't want.  You'll have realized there's a lot
-of perlcritic builtin and add-on policies and they range from the sublime to
-the bizarre.  In some cases they're even mutually contradictory.  So it's
-quite normal to pick and choose what you want reported!
+Roughly half are bugs and half cosmetic.  You can always enable or disable
+the ones you do or don't want.  You'll have realized there's a lot of
+perlcritic builtin and add-on policies and they range from very helpful to
+very bizarre, and in some cases mutually contradictory.  So it's quite
+normal to pick and choose what you want reported.  If you're not turning off
+about 1 in 4 and customizing others then either you're not trying or you're
+much too easily lead!
+
+=head1 OTHER NOTES
+
+In a lot of the perlcritic docs, including the Pulp ones here, policy names
+appear without the full C<Perl::Critic::Policy::...> class name.  In Emacs
+have a look at C<man-completion.el> to automatically get the man page from a
+suffix part (at point), or C<ffap-perl-module.el> to go to the source.
+
+=over 4
+
+L<http://www.geocities.com/user42_kevin/man-completion/index.html>
+
+L<http://www.geocities.com/user42_kevin/ffap-perl-module/index.html>
+
+=back
+
+In perlcritic's output you can ask for %P for the full name.  Here's a good
+format for your F<.perlcriticrc>, including file:line:column: which Emacs
+recognises (see L<Perl::Critic::Violation> on the C<%> escapes).
+
+    verbose=%f:%l:%c:\n %P\n %m\n
+
+F<perlcritic.el> has patterns to match the builtin formats, but it's a lot
+easier to make perlcritic print file:line:column: in the first place.
 
 =head1 SEE ALSO
 
