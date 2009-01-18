@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 13;
+our $VERSION = 14;
 
 1;
 __END__

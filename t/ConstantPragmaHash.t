@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::ConstantPragmaHash;
-use Test::More tests => 106;
+use Test::More tests => 107;
 use Perl::Critic;
 
 my $single_policy = 'Compatibility::ConstantPragmaHash';
@@ -33,7 +33,7 @@ my $critic = Perl::Critic->new
       "single policy $single_policy");
 }
 
-my $want_version = 13;
+my $want_version = 14;
 ok ($Perl::Critic::Policy::Compatibility::ConstantPragmaHash::VERSION >= $want_version, 'VERSION variable');
 ok (Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION  >= $want_version, 'VERSION class method');
 Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION($want_version);
@@ -222,6 +222,8 @@ foreach my $data (
 
                   # this is a syntax error, but shouldn't tickle the policy
                   [ 0, 'use constant \'1.02\' { GG => 1, HH => 2};' ],
+
+                  [ 0, '1;' ]
 
                  ) {
   my ($want_count, $str) = @$data;

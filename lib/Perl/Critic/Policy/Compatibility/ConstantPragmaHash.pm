@@ -21,7 +21,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use version;
 
-our $VERSION = 13;
+our $VERSION = 14;
 
 use constant DEBUG => 0;
 
@@ -41,7 +41,8 @@ sub violates {
   my $perlver; # a "version" object
   my $modver;  # a "version" object
 
-  my $aref = $document->find ('PPI::Statement::Include');
+  my $aref = $document->find ('PPI::Statement::Include')
+    || return; # if no includes at all
   foreach my $inc (@$aref) {
 
     $inc->type eq 'use'

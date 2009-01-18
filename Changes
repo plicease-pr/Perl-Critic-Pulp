@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 14, January 2009
+    - fix for "ConstantPragmaHash" on document with no includes at all
+
 Version 13, January 2009
     - fix for location reported in "ConstantPragmaHash"
 

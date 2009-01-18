@@ -33,7 +33,7 @@ my $critic = Perl::Critic->new
       'single policy ConstantBeforeLt');
 }
 
-my $want_version = 13;
+my $want_version = 14;
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION >= $want_version, 'VERSION variable');
 ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION  >= $want_version, 'VERSION class method');
 Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION($want_version);

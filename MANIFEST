@@ -12,6 +12,9 @@ devel/const-noproto.pl
 devel/const-post.pl
 devel/empty.pl
 devel/gettext.pl
+devel/grep-qrm.pl
+devel/grep-t-print.sh
+devel/grep-use-quoted.pl
 devel/h2xs/PostModule.pm
 devel/h2xs/run.pl
 devel/h2xs/TestConstFoo.h
@@ -19,9 +22,7 @@ devel/not.sh
 devel/notwithcompare.pl
 devel/posix-user.pl
 devel/PosixUser.pm
-devel/qrmgrep.pl
 devel/TestAutoload.pm
-devel/use-quoted-grep.pl
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
