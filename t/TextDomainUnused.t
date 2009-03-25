@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+
+# Copyright 2008, 2009 Kevin Ryde
+
+# This file is part of Perl-Critic-Pulp.
+#
+# Perl-Critic-Pulp is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# Perl-Critic-Pulp is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
+
+
+use strict;
+use warnings;
+use Perl::Critic::Policy::Miscellanea::TextDomainUnused;
+use Test::More tests => 18;
+use Perl::Critic;
+
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => 'Miscellanea::TextDomainUnused');
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+     'single policy TextDomainUnused');
+}
+
+my $want_version = 15;
+ok ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION >= $want_version, 'VERSION variable');
+ok (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION  >= $want_version, 'VERSION class method');
+{
+  ok (eval { Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION($check_version); 1 }, "VERSION class check $check_version");
+}
+
+foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
+                  [ 1, "use Locale::TextDomain ('MyMessageDomain')" ],
+
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print __('hello')" ],
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print __x('hello')" ],
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print __n('hello','hellos')" ],
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print __xn('hello','hellos')" ],
+
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print N__('hello')" ],
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print N__n('hello','hellos')" ],
+
+                  # %__ hash
+                  [ 0, 'use Locale::TextDomain ("MyMessageDomain");
+                        print $__{hello};' ],
+
+                  [ 0, 'use Locale::TextDomain ("MyMessageDomain");
+                        print "$__{hello}";' ],
+                  [ 0, 'use Locale::TextDomain ("MyMessageDomain");
+                        print "<<< $__{hello} >>>";' ],
+
+                  # $__ hashref
+                  [ 0, 'use Locale::TextDomain ("MyMessageDomain");
+                        print $__->{hello};' ],
+                  [ 1, 'use Locale::TextDomain ("MyMessageDomain");
+                        print "$__X";' ],
+                  [ 0, 'use Locale::TextDomain ("MyMessageDomain");
+                        print "*** $__->{hello} ***";' ],
+
+                  ## use critic
+                 ) {
+  my ($want_count, $str) = @$data;
+
+  my @violations = $critic->critique (\$str);
+  foreach (@violations) {
+    diag ($_->description);
+  }
+  my $got_count = scalar @violations;
+  is ($got_count, $want_count, "str: $str");
+}
+
+exit 0;

@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 15, March 2009
+    - new policy "TextDomainUnused"
+
 Version 14, January 2009
     - fix for "ConstantPragmaHash" on document with no includes at all
 

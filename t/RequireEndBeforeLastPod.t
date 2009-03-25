@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod;
-use Test::More tests => 17;
+use Test::More tests => 19;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -32,10 +32,14 @@ my $critic = Perl::Critic->new
       'single policy RequireEndBeforeLastPod');
 }
 
-my $want_version = 14;
+my $want_version = 15;
 ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION >= $want_version, 'VERSION variable');
 ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION  >= $want_version, 'VERSION class method');
-Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION($want_version);
+{
+  ok (eval { Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION($check_version); 1 }, "VERSION class check $check_version");
+}
 
 
 # ^Z is equivalent to __END__, but don't exercise that because PPI 1.204

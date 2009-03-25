@@ -21,7 +21,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use version;
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 use constant DEBUG => 0;
 
@@ -300,6 +300,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses>.
+Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
 
 =cut

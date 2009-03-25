@@ -57,14 +57,17 @@ HERE
 sub MY::postamble {
   return <<'MAKE_FRAG';
 
-CHECKFILES = $(TO_INST_PM) t/*.t devel/churn.pl
+LINT_FILES = $(TO_INST_PM) t/*.t devel/churn.pl
 lint:
-	for i in $(CHECKFILES); do perl -MO=Lint $$i; done
-	podchecker    $(CHECKFILES)
+	for i in $(LINT_FILES); do perl -MO=Lint $$i; done
 pc:
-	perlcritic $(CHECKFILES)
+	-podchecker $(LINT_FILES)
+	perlcritic $(LINT_FILES)
 unused:
-	for i in $(LINT_FILES); do perl -Mwarnings::unused -I lib $$i; done
+	# FIXME: full run of *.t and churn.pl not wanted, just load the code
+	# ...
+	(for i in $(LINT_FILES); do perl -Mwarnings::unused -I lib $$i; done) \
+	  2>&1 | grep -v 'at /'
 
 myman:
 	mv MANIFEST MANIFEST.old
@@ -76,7 +79,7 @@ myman:
 copyright-years-check:
 	year=`date +%Y`; \
 	tar tvfz Perl-Critic-Pulp-$(VERSION).tar.gz \
-	| grep $$year- \
+	| egrep '$$year-|debian/copyright' \
 	| sed 's:^.*Perl-Critic-Pulp-$(VERSION)/::' \
 	| (result=0; \
 	  while read i; do \

@@ -33,6 +33,8 @@ This is some add-on policies for Perl::Critic,
 
 * TextDomainPlaceholders -- check args to __x and __nx
 
+* TextDomainUnused -- Locale::TextDomain imported but not used
+
 * UnexpandedSpecialLiteral -- using __PACKAGE__ etc unexpanded
 
 

@@ -26,6 +26,7 @@ devel/TestAutoload.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
+lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
@@ -34,6 +35,7 @@ lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 README
 SIGNATURE
 t/ConstantBeforeLt.t
@@ -44,5 +46,6 @@ t/ProhibitEmptyCommas.t
 t/ProhibitNullStatements.t
 t/RequireEndBeforeLastPod.t
 t/TextDomainPlaceholders.t
+t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t
 META.yml                                 Module meta-data (added by MakeMaker)

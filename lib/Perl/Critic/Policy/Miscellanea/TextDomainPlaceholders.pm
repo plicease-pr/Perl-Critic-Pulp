@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 use constant DEBUG => 0;
 
@@ -234,7 +234,8 @@ checked, since it could all match up fine at runtime.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>, L<Locale::TextDomain>
+L<Perl::Critic::Pulp>, L<Perl::Critic>, L<Locale::TextDomain>,
+L<Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
 =head1 HOME PAGE
 
@@ -255,6 +256,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses>.
+Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
 
 =cut

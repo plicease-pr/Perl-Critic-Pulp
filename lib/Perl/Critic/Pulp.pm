@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 1;
 __END__
@@ -65,6 +65,10 @@ See L<Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>.
 
 See L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>.
 
+=item TextDomainUnused -- Locale::TextDomain imported but not used
+
+See L<Perl::Critic::Policy::Miscellanea::TextDomainUnused>.
+
 =item UnexpandedSpecialLiteral -- literal use of __PACKAGE__ etc
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
@@ -76,8 +80,8 @@ the ones you do or don't want.  You'll have realized there's a lot of
 perlcritic builtin and add-on policies and they range from very helpful to
 very bizarre, and in some cases mutually contradictory.  So it's quite
 normal to pick and choose what you want reported.  If you're not turning off
-about 1 in 4 and customizing others then either you're not trying or you're
-much too easily lead!
+about a quarter and customizing others then either you're not trying or
+you're much too easily lead!
 
 =head1 OTHER NOTES
 
@@ -95,13 +99,13 @@ L<http://www.geocities.com/user42_kevin/ffap-perl-module/index.html>
 =back
 
 In perlcritic's output you can ask for %P for the full name.  Here's a good
-format for your F<.perlcriticrc>, including file:line:column: which Emacs
-recognises (see L<Perl::Critic::Violation> on the C<%> escapes).
+format you can put in F<.perlcriticrc> with a file:line:column: which Emacs
+will recognise (see L<Perl::Critic::Violation> on the C<%> escapes).
 
     verbose=%f:%l:%c:\n %P\n %m\n
 
-F<perlcritic.el> has patterns to match the builtin formats, but it's a lot
-easier to make perlcritic print file:line:column: in the first place.
+F<perlcritic.el> has patterns to match the perlcritic builtin formats, but
+it's much easier to have it print file:line:column: in the first place.
 
 =head1 SEE ALSO
 
@@ -126,6 +130,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses>.
+Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
 
 =cut

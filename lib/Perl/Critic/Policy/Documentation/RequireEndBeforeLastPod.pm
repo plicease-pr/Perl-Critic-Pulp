@@ -22,7 +22,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 14;
+our $VERSION = 15;
 
 sub supported_parameters { return; }
 sub default_severity { return $SEVERITY_LOWEST;  }
@@ -156,6 +156,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses>.
+Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
 
 =cut

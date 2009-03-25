@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
-use Test::More tests => 18;
+use Test::More tests => 20;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -32,11 +32,14 @@ my $critic = Perl::Critic->new
       'single policy ProhibitNullStatements');
 }
 
-my $want_version = 14;
+my $want_version = 15;
 ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION >= $want_version, 'VERSION variable');
 ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION  >= $want_version, 'VERSION class method');
-Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION($want_version);
-
+{
+  ok (eval { Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION($check_version); 1 }, "VERSION class check $check_version");
+}
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, ';' ],
