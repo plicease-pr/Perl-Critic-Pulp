@@ -19,6 +19,8 @@
 ~$
 # emacs locks
 (^|/)\.#
+# emacs autosave
+(^|/)#
 
 # own dists
 ^Perl-Critic
@@ -32,6 +34,7 @@
 ^Makefile$
 ^blib
 ^pm_to_blib
+^TAGS$
 
 # test build stuff
 devel/h2xs/TestConstFoo/
@@ -40,5 +43,5 @@ devel/h2xs/TestConstFoo/
 \.bak$
 ^backup
 ^misc
-dist-deb
 diff.tmp
+dist-deb

@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 16, April 2009
+    - new policy "ProhibitUseQuotedVersion"
+
 Version 15, March 2009
     - new policy "TextDomainUnused"
 

@@ -33,7 +33,7 @@ foreach my $filename (@files) {
   while ($str =~ /((use|no)[ \t]+
                     [A-Za-z0-9_:]+[ \t]+
                     (['"]|qq?.?])
-                    (v?[0-9][0-9.]*)
+                    (v?[0-9][0-9._e]*)
                     ['"}][ \t]*
                     ;.*
 

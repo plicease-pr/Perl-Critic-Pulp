@@ -35,11 +35,11 @@ my $critic = Perl::Critic->new
       'single policy ConstantBeforeLt');
 }
 
-my $want_version = 15;
-ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION
-    >= $want_version, 'VERSION variable');
-ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION
-    >= $want_version, 'VERSION class method');
+my $want_version = 16;
+cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION,
+        '>=', $want_version, 'VERSION variable');
+cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
+        '>=', $want_version, 'VERSION class method');
 {
   ok (eval { Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;

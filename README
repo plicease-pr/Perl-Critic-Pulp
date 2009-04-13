@@ -29,6 +29,8 @@ This is some add-on policies for Perl::Critic,
 
 * ProhibitNullStatements -- find stray semicolons
 
+* ProhibitUseQuotedVersion -- unquoted version string in use Foo '1.5'
+
 * RequireEndBeforeLastPod -- __END__ before POD at end of file
 
 * TextDomainPlaceholders -- check args to __x and __nx

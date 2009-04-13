@@ -43,8 +43,11 @@ WriteMakefile
                     'version' => 0,
                    },
    EXTRA_META => <<'HERE',
-recommends:
-    Test::Pod: 1.00
+optional_features:
+    maximum_tests:
+        description: Have "make test" do as much as possible.
+        requires:
+            Test::Pod: 1.00
 no_index:
     directory:
         - devel
@@ -64,9 +67,7 @@ pc:
 	-podchecker $(LINT_FILES)
 	perlcritic $(LINT_FILES)
 unused:
-	# FIXME: full run of *.t and churn.pl not wanted, just load the code
-	# ...
-	(for i in $(LINT_FILES); do perl -Mwarnings::unused -I lib $$i; done) \
+	(for i in $(LINT_FILES); do perl -c -Mwarnings::unused -I lib $$i; done) \
 	  2>&1 | grep -v 'at /'
 
 myman:

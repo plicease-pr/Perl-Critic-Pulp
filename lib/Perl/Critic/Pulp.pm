@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 15;
+our $VERSION = 16;
 
 1;
 __END__
@@ -32,7 +32,7 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 =head1 DESCRIPTION
 
 This is a collection of the following add-on policies for C<Perl::Critic>.
-They're under a new "pulp" theme, plus other themes according to their
+They're under a new "pulp" theme plus other themes according to their
 function (see L<Perl::Critic/POLICY THEMES>).
 
 =over 4
@@ -57,6 +57,10 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>.
 
 See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>.
 
+=item ProhibitUseQuotedVersion -- unquoted version string in C<use Foo '1.5'>
+
+See L<Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>.
+
 =item RequireEndBeforeLastPod -- __END__ before POD at end of file
 
 See L<Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>.
@@ -75,10 +79,10 @@ See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
 
 =back
 
-Roughly half are bugs and half cosmetic.  You can always enable or disable
-the ones you do or don't want.  You'll have realized there's a lot of
-perlcritic builtin and add-on policies and they range from very helpful to
-very bizarre, and in some cases mutually contradictory.  So it's quite
+Roughly half are about bugs and half cosmetic.  You can always enable or
+disable the ones you do or don't want.  You'll have realized there's a lot
+of perlcritic builtin and add-on policies and they range from very helpful
+to very bizarre, and in some cases mutually contradictory.  So it's quite
 normal to pick and choose what you want reported.  If you're not turning off
 about a quarter and customizing others then either you're not trying or
 you're much too easily lead!
@@ -88,7 +92,8 @@ you're much too easily lead!
 In a lot of the perlcritic docs, including the Pulp ones here, policy names
 appear without the full C<Perl::Critic::Policy::...> class name.  In Emacs
 have a look at C<man-completion.el> to automatically get the man page from a
-suffix part (at point), or C<ffap-perl-module.el> to go to the source.
+suffix part (at point), or C<ffap-perl-module.el> to go to the source
+similarly.
 
 =over 4
 
@@ -99,13 +104,13 @@ L<http://www.geocities.com/user42_kevin/ffap-perl-module/index.html>
 =back
 
 In perlcritic's output you can ask for %P for the full name.  Here's a good
-format you can put in F<.perlcriticrc> with a file:line:column: which Emacs
-will recognise (see L<Perl::Critic::Violation> on the C<%> escapes).
+format you can put in your F<.perlcriticrc> with a file:line:column: which
+Emacs will recognise (see L<Perl::Critic::Violation> for C<%> escapes).
 
     verbose=%f:%l:%c:\n %P\n %m\n
 
 F<perlcritic.el> has patterns to match the perlcritic builtin formats, but
-it's much easier to have it print file:line:column: in the first place.
+it's much easier to print file:line:column: in the first place.
 
 =head1 SEE ALSO
 

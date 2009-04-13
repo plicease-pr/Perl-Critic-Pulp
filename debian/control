@@ -27,7 +27,7 @@
 Source: libperl-critic-pulp-perl
 Section: perl
 Priority: optional
-Build-Depends: cdbs, debhelper (>= 4), libtest-more-perl | perl-modules (>= 5.6.2)
+Build-Depends: cdbs, debhelper (>= 5), libtest-more-perl | perl-modules (>= 5.6.2)
 Maintainer: Kevin Ryde <user42@zip.com.au>
 Standards-Version: 3.8.1
 Homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
@@ -44,6 +44,7 @@ Description: Some add-on policies for perlcritic
   * NotWithCompare -- avoiding problems with "! $x == $y"
   * ProhibitEmptyCommas -- consecutive commas
   * ProhibitNullStatements -- find stray semicolons
+  * ProhibitUseQuotedVersion -- unquoted version string in use Foo '1.5'
   * RequireEndBeforeLastPod -- __END__ before POD at end of file
   * TextDomainPlaceholders -- check args to __x and __nx
   * TextDomainUnused -- Locale::TextDomain imported but not used
