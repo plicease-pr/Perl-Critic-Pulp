@@ -71,7 +71,7 @@ unused:
 	  2>&1 | grep -v 'at /'
 
 myman:
-	mv MANIFEST MANIFEST.old
+	-mv MANIFEST MANIFEST.old
 	touch SIGNATURE
 	(make manifest 2>&1; diff -u MANIFEST.old MANIFEST) |less
 

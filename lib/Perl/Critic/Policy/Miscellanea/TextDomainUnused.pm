@@ -24,7 +24,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities
                            is_function_call);
 
-our $VERSION = 16;
+our $VERSION = 17;
 
 use constant DEBUG => 0;
 
@@ -58,14 +58,16 @@ sub _find_use_locale_textdomain {
                              } @$aref;
 }
 
-my %funcs = (__   => 1,
-             __n  => 1,
-             __nx => 1,
-             __x  => 1,
-             __xn => 1,
-             N__  => 1,
-             N__n => 1);
-# and also as full "Locale::TextDomain::..."
+
+# The following qw() copied from @Locale::TextDomain::EXPORT of libintl-perl
+# 1.18, with $__ %__ moved to %vars below.  __p and friends are new in 1.17,
+# but no need to check that.
+#
+my %funcs = map {($_=>1)}
+  qw(__ __x __n __nx __xn __p __px __np __npx
+     N__ N__n N__p N__np);
+
+# and also as full names "Locale::TextDomain::__"
 foreach (keys %funcs) {
   $funcs{"Locale::TextDomain::$_"} = 1;
 }
@@ -111,33 +113,35 @@ Perl::Critic::Policy::Miscellanea::TextDomainUnused - check for Locale::TextDoma
 =head1 DESCRIPTION
 
 This policy is part of the Perl::Critic::Pulp addon.  It reports when you
-include L<C<Locale::TextDomain>|Locale::TextDomain> like
+have L<C<Locale::TextDomain>|Locale::TextDomain> like
 
     use Locale::TextDomain ('MyMessageDomain');
 
-but then don't use one of its functions or variables
+but then don't use any of its functions or variables
 
-    __ __n __nx __x __xn
-    N__ N__n
+    __ __x __n __nx __xn
+    __p __px __np __npx
+    N__ N__n N__p N__np
     %__ $__
 
-C<Locale::TextDomain> is unnecessary in that case, but it's also not
+C<Locale::TextDomain> is not needed when not used, but it's also not
 actively harmful so this policy is only low priority and under the
 C<cosmetic> theme (see L<Perl::Critic/POLICY THEMES>).
 
 The check is good if you've got C<Locale::TextDomain> as boilerplate code in
-most of your program, but in some modules it's not used.  You might want to
-remove it entirely from non-interactive modules, or comment it out from
-modules which might have messages but don't yet.  The best thing picked up
-is when your boilerplate has got into a programmatic module which shouldn't
-say anything at the user level.
+most of your program, but in some modules it's unused.  You can remove it
+entirely from non-interactive modules, or comment it out from modules which
+might have messages but don't yet.  The best thing picked up is when your
+boilerplate has got into a programmatic module which shouldn't say anything
+at the user level.
 
 The saving from removing unused C<Locale::TextDomain> is modest, just some
-imports and a hash entry recording the textdomain for the package.  It's
-easy to imagine a general kind of "module imported but unused", but in
-practice its hard for perlcritic to know the automatic imports of every
-module, and quite a few modules have side-effects, so this TextDomainUnused
-just starts with one case of an unused include.
+imports and a hash entry holding the "textdomain" for the package.
+
+It's easy to imagine a general kind of "module imported but unused" policy
+check, but in practice its hard for perlcritic to know the automatic imports
+of every module, and quite a few modules have side-effects, so this
+TextDomainUnused policy just starts with one case of an unused include.
 
 =head2 Interpolated Variables
 

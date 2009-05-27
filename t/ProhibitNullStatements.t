@@ -32,7 +32,7 @@ my $critic = Perl::Critic->new
       'single policy ProhibitNullStatements');
 }
 
-my $want_version = 16;
+my $want_version = 17;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION,  '>=', $want_version, 'VERSION class method');
 {

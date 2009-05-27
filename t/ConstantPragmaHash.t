@@ -35,7 +35,7 @@ my $critic = Perl::Critic->new
       "single policy $single_policy");
 }
 
-my $want_version = 16;
+my $want_version = 17;
 cmp_ok ($Perl::Critic::Policy::Compatibility::ConstantPragmaHash::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION,

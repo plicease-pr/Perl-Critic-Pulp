@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Miscellanea::TextDomainUnused;
-use Test::More tests => 18;
+use Test::More tests => 19;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -32,7 +32,7 @@ my $critic = Perl::Critic->new
       'single policy TextDomainUnused');
 }
 
-my $want_version = 16;
+my $want_version = 17;
 cmp_ok ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,
@@ -55,6 +55,8 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                         print __n('hello','hellos')" ],
                   [ 0, "use Locale::TextDomain ('MyMessageDomain');
                         print __xn('hello','hellos')" ],
+                  [ 0, "use Locale::TextDomain ('MyMessageDomain');
+                        print __p('context','hello')" ],
 
                   [ 0, "use Locale::TextDomain ('MyMessageDomain');
                         print N__('hello')" ],

@@ -21,7 +21,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use version;
 
-our $VERSION = 16;
+our $VERSION = 17;
 
 use constant DEBUG => 0;
 

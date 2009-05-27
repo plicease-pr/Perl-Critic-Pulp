@@ -20,7 +20,7 @@ package Perl::Critic::Pulp;
 use strict;
 use warnings;
 
-our $VERSION = 16;
+our $VERSION = 17;
 
 1;
 __END__
@@ -37,62 +37,62 @@ function (see L<Perl::Critic/POLICY THEMES>).
 
 =over 4
 
-=item ConstantBeforeLt -- avoiding problems with C<< FOO < 123 >>
+=item L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
 
-See L<Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>.
+Avoiding problems with C<< FOO < 123 >>
 
-=item ConstantPragmaHash -- version declaration for hash style multi-constants
+=item L<Perl::Critic::Policy::Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>
 
-See L<Perl::Critic::Policy::Compatibility::ConstantPragmaHash>.
+Version declaration for hash style multi-constants.
 
-=item NotWithCompare -- avoiding problems with C<! $x == $y>
+=item L<Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare|Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>
 
-See L<Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>.
+Avoiding problems with C<! $x == $y>
 
-=item ProhibitEmptyCommas -- stray consecutive commas
+=item L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas|Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>
 
-See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>.
+Stray consecutive commas.
 
-=item ProhibitNullStatements -- stray semicolons
+=item L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements|Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>
 
-See L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>.
+Stray semicolons.
 
-=item ProhibitUseQuotedVersion -- unquoted version string in C<use Foo '1.5'>
+=item L<Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
 
-See L<Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>.
+Unquoted version string in C<use Foo '1.5'>
 
-=item RequireEndBeforeLastPod -- __END__ before POD at end of file
+=item L<Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod|Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 
-See L<Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>.
+__END__ before POD at end of file.
 
-=item TextDomainPlaceholders -- check args to C<__x> and C<__nx>
+=item L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 
-See L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>.
+Check args to C<__x> and C<__nx>.
 
-=item TextDomainUnused -- Locale::TextDomain imported but not used
+=item L<Perl::Critic::Policy::Miscellanea::TextDomainUnused|Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
-See L<Perl::Critic::Policy::Miscellanea::TextDomainUnused>.
+Locale::TextDomain imported but not used.
 
-=item UnexpandedSpecialLiteral -- literal use of __PACKAGE__ etc
+=item L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral|Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>
 
-See L<Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>.
+Literal use of __PACKAGE__ etc.
 
 =back
 
 Roughly half are about bugs and half cosmetic.  You can always enable or
 disable the ones you do or don't want.  You'll have realized there's a lot
-of perlcritic builtin and add-on policies and they range from very helpful
-to very bizarre, and in some cases mutually contradictory.  So it's quite
-normal to pick and choose what you want reported.  If you're not turning off
-about a quarter and customizing others then either you're not trying or
-you're much too easily lead!
+of perlcritic builtin and add-on policies and they range from helpful to
+bizarre, and in some cases mutually contradictory.  So it's quite normal to
+pick and choose what you want reported.  If you're not turning off about a
+quarter and customizing others then either you're not trying or you're much
+too easily lead!
 
 =head1 OTHER NOTES
 
 In a lot of the perlcritic docs, including the Pulp ones here, policy names
 appear without the full C<Perl::Critic::Policy::...> class name.  In Emacs
-have a look at C<man-completion.el> to automatically get the man page from a
-suffix part (at point), or C<ffap-perl-module.el> to go to the source
+have a look at my C<man-completion.el> to automatically get the man page
+from a suffix part (at point), or C<ffap-perl-module.el> to go to the source
 similarly.
 
 =over 4
@@ -110,7 +110,7 @@ Emacs will recognise (see L<Perl::Critic::Violation> for C<%> escapes).
     verbose=%f:%l:%c:\n %P\n %m\n
 
 F<perlcritic.el> has patterns to match the perlcritic builtin formats, but
-it's much easier to print file:line:column: in the first place.
+it's easier to print file:line:column: in the first place.
 
 =head1 SEE ALSO
 

@@ -22,7 +22,7 @@ use Perl::Critic::Utils qw(:severities);
 use Perl::Critic::Utils::PPIRegexp qw(get_modifiers);
 use version;
 
-our $VERSION = 16;
+our $VERSION = 17;
 
 use constant DEBUG => 0;
 

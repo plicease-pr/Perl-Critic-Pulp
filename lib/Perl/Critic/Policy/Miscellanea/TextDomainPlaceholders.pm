@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 16;
+our $VERSION = 17;
 
 use constant DEBUG => 0;
 

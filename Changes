@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 17, May 2009
+    - TextDomainUnused recognise __p() etc new in libintl-perl 1.17,
+      as advised by Guido Flohr
+
 Version 16, April 2009
     - new policy "ProhibitUseQuotedVersion"
 
