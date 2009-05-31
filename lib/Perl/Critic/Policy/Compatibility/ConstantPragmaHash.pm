@@ -20,8 +20,9 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use version;
+use Perl::Critic::Pulp;
 
-our $VERSION = 17;
+our $VERSION = 18;
 
 use constant DEBUG => 0;
 
@@ -65,7 +66,7 @@ sub violates {
 
     ($inc->module||'') eq 'constant' || next;
 
-    if (my $ver = _include_module_version ($inc)) {
+    if (my $ver = Perl::Critic::Pulp::include_module_version ($inc)) {
       $ver = version->new ($ver);
       if (! defined $modver || $ver > $modver) {
         $modver = $ver;
@@ -120,64 +121,12 @@ sub violates {
 #
 sub _use_constant_is_multi {
   my ($inc) = @_;
-  my $arg = _include_module_first_arg ($inc)
+  my $arg = Perl::Critic::Pulp::include_module_first_arg ($inc)
     || return 0; # empty "use constant" or version "use constant 1.05"
   return ($arg->isa('PPI::Structure::Constructor') # without version number
           || $arg->isa('PPI::Structure::Block'));  # with version number
 }
 
-
-# $inc is a PPI::Statement::Include.
-# If it has a version number for a module "use" or "no" then return that
-# element.  As of PPI 1.203 there's no v-number parsing, so the version
-# element is always a PPI::Token::Number.
-#
-# A "require" is treated the same as "use" and "no", though a module version
-# number like "require Foo::Bar 1.5" is actually a syntax error.
-#
-# A module version is a literal number following the module name, with
-# either nothing else after it, or with no comma for the arglist.
-#
-sub _include_module_version {
-  my ($inc) = @_;
-  defined ($inc->module) || return undef;
-  my $ver = $inc->schild(2) || return undef;
-  $ver->isa('PPI::Token::Number') || return undef;
-  my $after = $ver->snext_sibling;
-  if ($after
-      && $after->isa('PPI::Token::Operator')
-      && ($after eq ',' || $after eq '=>')) {
-    return undef;
-  }
-  return $ver;
-}
-
-# $inc is a PPI::Statement::Include.
-# Return the element which is the start of the first argument to its "use"
-# import or "no" unimport.
-#
-# A "require" is treated the same as "use" and "no", though arguments to it
-# like "require Foo::Bar '-init';" is in fact a syntax error.
-#
-sub _include_module_first_arg {
-  my ($inc) = @_;
-  defined ($inc->module) || return undef;
-  my $arg;
-  if (my $ver = _include_module_version ($inc)) {
-    $arg = $ver->snext_sibling;
-  } else {
-    # eg. "use Foo 'xxx'"
-    $arg = $inc->schild(2);
-  }
-  # don't return terminating ";"
-  if ($arg
-      && $arg->isa('PPI::Token::Structure')
-      && $arg->content eq ';'
-      && ! $arg->snext_sibling) {
-    return undef;
-  }
-  return $arg;
-}
 
 # return true if $elem is somewhere within a BEGIN block
 sub _in_BEGIN {

@@ -15,15 +15,15 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 8624bcdae55baeef00cd11d5dfcfa60f68710a02 COPYING
-SHA1 2c342f2ffd8fcb655c6642b5bbcba500f78878a0 Changes
-SHA1 a16dc4f1735f7c80b284b84216c1e21896f37971 MANIFEST
+SHA1 7aad887647e4f6ae50228442231b962f0bd0f7ec Changes
+SHA1 93886f78d6b29666963f310a24739402a4c7e40a MANIFEST
 SHA1 0d10fabae7e07d597be877b7d0258bc5a70a9e80 MANIFEST.SKIP
-SHA1 7c7044bc2a3a1cbcbe3f818db5b37192c86d0e26 META.yml
-SHA1 11e54ff4118efeeaea420b204bda115e8cd4ac76 Makefile.PL
-SHA1 8bf964da0d33c734b1b5332733e467dbf7ac9e44 README
-SHA1 d86b20388ccd0932a763a8088251d277a2cf7a74 debian/changelog
+SHA1 2324d232755cd0d457f42e6877dd72722cda9740 META.yml
+SHA1 e5daa1689d26bbb438bbf5cec3963b4e93139625 Makefile.PL
+SHA1 070ac99aa30001f231700b17e687f2dacd412110 README
+SHA1 ac628048c0b00e3fef5e1ac97d7f13359e508338 debian/changelog
 SHA1 ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4 debian/compat
-SHA1 be9b617cdf01a2c9e4769ff2ac1f9d47ef10c794 debian/control
+SHA1 cd4c010b28f60e5b8cf20768ba6d8467c4ac4239 debian/control
 SHA1 cb5a84cfac3d978bbbd8d24251b23b1072916d66 debian/copyright
 SHA1 f5bdfcd6c87dd9d2849bc43a38982a6e89574e06 debian/rules
 SHA1 1dd497a9bb3515250912c1fc37a72f1540fcc70f debian/watch
@@ -37,6 +37,7 @@ SHA1 55aec463687e0cdf4bb3c3b0938633397c1999ca devel/empty.pl
 SHA1 206c5a5f07120dcb9c4ee62fa6c281811a0f3258 devel/gettext.pl
 SHA1 90750b5f52a908e74bad07feca349ccdd53374b2 devel/grep-qrm.pl
 SHA1 9768f1ca3537ff02d66b6e167e8384c6c338c28c devel/grep-t-print.sh
+SHA1 3a466a431e7c146a65fcc22ba4e85b5602091015 devel/grep-use-decimal.pl
 SHA1 94226b2b5d2e4c5fe0e7e2de3b483553b9d55c6b devel/grep-use-quoted.pl
 SHA1 0e453f6f56e78b2323979a862dd04bd994db1f07 devel/h2xs/PostModule.pm
 SHA1 22458070ae218f32f053c3848967cdf11d4d561d devel/h2xs/TestConstFoo.h
@@ -44,32 +45,38 @@ SHA1 3fff3f663aaed32db68f89acdc426aa1253f773a devel/h2xs/run.pl
 SHA1 2c111233ff0e6f4153f485affe31f3d5bafce7ea devel/not.sh
 SHA1 c8346b137e5b505eb8be49e046bce328faa15125 devel/notwithcompare.pl
 SHA1 98bffd3d730b181904693a3f930ddce6572835b9 devel/posix-user.pl
-SHA1 f7fc37302be02005c3e5c1821494ec55ce541756 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
-SHA1 b605b58b306b3728dbea9aed4e038677f57dffd0 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
-SHA1 798b0b69f6d35433ea17b4e5cb2ad86dc6aea63f lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
-SHA1 74aa4c6e5de039e249f86bfd7739e3a50a4d8b33 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
-SHA1 e9ea9dfd89ccec045017c8abe28f8590b0506352 lib/Perl/Critic/Policy/Modules/ProhibitUseQuotedVersion.pm
-SHA1 e7e2d6ae5f36b2fccee08849b09abe89f132025a lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
-SHA1 7caf83ecc96b178eb383b07462fd1faa8898e411 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
-SHA1 f7b74646783f01bc659dbb48174e1f796051680f lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
-SHA1 2bc728b68a1d57a4915f5e40765a5b366c0909a6 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
-SHA1 dc6381f981482453cfd4b68ca9f92b87525c26c1 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
-SHA1 444816d8dd74662e19fe8264a5aaad3518124285 lib/Perl/Critic/Pulp.pm
-SHA1 dac4e2924965e5911c60a2218afaaedf4533cb24 t/ConstantBeforeLt.t
-SHA1 2a9fdf20b9ac51157d81aa9197b7fb0e1165aae6 t/ConstantPragmaHash.t
-SHA1 d5c59b80eb073d7f2089535bd79a2b198a60599c t/NotWithCompare.t
-SHA1 725312932142d21d9820a800971562c2cdb623e6 t/ProhibitEmptyCommas.t
-SHA1 6c841fed370c5621fe9789d0bc6c5a1a371d8fe0 t/ProhibitNullStatements.t
-SHA1 835ddd9d06f7dc942827e5c07bb2090fa780573b t/ProhibitUseQuotedVersion.t
-SHA1 a922383ae6977767b79ce2363496958b072fc66a t/RequireEndBeforeLastPod.t
-SHA1 7364d8b710d3b0bcf41698877f33e3bcd340856e t/TextDomainPlaceholders.t
-SHA1 d38da4595b459787abeb24c21e38f0b5945be57f t/TextDomainUnused.t
-SHA1 2b2a9703fff2f2f515b9a413d7bd4503e6019e0a t/UnexpandedSpecialLiteral.t
-SHA1 a661a39e55a4127aecb1b97a631c4f01f7dce8c6 t/pod.t
+SHA1 3fa5c18973e103e7082538e9c5b6ac13ee842f4d devel/use-quoted.pl
+SHA1 3fd16f1f2e58dc37b5dc8ee8b03972c54ea06584 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
+SHA1 912a8b26b6acbdac0dfdb744e5866429de641010 lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
+SHA1 69ab2f16fc7215a1ba13edad97b0dfb8cf33409f lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
+SHA1 fe9c0655ba73740fac6b220c2cd2e6cce94722a4 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
+SHA1 d87c2b3e7a01d59464a4d2ceb61438316f5a462f lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
+SHA1 0ac25697761a2624eb181a99a2581b64bbc9aef9 lib/Perl/Critic/Policy/Modules/ProhibitUseQuotedVersion.pm
+SHA1 a52a58727b9511b41170dc65072b7f52fbfba770 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
+SHA1 2b3157ec1e8bb375f5de64ba86e2fc9fa4625714 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
+SHA1 4d1212232f095d552f37d9b4be4e16aa7a7b9827 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
+SHA1 f209a5d324e0355af9252d5bde1c9ab9347dcdc1 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+SHA1 ce39d26695cc8245243be3f87b20ad8b3ca95ab9 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
+SHA1 64d0264c9f08a3522dbd08ee10dd54789296b0f6 lib/Perl/Critic/Pulp.pm
+SHA1 113ebd42b2534387c7026f33c3f2a91bab83713b t/0-META-read.t
+SHA1 c2d28b665a07a9afb22d4736ae038a0a81701b51 t/0-Test-Pod.t
+SHA1 1ca294949007397f7928e494900d203365bb41f6 t/0-Test-YAML-Meta.t
+SHA1 80329b6bbdb9c8c319ac4fc2c2d45dce5346302b t/ConstantBeforeLt.t
+SHA1 0eec41c8106848977be2f7649ec372b0d5d8b3bb t/ConstantPragmaHash.t
+SHA1 01dba47b89d41385309145f4b489bfde8f4caef5 t/Gtk2Constants.t
+SHA1 7ca936d9a8bf1dd2f42fe29759ac4d3e248d9944 t/NotWithCompare.t
+SHA1 e2988edae9ab6cf296d95ba7b14674feb0a60e05 t/ProhibitEmptyCommas.t
+SHA1 69fcdaef8627a74d9662c8ceea1f1e86293c958f t/ProhibitNullStatements.t
+SHA1 04fe73b8d468a237e8dc65d3768825d9720ab34c t/ProhibitUseQuotedVersion.t
+SHA1 a319c87539474434e53569efa17cfa7b37191a9f t/Pulp.t
+SHA1 dcf0770eeb1b2c475c971daade1a48791a3d4887 t/RequireEndBeforeLastPod.t
+SHA1 421e644a3baaa164f39a04d6afa0c341cfe60796 t/TextDomainPlaceholders.t
+SHA1 3e8d66a893dc83f7297ff3023aea1f259966589f t/TextDomainUnused.t
+SHA1 5face3a65c80d078e946a856bed3fac8171218b2 t/UnexpandedSpecialLiteral.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iD8DBQFKHI1XLFMCIV9q3ToRAuT0AJ9RgxEZwjMemGMSIhBgb6LT1vHRNQCgmt4x
-GxC3h58dMGE5ne4nf5o/GPA=
-=Xfyc
+iD8DBQFKIwNXLFMCIV9q3ToRAnAQAKCGSfk9b21TdjS1DVNWaO6+WpgVlwCff7HD
+qaInTUcmKC8L44cPIvmFdxg=
+=FVPx
 -----END PGP SIGNATURE-----

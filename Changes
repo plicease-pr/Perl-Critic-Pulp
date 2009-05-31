@@ -16,45 +16,51 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 18, June 2009
+    - Gtk2Constants -- new policy
+    - TextDomainPlaceholders -- check __px() and __npx(), and try to
+      notice a missing count arg in __nx(), __xn() and __npx()
+
 Version 17, May 2009
-    - TextDomainUnused recognise __p() etc new in libintl-perl 1.17,
-      as advised by Guido Flohr
+    - TextDomainUnused -- recognise __p() etc new in libintl-perl
+      1.17, as advised by Guido Flohr
 
 Version 16, April 2009
-    - new policy "ProhibitUseQuotedVersion"
+    - ProhibitUseQuotedVersion -- new policy
 
 Version 15, March 2009
-    - new policy "TextDomainUnused"
+    - TextDomainUnused -- new policy
 
 Version 14, January 2009
-    - fix for "ConstantPragmaHash" on document with no includes at all
+    - ConstantPragmaHash -- fix for document with no includes at all
 
 Version 13, January 2009
-    - fix for location reported in "ConstantPragmaHash"
+    - ConstantPragmaHash -- fix location reported
 
 Version 12, January 2009
-    - new policy "ConstantPragmaHash"
+    - ConstantPragmaHash -- new policy
 
 Version 11, December 2008
     - oops, in the tests PPI 1.203 doesn't like an empty document
 
 Version 10, December 2008
-    - new policy "RequireEndBeforeLastPod"
+    - RequireEndBeforeLastPod -- new policy
 
 Version 9, December 2008
-    - new policy "ProhibitEmptyCommas"
+    - ProhibitEmptyCommas --new policy
 
 Version 8, October 2008
-    - call it "UnexpandedSpecialLiteral" for clarity
+    - UnexpandedSpecialLiteral -- rename LiteralSpecialLiteral, for
+      clarity
 
 Version 7, August 2008
-    - new policy "LiteralSpecialLiteral"
+    - LiteralSpecialLiteral -- new policy
 
 Version 6, August 2008
-    - new policy "TextDomainPlaceholders"
+    - TextDomainPlaceholders -- new policy
 
 Version 5, July 2008
-    - new policy "NotWithCompare"
+    - NotWithCompare -- new policy
 
 Version 4, July 2008
     - another go at the CPAN indexing
@@ -63,8 +69,8 @@ Version 3, July 2008
     - fixes for CPAN indexing
 
 Version 2, July 2008
-    - add a toplevel Perl::Critic::Pulp module
-    - "ConstantBeforeLt" depends on prototyping, not perl version
+    - Perl::Critic::Pulp -- new toplevel module
+    - ConstantBeforeLt -- depends on prototyping, not perl version
 
 Version 1, June 2008
     - the first version

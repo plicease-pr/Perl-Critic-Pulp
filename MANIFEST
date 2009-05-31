@@ -14,6 +14,7 @@ devel/empty.pl
 devel/gettext.pl
 devel/grep-qrm.pl
 devel/grep-t-print.sh
+devel/grep-use-decimal.pl
 devel/grep-use-quoted.pl
 devel/h2xs/PostModule.pm
 devel/h2xs/run.pl
@@ -23,7 +24,9 @@ devel/notwithcompare.pl
 devel/posix-user.pl
 devel/PosixUser.pm
 devel/TestAutoload.pm
+devel/use-quoted.pl
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
+lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
@@ -39,13 +42,17 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 SIGNATURE
+t/0-META-read.t
+t/0-Test-Pod.t
+t/0-Test-YAML-Meta.t
 t/ConstantBeforeLt.t
 t/ConstantPragmaHash.t
+t/Gtk2Constants.t
 t/NotWithCompare.t
-t/pod.t
 t/ProhibitEmptyCommas.t
 t/ProhibitNullStatements.t
 t/ProhibitUseQuotedVersion.t
+t/Pulp.t
 t/RequireEndBeforeLastPod.t
 t/TextDomainPlaceholders.t
 t/TextDomainUnused.t

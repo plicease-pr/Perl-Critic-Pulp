@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
-use Test::More tests => 25;
+use Test::More tests => 53;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -32,7 +32,7 @@ my $critic = Perl::Critic->new
       'single policy TextDomainPlaceholders');
 }
 
-my $want_version = 17;
+my $want_version = 18;
 cmp_ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,
@@ -44,7 +44,31 @@ cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,
 }
 
 
+#-----------------------------------------------------------------------------
+# string_any_vars()
+
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
+                  [ '', 0 ],
+                  [ 'foo', 0 ],
+                  [ '$foo', 1 ],
+                  [ '\\$foo', 0 ],
+                  [ '\\\\$foo', 1 ],
+
+                  [ 'zz @foo', 1 ],
+                  [ 'zz \\@foo', 0 ],
+                  [ 'zz \\\\@foo', 1 ],
+
+                 ) {
+  my ($str, $want) = @$data;
+
+  my $got = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::string_any_vars($str) ? 1 : 0;
+  is ($got, $want, "str: \"$str\"");
+}
+
+#-----------------------------------------------------------------------------
+
+foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
                   [ 0, '__x("")' ],
                   [ 0, '__x(\'\')' ],
                   [ 0, '__x(\'{foo}\', foo => 123)' ],
@@ -56,7 +80,14 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 2, '__x(\'{foo}\', bar => 123)' ],
 
                   [ 1, '__x(\'$x\', foo => 123)' ],
+
+                  # $x in the format is an interpolation, can't be sure foo
+                  # arg is unused; but backslashed $ is not an interpolation
+                  # and can tell unused
                   [ 0, '__x("$x", foo => 123)' ],
+                  [ 1, '__x("\\$x", foo => 123)' ],
+                  [ 0, '__x("\\\\$x", foo => 123)' ],
+                  [ 1, '__x("\\\\\\$x", foo => 123)' ],
 
                   [ 0, '__x(\'{foo}\', $x => 123)' ],
                   [ 1, '__x(\'{foo}\', $x => 123, bar => 456)' ],
@@ -65,14 +96,14 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
 {foo}
 HERE' ],
                   [ 1, '__x(<<HERE, foo => 123)
-{foo} {bar}
+  {foo} {bar}
 HERE' ],
                   [ 0, '__x(<<HERE, foo => 123)
-$x
-HERE' ],
+  $x
+  HERE' ],
                   [ 1, '__x(<<\'HERE\', foo => 123)
-$x
-HERE' ],
+  $x
+  HERE' ],
 
                   [ 0, '__x(\'{foo}\' . \'{bar}\',
                             foo => 123, bar => 456)' ],
@@ -80,6 +111,33 @@ HERE' ],
                   [ 1, 'Locale::TextDomain::__x(\'{foo}\')' ],
                   [ 0, '__x(\'{foo}\', @args)' ],
                   [ 1, '__x(\'{foo}\', bar => 123, @args)' ],
+
+                  [ 0, '__nx(\'{foo}\', \'{foo}s\', $n, foo => 123)' ],
+                  [ 0, '__nx(\'{foo}\', \'{foo}s\', $n, "foo", $foo)' ],
+                  [ 1, '__nx(\'{foo}\', \'{bar}\',  $n, foo => 123)' ],
+                  [ 2, '__nx(\'{foo}\', \'{bar}\',  $n)' ],
+                  [ 3, '__nx(\'{foo}\', \'{bar}\',  $n, quux => 123)' ],
+
+                  # forgotten count argument
+                  [ 3, '__nx(\'{foo}\', \'{foo}s\')' ],
+                  [ 1, '__nx(\'{foo}\', \'{foo}s\', foo=>$foo)' ],
+                  [ 1, '__nx(\'{foo}\', \'{foo}s\', foo=>$foo, bar=>$bar)' ],
+                  [ 4, '__nx(\'{foo}\', \'{foo}s\', foo => 123)' ],
+                  [ 5, '__nx(\'{foo}\', \'{foo}s\', foo => 123, bar => 456)' ],
+                  # from the POD
+                  [ 3, "print __nx('Read one file',
+                                   'Read {numfiles} files',
+                                   numfiles => 123);     # bad" ],
+
+                  [ 0, '__xn(\'{foo}\', \'{foo}s\', $n, foo => 123)' ],
+                  [ 3, '__xn(\'{foo}\', \'{foo}s\')' ],
+
+                  [ 0, '__px(\'context\', \'{foo}\', foo => 123)' ],
+                  [ 1, '__px(\'context\', \'{foo}\')' ],
+
+                  [ 0, '__npx(\'context\', \'{foo}\', \'{foo}s\',
+                              $n, foo => 123)' ],
+                  [ 3, '__npx(\'context\', \'{foo}\', \'{foo}s\')' ],
 
                  ) {
   my ($want_count, $str) = @$data;

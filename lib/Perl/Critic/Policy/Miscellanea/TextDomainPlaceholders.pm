@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 17;
+our $VERSION = 18;
 
 use constant DEBUG => 0;
 
@@ -34,76 +34,109 @@ sub default_severity { return $SEVERITY_MEDIUM;   }
 sub default_themes   { return qw(pulp bugs);      }
 sub applies_to       { return 'PPI::Token::Word'; }
 
-my %funcs = (__x  => [ 1, 0 ],
-             __nx => [ 2, 1 ],
-             __xn => [ 2, 1 ],
+my %funcs = (__x   => 1,
+             __nx  => 1,
+             __xn  => 1,
 
-             # the same with fully qualified names
-             'Locale::TextDomain::__x'  => [ 1, 0 ],
-             'Locale::TextDomain::__nx' => [ 2, 1 ],
-             'Locale::TextDomain::__xn' => [ 2, 1 ]);
+             __px  => 1,
+             __npx => 1);
 
 sub violates {
   my ($self, $elem, $document) = @_;
 
-  my $settings = $funcs{"$elem"} || return;
-  my ($format_count, $skip_count) = @$settings;
+  my $funcname = $elem->content;
+  $funcname =~ s/^Locale::TextDomain:://;
+  my $funcinfo = $funcs{$funcname} || return;
   if (DEBUG) { print "TextDomainPlaceholders $elem\n"; }
+  my @violations;
 
+  # The arg crunching bits assume one parsed expression results in one arg,
+  # which is not true if the expressions are an array, a hash, or a function
+  # call returning multiple values.  The one-arg-one-value assumption is
+  # reasonable on the whole though.
+  #
+  # In the worst case you'd have to take any function call value part like
+  # "foo => FOO()" to perhaps return multiple values -- which would
+  # completely defeat testing of normal cases, so don't want to do that.
+  #
+  # ENHANCE-ME: One bit that could be done though is to recognise a %foo arg
+  # as giving an even number of values, so keyword checking could continue
+  # past it.
+
+  # each element of @args is an arrayref containing PPI elements making up
+  # the arg
   my @args = parse_arg_list ($elem);
   if (DEBUG) { print "  got total ",scalar(@args)," args\n"; }
 
-  my @formats = splice @args, 0, $format_count;
-  splice @args, 0, $skip_count;
-  if (DEBUG) { print "  got ",scalar(@args)," data args\n"; }
-
-  my $format_any_vars;
-  foreach my $format (@formats) {
-    my $any_vars;
-    ($format, $any_vars) = _arg_string ($format);
-    $format_any_vars ||= $any_vars;
+  if ($funcname =~ /p/) {
+    # msgctxt context arg to __p, __npx
+    shift @args;
   }
 
-  my $arg_any_vars = 0;
+  # one format to __x, two to __nx and other "n" funcs
+  my @format_args = splice @args, 0, ($funcname =~ /n/ ? 2 : 1);
+
+  if ($funcname =~ /n/) {
+    # count arg to __nx and other "n" funcs
+    my $count_arg = shift @args;
+    if (! $count_arg
+        || do {
+          # if it looks like a keyword symbol foo=> or 'foo' etc
+          my ($str, $any_vars) = _arg_word_or_string ($count_arg);
+          ($str =~ /^[a-zA-Z0-9_]+$/ && ! $any_vars)
+        }) {
+      push @violations, $self->violation
+        ("Probably missing 'count' argument to $funcname",
+         '',
+         $count_arg->[0] || $elem);
+    }
+  }
+
+  if (DEBUG) { print "  got ",scalar(@args)," data args\n"; }
+
+  my $args_any_vars = 0;
   my %arg_keys;
   while (@args) {
     my $arg = shift @args;
     my ($str, $any_vars) = _arg_word_or_string ($arg);
-    $arg_any_vars ||= $any_vars;
-    if (DEBUG) { print "  arg '$str'\n"; }
+    $args_any_vars ||= $any_vars;
+    if (DEBUG) { print "  arg @$arg str='$str' any_vars=$any_vars\n"; }
     if (! $any_vars) {
-      $arg_keys{$str} = 1;
+      $arg_keys{$str} = $arg;
     }
     shift @args; # value part
   }
 
   my %format_keys;
-  foreach my $format (@formats) {
-    while ($format =~ /\{([a-zA-Z0-9_]+)\}/g) {
-      if (DEBUG) { print "  format key: '$1'\n"; }
-      $format_keys{$1} = 1;
-    }
-  }
+  my $format_any_vars;
 
-  my @violations;
-  if (! $arg_any_vars) {
-    foreach my $format_key (keys %format_keys) {
-      if (! exists $arg_keys{$format_key}) {
+  foreach my $format_arg (@format_args) {
+    my ($format_str, $any_vars) = _arg_string ($format_arg);
+    $format_any_vars ||= $any_vars;
+
+    while ($format_str =~ /\{([a-zA-Z0-9_]+)\}/g) {
+      my $format_key = $1;
+      if (DEBUG) { print "  format key: '$format_key'\n"; }
+      $format_keys{$format_key} = 1;
+
+      if (! $args_any_vars && ! exists $arg_keys{$format_key}) {
         push @violations, $self->violation
           ("Format key '$format_key' not in arg list",
            '',
-           $elem);
+           $format_arg->[0] || $elem);
       }
     }
   }
+
   if (! $format_any_vars) {
     foreach my $arg_key (keys %arg_keys) {
       if (! exists $format_keys{$arg_key}) {
+        my $arg = $arg_keys{$arg_key};
         push @violations, $self->violation
           ("Argument key '$arg_key' not used by format"
-           . ($format_count ? 's' : ''),
+           . (@format_args == 1 ? '' : 's'),
            '',
-           $elem);
+           $arg->[0] || $elem);
       }
     }
   }
@@ -149,6 +182,10 @@ sub _arg_string {
       }
       $ret .= $str;
 
+    } elsif ($elem->isa('PPI::Token::Number')) {
+      # a number can work like a constant string
+      $ret .= $elem->content;
+
     } else {
       # some variable or something
       return ('', 1);
@@ -165,10 +202,11 @@ sub _arg_string {
   return ($ret, $any_vars);
 }
 
-# return true if $str has any $ or @ forms for expanding as a variable
+# $str is the contents of a "" or qq{} string
+# return true if it has any $ or @ interpolation forms
 sub string_any_vars {
   my ($str) = @_;
-  return ($str =~ /(\\\\)*[\$\@]/);
+  return ($str =~ /(^|[^\\])(\\\\)*[\$@]/);
 }
 
 1;
@@ -181,31 +219,34 @@ Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders - check placeholder na
 =head1 DESCRIPTION
 
 This policy is part of the Perl::Critic::Pulp addon.  It checks the
-placeholder arguments in format strings to the C<__x>, C<__nx> and C<__xn>
-functions from C<Locale::TextDomain>.  Calls with a key missing from the
-args or args unused by the format are reported.
+placeholder arguments in format strings to the following functions from
+C<Locale::TextDomain>.
+
+    __x __nx __xn __px __npx
+
+Calls with a key missing from the args or args unused by the format are
+reported.
 
     print __x('Searching for {data}',  # bad
               datum => 123);
 
-    print __nx('Read one file',     # bad
-               'Read {num} files',
+    print __nx('Read one file',
+               'Read {num} files',     # bad
                $n,
                count => 123);
 
-This sort of thing is normally a mistake, so this policy is under the
-C<bugs> theme (see L<Perl::Critic/POLICY THEMES>).  An error can fairly
-easily go unnoticed because (as of TextDomain version 1.16) a placeholder
-without a corresponding arg goes through unexpanded and any extra args are
-ignored.
+This is normally a mistake, so this policy is under the C<bugs> theme (see
+L<Perl::Critic/POLICY THEMES>).  An error can easily go unnoticed because
+(as of Locale::TextDomain version 1.16) a placeholder without a
+corresponding arg goes through unexpanded and any extra args are ignored.
 
-The way TextDomain parses the format allows anything between
-S<< "C<< { } >>" >> as a key string, but for the purposes of this policy
-only symbol characters "a-zA-Z0-9_" are taken to be a key.  This is almost
-certainly what you'll want to use, and it makes it possible to include
-literal braces in a format string without tickling this policy all the time.
+The way Locale::TextDomain parses the format string allows anything between
+S<< C<< { } >> >> as a key, but for the purposes of this policy only symbol
+characters "a-zA-Z0-9_" are taken to be a key.  This is almost certainly
+what you'll want to use, and it's then possible to include literal braces in
+a format string without tickling this policy all the time.
 
-=head1 LIMITATIONS
+=head1 Partial Checks
 
 If the format string is not a literal then it might use any args, so all are
 considered used.
@@ -231,6 +272,20 @@ But again if some args are literals they can be checked.
 
 If there's non-literals both in the format and in the args then nothing is
 checked, since it could all match up fine at runtime.
+
+=head2 C<__nx> Count Argument
+
+A missing count argument to C<__nx>, C<__xn> and C<__npx> is sometimes
+noticed by this policy.  For example,
+
+    print __nx('Read one file',
+               'Read {numfiles} files',
+               numfiles => $numfiles);   # bad
+
+If the count argument looks like a key instead it's reported as a probably
+mistake.  This is done primarily because the following expression part is
+then taken as a key, and because it's not a constant it's assumed to fulfil
+the format strings at runtime, so no violations are otherwise reported.
 
 =head1 SEE ALSO
 

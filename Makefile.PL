@@ -42,12 +42,19 @@ WriteMakefile
                     # and comes with perl 5.10 anyway too
                     'version' => 0,
                    },
+   clean     => { FILES => [ 'TAGS' ] },
+
    EXTRA_META => <<'HERE',
 optional_features:
     maximum_tests:
         description: Have "make test" do as much as possible.
         requires:
-            Test::Pod: 1.00
+            Test::Pod: 0
+            Test::YAML::Meta: 0
+            YAML: 0
+            YAML::Syck: 0
+            YAML::Tiny: 0
+            YAML::XS: 0
 no_index:
     directory:
         - devel
@@ -114,6 +121,10 @@ diff-prev:
 	                       $(NAME)-$(VERSION) >tree.diff
 	-less diff.tmp/tree.diff
 	rm -rf diff.tmp
+
+TAG_FILES = $(TO_INST_PM)
+TAGS: $(TAG_FILES)
+	etags $(TAG_FILES)
 
 MAKE_FRAG
 }

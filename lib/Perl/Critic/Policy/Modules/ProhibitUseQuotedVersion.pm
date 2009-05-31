@@ -21,8 +21,9 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use Perl::Critic::Utils::PPIRegexp qw(get_modifiers);
 use version;
+use Perl::Critic::Pulp;
 
-our $VERSION = 17;
+our $VERSION = 18;
 
 use constant DEBUG => 0;
 
@@ -40,9 +41,15 @@ sub violates {
   $arg->isa('PPI::Token::Quote') || return;
   _elem_is_last_of_statement ($arg) || return;
 
+  # This is a strict match of what a module version number is like.
+  # Previously looser forms like '.500' were matched too, but of course
+  # unquoting that doesn't give something that's checked by perl itself.
+  # There don't seem to be forms like .500 used in practice, so don't think
+  # it's important.
+  #
   my $str = $arg->string;
-  $str =~ /^[0-9.][0-9._]*$/ or return; # digits dots and underscores
-  $str =~ /[0-9]/ or return;            # with at least one digit
+  $str =~ $Perl::Critic::Pulp::use_module_version_number_re
+    or return;
 
   return $self->violation
     ("Don't use a quoted string version number in a \"use\" statement",

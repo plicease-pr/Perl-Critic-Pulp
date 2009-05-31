@@ -21,10 +21,8 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::ConstantPragmaHash;
-use Test::More tests => 109;
+use Test::More tests => 59;
 use Perl::Critic;
-
-## no critic (ProtectPrivateSubs)
 
 my $single_policy = 'Compatibility::ConstantPragmaHash';
 my $critic = Perl::Critic->new
@@ -35,7 +33,7 @@ my $critic = Perl::Critic->new
       "single policy $single_policy");
 }
 
-my $want_version = 17;
+my $want_version = 18;
 cmp_ok ($Perl::Critic::Policy::Compatibility::ConstantPragmaHash::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION,
@@ -44,89 +42,6 @@ cmp_ok (Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION,
   ok (eval { Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION($check_version); 1 }, "VERSION class check $check_version");
-}
-
-#-----------------------------------------------------------------------------
-# _include_module_version()
-
-foreach my $data ([ 'use foo', undef ],
-
-                  [ 'use foo 1', 1 ],
-                  [ 'use foo 1;', 1 ],
-                  [ 'no foo 1', 1 ],
-                  [ 'no foo 1;', 1 ],
-
-                  [ 'use foo 1.5', 1.5 ],
-                  [ 'use foo 1.5;', 1.5 ],
-                  [ 'no foo 1.5', 1.5 ],
-                  [ 'no foo 1.5;', 1.5 ],
-
-                  [ 'use foo 1,2', undef ],
-                  [ 'use foo 1, ;', undef ],
-                  [ 'use foo \'1\';', undef ],
-                  [ 'use foo "1";', undef ],
-                  [ 'use foo q{1};', undef ],
-
-                  # trailing comma is ok at end of file, and it's not a
-                  # version number
-                  [ 'use foo 1,', undef ],
-
-                  # this is a syntax error, but let's suppose that if it
-                  # worked it's an arglist not a version
-                  [ 'use foo 5 => 6', undef ],
-
-                  # this is a syntax error, but the func still interprets it
-                  # the same as "use" or "no"
-                  [ 'require foo 5', 5 ],
-
-                 ) {
-  my ($str, $want) = @$data;
-
-  foreach my $suffix ('', ';') {
-    $str .= $suffix;
-
-    my $document = PPI::Document->new (\$str)
-      or die "oops, no parse: $str";
-    my $incs = ($document->find ('PPI::Statement::Include')
-                || $document->find ('PPI::Statement::Sub')
-                || die "oops, no target statement in '$str'");
-    my $inc = $incs->[0] or die "oops, no Include element";
-    my $ver = Perl::Critic::Policy::Compatibility::ConstantPragmaHash::_include_module_version ($inc);
-    is (defined $ver ? $ver->content : undef,
-        $want,
-        "str: $str");
-  }
-}
-
-#-----------------------------------------------------------------------------
-# _include_module_first_arg()
-
-foreach my $data ([ 'use foo',   undef ],
-                  [ 'use foo;',  undef ],
-                  [ 'use foo 1', undef ],
-
-                  [ 'use foo 123,456',     123 ],
-                  [ 'use foo 123,',        123 ],
-                  [ 'use foo 123,{x=>1}',  '123' ],
-                  [ 'use foo 1.03 {x=>1}', '{x=>1}' ],
-                  [ 'use foo {x=>1}',      '{x=>1}' ],
-
-                 ) {
-  foreach my $suffix ('', ';') {
-
-    my ($str, $want) = @$data;
-    $str .= $suffix;
-
-    my $document = PPI::Document->new (\$str)
-      or die "oops, no parse: $str";
-    my $incs = ($document->find ('PPI::Statement::Include')
-                || $document->find ('PPI::Statement::Sub')
-                || die "oops, no target statement in '$str'");
-    my $inc = $incs->[0] or die "oops, no Include element";
-    my $elem = Perl::Critic::Policy::Compatibility::ConstantPragmaHash::_include_module_first_arg ($inc);
-    diag "elem class ",ref($elem);
-    is ($elem ? "$elem" : undef, $want, "str: $str");
-  }
 }
 
 #-----------------------------------------------------------------------------

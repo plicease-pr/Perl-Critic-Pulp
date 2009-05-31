@@ -23,6 +23,8 @@ This is some add-on policies for Perl::Critic,
 
 * ConstantPragmaHash -- version declaration for hash style multi-constants
 
+* Gtk2Constants -- new enough Gtk2 version for its constants
+
 * NotWithCompare -- avoiding problems with "! $x == $y"
 
 * ProhibitEmptyCommas -- consecutive commas
@@ -43,6 +45,4 @@ This is some add-on policies for Perl::Critic,
 The only prerequisite is Perl::Critic itself.  The Perl-Critic-Pulp
 home page is
 
-    http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
-
-Bug reports to the author at user42@zip.com.au please.
+  http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html

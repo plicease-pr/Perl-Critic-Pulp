@@ -24,7 +24,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities
                            is_function_call);
 
-our $VERSION = 17;
+our $VERSION = 18;
 
 use constant DEBUG => 0;
 

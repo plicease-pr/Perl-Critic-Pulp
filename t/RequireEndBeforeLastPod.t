@@ -32,7 +32,7 @@ my $critic = Perl::Critic->new
       'single policy RequireEndBeforeLastPod');
 }
 
-my $want_version = 17;
+my $want_version = 18;
 cmp_ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION,

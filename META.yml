@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Perl-Critic-Pulp
-version:             17
+version:             18
 abstract:            Some add-on policies for Perl::Critic.
 license:             gpl
 author:              
@@ -19,7 +19,12 @@ optional_features:
     maximum_tests:
         description: Have "make test" do as much as possible.
         requires:
-            Test::Pod: 1.00
+            Test::Pod: 0
+            Test::YAML::Meta: 0
+            YAML: 0
+            YAML::Syck: 0
+            YAML::Tiny: 0
+            YAML::XS: 0
 no_index:
     directory:
         - devel

@@ -16,12 +16,13 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Build-Depends could have "libtest-pod-perl (>= 1.00)" but it's
-# optional and only makes the build tools drag in more stuff.
+# "Build-Depends:" could have the "maximum_tests" modules from
+# Makefile.PL for more tests, but they're optional author tests really
+# wouldjust make the build tools drag in more stuff.
 #
-# Depends has "libversion-perl" for older perl or "perl-modules (>=
+# "Depends:" has "libversion-perl" for older perl or "perl-modules (>=
 # 5.10)" for builtin -- the same as the Depends in libperl-critic-perl
-# itself.  But put libversion-perl first in the hope it makes "apt"
+# itself.  But have libversion-perl first in the hope it makes "apt"
 # inclined to download that rather than upgrade perl.
 
 Source: libperl-critic-pulp-perl
@@ -41,6 +42,7 @@ Description: Some add-on policies for perlcritic
  .
   * ConstantBeforeLt -- avoid problems with "FOO < 123"
   * ConstantPragmaHash -- version declaration for multi-constants
+  * Gtk2Constants -- new enough Gtk2 version for its constants
   * NotWithCompare -- avoiding problems with "! $x == $y"
   * ProhibitEmptyCommas -- consecutive commas
   * ProhibitNullStatements -- find stray semicolons

@@ -21,7 +21,7 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion;
-use Test::More tests => 20;
+use Test::More tests => 21;
 use Perl::Critic;
 
 my $critic = Perl::Critic->new
@@ -32,7 +32,7 @@ my $critic = Perl::Critic->new
       'single policy ProhibitUseQuotedVersion');
 }
 
-my $want_version = 17;
+my $want_version = 18;
 cmp_ok ($Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION,
@@ -62,6 +62,8 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 0, "use Foo '1', '2'" ],
                   [ 0, "use Foo x=>1, y=>2" ],
                   [ 0, "use Foo { x=>1, y=>2}" ],
+
+                  [ 0, 'my $x; BEGIN{$x="123"}; use Foo "$x" ' ],
 
                   ## use critic
                  ) {

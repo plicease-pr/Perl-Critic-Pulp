@@ -32,7 +32,7 @@ my $critic = Perl::Critic->new
       'single policy TextDomainUnused');
 }
 
-my $want_version = 17;
+my $want_version = 18;
 cmp_ok ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,
