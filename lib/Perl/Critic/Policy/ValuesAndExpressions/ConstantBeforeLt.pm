@@ -18,6 +18,7 @@
 
 
 package Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
+use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
@@ -27,7 +28,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -209,11 +210,12 @@ Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt - disallow bareword
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It prohibits a
-bareword before a C<E<lt>> to keep you out of trouble with autoloaded or
-unprototyped constant subs since a C<E<lt>> in that case is interpreted as
-the start of a C<E<lt>..E<gt>> glob or readline instead of a less-than.
-This policy is under the C<bugs> theme (see L<Perl::Critic/POLICY THEMES>).
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It prohibits a bareword before a C<E<lt>> to keep you out of trouble
+with autoloaded or unprototyped constant subs since a C<E<lt>> in that case
+is interpreted as the start of a C<E<lt>..E<gt>> glob or readline instead of
+a less-than.  This policy is under the C<bugs> theme (see
+L<Perl::Critic/POLICY THEMES>).
 
     use POSIX;
     DBL_MANT_DIG < 32   # bad, perl 5.8 thinks <>
@@ -274,7 +276,7 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -291,6 +293,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

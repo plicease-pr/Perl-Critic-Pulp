@@ -21,18 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
-use Test::More tests => 53;
-use Perl::Critic;
+use Test::More tests => 59;
 
-my $critic = Perl::Critic->new
-  ('-profile' => '',
-   '-single-policy' => 'Miscellanea::TextDomainPlaceholders');
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-      'single policy TextDomainPlaceholders');
-}
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
-my $want_version = 18;
+
+#-----------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,
@@ -66,6 +62,22 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
 }
 
 #-----------------------------------------------------------------------------
+
+require Perl::Critic;
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => 'Miscellanea::TextDomainPlaceholders');
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+      'single policy TextDomainPlaceholders');
+
+  my $policy = $p[0];
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
+}
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
 
@@ -138,6 +150,18 @@ HERE' ],
                   [ 0, '__npx(\'context\', \'{foo}\', \'{foo}s\',
                               $n, foo => 123)' ],
                   [ 3, '__npx(\'context\', \'{foo}\', \'{foo}s\')' ],
+
+                  # not function calls
+                  [ 0, '
+my %funcs = (__x   => 1,
+             __nx  => 1,
+             __xn  => 1,
+
+             __px  => 1,
+             __npx => 1);
+' ],
+                  [ 0, 'print $obj->__x' ],
+                  [ 0, 'print My::Class->__x' ],
 
                  ) {
   my ($want_count, $str) = @$data;

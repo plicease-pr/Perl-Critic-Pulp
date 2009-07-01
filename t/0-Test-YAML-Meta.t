@@ -19,6 +19,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this file.  If not, see <http://www.gnu.org/licenses/>.
 
+use 5.000;
 use strict;
 use warnings;
 use FindBin;
@@ -26,20 +27,17 @@ use File::Spec;
 use Test::More;
 
 plan skip_all =>
-  "disabled -- Test::YAML::Meta 0.11 doesn't like my license urls with #GPL fragment part";
+  "disabled -- Test::YAML::Meta 0.11 asks for 'optional_features' as a list, but think it's meant to be a map ...";
 
 
 
-
-#------------------------------------------------------------------------------
 my $meta_filename = File::Spec->catfile
   ($FindBin::Bin, File::Spec->updir, 'META.yml');
-if (! -f $meta_filename) {
-  plan skip_all =>
-    "$meta_filename does not exist -- assume this is a working directory not a dist";
-}
+open META, $meta_filename
+  or plan skip_all => "Cannot open $meta_filename ($!) -- assume this is a working directory not a dist";
+close META or die;
 
-eval "use Test::YAML::Meta; 1"
+eval 'use Test::YAML::Meta; 1'
   or plan skip_all => "due to Test::YAML::Meta not available -- $@";
 
 meta_yaml_ok();

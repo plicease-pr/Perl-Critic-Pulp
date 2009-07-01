@@ -17,15 +17,17 @@
 
 
 package Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
+use 5.006;
 use strict;
 use warnings;
 
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities
+                           is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 use constant DEBUG => 0;
 
@@ -46,8 +48,11 @@ sub violates {
 
   my $funcname = $elem->content;
   $funcname =~ s/^Locale::TextDomain:://;
-  my $funcinfo = $funcs{$funcname} || return;
+  $funcs{$funcname} || return;
   if (DEBUG) { print "TextDomainPlaceholders $elem\n"; }
+
+  is_function_call($elem) || return;
+
   my @violations;
 
   # The arg crunching bits assume one parsed expression results in one arg,
@@ -218,9 +223,9 @@ Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders - check placeholder na
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It checks the
-placeholder arguments in format strings to the following functions from
-C<Locale::TextDomain>.
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It checks the placeholder arguments in format strings to the
+following functions from C<Locale::TextDomain>.
 
     __x __nx __xn __px __npx
 
@@ -294,7 +299,7 @@ L<Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -311,6 +316,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

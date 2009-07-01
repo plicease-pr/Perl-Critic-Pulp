@@ -21,19 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::Gtk2Constants;
-use Test::More tests => 45;
-use Perl::Critic;
+use Test::More tests => 48;
 
-my $single_policy = 'Compatibility::Gtk2Constants';
-my $critic = Perl::Critic->new
-  ('-profile' => '',
-   '-single-policy' => $single_policy);
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-      "single policy $single_policy");
-}
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
-my $want_version = 18;
+
+#-----------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Policy::Compatibility::Gtk2Constants::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::Gtk2Constants->VERSION,
@@ -43,6 +38,7 @@ cmp_ok (Perl::Critic::Policy::Compatibility::Gtk2Constants->VERSION,
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Policy::Compatibility::Gtk2Constants->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
+
 
 #-----------------------------------------------------------------------------
 # _qualifier_and_basename()
@@ -63,8 +59,26 @@ foreach my $data ([ 'Foo',            undef,      'Foo' ],
 #-----------------------------------------------------------------------------
 # the policy
 
+require Perl::Critic;
+my $single_policy = 'Compatibility::Gtk2Constants';
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => $single_policy);
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+      "single policy $single_policy");
+
+  my $policy = $p[0];
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
+}
+
 foreach my $data
   (
+   ## no critic (RequireInterpolationOfMetachars)
    [ 0, 'EVENT_PROPAGATE' ],
    [ 1, 'Gtk2::EVENT_PROPAGATE' ],
    [ 1, 'use Gtk2; Gtk2::EVENT_PROPAGATE' ],
@@ -92,7 +106,7 @@ foreach my $data
 
    [ 0, 'my $hashref = { Glib::SOURCE_REMOVE => 123 }' ],
    [ 0, 'use Glib; sub SOURCE_REMOVE { print 123 }' ],
-     
+
    [ 0, '*myalias = \&SOURCE_REMOVE' ],
    [ 1, '*myalias = \&Glib::SOURCE_REMOVE' ],
    [ 1, 'use Glib; *myalias = \&SOURCE_REMOVE' ],
@@ -101,11 +115,12 @@ foreach my $data
    [ 0, '&EVENT_PROPAGATE()' ],
    [ 1, '&Gtk2::EVENT_PROPAGATE()' ],
    [ 0, 'use Gtk2 1.220; &Gtk2::EVENT_PROPAGATE()' ],
-  
+
    [ 0, '\&EVENT_PROPAGATE()' ],
    [ 1, '\&Gtk2::EVENT_PROPAGATE()' ],
    [ 0, 'use Gtk2 1.220; \&Gtk2::EVENT_PROPAGATE()' ],
-     
+
+   ## use critic
   ) {
   my ($want_count, $str) = @$data;
 

@@ -21,18 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
-use Test::More tests => 35;
-use Perl::Critic;
+use Test::More tests => 38;
 
-my $critic = Perl::Critic->new
-  ('-profile' => '',
-   '-single-policy' => 'ValuesAndExpressions::UnexpandedSpecialLiteral');
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-     'single policy UnexpandedSpecialLiteral');
-}
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
-my $want_version = 18;
+
+#-----------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION, '>=', $want_version, 'VERSION class method');
 {
@@ -42,6 +38,7 @@ cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VE
 }
 
 
+#------------------------------------------------------------------------------
 # confirming what's claimed in the POD and subject to critiquing ...
 #
 { my @x = ('MyExtra::'.__PACKAGE__ => 123);
@@ -54,6 +51,24 @@ cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VE
              'hash constructor literal on right of a . expression');
 }
 
+
+#------------------------------------------------------------------------------
+
+require Perl::Critic;
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => 'ValuesAndExpressions::UnexpandedSpecialLiteral');
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+     'single policy UnexpandedSpecialLiteral');
+
+  my $policy = $p[0];
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
+}
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
 

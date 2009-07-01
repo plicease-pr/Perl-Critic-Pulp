@@ -15,6 +15,7 @@
 
 
 package Perl::Critic::Policy::Compatibility::ConstantPragmaHash;
+use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
@@ -22,7 +23,7 @@ use Perl::Critic::Utils qw(:severities);
 use version;
 use Perl::Critic::Pulp;
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 use constant DEBUG => 0;
 
@@ -148,9 +149,10 @@ Perl::Critic::Policy::Compatibility::ConstantPragmaHash - new enough "constant" 
 
 =head1 DESCRIPTION
 
-This policy is part of the C<Perl::Critic::Pulp> addon.  It requires that
-when you use the hash style multiple constants with C<use constant> you
-explicitly declare either Perl 5.8 or C<constant> 1.03, or higher.
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It requires that when you use the hash style multiple constants with
+C<use constant> you explicitly declare either Perl 5.8 or C<constant> 1.03,
+or higher.
 
     use constant { AA => 1, BB => 2 };       # bad
 
@@ -232,7 +234,7 @@ L<Perl::Critic::Policy::Modules::RequirePerlVersion>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -249,6 +251,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

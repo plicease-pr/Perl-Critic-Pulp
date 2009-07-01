@@ -21,18 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Miscellanea::TextDomainUnused;
-use Test::More tests => 19;
-use Perl::Critic;
+use Test::More tests => 22;
 
-my $critic = Perl::Critic->new
-  ('-profile' => '',
-   '-single-policy' => 'Miscellanea::TextDomainUnused');
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-      'single policy TextDomainUnused');
-}
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
-my $want_version = 18;
+
+#-----------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,
@@ -41,6 +37,24 @@ cmp_ok (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,
   ok (eval { Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION($check_version); 1 }, "VERSION class check $check_version");
+}
+
+#------------------------------------------------------------------------------
+
+require Perl::Critic;
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => 'Miscellanea::TextDomainUnused');
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+      'single policy TextDomainUnused');
+
+  my $policy = $p[0];
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

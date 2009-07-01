@@ -17,6 +17,7 @@
 
 
 package Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
+use 5.006;
 use strict;
 use warnings;
 use List::Util qw(min max);
@@ -27,7 +28,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 
 sub supported_parameters { return (); }
@@ -111,10 +112,11 @@ Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral - specials 
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It picks up some cases
-where the special literals C<__FILE__>, C<__LINE__> and C<__PACKAGE__> (see
-L<perldata/Special Literals>) are used with C<< => >> or as a hash subscript
-and so don't expand to the respective filename, line number or package name.
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It picks up some cases where the special literals C<__FILE__>,
+C<__LINE__> and C<__PACKAGE__> (see L<perldata/Special Literals>) are used
+with C<< => >> or as a hash subscript and so don't expand to the respective
+filename, line number or package name.
 
     my $seen = { __FILE__ => 1 };          # bad
     return ('At:'.__LINE__ => 123);        # bad
@@ -194,7 +196,7 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>, L<perldata/"Special Literals">
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -211,6 +213,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

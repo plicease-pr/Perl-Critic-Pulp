@@ -15,6 +15,7 @@
 
 
 package Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion;
+use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
@@ -23,7 +24,7 @@ use Perl::Critic::Utils::PPIRegexp qw(get_modifiers);
 use version;
 use Perl::Critic::Pulp;
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 use constant DEBUG => 0;
 
@@ -78,8 +79,9 @@ Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion - avoid quoted version n
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It prohibits a quoted
-version number string as the sole argument to a C<use> or C<no> statement.
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It prohibits a quoted version number string as the sole argument to
+a C<use> or C<no> statement.
 
     use Foo::Bar '1.50';      # bad
     use Foo::Bar 1.50;        # ok
@@ -120,7 +122,7 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -137,6 +139,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses>.
 
 =cut

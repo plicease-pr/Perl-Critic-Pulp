@@ -21,10 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Pulp;
-use Test::More tests => 82;
+use Test::More tests => 86;
+
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
 
-my $want_version = 18;
+#-----------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Pulp::VERSION, '>=', $want_version,
         'VERSION variable');
 cmp_ok (Perl::Critic::Pulp->VERSION, '>=', $want_version,
@@ -35,6 +39,19 @@ cmp_ok (Perl::Critic::Pulp->VERSION, '>=', $want_version,
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Pulp->VERSION($check_version); 1 },
       "VERSION class check $check_version");
+}
+
+#-----------------------------------------------------------------------------
+# version_if_valid()
+
+foreach my $elem ([ 1, '1' ],
+                  [ 1, '1.5' ],
+                  [ 0, 'somebogosity' ],
+                 ) {
+  my ($want, $str) = @$elem;
+  my $version = Perl::Critic::Pulp::version_if_valid($str);
+  my $got = (defined $version ? 1 : 0);
+  is ($want, $got, "version_if_valid '$str'");
 }
 
 #-----------------------------------------------------------------------------

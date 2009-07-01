@@ -23,19 +23,14 @@ use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
 use PPI;
 use Perl::Critic;
-use Test::More tests => 47;
+use Test::More tests => 50;
 
-## no critic (ProtectPrivateSubs)
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
-my $critic = Perl::Critic->new
-  ('-profile' => '',
-   '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-      'single policy ConstantBeforeLt');
-}
 
-my $want_version = 18;
+#------------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
@@ -45,6 +40,10 @@ cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
+
+
+#------------------------------------------------------------------------------
+# _use_constants()
 
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',
@@ -92,11 +91,29 @@ foreach my $data ([ 'use constant' ],
                  || $document->find ('PPI::Statement::Sub')
                  || die "oops, no target statement in '$str'");
     my $elem = $elems->[0] or die "oops, no Include element";
+
+    ## no critic (ProtectPrivateSubs)
     my @got_constants = Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::_use_constants ($elem);
     is_deeply (\@got_constants, \@want_constants, $str);
   }
 }
 
+
+#------------------------------------------------------------------------------
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+      'single policy ConstantBeforeLt');
+
+  my $policy = $p[0];
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
+}
 
 # ok stuff
 #

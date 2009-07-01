@@ -21,18 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion;
-use Test::More tests => 21;
-use Perl::Critic;
+use Test::More tests => 24;
 
-my $critic = Perl::Critic->new
-  ('-profile' => '',
-   '-single-policy' => 'Modules::ProhibitUseQuotedVersion');
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-      'single policy ProhibitUseQuotedVersion');
-}
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
-my $want_version = 18;
+
+#-----------------------------------------------------------------------------
+my $want_version = 19;
 cmp_ok ($Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION,
@@ -41,6 +37,24 @@ cmp_ok (Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION,
   ok (eval { Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION($check_version); 1 }, "VERSION class check $check_version");
+}
+
+
+#-----------------------------------------------------------------------------
+require Perl::Critic;
+my $critic = Perl::Critic->new
+  ('-profile' => '',
+   '-single-policy' => 'Modules::ProhibitUseQuotedVersion');
+{ my @p = $critic->policies;
+  is (scalar @p, 1,
+      'single policy ProhibitUseQuotedVersion');
+
+  my $policy = $p[0];
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

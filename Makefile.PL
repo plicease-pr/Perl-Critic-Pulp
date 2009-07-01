@@ -21,6 +21,8 @@ use 5.006;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
+use lib 'inc';
+use MyMakeMakerExtras;
 
 WriteMakefile
   (NAME         => 'Perl-Critic-Pulp',
@@ -29,102 +31,67 @@ WriteMakefile
    AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
    LICENSE      => 'gpl',
    SIGN         => 1,
+   MIN_PERL_VERSION => '5.006',
 
    PREREQ_PM    => {
                     # 1.082 or some such for new style parameter specs
                     'Perl::Critic' => '1.082',
+                    # parts of Perl::Critic, used so name them explicitly
+                    'Perl::Critic::Utils' => 0,
+                    'Perl::Critic::Utils::PPIRegexp' => 0,
+                    'Perl::Critic::Violation' => 0,
 
-                    # builtin in recent perl anyway
+                    # Required by Perl::Critic itself anyway.
+                    # 1.02 for avoiding leaks in perl 5.8 (probably
+                    # something even newer has more merit though)
+                    'IO::String' => '1.02',
+
+                    # Builtin in recent perl anyway.
                     'List::Util' => 0,
                     'Test::More' => 0,
 
-                    # demanded by Perl::Critic itself anyway,
-                    # and comes with perl 5.10 anyway too
+                    # Required by Perl::Critic itself anyway,
+                    # and comes with perl 5.10 anyway too.
                     'version' => 0,
+
                    },
    clean     => { FILES => [ 'TAGS' ] },
 
    EXTRA_META => <<'HERE',
 optional_features:
+    maximum_policies:
+        description: Have the policies check as much as possible.
+        requires:
+            Perl::MinimumVersion: 0
     maximum_tests:
         description: Have "make test" do as much as possible.
         requires:
-            Test::Pod: 0
+            Perl::MinimumVersion: 0
+            Test::NoWarnings: 0
+            Test::Pod: 1.00
             Test::YAML::Meta: 0
             YAML: 0
             YAML::Syck: 0
             YAML::Tiny: 0
             YAML::XS: 0
+    maximum_devel:
+        description: Stuff used variously for development.
+        requires:
+            Perl6::Slurp: 0
 no_index:
     directory:
         - devel
+        - inc
+        - t
 resources:
-    homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
-    license: http://www.gnu.org/licenses/#GPL
+    homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
+    license: http://www.gnu.org/licenses/gpl.html
 HERE
   );
 
-sub MY::postamble {
-  return <<'MAKE_FRAG';
-
-LINT_FILES = $(TO_INST_PM) t/*.t devel/churn.pl
-lint:
-	for i in $(LINT_FILES); do perl -MO=Lint $$i; done
-pc:
-	-podchecker $(LINT_FILES)
-	perlcritic $(LINT_FILES)
-unused:
-	(for i in $(LINT_FILES); do perl -c -Mwarnings::unused -I lib $$i; done) \
-	  2>&1 | grep -v 'at /'
-
-myman:
-	-mv MANIFEST MANIFEST.old
-	touch SIGNATURE
-	(make manifest 2>&1; diff -u MANIFEST.old MANIFEST) |less
-
-# find files in the dist with mod times this year, but without this year in
-# the copyright line
-copyright-years-check:
-	year=`date +%Y`; \
-	tar tvfz Perl-Critic-Pulp-$(VERSION).tar.gz \
-	| egrep '$$year-|debian/copyright' \
-	| sed 's:^.*Perl-Critic-Pulp-$(VERSION)/::' \
-	| (result=0; \
-	  while read i; do \
-	    case $$i in \
-	      '' | */ \
-	      | debian/changelog | debian/compat \
-	      | t/pod.t \
-	      | COPYING | MANIFEST | SIGNATURE | META.yml) \
-	      continue ;; \
-	    esac; \
-	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \
-	    else f="$$i"; fi; \
-	    if ! grep -q "Copyright.*$$year" $$f; then \
-	      echo "$$i:1: this file"; \
-	      grep Copyright $$f; \
-	      result=1; \
-	    fi; \
-	  done; \
-	  exit $$result)
-
-debug-constants-check:
-	if egrep -n 'DEBUG => [^0]' $(TO_INST_PM); then exit 1; else exit 0; fi
-
-diff-prev:
-	rm -rf diff.tmp
-	mkdir diff.tmp
-	cd diff.tmp \
-	&& tar xfz ../$(NAME)-`expr $(VERSION) - 1`.tar.gz \
-	&& tar xfz ../$(NAME)-$(VERSION).tar.gz
-	-cd diff.tmp; diff -ur $(NAME)-`expr $(VERSION) - 1` \
-	                       $(NAME)-$(VERSION) >tree.diff
-	-less diff.tmp/tree.diff
-	rm -rf diff.tmp
-
-TAG_FILES = $(TO_INST_PM)
-TAGS: $(TAG_FILES)
-	etags $(TAG_FILES)
-
-MAKE_FRAG
+#------------------------------------------------------------------------------
+package MY;
+sub postamble {
+  my ($makemaker) = @_;
+  return MyMakeMakerExtras::postamble ($makemaker);
 }

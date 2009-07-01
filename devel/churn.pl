@@ -60,16 +60,19 @@ GetOptions
    consthash => sub {
      push @option_policies, 'Compatibility::ConstantPragmaHash';
    },
+   gtk2 => sub {
+     push @option_policies, 'Modules::Gtk2Version';
+   },
 
    # secret extras ...
+   podmin => sub {
+     push @option_policies, 'Compatibility::PodMinimumVersion';
+   },
    usever => sub {
      push @option_policies, 'Modules::ProhibitUseQuotedVersion';
    },
    qrm => sub {
      push @option_policies, 'Compatibility::RegexpQrm';
-   },
-   gtk2 => sub {
-     push @option_policies, 'Modules::Gtk2Version';
    },
   );
 

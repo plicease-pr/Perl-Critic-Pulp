@@ -17,13 +17,13 @@
 
 
 package Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
+use 5.006;
 use strict;
 use warnings;
-
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 
 sub supported_parameters {
@@ -153,9 +153,9 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements - disallow em
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It prohibits empty
-statements, ie. bare C<;> semicolons.  This can be a typo doubling up a semi
-like
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It prohibits empty statements, ie. bare C<;> semicolons.  This can
+be a typo doubling up a semi like
 
     use Foo;;    # bad
 
@@ -224,7 +224,7 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -241,6 +241,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

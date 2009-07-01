@@ -17,12 +17,13 @@
 
 
 package Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas;
+use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 
 sub supported_parameters { return; }
@@ -89,9 +90,9 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas - disallow empty
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It prohibits empty
-comma operators C<,> or C<=E<gt>> meaning either consecutive commas or a
-comma at the start of a list or expression.
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It prohibits empty comma operators C<,> or C<=E<gt>> meaning either
+consecutive commas or a comma at the start of a list or expression.
 
     print 'foo',,'bar';      # bad
     @a = (,1,2);             # bad
@@ -140,7 +141,7 @@ L<Perl::Critic::Policy::Tics::ProhibitManyArrows>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -157,6 +158,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

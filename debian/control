@@ -17,12 +17,12 @@
 
 
 # "Build-Depends:" could have the "maximum_tests" modules from
-# Makefile.PL for more tests, but they're optional author tests really
-# wouldjust make the build tools drag in more stuff.
+# Makefile.PL for more tests, but they're optional and would just make
+# the build tools drag in more stuff.
 #
 # "Depends:" has "libversion-perl" for older perl or "perl-modules (>=
-# 5.10)" for builtin -- the same as the Depends in libperl-critic-perl
-# itself.  But have libversion-perl first in the hope it makes "apt"
+# 5.10)" for builtin, the same as the Depends in libperl-critic-perl
+# itself.  Put libversion-perl first in the hope it makes "apt"
 # inclined to download that rather than upgrade perl.
 
 Source: libperl-critic-pulp-perl
@@ -30,13 +30,14 @@ Section: perl
 Priority: optional
 Build-Depends: cdbs, debhelper (>= 5), libtest-more-perl | perl-modules (>= 5.6.2)
 Maintainer: Kevin Ryde <user42@zip.com.au>
-Standards-Version: 3.8.1
-Homepage: http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
+Standards-Version: 3.8.2
+Homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
 Bugs: mailto:user42@zip.com.au
 
 Package: libperl-critic-pulp-perl
 Architecture: all
-Depends: perl (>= 5.6), libperl-critic-perl (>= 1.082), libversion-perl | perl-modules (>= 5.10), liblist-util-perl | perl-modules (>= 5.8), ${misc:Depends}
+Depends: perl (>= 5.6), libperl-critic-perl (>= 1.082), libio-string-perl (>= 1.02), libversion-perl | perl-modules (>= 5.10), liblist-util-perl | perl-modules (>= 5.8), ${misc:Depends}
+Recommends: libperl-minimumversion-perl
 Description: Some add-on policies for perlcritic
  This is some further policies for perlcritic:
  .
@@ -44,10 +45,14 @@ Description: Some add-on policies for perlcritic
   * ConstantPragmaHash -- version declaration for multi-constants
   * Gtk2Constants -- new enough Gtk2 version for its constants
   * NotWithCompare -- avoiding problems with "! $x == $y"
+  * PerlMinimumVersionAndWhy -- Perl features used vs version declared
+  * PodMinimumVersion -- POD features used vs Perl version declared
   * ProhibitEmptyCommas -- consecutive commas
   * ProhibitNullStatements -- find stray semicolons
-  * ProhibitUseQuotedVersion -- unquoted version string in use Foo '1.5'
+  * ProhibitUseQuotedVersion -- unquote version string in use Foo '1.5'
   * RequireEndBeforeLastPod -- __END__ before POD at end of file
-  * TextDomainPlaceholders -- check args to __x and __nx
+  * TextDomainPlaceholders -- check args to __x, __nx, etc
   * TextDomainUnused -- Locale::TextDomain imported but not used
   * UnexpandedSpecialLiteral -- check __PACKAGE__ etc unexpanded
+
+

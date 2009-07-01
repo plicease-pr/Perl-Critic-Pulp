@@ -17,15 +17,49 @@
 
 
 package Perl::Critic::Pulp;
+use 5.006;
 use strict;
 use warnings;
+use version;
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 
 # The code here is shared by some of the modules, or might one day get into
 # perlcritic or PPI directly.  In any case it's meant for private use only.
 
+
+# a parser function for a "supported_parameters" entry taking a version
+# number as a string
+#
+sub parameter_parse_version {
+  my ($self, $parameter, $str) = @_;
+
+  my $version;
+  if (defined $str && $str ne '') {
+    $version = version_if_valid ($str);
+    if (! defined $version) {
+      $self->throw_parameter_value_exception
+        ($parameter->get_name,
+         $str,
+         undef, # source
+         'invalid version number string');
+    }
+  }
+  $self->{$parameter->get_name} = $version;
+}
+
+# return a version.pm object, or undef if invalid
+sub version_if_valid {
+  my ($str) = @_;
+  # this is a nasty hack to notice "not a number" etc warnings
+  my $good = 1;
+  my $version;
+  { local $SIG{'__WARN__'} = sub { $good = 0 };
+    $version = version->new($str);
+  }
+  return ($good ? $version : undef);
+}
 
 # This regexp is what Perl's toke.c S_force_version() demands, as of
 # versions 5.004 through 5.8.9.  A version number in a "use" must start with
@@ -121,6 +155,14 @@ Version declaration for hash style multi-constants.
 
 New enough Gtk2 version for its constants.
 
+=item L<Compatibility::PerlMinimumVersionAndWhy|Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy>
+
+Check Perl version declared against features used.
+
+=item L<Compatibility::PodMinimumVersion|Perl::Critic::Policy::Compatibility::PodMinimumVersion>
+
+Check Perl version declared against POD features used.
+
 =item L<Documentation::RequireEndBeforeLastPod|Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 
 __END__ before POD at end of file.
@@ -175,13 +217,9 @@ look at my C<man-completion.el> to automatically get the man page from a
 suffix part (at point), or C<ffap-perl-module.el> to go to the source
 similarly.
 
-=over 4
+    http://user42.tuxfamily.org/man-completion/index.html
 
-L<http://www.geocities.com/user42_kevin/man-completion/index.html>
-
-L<http://www.geocities.com/user42_kevin/ffap-perl-module/index.html>
-
-=back
+    http://user42.tuxfamily.org/ffap-perl-module/index.html
 
 Or in perlcritic's output you can ask for %P for the full name to paste or
 follow.  Here's a good format you can put in your F<.perlcriticrc> with a
@@ -199,7 +237,7 @@ L<Perl::Critic>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -216,6 +254,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

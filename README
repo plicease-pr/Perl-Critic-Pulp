@@ -27,22 +27,28 @@ This is some add-on policies for Perl::Critic,
 
 * NotWithCompare -- avoiding problems with "! $x == $y"
 
+* PerlMinimumVersionAndWhy -- Perl features used vs version declared
+
+* PodMinimumVersion -- POD features used vs Perl version declared
+
 * ProhibitEmptyCommas -- consecutive commas
 
 * ProhibitNullStatements -- find stray semicolons
 
-* ProhibitUseQuotedVersion -- unquoted version string in use Foo '1.5'
+* ProhibitUseQuotedVersion -- unquote version string in use Foo '1.5'
 
 * RequireEndBeforeLastPod -- __END__ before POD at end of file
 
-* TextDomainPlaceholders -- check args to __x and __nx
+* TextDomainPlaceholders -- check args to __x, __nx, etc
 
 * TextDomainUnused -- Locale::TextDomain imported but not used
 
 * UnexpandedSpecialLiteral -- using __PACKAGE__ etc unexpanded
 
 
-The only prerequisite is Perl::Critic itself.  The Perl-Critic-Pulp
-home page is
+The only prerequisite is Perl::Critic itself, though
+PerlMinimumVersionAndWhy does nothing without Perl::MinimumVersion.
 
-  http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html
+The Perl-Critic-Pulp home page is
+
+  http://user42.tuxfamily.org/perl-critic-pulp/index.html

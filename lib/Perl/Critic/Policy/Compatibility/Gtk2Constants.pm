@@ -15,6 +15,7 @@
 
 
 package Perl::Critic::Policy::Compatibility::Gtk2Constants;
+use 5.006;
 use strict;
 use warnings;
 use List::Util;
@@ -25,7 +26,7 @@ use Perl::Critic::Utils qw(:severities
                            is_method_call);
 use Perl::Critic::Pulp;
 
-our $VERSION = 18;
+our $VERSION = 19;
 
 use constant DEBUG => 0;
 
@@ -220,9 +221,10 @@ Perl::Critic::Policy::Compatibility::Gtk2Constants - new enough Gtk2 version for
 
 =head1 DESCRIPTION
 
-This policy is part of the C<Perl::Critic::Pulp> addon.  It requires that if
-you use certain constant subs from L<C<Gtk2>|Gtk2> and L<C<Glib>|Glib> then
-you must explicitly have a C<use> of a high enough version of those modules.
+This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
+addon.  It requires that if you use certain constant subs from
+L<C<Gtk2>|Gtk2> and L<C<Glib>|Glib> then you must explicitly have a C<use>
+of a high enough version of those modules.
 
     use Gtk2 1.160;
     ... return Gtk2::EVENT_PROPAGATE;  # bad
@@ -302,7 +304,7 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>, L<Gtk2>, L<Glib>
 
 =head1 HOME PAGE
 
-L<http://www.geocities.com/user42_kevin/perl-critic-pulp/index.html>
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
@@ -319,6 +321,6 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License along with
-Perl-Critic-Pulp.  If not, see L<http://www.gnu.org/licenses/>.
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

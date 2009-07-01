@@ -29,7 +29,7 @@ foreach my $filename (@files) {
     || do { # print "Cannot read $filename: $!\n";
             next;
           };
-  
+
   while ($str =~ m%(qr([/].*?[/]
                       |[|].*?[|]
                       |'.*?'

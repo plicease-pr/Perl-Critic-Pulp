@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 19, June 2009
+    - new policies PerlMinimumVersionAndWhy and PodMinimumVersion
+
 Version 18, June 2009
-    - Gtk2Constants -- new policy
+    - new policy Gtk2Constants
     - TextDomainPlaceholders -- check __px() and __npx(), and try to
       notice a missing count arg in __nx(), __xn() and __npx()
 
@@ -26,10 +29,10 @@ Version 17, May 2009
       1.17, as advised by Guido Flohr
 
 Version 16, April 2009
-    - ProhibitUseQuotedVersion -- new policy
+    - new policy ProhibitUseQuotedVersion
 
 Version 15, March 2009
-    - TextDomainUnused -- new policy
+    - new policy TextDomainUnused
 
 Version 14, January 2009
     - ConstantPragmaHash -- fix for document with no includes at all
@@ -38,29 +41,29 @@ Version 13, January 2009
     - ConstantPragmaHash -- fix location reported
 
 Version 12, January 2009
-    - ConstantPragmaHash -- new policy
+    - new policy ConstantPragmaHash
 
 Version 11, December 2008
     - oops, in the tests PPI 1.203 doesn't like an empty document
 
 Version 10, December 2008
-    - RequireEndBeforeLastPod -- new policy
+    - new policy RequireEndBeforeLastPod
 
 Version 9, December 2008
-    - ProhibitEmptyCommas --new policy
+    - new policy ProhibitEmptyCommas
 
 Version 8, October 2008
-    - UnexpandedSpecialLiteral -- rename LiteralSpecialLiteral, for
-      clarity
+    - UnexpandedSpecialLiteral -- rename from LiteralSpecialLiteral,
+      for clarity
 
 Version 7, August 2008
-    - LiteralSpecialLiteral -- new policy
+    - new policy LiteralSpecialLiteral
 
 Version 6, August 2008
-    - TextDomainPlaceholders -- new policy
+    - new policy TextDomainPlaceholders
 
 Version 5, July 2008
-    - NotWithCompare -- new policy
+    - new policy NotWithCompare
 
 Version 4, July 2008
     - another go at the CPAN indexing
@@ -69,7 +72,7 @@ Version 3, July 2008
     - fixes for CPAN indexing
 
 Version 2, July 2008
-    - Perl::Critic::Pulp -- new toplevel module
+    - new toplevel module Perl::Critic::Pulp
     - ConstantBeforeLt -- depends on prototyping, not perl version
 
 Version 1, June 2008
