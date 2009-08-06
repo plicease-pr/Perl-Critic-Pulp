@@ -57,7 +57,7 @@ WriteMakefile
                    },
    clean     => { FILES => [ 'TAGS' ] },
 
-   EXTRA_META => <<'HERE',
+   EXTRA_META => strip_comments(<<'HERE'),
 optional_features:
     maximum_policies:
         description: Have the policies check as much as possible.
@@ -79,6 +79,9 @@ optional_features:
         requires:
             Perl6::Slurp: 0
 no_index:
+    package:
+        # use of "package Perl::MinimumVersion" hack for fixes there
+        - Perl::MinimumVersion
     directory:
         - devel
         - inc
@@ -88,6 +91,12 @@ resources:
     license: http://www.gnu.org/licenses/gpl.html
 HERE
   );
+
+sub strip_comments {
+  my ($str) = @_;
+  $str =~ s/^\s*#.*\n//mg;
+  $str
+}
 
 #------------------------------------------------------------------------------
 package MY;

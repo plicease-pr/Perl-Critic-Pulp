@@ -40,9 +40,9 @@ use Test::More;
 
 my $meta_filename = File::Spec->catfile
   ($FindBin::Bin, File::Spec->updir, 'META.yml');
-open META, $meta_filename
-  or plan skip_all => "Cannot open $meta_filename ($!) -- assume this is a working directory not a dist";
-close META or die;
+unless (-e $meta_filename) {
+  plan skip_all => "$meta_filename doesn't exist -- assume this is a working directory not a dist";
+}
 
 plan tests => 6;
 
@@ -53,9 +53,9 @@ SKIP: {
   eval { require YAML; 1 }
     or skip "due to YAML module not available -- $@", 1;
 
-  eval { YAML::LoadFile ($meta_filename) };
-  is ($@, '',
-      "Read $meta_filename with YAML module");
+  my $ok = eval { YAML::LoadFile ($meta_filename); 1 }
+    or diag "YAML::LoadFile() error -- $@";
+  ok ($ok, "Read $meta_filename with YAML module");
 }
 
 # YAML 0.68 is in fact YAML::Old, or something weird -- don't think they can
@@ -74,27 +74,27 @@ SKIP: {
   eval { require YAML::Syck; 1 }
     or skip "due to YAML::Syck not available -- $@", 1;
 
-  eval { YAML::Syck::LoadFile ($meta_filename) };
-  is ($@, '',
-      "Read $meta_filename with YAML::Syck");
+  my $ok = eval { YAML::Syck::LoadFile ($meta_filename); 1 }
+    or diag "YAML::Syck::LoadFile() error -- $@";
+  ok ($ok, "Read $meta_filename with YAML::Syck");
 }
 
 SKIP: {
   eval { require YAML::Tiny; 1 }
     or skip "due to YAML::Tiny not available -- $@", 1;
 
-  eval { YAML::Tiny->read ($meta_filename) };
-  is ($@, '',
-      "Read $meta_filename with YAML::Tiny");
+  my $ok = eval { YAML::Tiny->read ($meta_filename); 1 }
+    or diag "YAML::Tiny->read() error -- $@";
+  ok ($ok, "Read $meta_filename with YAML::Tiny");
 }
 
 SKIP: {
   eval { require YAML::XS; 1 }
     or skip "due to YAML::XS not available -- $@", 1;
 
-  eval { YAML::XS::LoadFile ($meta_filename) };
-  is ($@, '',
-      "Read $meta_filename with YAML::XS");
+  my $ok = eval { YAML::XS::LoadFile ($meta_filename); 1 }
+    or diag "YAML::XS::LoadFile() error -- $@";
+  ok ($ok, "Read $meta_filename with YAML::XS");
 }
 
 # Parse::CPAN::Meta describes itself for use on "typical" META.yml, so not
@@ -106,9 +106,9 @@ SKIP: {
   eval { require Parse::CPAN::Meta; 1 }
     or skip "due to Parse::CPAN::Meta not available -- $@", 1;
 
-  eval { Parse::CPAN::Meta::LoadFile ($meta_filename) };
-  is ($@, '',
-      "Read $meta_filename with Parse::CPAN::Meta");
+  my $ok = eval { Parse::CPAN::Meta::LoadFile ($meta_filename); 1 }
+    or diag "Parse::CPAN::Meta::LoadFile() error -- $@";
+  ok ($ok, "Read $meta_filename with Parse::CPAN::Meta::LoadFile");
 }
 
 # Data::YAML::Reader 0.06 doesn't like header "--- #YAML:1.0" with the #
@@ -133,22 +133,6 @@ SKIP: {
 #    print Dumper(\@lines);
 #
 # #  { local $,="\n"; print @lines,"\n"; }
-#
-# @lines = (
-#         '--- ',
-#         '- one',
-#         '-',
-#         '  - two',
-#         '  -',
-#         '    - three',
-#         '  - four',
-#         '- five',
-#         '... ',
-#          );
-#
-#   eval { $reader->read (\@lines) };
-#   is ($@, '',
-#       "Read $meta_filename with Data::YAML::Reader");
-# }
+
 
 exit 0;

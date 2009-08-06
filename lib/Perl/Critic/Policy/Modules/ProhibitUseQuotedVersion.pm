@@ -24,7 +24,7 @@ use Perl::Critic::Utils::PPIRegexp qw(get_modifiers);
 use version;
 use Perl::Critic::Pulp;
 
-our $VERSION = 19;
+our $VERSION = 20;
 
 use constant DEBUG => 0;
 

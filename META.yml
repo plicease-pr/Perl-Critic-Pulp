@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Perl-Critic-Pulp
-version:             19
+version:             20
 abstract:            Some add-on policies for Perl::Critic.
 license:             gpl
 author:              
@@ -40,6 +40,8 @@ optional_features:
         requires:
             Perl6::Slurp: 0
 no_index:
+    package:
+        - Perl::MinimumVersion
     directory:
         - devel
         - inc

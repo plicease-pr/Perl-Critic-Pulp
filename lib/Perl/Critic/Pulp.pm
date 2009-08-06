@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 19;
+our $VERSION = 20;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -93,11 +93,19 @@ sub include_module_version {
 
   $ver->content =~ $use_module_version_number_re or return undef;
 
-  # when followed by a comma it's an argument not a version number,
-  # eg. "use Foo 1.0, 'hello'"
-  if (my $after = $ver->snext_sibling) {
-    if ($after->isa('PPI::Token::Operator')
-        && ($after eq ',' || $after eq '=>')) {
+  # must be followed by whitespace, or comment, or end of statement, so
+  #
+  #    use Foo 10 -3;    <- version 10, arg -3
+  #    use Foo 10-3;     <- arg 7
+  #
+  #    use Foo 10#       <- version 10, arg -3
+  #    -3;
+  #
+  if (my $after = $ver->next_sibling) {
+    unless ($after->isa('PPI::Token::Whitespace')
+            || $after->isa('PPI::Token::Comment')
+            || ($after->isa('PPI::Token::Structure')
+                && $after eq ';')) {
       return undef;
     }
   }

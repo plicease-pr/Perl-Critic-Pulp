@@ -24,20 +24,39 @@ use warnings;
 
 sub postamble {
   my ($makemaker) = @_;
-  my $post = '';
+  my $post = <<'HERE';
+#------------------------------------------------------------------------------
+# development stuff -- from inc/MyMakeMakerExtras.pm
 
-  my $lint_files = '';
-  foreach my $dir ('examples', 'devel') {
-    my $pattern = "$dir/*.pl";
-    if (glob ($pattern)) {
-      $lint_files .= " $pattern";
+HERE
+
+  my $lint_files = $makemaker->{'MyMakeMakerExtras_LINT_FILES'};
+  if (! defined $lint_files) {
+    $lint_files = '$(EXE_FILES) $(TO_INST_PM)';
+    # would prefer not to lock down the 't' dir existance at ./Makefile.PL
+    # time, but it's a bit hard without without GNU make extensions
+    if (-d 't') { $lint_files .= ' t/*.t'; }
+
+    foreach my $dir ('examples', 'devel') {
+      my $pattern = "$dir/*.pl";
+      if (glob ($pattern)) {
+        $lint_files .= " $pattern";
+      }
     }
   }
-  $post .= "LINT_FILES = \$(EXE_FILES) \$(TO_INST_PM) t/*.t $lint_files\n"
+
+  my $podcoverage = '';
+  foreach my $class (@{$makemaker->{'MyMakeMakerExtras_Pod_Coverage'}}) {
+    $podcoverage .= "\t-perl -e 'use Pod::Coverage package=>$class'\n";
+  }
+
+  $post .= "LINT_FILES = $lint_files\n"
     . <<'HERE';
 lint:
 	perl -MO=Lint $(LINT_FILES)
 pc:
+HERE
+  $post .= $podcoverage . <<'HERE';
 	-podchecker $(LINT_FILES)
 	perlcritic $(LINT_FILES)
 unused:
@@ -76,8 +95,10 @@ copyright-years-check:
 	  done; \
 	  exit $$result)
 
+# only a non-zero number is bad, allow an expression to copy a debug from
+# another package
 debug-constants-check:
-	if egrep -n 'DEBUG => [^0]' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
+	if egrep -n 'DEBUG => [1-9]' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
 
 diff-prev:
 	rm -rf diff.tmp
@@ -103,29 +124,44 @@ HERE
 DEBVNAME = $(DEBNAME)_$(VERSION)-1
 DEBFILE = $(DEBVNAME)_all.deb
 
-# ExtUtils::MakeMaker 6.42 of perl 5.10.0 has a very dodgy rule for
-# $(DISTVNAME).tar.gz, making it depend on the distdir "$(DISTVNAME)", which
-# is always non-existant after a successful dist build, so the .tar.gz is
-# always rebuilt.  So although "deb" and $(DEBFILE) depend on
-# $(DISTVNAME).tar.gz, don't express that here.
+# ExtUtils::MakeMaker 6.42 of perl 5.10.0 makes "$(DISTVNAME).tar.gz" depend
+# on "$(DISTVNAME)" distdir directory, which is always non-existant after a
+# successful dist build, so the .tar.gz is always rebuilt.
 #
-deb $(DEBFILE):
+# So although the .deb depends on the .tar.gz don't express that here or it
+# rebuilds the .tar.gz every time.
+#
+# The right rule for the .tar.gz would be to depend on the files which go
+# into it of course ...
+#
+# DISPLAY is unset for making a deb since under fakeroot gtk stuff may try
+# to read config files like ~/.pangorc from root's home dir /root/.pangorc,
+# and that dir will be unreadable by ordinary users (normally), provoking
+# warnings and possible failures from Test::NoWarnings.
+#
+$(DEBFILE) deb:
 	test -f $(DISTVNAME).tar.gz
 	rm -rf $(DISTVNAME)
 	tar xfz $(DISTVNAME).tar.gz
-	cd $(DISTVNAME) \
+	unset DISPLAY; export DISPLAY; \
+	  cd $(DISTVNAME) \
 	  && dpkg-checkbuilddeps debian/control \
 	  && fakeroot debian/rules binary
 	rm -rf $(DISTVNAME)
 
+lintian-deb: $(DEBFILE)
+	lintian -i -X new-package-should-close-itp-bug $(DEBFILE)
 lintian-source:
 	rm -rf temp-lintian; \
 	mkdir temp-lintian; \
 	cd temp-lintian; \
 	cp ../$(DISTVNAME).tar.gz $(DEBNAME)_$(VERSION).orig.tar.gz; \
 	tar xfz $(DEBNAME)_$(VERSION).orig.tar.gz; \
+        echo 'empty-debian-diff' \
+             >$(DISTVNAME)/debian/source.lintian-overrides; \
 	mv -T $(DISTVNAME) $(DEBNAME)-$(VERSION); \
-	dpkg-source -b $(DEBNAME)-$(VERSION) $(DEBNAME)_$(VERSION).orig.tar.gz; \
+	dpkg-source -b $(DEBNAME)-$(VERSION) \
+	               $(DEBNAME)_$(VERSION).orig.tar.gz; \
 	lintian -i *.dsc; \
 	cd ..; \
 	rm -rf temp-lintian

@@ -25,7 +25,7 @@ use Test::More tests => 23;
 use Perl::Critic;
 
 #------------------------------------------------------------------------------
-my $want_version = 19;
+my $want_version = 20;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,

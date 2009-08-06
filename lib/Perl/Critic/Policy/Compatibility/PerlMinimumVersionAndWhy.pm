@@ -21,8 +21,9 @@ use version;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Pulp;
 use Perl::Critic::Utils ':severities';
+use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 19;
+our $VERSION = 20;
 
 use constant DEBUG => 0;
 
@@ -90,7 +91,9 @@ sub _setup_extra_checks {
   my $v5010 = version->new('5.010');
   $Perl::MinimumVersion::CHECKS{_perl_5010_magic__fix}     = $v5010;
   $Perl::MinimumVersion::CHECKS{_perl_5010_operators__fix} = $v5010;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_working_properly} = $v5010;
 }
+
 {
   package Perl::MinimumVersion;
   use vars qw(%MATCHES);
@@ -110,6 +113,24 @@ sub _setup_extra_checks {
              $MATCHES{_perl_5010_magic}->{$_[1]->content}
            } );
   }
+}
+
+sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
+  my ($pmv) = @_;
+  if (DEBUG) { print "_my_perl_5010_qr_m_working_properly check\n"; }
+  $pmv->Document->find_any
+    (sub {
+       my ($document, $elem) = @_;
+       $elem->isa('PPI::Token::QuoteLike::Regexp') || return 0;
+
+       my %modifiers = Perl::Critic::Utils::PPIRegexp::get_modifiers ($elem);
+       if (DEBUG) {
+         require Data::Dumper;
+         print "  ", $elem->content,
+           " modifiers ",Data::Dumper::Dumper(\%modifiers),"\n";
+       }
+       return $modifiers{'m'};
+     });
 }
 
 #---------------------------------------------------------------------------
@@ -174,6 +195,20 @@ expressed in your distribution "prereq".
 A multi-constant hash with the L<C<constant>|constant> module is not
 reported, since that's covered better by
 L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>.
+
+=back
+
+=head2 MinimumVersion Extras
+
+The following extra checks are added to what C<Perl::MinimumVersion>
+normally reports.
+
+=over 4
+
+=item *
+
+C<qr//m> requires Perl 5.10, as the "m" modifier doesn't propagate correctly
+on a C<qr> until then.
 
 =back
 

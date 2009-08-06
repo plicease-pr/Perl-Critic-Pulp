@@ -24,7 +24,7 @@ use List::Util;
 use version;
 use vars qw($VERSION @CHECKS);
 
-$VERSION = 19;
+$VERSION = 20;
 
 use constant DEBUG => 0;
 
@@ -335,7 +335,7 @@ The following POD features are identified.
 
 =item *
 
-LE<lt>display text|target<gt> display part, new in 5.005.
+LE<lt>display text|targetE<gt> display part, new in 5.005.
 
 =item *
 
@@ -343,12 +343,12 @@ CE<lt>E<lt> foo E<gt>E<gt> double-angles, new in 5.6.0.
 
 =item *
 
-C<=head3> and C<=head4> commands, new in 5.8.0.
+C<=head3> and C<=head4>, new in 5.8.0.
 
 =item *
 
-LE<lt>http://some.where.comE<gt> new in 5.8.0.  (Prior versions take the "/"
-as a "section" part, giving some very poor output.)
+LE<lt>http://some.where.comE<gt>, new in 5.8.0.  (Prior versions take the "/"
+as a "section" part, giving very poor output.)
 
 =item *
 

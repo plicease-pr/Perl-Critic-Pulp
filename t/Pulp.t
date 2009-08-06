@@ -21,14 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Pulp;
-use Test::More tests => 86;
+use Test::More tests => 92;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 19;
+my $want_version = 20;
 cmp_ok ($Perl::Critic::Pulp::VERSION, '>=', $want_version,
         'VERSION variable');
 cmp_ok (Perl::Critic::Pulp->VERSION, '>=', $want_version,
@@ -57,7 +57,9 @@ foreach my $elem ([ 1, '1' ],
 #-----------------------------------------------------------------------------
 # include_module_version()
 
-foreach my $data ([ 'use foo', undef ],
+foreach my $data ([ 'use foo 10 -3', 10 ],
+                  [ 'use foo 10-3', undef ],
+                  [ 'use foo', undef ],
 
                   [ 'use foo 1', 1 ],
                   [ 'use foo 1;', 1 ],
@@ -84,9 +86,11 @@ foreach my $data ([ 'use foo', undef ],
                   # version number
                   [ 'use foo 1,', undef ],
 
-                  # this is a syntax error, but let's suppose that if it
-                  # worked it's an arglist not a version
-                  [ 'use foo 5 => 6', undef ],
+                  # these are syntax errors, because 5 is taken to be the
+                  # version number and , or => is then the start of the
+                  # args
+                  [ 'use foo 5 , 6', 5 ],
+                  [ 'use foo 5 => 6', 5 ],
 
                   # this is a syntax error, but the func still interprets it
                   # the same as "use" or "no"

@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 19;
+our $VERSION = 20;
 
 
 sub supported_parameters {
@@ -40,7 +40,7 @@ sub applies_to       { return 'PPI::Statement::Null'; }
 sub violates {
   my ($self, $elem, $document) = @_;
 
-  # if allow_perl4_semihash then ";# comment ..." ok 
+  # if allow_perl4_semihash then ";# comment ..." ok
   if ($self->{_allow_perl4_semihash} && is_perl4_semihash($elem)) {
     return; # ok
   }
@@ -53,8 +53,18 @@ sub violates {
   #     PPI::Statement::Null
   #       PPI::Token::Structure  	';'
   #
+  # or the incompatible change in ppi 1.205
+  #
+  #   PPI::Token::Word         'for'
+  #    PPI::Structure::For     ( ... )
+  #      PPI::Statement::Null
+  #       PPI::Token::Structure        ';'
+  #      PPI::Statement::Null
+  #       PPI::Token::Structure        ';'
+
   my $parent = $elem->parent;
-  if ($parent->isa ('PPI::Structure::ForLoop')) {
+  if ($parent->isa('PPI::Structure::For')
+      || $parent->isa('PPI::Structure::ForLoop')) {
     return; # ok
   }
 

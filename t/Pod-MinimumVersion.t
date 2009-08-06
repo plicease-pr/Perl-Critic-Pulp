@@ -25,7 +25,7 @@ use Test::More tests => 40;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 19;
+  my $want_version = 20;
   cmp_ok ($Pod::MinimumVersion::VERSION,
           '>=', $want_version, 'VERSION variable');
   cmp_ok (Pod::MinimumVersion->VERSION,

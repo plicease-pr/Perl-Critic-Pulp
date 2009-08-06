@@ -46,9 +46,26 @@
 ^TAGS$
 # MakeMaker 6.18 to 6.25, apparently
 ^blibdirs\.ts$
-# cdbs and debhelper
+
+# built - cdbs and debhelper
 ^debian/stamp-
 ^debian/.*\.log$
+
+# built - texinfo temporaries
+\.(aux|cp|cps|fn|fns|ky|log|pg|toc|tp|tps|vr)$
+
+# built - xsubs, try not to exclude ordinary C files though, maybe ...
+#(^|/)[A-Z][A-Za-z0-9_]*\.c$
+(^|/[^Z])[^/]+\.c$
+\.o$
+\.bs$
+
+# built - configury
+^conftest
+^config\.h$
+
+# built - toplevel html pages
+^[A-Z][^.]+\.html$
 
 # cpantesters reports
 ^msg\d*\.html$
@@ -69,3 +86,4 @@ devel/h2xs/TestConstFoo/
 ^formats
 ^dist-deb
 ^up$
+^c$

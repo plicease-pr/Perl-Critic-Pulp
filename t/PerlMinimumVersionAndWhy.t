@@ -21,12 +21,12 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
-use Test::More tests => 10;
+use Test::More tests => 12;
 use Perl::Critic;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 19;
+my $want_version = 20;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,  '>=', $want_version, 'VERSION class method');
 {
@@ -54,7 +54,7 @@ my $have_perl_minimumversion = eval { require Perl::MinimumVersion };
 
 SKIP: {
   $critic
-    or skip 'Perl::MinimumVersion not available', 5;
+    or skip 'Perl::MinimumVersion not available', 7;
 
   my ($policy) = $critic->policies;
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -64,9 +64,14 @@ SKIP: {
       "VERSION object check $check_version");
 
   foreach my $data (
+                    # _my_perl_5010_qr_m_working_properly
+                    [ 1, 'use 5.008; qr/^x$/m' ],
+                    [ 0, 'use 5.010; qr/^x$/m' ],
+
                     [ 1, "1 // 2" ],
                     [ 1, "use 5.008; 1 // 2" ],
                     [ 0, "use 5.010; 1 // 2" ],
+
                    ) {
     my ($want_count, $str) = @$data;
     $str = "$str";
