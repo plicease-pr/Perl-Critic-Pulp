@@ -20,11 +20,10 @@ use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
-use Perl::Critic::Utils::PPIRegexp qw(get_modifiers);
 use version;
 use Perl::Critic::Pulp;
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 use constant DEBUG => 0;
 

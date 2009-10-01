@@ -26,7 +26,7 @@ use Perl::Critic;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 20;
+my $want_version = 22;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,  '>=', $want_version, 'VERSION class method');
 {
@@ -64,6 +64,7 @@ SKIP: {
       "VERSION object check $check_version");
 
   foreach my $data (
+                    ## no critic (RequireInterpolationOfMetachars)
                     # _my_perl_5010_qr_m_working_properly
                     [ 1, 'use 5.008; qr/^x$/m' ],
                     [ 0, 'use 5.010; qr/^x$/m' ],

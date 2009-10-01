@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 use constant DEBUG => 0;
 
@@ -88,7 +88,7 @@ sub violates {
         || do {
           # if it looks like a keyword symbol foo=> or 'foo' etc
           my ($str, $any_vars) = _arg_word_or_string ($count_arg);
-          ($str =~ /^[a-zA-Z0-9_]+$/ && ! $any_vars)
+          ($str =~ /^\w+$/ && ! $any_vars)
         }) {
       push @violations, $self->violation
         ("Probably missing 'count' argument to $funcname",
@@ -119,7 +119,7 @@ sub violates {
     my ($format_str, $any_vars) = _arg_string ($format_arg);
     $format_any_vars ||= $any_vars;
 
-    while ($format_str =~ /\{([a-zA-Z0-9_]+)\}/g) {
+    while ($format_str =~ /\{(\w+)\}/g) {
       my $format_key = $1;
       if (DEBUG) { print "  format key: '$format_key'\n"; }
       $format_keys{$format_key} = 1;
@@ -246,10 +246,13 @@ L<Perl::Critic/POLICY THEMES>).  An error can easily go unnoticed because
 corresponding arg goes through unexpanded and any extra args are ignored.
 
 The way Locale::TextDomain parses the format string allows anything between
-S<< C<< { } >> >> as a key, but for the purposes of this policy only symbol
-characters "a-zA-Z0-9_" are taken to be a key.  This is almost certainly
+S<< C<< { } >> >> as a key, but for the purposes of this policy only symbols
+(alphanumeric plus "_") are taken to be a key.  This is almost certainly
 what you'll want to use, and it's then possible to include literal braces in
-a format string without tickling this policy all the time.
+a format string without tickling this policy all the time.  (Symbol
+characters are per Perl C<\w>, so non-ASCII is supported, though the Gettext
+manual in node "Charset conversion" recommends message-IDs should be
+ASCII-only.)
 
 =head1 Partial Checks
 
@@ -287,10 +290,11 @@ noticed by this policy.  For example,
                'Read {numfiles} files',
                numfiles => $numfiles);   # bad
 
-If the count argument looks like a key instead it's reported as a probably
-mistake.  This is done primarily because the following expression part is
-then taken as a key, and because it's not a constant it's assumed to fulfil
-the format strings at runtime, so no violations are otherwise reported.
+If the count argument looks like a key then it's reported as a probable
+mistake.  Such a check is not the main aim of this policy but it's done
+because otherwise no violations would be reported at all.  (The next
+argument would be the key, and normally being an expression it would be
+assumed to fulfil the format strings at runtime.)
 
 =head1 SEE ALSO
 

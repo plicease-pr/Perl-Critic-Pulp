@@ -63,16 +63,19 @@ GetOptions
    gtk2 => sub {
      push @option_policies, 'Modules::Gtk2Version';
    },
-
-   # secret extras ...
    podmin => sub {
      push @option_policies, 'Compatibility::PodMinimumVersion';
    },
    usever => sub {
      push @option_policies, 'Modules::ProhibitUseQuotedVersion';
    },
+
+   # secret extras ...
    qrm => sub {
      push @option_policies, 'Compatibility::RegexpQrm';
+   },
+   posix => sub {
+     push @option_policies, 'Modules::ProhibitPOSIXimport';
    },
   );
 
@@ -131,7 +134,7 @@ foreach my $p ($critic->policies) {
 
 
 # "%f:%l:%c:" is good for emacs compilation-mode
-Perl::Critic::Violation::set_format ("%f:%l:%c:\n %P\n %m\n");
+Perl::Critic::Violation::set_format ("%f:%l:%c:\n %P\n %m\n %r\n");
 
 foreach my $file (@files) {
   print "$file\n";

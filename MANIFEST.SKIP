@@ -30,13 +30,14 @@
 # emacs autosave
 (^|/)#
 
-# own dists
+# own distdir
 ^[A-Za-z][A-Za-z0-9-_]*-\d+/
+# own dist files
 \.tar\.gz$
 \.deb$
 
 # ExtUtils::MakeMaker leaving Makefile.old
-# "myman" leaving MANIFEST.old
+# and "myman" leaving MANIFEST.old
 \.old$
 
 # built stuff
@@ -47,14 +48,14 @@
 # MakeMaker 6.18 to 6.25, apparently
 ^blibdirs\.ts$
 
-# built - cdbs and debhelper
+# cdbs and debhelper built stuff
 ^debian/stamp-
 ^debian/.*\.log$
 
-# built - texinfo temporaries
+# texinfo.tex temporaries
 \.(aux|cp|cps|fn|fns|ky|log|pg|toc|tp|tps|vr)$
 
-# built - xsubs, try not to exclude ordinary C files though, maybe ...
+# xsub .c, .o, try not to exclude ordinary C files though, maybe ...
 #(^|/)[A-Z][A-Za-z0-9_]*\.c$
 (^|/[^Z])[^/]+\.c$
 \.o$
@@ -65,17 +66,29 @@
 ^config\.h$
 
 # built - toplevel html pages
-^[A-Z][^.]+\.html$
+^[a-zA-Z][^.]+\.html$
 
 # cpantesters reports
 ^msg\d*\.html$
 
-# my temporaries
+# inc/MyMakefileExtras.pm "diff-prev"
 ^diff\.tmp
+# inc/MyMakefileExtras.pm "lintian-source"
 ^temp-lintian
 
-# test build stuff
+
+# my dists
+^dist-deb
+^up$
+^c$
+
+# my special case pulp test build stuff
 devel/h2xs/TestConstFoo/
+
+# my special case mall executables
+devel/hblk
+devel/mallopt
+
 
 \.bak$
 ^backup
@@ -84,6 +97,3 @@ devel/h2xs/TestConstFoo/
 ^samples
 ^samp
 ^formats
-^dist-deb
-^up$
-^c$

@@ -23,7 +23,7 @@ use Perl::Critic::Pulp;
 use Perl::Critic::Utils ':severities';
 use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 use constant DEBUG => 0;
 
@@ -163,7 +163,8 @@ L<C<Perl::MinimumVersion>|Perl::MinimumVersion>.  For example,
     print $x // $y;  # ok
 
 If you don't have C<Perl::MinimumVersion> then nothing is reported.  Certain
-nasty hacks are used to extract reasons and locations from it.
+nasty hacks are used to extract reasons and locations from
+C<Perl::MinimumVersion>.
 
 This policy is under the "compatibility" theme (see L<Perl::Critic/POLICY
 THEMES>).  Its best use is when it picks up things like C<//> or C<qr> only
@@ -171,9 +172,9 @@ available in a newer Perl than you thought to support.
 
 An explicit C<use 5.xxx> in your code can be tedious, but makes it clear
 what you need (or think you need) and it gets a good error message if run on
-an older Perl.  The config below lets you limit how far back you might go,
-or if you don't care at all about this sort of thing you can always disable
-this policy completely from you F<~/.perlcriticrc> file in the usual way,
+an older Perl.  The config below lets you limit how far back you might go.
+Or if you don't care at all about this sort of thing you can always disable
+the policy completely from you F<~/.perlcriticrc> file in the usual way,
 
     [-Compatibility::PerlMinimumVersionAndWhy]
 

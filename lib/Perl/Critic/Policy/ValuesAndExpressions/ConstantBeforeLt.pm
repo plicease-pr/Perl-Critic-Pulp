@@ -28,7 +28,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -107,6 +107,7 @@ sub _one_violate {
 # some similar stuff, but it crunches the whole document at once, instead of
 # just one statement.
 #
+my %constant_modules = ('constant' => 1, 'constant::defer' => 1);
 sub _use_constants {
   my ($elem) = @_;
 
@@ -120,9 +121,9 @@ sub _use_constants {
     return;
   }
 
-  if (! $elem->isa ('PPI::Statement::Include')) { return; }
-  if ($elem->type ne 'use') { return; }
-  if (($elem->module || '') ne 'constant') { return; }
+  return unless ($elem->isa ('PPI::Statement::Include')
+                 && $elem->type eq 'use'
+                 && $constant_modules{$elem->module || ''});
 
   $elem = $elem->schild(2) or return; # could be "use constant" alone
   if (DEBUG) { print "  start at ",$elem->content,"\n"; }

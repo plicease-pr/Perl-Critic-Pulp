@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -122,7 +122,7 @@ sub include_module_version {
 #
 sub include_module_first_arg {
   my ($inc) = @_;
-  defined ($inc->module) || return undef;
+  defined ($inc->module) || return;
   my $arg;
   if (my $ver = include_module_version ($inc)) {
     $arg = $ver->snext_sibling;
@@ -135,7 +135,7 @@ sub include_module_first_arg {
       && $arg->isa('PPI::Token::Structure')
       && $arg->content eq ';'
       && ! $arg->snext_sibling) {
-    return undef;
+    return;
   }
   return $arg;
 }
@@ -149,51 +149,55 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a collection of the following add-on policies for C<Perl::Critic>.
+This is a collection of add-on policies for C<Perl::Critic> as follows.
 They're under a new "pulp" theme plus other themes according to their
-function (see L<Perl::Critic/POLICY THEMES>).
+purpose (see L<Perl::Critic/POLICY THEMES>).
 
 =over 4
 
 =item L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>
 
-Version declaration for hash style multi-constants.
+Perl version for hash style multi-constants.
 
 =item L<Compatibility::Gtk2Constants|Perl::Critic::Policy::Compatibility::Gtk2Constants>
 
-New enough Gtk2 version for its constants.
+Gtk2 module version for its constants.
 
 =item L<Compatibility::PerlMinimumVersionAndWhy|Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy>
 
-Check Perl version declared against features used.
+Perl version declared against features used.
 
 =item L<Compatibility::PodMinimumVersion|Perl::Critic::Policy::Compatibility::PodMinimumVersion>
 
-Check Perl version declared against POD features used.
+Perl version declared against POD features used.
 
 =item L<Documentation::RequireEndBeforeLastPod|Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 
-__END__ before POD at end of file.
+Put C<__END__> before POD at end of file.
 
 =item L<Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 
-Check args to C<__x> and C<__nx>.
+Arguments to C<__x>, C<__nx>, etc.
 
 =item L<Miscellanea::TextDomainUnused|Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
-Locale::TextDomain imported but not used.
+C<Locale::TextDomain> imported but not used.
+
+=item L<Modules::ProhibitPOSIXimport|Perl::Critic::Policy::Modules::ProhibitPOSIXimport>
+
+Don't import the whole of C<POSIX>.
 
 =item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
 
-Unquoted version string in C<use Foo '1.5'>
+Don't quote version requirement like C<use Foo '1.5'>
 
 =item L<ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
 
-Avoiding problems with C<< FOO < 123 >>
+Avoid problems with C<< FOO < 123 >>
 
 =item L<ValuesAndExpressions::NotWithCompare|Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>
 
-Avoiding problems with C<! $x == $y>
+Avoid problems with C<! $x == $y>
 
 =item L<ValuesAndExpressions::ProhibitEmptyCommas|Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>
 
@@ -205,34 +209,36 @@ Stray semicolons  C<;>
 
 =item L<ValuesAndExpressions::UnexpandedSpecialLiteral|Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>
 
-Literal use of __PACKAGE__ etc.
+Literal use of C<__PACKAGE__> etc.
 
 =back
 
-Roughly half are about bugs and half cosmetic.  You can always enable or
-disable the ones you do or don't want.  You'll have realized there's a lot
-of perlcritic builtin and add-on policies and they range from the helpful to
-the bizarre, and in some cases are even mutually contradictory.  So it's
-quite normal to pick and choose what you want reported.  If you're not
-turning off about a quarter and customizing others then either you're not
-trying or you're much too easily lead!
+Roughly half are bugs and half cosmetic.  You can always enable or disable
+the ones you do or don't want.  It's normal to pick and choose what you want
+reported.
+
+There's a lot of perlcritic builtin and add-on policies.  They range from
+helpful to restrictive to bizarre and in some cases are even mutually
+contradictory.  Many are building blocks for enforcing particular house
+styles.  If you tried to pass all you'd give away half the language.
+Generally if you're not turning off or customizing up to half then either
+you're not trying or you're much too easily lead!
 
 =head1 OTHER NOTES
 
-In a lot of the perlcritic docs, including Pulp here, policy names appear
-without the full C<Perl::Critic::Policy::...> class name.  In Emacs have a
-look at my C<man-completion.el> to automatically get the man page from a
-suffix part (at point), or C<ffap-perl-module.el> to go to the source
-similarly.
+In most of the perlcritic docs, including Pulp here, policy names appear
+without the full C<Perl::Critic::Policy::...> class name.  In Emacs try
+C<man-completion.el> to automatically get the man page from a suffix part at
+point, or C<ffap-perl-module.el> to go to the source similarly.
 
     http://user42.tuxfamily.org/man-completion/index.html
 
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
-Or in perlcritic's output you can ask for %P for the full name to paste or
-follow.  Here's a good format you can put in your F<.perlcriticrc> with a
-file:line:column: which Emacs will recognise (see L<Perl::Critic::Violation>
-for C<%> escapes).
+In perlcritic's output you can ask for %P for the full policy name to paste
+or follow.  Here's a good format you can put in your F<.perlcriticrc> for
+file:line:column: which Emacs will recognise.  See
+L<Perl::Critic::Violation> for all the C<%> escapes.
 
     verbose=%f:%l:%c:\n %P\n %m\n
 

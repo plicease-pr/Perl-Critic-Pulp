@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 20;
+my $want_version = 22;
 cmp_ok ($Perl::Critic::Policy::Compatibility::Gtk2Constants::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::Gtk2Constants->VERSION,
@@ -48,7 +48,7 @@ foreach my $data ([ 'Foo',            undef,      'Foo' ],
                   [ 'Foo::Bar',       'Foo',      'Bar' ],
                   [ 'Foo::Bar::QUUX', 'Foo::Bar', 'QUUX' ],
                  ) {
-
+  ## no critic (ProtectPrivateSubs)
   my ($str, $want_qualifier, $want_basename) = @$data;
   my ($got_qualifier, $got_basename)
     = Perl::Critic::Policy::Compatibility::Gtk2Constants::_qualifier_and_basename ($str);

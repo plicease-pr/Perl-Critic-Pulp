@@ -24,7 +24,7 @@ use ExtUtils::MakeMaker;
 use lib 'inc';
 use MyMakeMakerExtras;
 
-WriteMakefile
+MyMakeMakerExtras::WriteMakefile
   (NAME         => 'Perl-Critic-Pulp',
    ABSTRACT     => 'Some add-on policies for Perl::Critic.',
    VERSION_FROM => 'lib/Perl/Critic/Pulp.pm',
@@ -38,6 +38,7 @@ WriteMakefile
                     'Perl::Critic' => '1.082',
                     # parts of Perl::Critic, used so name them explicitly
                     'Perl::Critic::Utils' => 0,
+                    'Perl::Critic::Utils::PPI' => 0,
                     'Perl::Critic::Utils::PPIRegexp' => 0,
                     'Perl::Critic::Violation' => 0,
 
@@ -46,9 +47,14 @@ WriteMakefile
                     # something even newer has more merit though)
                     'IO::String' => '1.02',
 
+                    # Also used by Perl::Critic itself.  Maybe should
+                    # require 0.24 for various XS bugfixes.
+                    'List::MoreUtils' => 0,
+
                     # Builtin in recent perl anyway.
                     'List::Util' => 0,
                     'Test::More' => 0,
+                    'Scalar::Util' => 0,
 
                     # Required by Perl::Critic itself anyway,
                     # and comes with perl 5.10 anyway too.
@@ -57,50 +63,40 @@ WriteMakefile
                    },
    clean     => { FILES => [ 'TAGS' ] },
 
-   EXTRA_META => strip_comments(<<'HERE'),
-optional_features:
-    maximum_policies:
-        description: Have the policies check as much as possible.
-        requires:
-            Perl::MinimumVersion: 0
-    maximum_tests:
-        description: Have "make test" do as much as possible.
-        requires:
-            Perl::MinimumVersion: 0
-            Test::NoWarnings: 0
-            Test::Pod: 1.00
-            Test::YAML::Meta: 0
-            YAML: 0
-            YAML::Syck: 0
-            YAML::Tiny: 0
-            YAML::XS: 0
-    maximum_devel:
-        description: Stuff used variously for development.
-        requires:
-            Perl6::Slurp: 0
-no_index:
-    package:
-        # use of "package Perl::MinimumVersion" hack for fixes there
-        - Perl::MinimumVersion
-    directory:
-        - devel
-        - inc
-        - t
-resources:
-    homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
-    license: http://www.gnu.org/licenses/gpl.html
-HERE
+   META_MERGE
+   => { no_index => { directory => [ 'devel' ],
+                      # use of "package Perl::MinimumVersion" hack for fixes
+                      # there
+                      package => [ 'Perl::MinimumVersion' ],
+                    },
+        resources
+        => { homepage
+             => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
+           },
+        optional_features
+        => { maximum_examples
+             => { description => 'Be able to run all the examples programs.',
+                  requires => { 'Iterator' => 0,
+                                'Iterator::Simple' => 0,
+                              },
+                },
+             maximum_policies
+             => { description => 'Have the policies check as much as possible.',
+                  requires => { 'Perl::MinimumVersion:' => 0,
+                              },
+                },
+             maximum_tests
+             => { description => 'Have "make test" do as much as possible.',
+                  requires => { 'Test::NoWarnings' => 0,
+                                'Perl::MinimumVersion:' => 0,
+                              },
+                },
+             maximum_devel
+             => { description => 'Stuff used variously for development.',
+                  requires => { 'Perl6::Slurp:' => 0,
+                                'Iterator::Simple::Locate:' => 0,
+                              },
+                },
+           },
+      },
   );
-
-sub strip_comments {
-  my ($str) = @_;
-  $str =~ s/^\s*#.*\n//mg;
-  $str
-}
-
-#------------------------------------------------------------------------------
-package MY;
-sub postamble {
-  my ($makemaker) = @_;
-  return MyMakeMakerExtras::postamble ($makemaker);
-}

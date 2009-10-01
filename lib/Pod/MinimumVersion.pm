@@ -24,7 +24,7 @@ use List::Util;
 use version;
 use vars qw($VERSION @CHECKS);
 
-$VERSION = 20;
+$VERSION = 22;
 
 use constant DEBUG => 0;
 
@@ -325,7 +325,7 @@ B<Caution: This is work in progress, don't use it yet.>
 
 C<Pod::MinimumVersion> parses the POD in a Perl script, module, or document,
 and reports what version of Perl is required to process the directives in
-it, with C<pod2man> etc.
+it with C<pod2man> etc.
 
 =head1 CHECKS
 
@@ -376,10 +376,10 @@ document.  The document is supplied as one of
     filename   => '/my/dir/foo.pod',
 
 For C<filehandle> and C<string>, a C<filename> can be supplied too to give a
-name in the reports, with the handle or string being what's actually read.
+name in the reports.  The handle or string is what's actually read though.
 
-The C<above_version> option lets you set a Perl version you use, to get
-reports only about features above that level.
+The C<above_version> option lets you set a Perl version you use, so reports
+are only about features above that level.
 
     above_version => '5.006',
 
@@ -391,7 +391,7 @@ Return the minimum Perl required for the document in C<$pmv>.
 
 C<minimum_version> returns a C<version> object (see L<version>).
 C<minimum_report> returns a C<Pod::MinimumVersion::Report> object described
-below.
+below (L</REPORT OBJECTS>).
 
 =item C<< @reports = $pmv->reports () >>
 
@@ -399,15 +399,15 @@ Return a list of C<Pod::MinimumVersion::Report> objects concerning the
 document in C<$pmv>.
 
 These multiple reports let you identify multiple places that a particular
-Perl is required.  With the C<above_version> option the reports are only
-about a Perl higher than that.
+Perl is required.  With the C<above_version> option the reports are still
+only about things higher than that.
 
 The report from C<minimum_version> and C<minimum_report> is simply the
 highest Perl among these multiple reports.
 
 =back
 
-=head2 C<Pod::MinimumVersion::Report> Object
+=head1 REPORT OBJECTS
 
 A C<Pod::MinimumVersion::Report> object holds a location within a document
 and a reason that a particular Perl is needed at that point.  The hash

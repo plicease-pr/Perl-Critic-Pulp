@@ -25,7 +25,7 @@ use Test::More tests => 23;
 use Perl::Critic;
 
 #------------------------------------------------------------------------------
-my $want_version = 20;
+my $want_version = 22;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,
@@ -48,6 +48,7 @@ foreach my $data ([ "one",   1, "one" ],
                  ) {
   my ($str, $n, $want) = @$data;
 
+  ## no critic (ProtectPrivateSubs)
   my $got = Perl::Critic::Policy::Compatibility::PodMinimumVersion::_str_line_n
     ($str, $n);
   is ($got, $want, "n=$n str=$str");

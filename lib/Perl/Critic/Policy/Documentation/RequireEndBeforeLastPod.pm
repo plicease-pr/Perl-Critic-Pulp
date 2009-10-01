@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 sub supported_parameters { return; }
 sub default_severity { return $SEVERITY_LOWEST;  }

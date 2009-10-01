@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 20;
+my $want_version = 22;
 cmp_ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION,
@@ -60,8 +60,7 @@ my $critic = Perl::Critic->new
 # ^Z is equivalent to __END__, but don't exercise that because PPI 1.204
 # doesn't support it
 #
-foreach my $data (## no critic (RequireInterpolationOfMetachars)
-
+foreach my $data (
                   # from the POD, ok
                   [ 0, '
 program_code();

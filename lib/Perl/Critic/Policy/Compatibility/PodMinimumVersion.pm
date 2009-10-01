@@ -25,7 +25,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Pulp;
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 20;
+our $VERSION = 22;
 
 use constant DEBUG => 0;
 
@@ -56,7 +56,8 @@ sub violates {
     my $report = $_;
     my $violation = $self->violation
       ("Pod requires perl $report->{'version'} due to: $report->{'why'}.",
-       '', $document);
+       '',
+       $document);
     _violation_override_linenum ($violation, $str, $report->{'linenum'});
 
   } @reports;
@@ -69,15 +70,36 @@ sub violates {
 sub _violation_override_linenum {
   my ($violation, $doc_str, $linenum) = @_;
 
-  $violation->{'_location'} = [ $linenum, 1, 1 ];
+  #   if ($violation->can('set_line_number_offset')) {
+  #     $violation->set_line_number_offset ($linenum - 1);
+  #   } else {
+
+  bless $violation, 'Perl::Critic::Pulp::PodMinimumVersionViolation';
+  $violation->{_Pulp_linenum_offset} = $linenum - 1;
   $violation->{'_source'} = _str_line_n ($doc_str, $linenum);
+
   return $violation;
 }
 
+# starting from $n==0 for first line
 sub _str_line_n {
   my ($str, $n) = @_;
   $n--;
   return ($str =~ /^(.*\n){$n}(.*)/ ? $2 : '');
+}
+
+package Perl::Critic::Pulp::PodMinimumVersionViolation;
+use base 'Perl::Critic::Violation';
+sub location {
+  my ($self) = @_;
+  my $offset = ($self->{_Pulp_linenum_offset} || 0);
+
+  my @location = @{$self->SUPER::location()};
+  $location[0] += $offset;    # line
+  if ($#location >= 3) {
+    $location[3] += $offset;  # logical line, new in ppi 1.205
+  }
+  return \@location;
 }
 
 1;
