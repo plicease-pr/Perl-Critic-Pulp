@@ -23,7 +23,7 @@ use Perl::Critic::Pulp;
 use Perl::Critic::Utils ':severities';
 use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 22;
+our $VERSION = 23;
 
 use constant DEBUG => 0;
 
@@ -41,8 +41,10 @@ sub supported_parameters {
 
 sub initialize_if_enabled {
   my ($self, $config) = @_;
-  (eval { require Perl::MinimumVersion }
-   && defined %Perl::MinimumVersion::CHECKS)
+  # ask that Perl::MinimumVersion is available and still has its
+  # undocumented %CHECKS to mangle below
+  eval { require Perl::MinimumVersion;
+         scalar %Perl::MinimumVersion::CHECKS }
     or return 0;
 
   _setup_extra_checks();

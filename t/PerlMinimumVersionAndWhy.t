@@ -26,7 +26,7 @@ use Perl::Critic;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 22;
+my $want_version = 23;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,  '>=', $want_version, 'VERSION class method');
 {

@@ -17,6 +17,12 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Look for "use" statements with quoted version numbers, like
+#
+#    use Foo '1.5';
+#
+
 use strict;
 use warnings;
 use Perl6::Slurp;

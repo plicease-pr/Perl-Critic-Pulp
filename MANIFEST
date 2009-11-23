@@ -13,11 +13,14 @@ devel/const-noproto.pl
 devel/const-post.pl
 devel/empty.pl
 devel/gettext.pl
+devel/grep-backslash.pl
+devel/grep-condsub.pl
 devel/grep-each.pl
 devel/grep-filetest-f.pl
 devel/grep-qrm.pl
 devel/grep-t-print.sh
 devel/grep-use-decimal.pl
+devel/grep-use-langinfo.pl
 devel/grep-use-posix.pl
 devel/grep-use-quoted.pl
 devel/h2xs/PostModule.pm
@@ -61,6 +64,7 @@ SIGNATURE
 t/0-META-read.t
 t/0-Test-DistManifest.t
 t/0-Test-Pod.t
+t/0-Test-Synopsis.t
 t/ConstantBeforeLt.t
 t/ConstantPragmaHash.t
 t/Gtk2Constants.t

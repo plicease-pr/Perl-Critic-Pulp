@@ -61,13 +61,10 @@ MyMakeMakerExtras::WriteMakefile
                     'version' => 0,
 
                    },
-   clean     => { FILES => [ 'TAGS' ] },
 
    META_MERGE
-   => { no_index => { directory => [ 'devel' ],
-                      # use of "package Perl::MinimumVersion" hack for fixes
-                      # there
-                      package => [ 'Perl::MinimumVersion' ],
+   => { no_index => { # "package Perl::MinimumVersion" hack for fixes there
+                     package => [ 'Perl::MinimumVersion' ],
                     },
         resources
         => { homepage

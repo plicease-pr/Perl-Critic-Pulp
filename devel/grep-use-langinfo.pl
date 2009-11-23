@@ -17,16 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# Look for "use POSIX" statements with full import, like
-#
-#    use POSIX;
-#
-# or
-#
-#    use POSIX 1.10;
-#
-
+use 5.010;
 use strict;
 use warnings;
 use Perl6::Slurp;
@@ -39,7 +30,8 @@ my $verbose = 0;
 
 my $it = File::Locate::Iterator->new (globs => [# '*.t',
                                                 '*.pm',
-                                                # '*.pl',
+                                                '*.pl',
+                                                #'/usr/lib/perl/5.10.1/I18N/Langinfo.pm'
                                                ]);
 print "$progname: $it->{'regexp'}\n";
 my $count = 0;
@@ -49,9 +41,17 @@ while (defined (my $filename = $it->next)) {
   if ($verbose) { print "$filename\n"; }
   $count++;
 
-  while (<$in>) {
-    if (/use POSIX(;|\s+[0-9])/) {
-      print "$filename:$.:1:\n  $_";
+ OUTER: for (;;) {
+    my $line = <$in> // last;
+    if ($line =~ /use I18N::Langinfo(;|\s+[0-9])/) {
+
+      for (;;) {
+        $line = <$in> // last OUTER;
+        if ($line =~ /(I18N::Langinfo::)?langinfo\s*\(/ && ! $1) {
+          print "$filename:$.:1:\n  $line";
+          last;
+        }
+      }
     }
   }
   close $in or die;

@@ -66,16 +66,19 @@ GetOptions
    podmin => sub {
      push @option_policies, 'Compatibility::PodMinimumVersion';
    },
+   posix => sub {
+     push @option_policies, 'Modules::ProhibitPOSIXimport';
+   },
    usever => sub {
      push @option_policies, 'Modules::ProhibitUseQuotedVersion';
    },
 
    # secret extras ...
+   backslash => sub {
+     push @option_policies, 'ValuesAndExpressions::ProhibitUnknownBackslash';
+   },
    qrm => sub {
      push @option_policies, 'Compatibility::RegexpQrm';
-   },
-   posix => sub {
-     push @option_policies, 'Modules::ProhibitPOSIXimport';
    },
   );
 
@@ -84,10 +87,11 @@ if (! @dirs) {
   if ($option_t_files) {
     @dirs = split /\n/, `locate '*.t'`;
   } else {
-    @dirs = ('/bin',
-             '/usr/bin',
-             '/usr/share/perl5',
-             glob('/usr/share/perl/*.*.*'));
+    @dirs = ('/usr/share/perl5',
+            # '/usr/bin',
+            # '/bin',
+            # glob('/usr/share/perl/*.*.*')
+            );
   }
 }
 print "Directories:\n";

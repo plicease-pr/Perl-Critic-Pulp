@@ -24,7 +24,7 @@ use List::Util;
 use version;
 use vars qw($VERSION @CHECKS);
 
-$VERSION = 22;
+$VERSION = 23;
 
 use constant DEBUG => 0;
 
@@ -77,6 +77,27 @@ sub analyze {
     $parser->parse_from_filehandle ($self->{'filehandle'});
   } elsif (exists $self->{'filename'}) {
     $parser->parse_from_file ($self->{'filename'});
+  }
+}
+
+#------------------------------------------------------------------------------
+# 5.004
+#
+# E<> newly documented in 5.004, but is in pod2man right back to 5.002, so
+# don't report that
+
+{
+  my $v5004 = version->new('5.004');
+
+  # =for, =begin, =end new in 5.004
+  #
+  push @CHECKS, [ \&_check_for_begin_end, 'command', $v5004 ];
+  my %for_begin_end = (for => 1, begin => 1, end => 1);
+  sub _check_for_begin_end {
+    my ($self, $command, $text, $para_obj) = @_;
+    if ($for_begin_end{$command}) {
+      $self->report ('for_begin_end', $v5004, $para_obj, "=$command command");
+    }
   }
 }
 
@@ -257,7 +278,7 @@ sub command {
                  (defined $text ? $text : 'undef'), "\n"; }
 
   if ($command eq 'for'
-      && $text =~ /^\s*Pod::MinimumVersion\s+use\s+(v?[0-9._]+)/) {
+      && $text =~ /^Pod::MinimumVersion\s+use\s+(v?[0-9._]+)/) {
     $self->{'pmv'}->{'for_version'} = version->new($1);
   }
 
@@ -332,6 +353,10 @@ it with C<pod2man> etc.
 The following POD features are identified.
 
 =over 4
+
+=item *
+
+Z<>=for, =begin and =end new in 5.004.
 
 =item *
 

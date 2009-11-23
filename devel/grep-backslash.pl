@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,44 +17,40 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# Look for "use POSIX" statements with full import, like
-#
-#    use POSIX;
-#
-# or
-#
-#    use POSIX 1.10;
-#
-
 use strict;
 use warnings;
 use Perl6::Slurp;
-use File::Locate::Iterator;
 
-use FindBin;
-my $progname = $FindBin::Script;
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
+use Text::Tabs ();
 
 my $verbose = 0;
 
-my $it = File::Locate::Iterator->new (globs => [# '*.t',
-                                                '*.pm',
-                                                # '*.pl',
-                                               ]);
-print "$progname: $it->{'regexp'}\n";
-my $count = 0;
+my $l = MyLocatePerl->new;
+while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
 
-while (defined (my $filename = $it->next)) {
-  open my $in, '<', $filename or next;
-  if ($verbose) { print "$filename\n"; }
-  $count++;
-
-  while (<$in>) {
-    if (/use POSIX(;|\s+[0-9])/) {
-      print "$filename:$.:1:\n  $_";
-    }
+  if ($str =~ /^__END__/m) {
+    substr ($str, $-[0], length($str), '');
   }
-  close $in or die;
+
+  # strip comments
+  #  $str =~ s/#.*//mg;
+
+  while ($str =~ /(?:^|\G|[^\\])
+                  \\(?:\\\\)*
+                  ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ])/sgx) {
+    my $char = $1;
+    my $pos = pos($str);
+
+    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+
+    print "$filename:$line:$col: unknown \\$char\n",
+      MyStuff::line_at_pos($str, $pos),
+          MyStuff::line_at_pos($str, $pos);
+  }
 }
-print "count $count\n";
+
 exit 0;

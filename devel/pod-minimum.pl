@@ -83,11 +83,21 @@ __END__
 
 =encoding utf-8
 
+=head1 NAME
+
+=head1 DESCRIPTION
+
 =head1 Heading
 
 J<< C<< x >> >>
 C<< double >>
 S<< double >>
 L<C<Foo>|Footext>
+
+=begin foo
+
+text meant only for foo ...
+
+=end foo
 
 =cut

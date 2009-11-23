@@ -21,11 +21,11 @@
 use strict;
 use warnings;
 use Pod::MinimumVersion;
-use Test::More tests => 40;
+use Test::More tests => 49;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 22;
+  my $want_version = 23;
   cmp_ok ($Pod::MinimumVersion::VERSION,
           '>=', $want_version, 'VERSION variable');
   cmp_ok (Pod::MinimumVersion->VERSION,
@@ -99,6 +99,19 @@ foreach my $data (
                   [ 1, "=encoding\n" ],
                   [ 1, "=encoding\n", above_version => '5.008' ],
                   [ 0, "=encoding\n", above_version => '5.010' ],
+
+                  # =for
+                  [ 1, "=for foo\n" ],
+                  [ 1, "=for foo\n", above_version => '5.003' ],
+                  [ 0, "=for foo\n", above_version => '5.004' ],
+                  # =begin
+                  [ 1, "=begin foo\n" ],
+                  [ 1, "=begin foo\n", above_version => '5.003' ],
+                  [ 0, "=begin foo\n", above_version => '5.004' ],
+                  # =end
+                  [ 1, "=end foo\n" ],
+                  [ 1, "=end foo\n", above_version => '5.003' ],
+                  [ 0, "=end foo\n", above_version => '5.004' ],
 
                  ) {
   my ($want_count, $str, @options) = @$data;

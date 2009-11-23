@@ -29,7 +29,7 @@ use Perl::Critic::Utils qw(:severities
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp;
 
-our $VERSION = 22;
+our $VERSION = 23;
 
 use constant DEBUG => 0;
 use constant _ALLOWED_CALL_COUNT => 15;

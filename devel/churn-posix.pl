@@ -18,6 +18,8 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Churn ProhibitPOSIXimport over all .pm files.
+
 use strict;
 use warnings;
 use Getopt::Long;
