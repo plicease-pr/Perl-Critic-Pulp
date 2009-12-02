@@ -32,22 +32,17 @@ my $l = MyLocatePerl->new;
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  if ($str =~ /^__END__/m) {
-    substr ($str, $-[0], length($str), '');
-  }
+  pos($str) = 0;
+  $str =~ /^=head1 SYNOPSIS/mg
+    or next;
+  my $beg = pos($str);
 
-  # strip comments
-  #  $str =~ s/#.*//mg;
-
-  while ($str =~ /(?:^|\G|[^\\])
-                  \\(?:\\\\)*
-                  ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ])/sgx) {
-    my $char = $1;
-    my $pos = pos($str);
-
+  if ($str !~ /^(=head1)|^[ \t]+[^ \t\r\n]/mg
+      || $1) {
+    my $pos = $beg;
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
 
-    print "$filename:$line:$col: unknown \\$char\n",
+    print "$filename:$line:$col: no verbatim in synopsis\n",
       MyStuff::line_at_pos($str, $pos);
   }
 }

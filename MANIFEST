@@ -17,7 +17,9 @@ devel/grep-backslash.pl
 devel/grep-condsub.pl
 devel/grep-each.pl
 devel/grep-filetest-f.pl
+devel/grep-pod-gt.pl
 devel/grep-qrm.pl
+devel/grep-synopsis.pl
 devel/grep-t-print.sh
 devel/grep-use-decimal.pl
 devel/grep-use-langinfo.pl
@@ -26,10 +28,13 @@ devel/grep-use-quoted.pl
 devel/h2xs/PostModule.pm
 devel/h2xs/run.pl
 devel/h2xs/TestConstFoo.h
+devel/Makefile
 devel/MyLocatePerl.pm
 devel/MyStuff.pm
 devel/MyUniqByInode.pm
 devel/MyUniqByMD5.pm
+devel/name.1
+devel/name.pod
 devel/not.sh
 devel/notwithcompare.pl
 devel/pod-minimum.pl
@@ -44,6 +49,7 @@ lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
 lib/Perl/Critic/Policy/Compatibility/PerlMinimumVersionAndWhy.pm
 lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
@@ -72,6 +78,7 @@ t/NotWithCompare.t
 t/PerlMinimumVersionAndWhy.t
 t/Pod-MinimumVersion.t
 t/PodMinimumVersion.t
+t/ProhibitBadAproposMarkup.t
 t/ProhibitEmptyCommas.t
 t/ProhibitNullStatements.t
 t/ProhibitPOSIXimport.t

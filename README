@@ -17,39 +17,12 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-This is some add-on policies for Perl::Critic,
-
-* ConstantBeforeLt -- avoiding problems with "FOO < 123"
-
-* ConstantPragmaHash -- version declaration for hash style multi-constants
-
-* Gtk2Constants -- new enough Gtk2 version for its constants
-
-* NotWithCompare -- avoiding problems with "! $x == $y"
-
-* PerlMinimumVersionAndWhy -- Perl features used vs version declared
-
-* PodMinimumVersion -- POD features used vs Perl version declared
-
-* ProhibitEmptyCommas -- consecutive commas
-
-* ProhibitNullStatements -- find stray semicolons
-
-* ProhibitPOSIXimport -- don't import the whole of POSIX
-
-* ProhibitUseQuotedVersion -- unquote version string in use Foo '1.5'
-
-* RequireEndBeforeLastPod -- __END__ before POD at end of file
-
-* TextDomainPlaceholders -- check args to __x, __nx, etc
-
-* TextDomainUnused -- Locale::TextDomain imported but not used
-
-* UnexpandedSpecialLiteral -- using __PACKAGE__ etc unexpanded
-
+This is some add-on policies for Perl::Critic, for miscellaneous bugs,
+compibility, efficiency and some cosmetic things.  See the POD of
+Perl::Critic::Pulp for the full list.
 
 The only major prerequisite is Perl::Critic itself, though
-PerlMinimumVersionAndWhy does nothing without Perl::MinimumVersion.
+"PerlMinimumVersionAndWhy" does nothing without Perl::MinimumVersion.
 
 The Perl-Critic-Pulp home page is
 

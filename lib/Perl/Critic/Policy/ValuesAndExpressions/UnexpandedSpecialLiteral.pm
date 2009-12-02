@@ -28,7 +28,7 @@ use Perl::Critic::Utils qw(:severities
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 23;
+our $VERSION = 24;
 
 
 sub supported_parameters { return (); }

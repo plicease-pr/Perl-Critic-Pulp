@@ -72,6 +72,9 @@ GetOptions
    usever => sub {
      push @option_policies, 'Modules::ProhibitUseQuotedVersion';
    },
+   apropos => sub {
+     push @option_policies, 'Documentation::ProhibitBadAproposMarkup';
+   },
 
    # secret extras ...
    backslash => sub {

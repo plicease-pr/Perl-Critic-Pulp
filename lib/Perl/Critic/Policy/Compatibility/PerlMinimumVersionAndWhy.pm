@@ -23,7 +23,7 @@ use Perl::Critic::Pulp;
 use Perl::Critic::Utils ':severities';
 use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 23;
+our $VERSION = 24;
 
 use constant DEBUG => 0;
 
@@ -97,6 +97,9 @@ sub _setup_extra_checks {
 }
 
 {
+  # Perl::MinimumVersion as of 1.22 has 'PPI::Token::Operator' and
+  # 'PPI::Token::Magic' swapped between the tests
+
   package Perl::MinimumVersion;
   use vars qw(%MATCHES);
   sub _perl_5010_operators__fix {

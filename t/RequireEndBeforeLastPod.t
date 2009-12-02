@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 23;
+my $want_version = 24;
 cmp_ok ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION,
@@ -151,6 +151,7 @@ __END__
 =head2 Bar
 
 =cut
+
 ' ],
 
 #---------------------------------
@@ -174,6 +175,7 @@ code;
 =head2 Foo
 
 =cut
+
 ' ],
 
 #---------------------------------

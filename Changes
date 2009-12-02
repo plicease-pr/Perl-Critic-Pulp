@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 24, December 2009
+    - new policy ProhibitBadAproposMarkup
+
 Version 23, November 2009
     - PodMinimumVersion 5.004 for =for, =begin, =end
 

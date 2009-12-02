@@ -26,35 +26,66 @@ use File::Locate::Iterator;
 use FindBin;
 my $progname = $FindBin::Script;
 
-my $verbose = 0;
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
 
-my $it = File::Locate::Iterator->new (globs => [# '*.t',
-                                                '*.pm',
-                                                '*.pl',
-                                                #'/usr/lib/perl/5.10.1/I18N/Langinfo.pm'
-                                               ]);
-print "$progname: $it->{'regexp'}\n";
+my $verbose = 0;
 my $count = 0;
 
-while (defined (my $filename = $it->next)) {
-  open my $in, '<', $filename or next;
-  if ($verbose) { print "$filename\n"; }
+my $l = MyLocatePerl->new;
+OUTER: while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
   $count++;
 
- OUTER: for (;;) {
-    my $line = <$in> // last;
-    if ($line =~ /use I18N::Langinfo(;|\s+[0-9])/) {
+  $str =~ /^use I18N::Langinfo(;|\s+[0-9])/mg
+    or next;
+  my $usepos = pos($str);
 
-      for (;;) {
-        $line = <$in> // last OUTER;
-        if ($line =~ /(I18N::Langinfo::)?langinfo\s*\(/ && ! $1) {
-          print "$filename:$.:1:\n  $line";
-          last;
-        }
-      }
-    }
+  if ($str =~ /I18N::Langinfo::langinfo/g) {
+    my $callpos = pos($str);
+
+    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $usepos);
+    print "$filename:$line:$col: bare use\n";
+    print MyStuff::line_at_pos($str, $usepos);
+
+    ($line, $col) = MyStuff::pos_to_line_and_column ($str, $callpos);
+    print "$filename:$line:$col: full call\n";
+    print MyStuff::line_at_pos($str, $callpos);
   }
-  close $in or die;
+
+#   while ($str =~ /(I18N::Langinfo::)?langinfo\s*\(/g) {
+#     if ($1) { next OUTER; } # import used
+#   }
+
 }
-print "count $count\n";
+
+print "looked at $count\n";
 exit 0;
+
+
+# my $it = File::Locate::Iterator->new (globs => [# '*.t',
+#                                                 '*.pm',
+#                                                 '*.pl',
+#                                                 #'/usr/lib/perl/5.10.1/I18N/Langinfo.pm'
+#                                                ]);
+# while (defined (my $filename = $it->next)) {
+#   open my $in, '<', $filename or next;
+#   if ($verbose) { print "$filename\n"; }
+#   $count++;
+#
+#  OUTER: for (;;) {
+#     my $line = <$in> // last;
+#     if ($line =~ /use I18N::Langinfo(;|\s+[0-9])/) {
+#
+#       for (;;) {
+#         $line = <$in> // last OUTER;
+#         if ($line =~ /(I18N::Langinfo::)?langinfo\s*\(/ && ! $1) {
+#           print "$filename:$.:1:\n  $line";
+#           last;
+#         }
+#       }
+#     }
+#   }
+#   close $in or die;
+# }

@@ -1,0 +1,4 @@
+=head1 NAME
+
+foo - like the C<bar> program B<bold> I<italic> F<filename>
+

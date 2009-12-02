@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 23;
+our $VERSION = 24;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -149,9 +149,49 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a collection of add-on policies for C<Perl::Critic> as follows.
-They're under a new "pulp" theme plus other themes according to their
-purpose (see L<Perl::Critic/POLICY THEMES>).
+This is a collection of add-on policies for C<Perl::Critic> summaried in the
+sections below.  They're under a new "pulp" theme plus other themes
+according to their purpose (see L<Perl::Critic/POLICY THEMES>).
+
+Roughly half are code related and half cosmetic.  You can always enable or
+disable the ones you do or don't want.  It's normal to pick and choose what
+you want reported.
+
+There's a lot of perlcritic builtin and add-on policies.  They range from
+helpful things catching problems, to the bizarre or restrictive, and in some
+cases are even mutually contradictory.  Many are intended as building blocks
+for enforcing a house style.  If you try to pass everything then you give
+away much of the language, so generally if you're not turning off or
+customizing about half then either you're not trying or you're much too
+easily lead!
+
+=head2 Bugs
+
+=over 4
+
+=item L<Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
+
+Check keyword arguments to C<__x>, C<__nx>, etc.
+
+=item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
+
+Don't quote version requirement like C<use Foo '1.5'>
+
+=item L<ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
+
+Avoid problems with C<< FOO < 123 >>
+
+=item L<ValuesAndExpressions::NotWithCompare|Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>
+
+Avoid problems with C<! $x == $y>
+
+=item L<ValuesAndExpressions::UnexpandedSpecialLiteral|Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>
+
+Literal use of C<__PACKAGE__> etc.
+
+=back
+
+=head2 Compatibility
 
 =over 4
 
@@ -171,13 +211,15 @@ Perl version declared against features used.
 
 Perl version declared against POD features used.
 
+=back
+
+=head2 Efficiency
+
+=over 4
+
 =item L<Documentation::RequireEndBeforeLastPod|Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 
-Put C<__END__> before POD at end of file.
-
-=item L<Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
-
-Arguments to C<__x>, C<__nx>, etc.
+Put C<__END__> before POD, at end of file.
 
 =item L<Miscellanea::TextDomainUnused|Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
@@ -187,17 +229,15 @@ C<Locale::TextDomain> imported but not used.
 
 Don't import the whole of C<POSIX>.
 
-=item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
+=back
 
-Don't quote version requirement like C<use Foo '1.5'>
+=head2 Cosmetic
 
-=item L<ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
+=over 4
 
-Avoid problems with C<< FOO < 123 >>
+=item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
 
-=item L<ValuesAndExpressions::NotWithCompare|Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>
-
-Avoid problems with C<! $x == $y>
+Avoid CE<lt>E<gt> in NAME section, bad for man's "apropos" output.
 
 =item L<ValuesAndExpressions::ProhibitEmptyCommas|Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>
 
@@ -205,37 +245,22 @@ Stray consecutive commas C<,,>
 
 =item L<ValuesAndExpressions::ProhibitNullStatements|Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>
 
-Stray semicolons  C<;>
-
-=item L<ValuesAndExpressions::UnexpandedSpecialLiteral|Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>
-
-Literal use of C<__PACKAGE__> etc.
+Stray semicolons C<;>
 
 =back
 
-Roughly half are bugs and half cosmetic.  You can always enable or disable
-the ones you do or don't want.  It's normal to pick and choose what you want
-reported.
-
-There's a lot of perlcritic builtin and add-on policies.  They range from
-helpful to restrictive to bizarre and in some cases are even mutually
-contradictory.  Many are building blocks for enforcing particular house
-styles.  If you tried to pass all you'd give away half the language.
-Generally if you're not turning off or customizing up to half then either
-you're not trying or you're much too easily lead!
-
 =head1 OTHER NOTES
 
-In most of the perlcritic docs, including Pulp here, policy names appear
-without the full C<Perl::Critic::Policy::...> class name.  In Emacs try
-C<man-completion.el> to automatically get the man page from a suffix part at
-point, or C<ffap-perl-module.el> to go to the source similarly.
+In most of the perlcritic docs, including the Pulp ones here, policy names
+appear without the full C<Perl::Critic::Policy::...> class name.  In Emacs
+try C<man-completion.el> to automatically get the man page from a suffix
+part at point, or C<ffap-perl-module.el> to go to the source similarly.
 
     http://user42.tuxfamily.org/man-completion/index.html
 
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
-In perlcritic's output you can ask for %P for the full policy name to paste
+In perlcritic's output you can ask for %P for the full policy name to copy
 or follow.  Here's a good format you can put in your F<.perlcriticrc> for
 file:line:column: which Emacs will recognise.  See
 L<Perl::Critic::Violation> for all the C<%> escapes.

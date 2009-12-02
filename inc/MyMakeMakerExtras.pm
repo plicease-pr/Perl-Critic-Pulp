@@ -207,6 +207,7 @@ lint:
 	perl -MO=Lint $(LINT_FILES)
 pc:
 HERE
+  # "podchecker -warnings -warnings" too much reporting every < and >
   $post .= $podcoverage . <<'HERE';
 	-podchecker $(LINT_FILES)
 	perlcritic $(LINT_FILES)

@@ -21,11 +21,14 @@
 use strict;
 use warnings;
 use Pod::MinimumVersion;
-use Test::More tests => 49;
+use Test::More tests => 50;
+
+SKIP: { eval 'use Test::NoWarnings; 1'
+          or skip 'Test::NoWarnings not available', 1; }
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 23;
+  my $want_version = 24;
   cmp_ok ($Pod::MinimumVersion::VERSION,
           '>=', $want_version, 'VERSION variable');
   cmp_ok (Pod::MinimumVersion->VERSION,
