@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 # Copyright 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
@@ -15,7 +17,34 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-lexgrog: name.1
-	lexgrog name.1
-name.1: name.pod
-	pod2man <name.pod >name.1
+use strict;
+use warnings;
+use Perl6::Slurp;
+
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
+use Text::Tabs ();
+
+my $verbose = 0;
+
+my $l = MyLocatePerl->new;
+while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
+
+  if ($str =~ /^__END__/m) {
+    substr ($str, $-[0], length($str), '');
+  }
+
+  # a few emacs lock filename patterns which are ok
+  while ($str =~ /qw\([^)]*#/sg) {
+    my $char = $1;
+    my $pos = pos($str);
+
+    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+    print "$filename:$line:$col: comment in qw\n",
+      MyStuff::line_at_pos($str, $pos);
+  }
+}
+
+exit 0;

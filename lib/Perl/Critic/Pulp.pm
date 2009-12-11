@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 24;
+our $VERSION = 25;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -184,6 +184,10 @@ Avoid problems with C<< FOO < 123 >>
 =item L<ValuesAndExpressions::NotWithCompare|Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>
 
 Avoid problems with C<! $x == $y>
+
+=item L<ValuesAndExpressions::ProhibitFiletest_f|Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f>
+
+Don't use C<-f>.
 
 =item L<ValuesAndExpressions::UnexpandedSpecialLiteral|Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>
 

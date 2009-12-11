@@ -23,7 +23,7 @@ use Perl::Critic::Pulp;
 use Perl::Critic::Utils ':severities';
 use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 24;
+our $VERSION = 25;
 
 use constant DEBUG => 0;
 
@@ -91,8 +91,8 @@ sub violates {
 
 sub _setup_extra_checks {
   my $v5010 = version->new('5.010');
-  $Perl::MinimumVersion::CHECKS{_perl_5010_magic__fix}     = $v5010;
-  $Perl::MinimumVersion::CHECKS{_perl_5010_operators__fix} = $v5010;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5010_magic__fix}     = $v5010;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5010_operators__fix} = $v5010;
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_working_properly} = $v5010;
 }
 
@@ -102,7 +102,7 @@ sub _setup_extra_checks {
 
   package Perl::MinimumVersion;
   use vars qw(%MATCHES);
-  sub _perl_5010_operators__fix {
+  sub _my_perl_5010_operators__fix {
     shift->Document->find_any
       (sub {
          $_[1]->isa('PPI::Token::Operator')
@@ -110,7 +110,7 @@ sub _setup_extra_checks {
              $MATCHES{_perl_5010_operators}->{$_[1]->content}
            } );
   }
-  sub _perl_5010_magic__fix {
+  sub _my_perl_5010_magic__fix {
     shift->Document->find_any
       (sub {
          $_[1]->isa('PPI::Token::Magic')

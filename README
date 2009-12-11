@@ -17,12 +17,13 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-This is some add-on policies for Perl::Critic, for miscellaneous bugs,
-compibility, efficiency and some cosmetic things.  See the POD of
-Perl::Critic::Pulp for the full list.
+This is some add-on policies for Perl::Critic checking for
+miscellaneous bugs, compatibility, efficiency, and cosmetic things.
+See the POD of Perl::Critic::Pulp for the full list.
 
-The only major prerequisite is Perl::Critic itself, though
-"PerlMinimumVersionAndWhy" does nothing without Perl::MinimumVersion.
+The only prerequisite is Perl::Critic itself, though the
+"PerlMinimumVersionAndWhy" policy does nothing without
+Perl::MinimumVersion.
 
 The Perl-Critic-Pulp home page is
 

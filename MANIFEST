@@ -17,8 +17,10 @@ devel/grep-backslash.pl
 devel/grep-condsub.pl
 devel/grep-each.pl
 devel/grep-filetest-f.pl
+devel/grep-makefile-exit.pl
 devel/grep-pod-gt.pl
 devel/grep-qrm.pl
+devel/grep-qw-comment.pl
 devel/grep-synopsis.pl
 devel/grep-t-print.sh
 devel/grep-use-decimal.pl
@@ -33,7 +35,6 @@ devel/MyLocatePerl.pm
 devel/MyStuff.pm
 devel/MyUniqByInode.pm
 devel/MyUniqByMD5.pm
-devel/name.1
 devel/name.pod
 devel/not.sh
 devel/notwithcompare.pl
@@ -42,7 +43,9 @@ devel/posix-import.pl
 devel/posix-size.pl
 devel/posix-user.pl
 devel/PosixUser.pm
+devel/qrm.pl
 devel/TestAutoload.pm
+devel/unknown-backslash.pl
 devel/use-quoted.pl
 inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
@@ -58,6 +61,7 @@ lib/Perl/Critic/Policy/Modules/ProhibitUseQuotedVersion.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitFiletest_f.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
@@ -71,6 +75,7 @@ t/0-META-read.t
 t/0-Test-DistManifest.t
 t/0-Test-Pod.t
 t/0-Test-Synopsis.t
+t/0-Test-YAML-Meta.t
 t/ConstantBeforeLt.t
 t/ConstantPragmaHash.t
 t/Gtk2Constants.t
@@ -80,6 +85,7 @@ t/Pod-MinimumVersion.t
 t/PodMinimumVersion.t
 t/ProhibitBadAproposMarkup.t
 t/ProhibitEmptyCommas.t
+t/ProhibitFiletest_f.t
 t/ProhibitNullStatements.t
 t/ProhibitPOSIXimport.t
 t/ProhibitUseQuotedVersion.t

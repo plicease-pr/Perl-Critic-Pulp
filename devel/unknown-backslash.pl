@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 # Copyright 2009 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
@@ -15,7 +17,28 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-lexgrog: name.1
-	lexgrog name.1
-name.1: name.pod
-	pod2man <name.pod >name.1
+use strict;
+use warnings;
+
+{
+  "\v";
+  exit 0;
+}
+
+{
+  require Encode;
+  binmode STDOUT, ':utf8' or die;
+  foreach my $s ('*', 'z',
+                 chr(128),
+                 chr(255),
+                 Encode::decode('latin-1',chr(255)),
+                 chr(0x1234),
+                 chr(0x2022), # bullet
+                 chr(0x2297), # circle times
+                ) {
+    my $q = quotemeta($s);
+    print ord($s), " ", ($s eq $q ? "unchanged" : "changed"), " $s $q",
+      " ",(utf8::is_utf8($s) ? "utf8" : "bytes"), "\n";
+  }
+  exit 0;
+}

@@ -26,5 +26,7 @@ use Test::More;
 eval 'use Test::Synopsis; 1'
   or plan skip_all => "due to Test::Synopsis not available -- $@";
 
+## no critic (ProhibitCallsToUndeclaredSubs)
 all_synopsis_ok();
+
 exit 0;

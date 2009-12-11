@@ -63,10 +63,7 @@ MyMakeMakerExtras::WriteMakefile
                    },
 
    META_MERGE
-   => { no_index => { # "package Perl::MinimumVersion" hack for fixes there
-                     package => [ 'Perl::MinimumVersion' ],
-                    },
-        resources
+   => { resources
         => { homepage
              => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
            },
@@ -79,21 +76,24 @@ MyMakeMakerExtras::WriteMakefile
                 },
              maximum_policies
              => { description => 'Have the policies check as much as possible.',
-                  requires => { 'Perl::MinimumVersion:' => 0,
+                  requires => { 'Perl::MinimumVersion' => 0,
                               },
                 },
              maximum_tests
              => { description => 'Have "make test" do as much as possible.',
                   requires => { 'Test::NoWarnings' => 0,
-                                'Perl::MinimumVersion:' => 0,
+                                'Perl::MinimumVersion' => 0,
                               },
                 },
              maximum_devel
              => { description => 'Stuff used variously for development.',
-                  requires => { 'Perl6::Slurp:' => 0,
-                                'Iterator::Simple::Locate:' => 0,
+                  requires => { 'Perl6::Slurp' => 0,
+                                'Iterator::Simple::Locate' => 0,
                               },
                 },
            },
+
+        # "package Perl::MinimumVersion" hack for fixes there
+        no_index => { package => [ 'Perl::MinimumVersion' ] },
       },
   );

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Perl-Critic-Pulp
-version:            24
+version:            25
 abstract:           Some add-on policies for Perl::Critic.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -41,8 +41,8 @@ optional_features:
     maximum_devel:
         description:  Stuff used variously for development.
         requires:
-            Iterator::Simple::Locate::  0
-            Perl6::Slurp::        0
+            Iterator::Simple::Locate:  0
+            Perl6::Slurp:         0
     maximum_examples:
         description:  Be able to run all the examples programs.
         requires:
@@ -51,15 +51,16 @@ optional_features:
     maximum_policies:
         description:  Have the policies check as much as possible.
         requires:
-            Perl::MinimumVersion::  0
+            Perl::MinimumVersion:  0
     maximum_tests:
         description:  Have "make test" do as much as possible.
         requires:
             Parse::CPAN::Meta:    0
-            Perl::MinimumVersion::  0
+            Perl::MinimumVersion:  0
             Test::DistManifest:   0
             Test::NoWarnings:     0
             Test::Pod:            1.00
+            Test::YAML::Meta:     0.13
             YAML:                 0
             YAML::Syck:           0
             YAML::Tiny:           0

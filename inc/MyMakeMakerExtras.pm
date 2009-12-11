@@ -23,6 +23,8 @@ use warnings;
 
 sub DEBUG () { 0 };
 
+my %my_options;
+
 sub WriteMakefile {
   my %opts = @_;
 
@@ -39,11 +41,17 @@ sub WriteMakefile {
     _meta_merge_shared_tests (\%opts);
   }
 
-  $opts{'clean'}->{'FILES'} .= ' temp-lintian';
+  $opts{'clean'}->{'FILES'} .= ' temp-lintian $(MY_HTML_FILES)';
   $opts{'realclean'}->{'FILES'} .= ' TAGS';
 
   if (! defined &MY::postamble) {
     *MY::postamble = \&MyMakeMakerExtras::postamble;
+  }
+
+  foreach my $opt ('MyMakeMakerExtras_Pod_Coverage',
+                   'MyMakeMakerExtras_LINT_FILES',
+                   'MY_NO_HTML') {
+    $my_options{$opt} = delete $opts{$opt};
   }
 
   ExtUtils::MakeMaker::WriteMakefile (%opts);
@@ -67,6 +75,10 @@ sub _meta_merge_shared_tests {
   if (-e 't/0-Test-DistManifest.t') {
     _meta_merge_req_add (_meta_merge_maximum_tests($opts),
                          'Test::DistManifest' => 0);
+  }
+  if (-e 't/0-Test-YAML-Meta.t') {
+    _meta_merge_req_add (_meta_merge_maximum_tests($opts),
+                         'Test::YAML::Meta' => '0.13');
   }
   if (-e 't/0-META-read.t') {
     _meta_merge_req_add_ver ($opts, 5.00307, 'FindBin' => 0);
@@ -122,9 +134,9 @@ sub postamble {
     require Data::Dumper;
     print Data::Dumper::Dumper($makemaker);
   }
-  my $post = '';
+  my $post = $my_options{'postamble_docs'};
 
-  unless ($makemaker->{'MY_NO_HTML'}) {
+  unless ($my_options{'MY_NO_HTML'}) {
     $post .= <<'HERE';
 
 #------------------------------------------------------------------------------
@@ -152,21 +164,33 @@ $munghtml_extra/;
     my %html_files;
 
     foreach my $pm (@exefiles, @pmfiles) {
-      my $html = $pm;
-      $html =~ s{.*/}{};     # remove any directory part
-      $html =~ s{.p[ml]$}{}; # remove .pm or .pl
-      $html .= '.html';
-      next if $html_files{$html}++;
-      $post .= <<"HERE";
-$html: $pm Makefile
+      my $fullhtml = $pm;
+      $fullhtml =~ s{lib/}{};     # remove lib/
+      $fullhtml =~ s{\.p[ml]$}{}; # remove .pm or .pl
+      $fullhtml .= '.html';
+      my $parthtml = $fullhtml;
+
+      $fullhtml =~ s{/}{-};       # so Foo-Bar.html
+      unless ($html_files{$fullhtml}++) {
+        $post .= <<"HERE";
+$fullhtml: $pm Makefile
 	\$(MY_POD2HTML) $pm \\
-	  | \$(MY_MUNGHTML) >$html
+	  | \$(MY_MUNGHTML) >$fullhtml
 HERE
+      }
+      $parthtml =~ s{.*/}{};      # remove any directory part, just Bar.html
+      unless ($html_files{$parthtml}++) {
+        $post .= <<"HERE";
+$parthtml: $pm Makefile
+	\$(MY_POD2HTML) $pm \\
+	  | \$(MY_MUNGHTML) >$parthtml
+HERE
+      }
     }
 
-    $post .= "HTML_FILES = " . join(' ', keys %html_files) . "\n";
+    $post .= "MY_HTML_FILES = " . join(' ', keys %html_files) . "\n";
     $post .= <<'HERE';
-html: $(HTML_FILES)
+html: $(MY_HTML_FILES)
 HERE
   }
 
@@ -180,7 +204,7 @@ version:
 
 HERE
 
-  my $lint_files = $makemaker->{'MyMakeMakerExtras_LINT_FILES'};
+  my $lint_files = $my_options{'MyMakeMakerExtras_LINT_FILES'};
   if (! defined $lint_files) {
     $lint_files = '$(EXE_FILES) $(TO_INST_PM)';
     # would prefer not to lock down the 't' dir existance at ./Makefile.PL
@@ -196,7 +220,7 @@ HERE
   }
 
   my $podcoverage = '';
-  foreach my $class (@{$makemaker->{'MyMakeMakerExtras_Pod_Coverage'}}) {
+  foreach my $class (@{$my_options{'MyMakeMakerExtras_Pod_Coverage'}}) {
     # the "." obscures it from MyExtractUse.pm
     $podcoverage .= "\t-perl -e 'use "."Pod::Coverage package=>$class'\n";
   }
@@ -227,14 +251,16 @@ myman:
 check-copyright-years:
 	year=`date +%Y`; \
 	tar tvfz $(DISTVNAME).tar.gz \
-	| egrep '$$year-|debian/copyright' \
+	| egrep "$$year-|debian/copyright" \
 	| sed 's:^.*$(DISTVNAME)/::' \
 	| (result=0; \
 	  while read i; do \
 	    case $$i in \
 	      '' | */ \
-	      | debian/changelog | debian/compat \
-	      | COPYING | MANIFEST* | SIGNATURE | META.yml) \
+	      | debian/changelog | debian/compat | debian/doc-base \
+	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
+	      | version.texi | */version.texi \
+	      | *.mo | *.locatedb | samp.*) \
 	      continue ;; \
 	    esac; \
 	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \
@@ -253,7 +279,7 @@ check-debug-constants:
 	if egrep -n 'DEBUG => [1-9]' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
 
 check-spelling:
-	if egrep -nHi 'explict|agument|destionation|\bthe the\b|\bnote sure\b' -r . \
+	if egrep -nHi 'existant|explict|agument|destionation|\bthe the\b|\bnote sure\b' -r . \
 	  | egrep -v '(MyMakeMakerExtras|Makefile|dist-deb).*grep -nH'; \
 	then false; else true; fi
 
@@ -294,7 +320,7 @@ DEBVNAME = $(DEBNAME)_$(VERSION)-1
 DEBFILE = $(DEBVNAME)_$(DPKG_ARCH).deb
 
 # ExtUtils::MakeMaker 6.42 of perl 5.10.0 makes "$(DISTVNAME).tar.gz" depend
-# on "$(DISTVNAME)" distdir directory, which is always non-existant after a
+# on "$(DISTVNAME)" distdir directory, which is always non-existent after a
 # successful dist build, so the .tar.gz is always rebuilt.
 #
 # So although the .deb depends on the .tar.gz don't express that here or it

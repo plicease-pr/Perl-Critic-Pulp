@@ -39,6 +39,6 @@ Architecture: all
 Depends: perl (>= 5.6), libperl-critic-perl (>= 1.082), libio-string-perl (>= 1.02), libversion-perl | perl-modules (>= 5.10), liblist-util-perl | perl-modules (>= 5.8), liblist-moreutils-perl, libscalar-util-perl | perl-modules (>= 5.8), ${misc:Depends}
 Recommends: libperl-minimumversion-perl
 Description: Some add-on policies for perlcritic
- This is some further policies for perlcritic, for miscellaneous bugs,
- compibility, efficiency and some cosmetic things.  See the
- Perl::Critic::Pulp man page for the full list.
+ This is some further policies for perlcritic, checking for
+ miscellaneous bugs, compatibility, efficiency, and cosmetic things.
+ See the Perl::Critic::Pulp man page for the full list.

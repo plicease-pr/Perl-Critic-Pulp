@@ -17,42 +17,38 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# exit 0 bad for Module::Depends::Intrusive
+
+use 5.006;
 use strict;
 use warnings;
 use Perl6::Slurp;
+use File::Locate::Iterator;
 
 use lib::abs '.';
-use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
+
+use FindBin;
+my $progname = $FindBin::Script;
 
 my $verbose = 0;
 
-my $l = MyLocatePerl->new;
-while (my ($filename, $str) = $l->next) {
-  if ($verbose) { print "look at $filename\n"; }
+my $it = File::Locate::Iterator->new (globs => ['*/Makefile.PL']);
+my $count = 0;
 
-  if ($str =~ /^__END__/m) {
-    substr ($str, $-[0], length($str), '');
-  }
+while (defined (my $filename = $it->next)) {
+  if ($verbose) { print "$filename\n"; }
+  my $str = eval { Perl6::Slurp::slurp($filename) } || next;
 
-  # strip comments
-  #  $str =~ s/#.*//mg;
-
-  while ($str =~ /(?:^|\G|[^\\])  # current pos or not a \
-                  \\(?:\\\\)*     # even number of \
-                  # and an unknown
-                  ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])/sgx) {
-    my $char = $1;
+  while ($str =~ /exit[ \t(]+0/mg) {
     my $pos = pos($str);
 
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    my $s = MyStuff::line_at_pos($str, $pos);
-
-    substr($s,0,$col) =~ /q[qx]|"/ or next;
-
-    print "$filename:$line:$col: unknown \\$char\n$s";
+    print "$filename:$line:$col: exit\n";
+    print MyStuff::line_at_pos($str, $pos);
   }
 }
+print "count $count\n";
 
-exit 0;
+__END__

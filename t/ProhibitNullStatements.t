@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 24;
+my $want_version = 25;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION,  '>=', $want_version, 'VERSION class method');
 {
@@ -42,17 +42,15 @@ require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::ProhibitNullStatements');
-{ my @p = $critic->policies;
-  is (scalar @p, 1,
-      'single policy ProhibitNullStatements');
+my @policies = $critic->policies;
+is (scalar @policies, 1, 'single policy ProhibitNullStatements');
 
-  my $policy = $p[0];
-  ok (eval { $policy->VERSION($want_version); 1 },
-      "VERSION object check $want_version");
-  my $check_version = $want_version + 1000;
-  ok (! eval { $policy->VERSION($check_version); 1 },
-      "VERSION object check $check_version");
-}
+my $policy = $policies[0];
+ok (eval { $policy->VERSION($want_version); 1 },
+    "VERSION object check $want_version");
+my $check_version = $want_version + 1000;
+ok (! eval { $policy->VERSION($check_version); 1 },
+    "VERSION object check $check_version");
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, ';' ],
@@ -84,9 +82,8 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
 }
 
 
-{ my ($p) = $critic->policies;
-  $p->{'_allow_perl4_semihash'} = 1;
-}
+$policy->{'_allow_perl4_semihash'} = 1;
+
 foreach my $data ([ 0, ';# a comment' ],
                   [ 0, "\n;# a comment" ],
                   [ 1, '  ;# but only at the start of a line' ],

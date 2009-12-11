@@ -21,14 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
-use Test::More tests => 13;
+use Test::More tests => 23;
 use Perl::Critic;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 #------------------------------------------------------------------------------
-my $want_version = 24;
+my $want_version = 25;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,  '>=', $want_version, 'VERSION class method');
 {
@@ -55,8 +55,8 @@ my $have_perl_minimumversion = eval { require Perl::MinimumVersion };
 }
 
 SKIP: {
-  $critic
-    or skip 'Perl::MinimumVersion not available', 7;
+  0 # $critic
+    or skip 'Perl::MinimumVersion not available', 17;
 
   my ($policy) = $critic->policies;
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -67,10 +67,31 @@ SKIP: {
 
   foreach my $data (
                     ## no critic (RequireInterpolationOfMetachars)
+
                     # _my_perl_5010_qr_m_working_properly
+                    #
                     [ 1, 'use 5.008; qr/^x$/m' ],
                     [ 0, 'use 5.010; qr/^x$/m' ],
+                    [ 1, 'use 5.006; my $re = qr/pattern/m;' ],
+                    [ 0, 'use 5.010; my $re = qr/pattern/m;' ],
+                    #
+                    # plain patterns ok, only qr// bad
+                    [ 0, '$str =~ /^foo$/m' ],
+                    [ 0, '$str =~ m{^foo$}m' ],
+                    #
+                    # with other modifiers
+                    [ 1, 'use 5.008; qr/^x$/im' ],
+                    [ 1, 'use 5.008; qr/^x$/ms' ],
+                    #
+                    # other modifiers
+                    [ 0, 'use 5.006; my $re = qr/pattern/s;' ],
+                    [ 0, 'use 5.006; my $re = qr/pattern/i;' ],
+                    [ 0, 'use 5.006; my $re = qr/pattern/x;' ],
+                    [ 0, 'use 5.006; my $re = qr/pattern/o;' ],
 
+
+                    # _perl_5010_operators__fix
+                    #
                     [ 1, "1 // 2" ],
                     [ 1, "use 5.008; 1 // 2" ],
                     [ 0, "use 5.010; 1 // 2" ],
