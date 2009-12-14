@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# XML::RSS::TimingBot \cm\cj lower case
+
 use strict;
 use warnings;
 use Perl6::Slurp;
@@ -40,9 +43,9 @@ while (my ($filename, $str) = $l->next) {
   #  $str =~ s/#.*//mg;
 
   while ($str =~ /(?:^|\G|[^\\])  # current pos or not a \
-                  \\(?:\\\\)*     # odd number of \
-                  # and an unknown
-                  ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])
+                  (?:\\\\)*       # odd number of \
+                  # \\c(.)
+                  \\c([^\x40-\x5F])
                  /sgx) {
     my $char = $1;
     my $pos = pos($str);
@@ -50,9 +53,9 @@ while (my ($filename, $str) = $l->next) {
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
     my $s = MyStuff::line_at_pos($str, $pos);
 
-    substr($s,0,$col) =~ /q[qx]|"/ or next;
+    # substr($s,0,$col) =~ /q[qx]|"/ or next;
 
-    print "$filename:$line:$col: unknown \\$char\n$s";
+    print "$filename:$line:$col: unknown control \\c $char\n$s";
   }
 }
 

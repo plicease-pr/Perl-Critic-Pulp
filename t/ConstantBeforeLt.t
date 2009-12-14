@@ -21,8 +21,6 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
-use PPI;
-use Perl::Critic;
 use Test::More tests => 50;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
@@ -30,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #------------------------------------------------------------------------------
-my $want_version = 25;
+my $want_version = 26;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
@@ -45,6 +43,7 @@ cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
 #------------------------------------------------------------------------------
 # _use_constants()
 
+require PPI;
 foreach my $data ([ 'use constant' ],
                   [ 'use constant FOO => 123',
                     'FOO' ],
@@ -100,6 +99,7 @@ foreach my $data ([ 'use constant' ],
 
 
 #------------------------------------------------------------------------------
+require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'ValuesAndExpressions::ConstantBeforeLt');

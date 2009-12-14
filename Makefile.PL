@@ -96,4 +96,6 @@ MyMakeMakerExtras::WriteMakefile
         # "package Perl::MinimumVersion" hack for fixes there
         no_index => { package => [ 'Perl::MinimumVersion' ] },
       },
+
+   MY_NO_HTML => 1,
   );

@@ -24,7 +24,7 @@ use List::Util;
 use version;
 use vars qw($VERSION @CHECKS);
 
-$VERSION = 25;
+$VERSION = 26;
 
 use constant DEBUG => 0;
 

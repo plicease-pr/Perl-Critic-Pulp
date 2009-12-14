@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 25;
+our $VERSION = 26;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -250,6 +250,10 @@ Stray consecutive commas C<,,>
 =item L<ValuesAndExpressions::ProhibitNullStatements|Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>
 
 Stray semicolons C<;>
+
+=item L<ValuesAndExpressions::ProhibitUnknownBackslash|Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash>
+
+Unknown C<\z> etc backslash escapes in strings.
 
 =back
 

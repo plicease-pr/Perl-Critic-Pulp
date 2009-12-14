@@ -6,6 +6,7 @@ debian/control
 debian/copyright
 debian/rules
 debian/watch
+devel/backslash-control.pl
 devel/churn-posix.pl
 devel/churn.pl
 devel/const-autoload.pl
@@ -13,6 +14,7 @@ devel/const-noproto.pl
 devel/const-post.pl
 devel/empty.pl
 devel/gettext.pl
+devel/grep-backslash-control.pl
 devel/grep-backslash.pl
 devel/grep-condsub.pl
 devel/grep-each.pl
@@ -63,6 +65,7 @@ lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitFiletest_f.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitUnknownBackslash.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
 lib/Pod/MinimumVersion.pm
@@ -88,6 +91,7 @@ t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
 t/ProhibitNullStatements.t
 t/ProhibitPOSIXimport.t
+t/ProhibitUnknownBackslash.t
 t/ProhibitUseQuotedVersion.t
 t/Pulp.t
 t/RequireEndBeforeLastPod.t

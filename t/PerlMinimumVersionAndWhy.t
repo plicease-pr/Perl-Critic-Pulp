@@ -22,13 +22,12 @@ use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 use Test::More tests => 23;
-use Perl::Critic;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 #------------------------------------------------------------------------------
-my $want_version = 25;
+my $want_version = 26;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,  '>=', $want_version, 'VERSION class method');
 {
@@ -38,6 +37,7 @@ cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION, 
 }
 
 #------------------------------------------------------------------------------
+require Perl::Critic;
 my $critic;
 eval {
   $critic = Perl::Critic->new

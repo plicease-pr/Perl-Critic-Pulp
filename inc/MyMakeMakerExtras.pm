@@ -170,7 +170,7 @@ $munghtml_extra/;
       $fullhtml .= '.html';
       my $parthtml = $fullhtml;
 
-      $fullhtml =~ s{/}{-};       # so Foo-Bar.html
+      $fullhtml =~ s{/}{-}g;      # so Foo-Bar.html
       unless ($html_files{$fullhtml}++) {
         $post .= <<"HERE";
 $fullhtml: $pm Makefile
@@ -258,6 +258,7 @@ check-copyright-years:
 	    case $$i in \
 	      '' | */ \
 	      | debian/changelog | debian/compat | debian/doc-base \
+	      | debian/patches/*.diff \
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
 	      | version.texi | */version.texi \
 	      | *.mo | *.locatedb | samp.*) \

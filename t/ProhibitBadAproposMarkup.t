@@ -22,10 +22,10 @@ use strict;
 use warnings;
 use Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
 use Test::More tests => 13;
-use Perl::Critic;
+
 
 #------------------------------------------------------------------------------
-my $want_version = 25;
+my $want_version = 26;
 cmp_ok ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -37,6 +37,7 @@ cmp_ok (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
 }
 
 #------------------------------------------------------------------------------
+require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => 'Documentation::ProhibitBadAproposMarkup');
