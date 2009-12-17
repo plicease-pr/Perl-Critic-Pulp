@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 26;
+our $VERSION = 27;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -149,21 +149,20 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a collection of add-on policies for C<Perl::Critic> summaried in the
-sections below.  They're under a new "pulp" theme plus other themes
+This is a collection of add-on policies for C<Perl::Critic>, summaried in
+the sections below.  They're under a new "pulp" theme plus other themes
 according to their purpose (see L<Perl::Critic/POLICY THEMES>).
 
 Roughly half are code related and half cosmetic.  You can always enable or
-disable the ones you do or don't want.  It's normal to pick and choose what
-you want reported.
+disable the ones you do or don't want.
 
-There's a lot of perlcritic builtin and add-on policies.  They range from
-helpful things catching problems, to the bizarre or restrictive, and in some
-cases are even mutually contradictory.  Many are intended as building blocks
-for enforcing a house style.  If you try to pass everything then you give
-away much of the language, so generally if you're not turning off or
-customizing about half then either you're not trying or you're much too
-easily lead!
+It's normal to pick and choose what you want reported.  There's a lot of
+perlcritic builtin and add-on policies and they range from helpful things
+catching problems, to the bizarre or restrictive, and in some cases are even
+mutually contradictory.  Many are intended as building blocks for enforcing
+a house style.  If you try to pass everything then you give away lots of the
+language, so if you're not turning off or customizing about half then either
+you're not trying or you're much too easily lead!
 
 =head2 Bugs
 
@@ -175,7 +174,7 @@ Check keyword arguments to C<__x>, C<__nx>, etc.
 
 =item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
 
-Don't quote version requirement like C<use Foo '1.5'>
+Don't quote version requirement C<use Foo '1.5'>
 
 =item L<ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
 
@@ -253,13 +252,13 @@ Stray semicolons C<;>
 
 =item L<ValuesAndExpressions::ProhibitUnknownBackslash|Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash>
 
-Unknown C<\z> etc backslash escapes in strings.
+Unknown C<\z> etc escapes in strings.
 
 =back
 
 =head1 OTHER NOTES
 
-In most of the perlcritic docs, including the Pulp ones here, policy names
+In most of the perlcritic documentation, including Pulp here, policy names
 appear without the full C<Perl::Critic::Policy::...> class name.  In Emacs
 try C<man-completion.el> to automatically get the man page from a suffix
 part at point, or C<ffap-perl-module.el> to go to the source similarly.

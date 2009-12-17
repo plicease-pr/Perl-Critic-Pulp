@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use Perl::Critic::Pulp;
 
-our $VERSION = 26;
+our $VERSION = 27;
 
 use constant DEBUG => 0;
 
@@ -48,14 +48,31 @@ sub supported_parameters {
 
 sub default_severity { return $SEVERITY_MEDIUM;   }
 sub default_themes   { return qw(pulp cosmetic);  }
-sub applies_to       { return ('PPI::Token::Quote::Single',
-                               'PPI::Token::Quote::Literal',
-                               'PPI::Token::Quote::Double',
-                               'PPI::Token::Quote::Interpolate',
-                               'PPI::Token::QuoteLike::Backtick',
-                               'PPI::Token::QuoteLike::Command',
-                               'PPI::Token::HereDoc'); }
 
+sub applies_to {
+  my ($policy) = @_;
+  return (($policy->{'_single'} ne 'none'
+           ? ('PPI::Token::Quote::Single',    # ''
+              'PPI::Token::Quote::Literal')   # q{}
+           : ()),
+
+          ($policy->{'_single'} ne 'none'
+           || $policy->{'_double'} ne 'none'
+           ? ('PPI::Token::QuoteLike::Command')  # qx{} or qx''
+           : ()),
+
+          ($policy->{'_double'} ne 'none'
+           ? ('PPI::Token::Quote::Double',       # ""
+              'PPI::Token::Quote::Interpolate',  # qq{}
+              'PPI::Token::QuoteLike::Backtick') # ``
+           : ()),
+
+          ($policy->{'_heredoc'} ne 'none'
+           ? ('PPI::Token::HereDoc')
+           : ()));
+}
+
+# for violation messages
 my %charname = ("\n" => '{newline}',
                 "\r" => '{cr}',
                 "\t" => '{tab}',
@@ -83,7 +100,7 @@ use constant _KNOWN => (
                         . '@'    # non-interpolation
                        );
 
-use constant _KNOWN_CONTROL
+use constant _CONTROL_KNOWN
   => '?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz';
 
 my $quotelike_re = qr/^(?:(q[qrwx]?)  # $1 "q" if present
@@ -115,14 +132,14 @@ sub violates {
       $str = $3;
     }
     $str =~ s{((^|\G|[^\\])(\\\\)*)\\\Q$close}{$close}sg;
-    
+
     if ($elem->isa('PPI::Token::Quote::Single')
         || $elem->isa('PPI::Token::Quote::Literal')
         || ($elem->isa('PPI::Token::QuoteLike::Command')
             && $close eq "'")) {
       $single = 1;
       $param = $self->{_single};
-      
+
     } else {
       $param = $self->{_double};
     }
@@ -156,7 +173,7 @@ sub violates {
   my @violations;
   while ($str =~ /(\$.                     # $ not at end-of-string
                   |\@[[:alnum:]:'\{\$+-])  # @ forms per toke.c S_scan_const()
-                 |(\\+)   # $2 run of backslashes
+                |(\\+)   # $2 run of backslashes
                  /sgx) {
     if (defined $1) {
       # $ or @
@@ -176,15 +193,24 @@ sub violates {
 
     my $c = substr($str,pos($str),1);
     pos($str)++;
-    if ($c eq 'c') {
-      # \cX skip char immediately after \c, in particular for \c\ the second
-      # backslash isn't an escape.  Perl gives an error for that, should it
-      # be reported here too?
-      #
-      # If \c is at end-of-string then pos() will go past length($str), but
-      # that's ok, the loop regexp gives no-match.
-      #
-      pos($str)++;
+
+    if ($c eq 'c' && ! $single) {
+      # \cX control char.
+      # If \c is at end-of-string then new $c is '' and pos() will goes past
+      # length($str).  That pos() is ok, the loop regexp gives no-match and
+      # terminates.
+      $c = substr ($str, pos($str)++, 1);
+      if ($c eq '') {
+        push @violations,
+          $self->violation ('Control char \\c at end of string', '', $elem);
+        next;
+      }
+      if (index (_CONTROL_KNOWN, $c) >= 0) {
+        next;  # a known escape
+      }
+      push @violations,
+        $self->violation ('Unknown control char \\c' . _printable($c),
+                          '', $elem);
       next;
     }
 
@@ -192,9 +218,9 @@ sub violates {
       # only report on chars quotemeta leaves unchanged
       next if $c ne quotemeta($c);
     } elsif ($param eq 'alnum') {
-      # only interested in alphanumerics like perl, does that mean only
-      # ascii alphabeticals?
-      next unless $c =~ /[a-zA-Z0-9]/;
+      # only report unknown alphanumerics, like perl does
+      # believe perl only reports ascii alnums as bad, wide char alphas ok
+      next if $c !~ /[a-zA-Z0-9]/;
     }
 
     # if $c eq '' for end-of-string then index() returns 0, for no violation
@@ -203,13 +229,10 @@ sub violates {
       next;
     }
 
-    # only ascii graphicals shown literally
-    (my $printable = $c) =~ s{([^[:graph:]]|[^[:ascii:]])}
-                             { $charname{$1} || sprintf('{0x%X}',ord($1)) }e;
-    my $msg = "Unknown backslash \\$printable"
-      . ($c eq 'N' && ", until perl 5.6.0");
-
-    push @violations, $self->violation ($msg, '', $elem);
+    push @violations,
+      $self->violation ('Unknown backslash \\' . _printable($c)
+                        . ($c eq 'N' && ', until perl 5.6.0'),
+                        '', $elem);
 
     # would have to take into account HereDoc begins on next line ...
     # _violation_elem_offset ($violation, $elem, pos($str)-2);
@@ -285,6 +308,12 @@ sub _violation_elem_offset {
   #   return Perl::Critic::Policy::Compatibility::PodMinimumVersion::_violation_override_linenum ($violation, $doc_str, $newlines - 1);
 }
 
+sub _printable {
+  my ($c) = @_;
+  $c =~ s{([^[:graph:]]|[^[:ascii:]])}
+         { $charname{$1} || sprintf('{0x%X}',ord($1)) }e;
+  return $c;
+}
 
 #-----------------------------------------------------------------------------
 # unused bits
@@ -340,26 +369,45 @@ addon.  It checks for unknown backslash escapes like
 
     print "\*.c";     # bad
 
-This is usually harmless, in as much as the intention is a literal "*" and
-that's what it gives, but it's unnecessary, and on that basis this policy is
-under the C<cosmetic> theme (see L<Perl::Critic/POLICY THEMES>).  It's also
-possible however an unnecessary backslash is a misunderstanding
-interpolation, or a typo.
+This is harmless, assuming the intention is a literal "*" (which it gives),
+but unnecessary, and on that basis this policy is under the C<cosmetic>
+theme (see L<Perl::Critic/POLICY THEMES>).  It's possible though an
+unnecessary backslash is a misunderstanding of interpolation, or a typo.
 
-Perl already warns about unknown escaped alphanumerics like C<\v>, under
+Perl already warns about unknown escaped alphanumerics like C<\v> under
 C<perl -w> or C<use warnings> (see L<perldiag/Unrecognized escape \\%c
 passed through>).
 
-    print "\v";       # provokes Perl warning
+    print "\v";       # bad, and provokes Perl warning
 
 This policy extends to report on any unknown escape, with options below to
-vary the strictness, and check single-quote strings too if desired.
+vary the strictness and to check single-quote strings too if desired.
+
+=head2 Control Characters \c
+
+Control characters C<\cX> are checked and only the conventional A-Z a-z @ [
+\ ] ^ _ ? are considered known.
+
+    print "\c*";      # bad
+
+Perl accepts any C<\c> and does an upcase and xor 0x40, so C<\c*> is the
+letter j, on an ASCII system at least.  But that's quite obscure and likely
+to be a typo or error.
+
+For reference, C<\c\> is the ASCII FS "file separator" and the second
+backslash is not an escape, except for a closing quote character, which it
+does escape (basically because Perl scans for a closing quote before
+considering interpolations).  Thus,
+
+    print " \c\  ";     # ok
+    print " \c\" ";     # bad, control-" is unknown
+    print qq[ \c\]  ];  # ok, control-]
 
 =head2 Wide Chars
 
 C<\N{}> named unicode and C<\777> octal escapes above 255 are new in Perl
 5.6.  They're considered known if the document has a C<use 5.006> or higher,
-or the default with no such version at all is to allow them too.
+or if there's no C<use> version at all.
 
     print "\777";            # ok
 
@@ -369,9 +417,9 @@ or the default with no such version at all is to allow them too.
     use 5.005;
     print "\N{COLON}";       # bad
 
-The absense of a C<use> is treated as 5.6 because that's most likely if you
-have those escapes intentionally.  But perhaps this will change, or be
-configurable.
+The absense of a C<use> is treated as 5.6 because that's most likely,
+especially if you have those escapes intentionally.  But perhaps this will
+change, or be configurable.
 
 In the violation messages a non-ascii or non-graphical escaped char is shown
 as hex like C<\{0x263A}>, to ensure the message is printable and
@@ -384,7 +432,7 @@ Perl does, so backslashes for refs there are ok, in particular tricks like
 C<${\scalar ...}> are fine (see L<perlfaq4/How do I expand function calls in
 a string?>).
 
-    print "this ${\(some()+thing())}
+    print "this ${\(some()+thing())}";   # ok
 
 As always, if you're not interested in any of this then you can disable
 C<ProhibitUnknownBackslash> from your F<.perlcriticrc> in the usual way,
@@ -411,20 +459,22 @@ The possible values are
 "alnum" does no more than compiling with C<perl -w>, but might be good for
 checking code you don't want to run at all.
 
-"quotemeta" means report escapes not produced by C<quotemeta()>.  For
-example C<quotemeta> escapes a C<*>, so C<\*> is not reported, but it
-doesn't escape an underscore C<_>, so C<\_> is reported.  The effect is to
-prohibit a few more escapes than "alnum".  One use is to check code
-generated by other code if you use C<quotemeta> to produce double-quoted
-strings and thus may have escaping which is unnecessary but works fine.
+"quotemeta" reports escapes not produced by C<quotemeta()>.  For example
+C<quotemeta> escapes a C<*>, so C<\*> is not reported, but it doesn't escape
+an underscore C<_>, so C<\_> is reported.  The effect is to prohibit a few
+more escapes than "alnum".  One use is to check code generated by other code
+where you've used C<quotemeta> to produce double-quoted strings and thus may
+have escaping which is unnecessary but works fine.
 
 =item C<single> (string, default "none")
 
 C<single> applies to single-quote strings C<''>, C<q{}>, C<qx''>, etc.  The
-possible values are as for C<double> above, though only "all" or "none" make
-much sense.
+possible values are as above, though only "all" or "none" make much sense.
 
-"single" defaults to "none" because literal backslashes in single-quotes are
+    none       don't report anything
+    all        report all unknowns
+
+The default is "none" because literal backslashes in single-quotes are
 usually both what you want and quite convenient.  Setting "all" effectively
 means you must write backslashes as C<\\>.
 
@@ -432,12 +482,12 @@ means you must write backslashes as C<\\>.
     print 'c:\\my\\msdos\\filename';  # ok
 
 Doubled backslashing like this is correct, and can emphasise that you really
-did want a backslash, but it's a bit tedious and not easy on the eye and so
-is left only as an option.
+did want a backslash, but it's tedious and not easy on the eye and so is
+left only as an option.
 
 For reference, single-quote here-documents C<E<lt>E<lt>'HERE'> don't have
-any backslash escapes and so are left alone by this policy.  C<qx{}>
-backticks are normally double-quote, but C<qx''> is single-quote.
+any backslash escapes and so are not considered by this policy.  C<qx{}>
+command backticks are normally double-quote, but C<qx''> is single-quote.
 
 =back
 

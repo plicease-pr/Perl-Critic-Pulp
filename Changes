@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 27, December 2009
+    - ProhibitUnknownBackslash also \c control chars
+
 Version 26, December 2009
     - new policy ProhibitUnknownBackslash
 

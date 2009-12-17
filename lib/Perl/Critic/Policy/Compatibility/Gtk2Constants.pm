@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(:severities
                            is_method_call);
 use Perl::Critic::Pulp;
 
-our $VERSION = 26;
+our $VERSION = 27;
 
 use constant DEBUG => 0;
 

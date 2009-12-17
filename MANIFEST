@@ -49,6 +49,7 @@ devel/qrm.pl
 devel/TestAutoload.pm
 devel/unknown-backslash.pl
 devel/use-quoted.pl
+inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm

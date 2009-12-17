@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #------------------------------------------------------------------------------
-my $want_version = 26;
+my $want_version = 27;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION,
         '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,

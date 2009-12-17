@@ -23,7 +23,7 @@ use Perl::Critic::Utils qw(:severities);
 use version;
 use Perl::Critic::Pulp;
 
-our $VERSION = 26;
+our $VERSION = 27;
 
 use constant DEBUG => 0;
 

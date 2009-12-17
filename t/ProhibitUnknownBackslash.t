@@ -21,14 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
-use Test::More tests => 321;
+use Test::More tests => 339;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 26;
+my $want_version = 27;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, '>=', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, '>=', $want_version, 'VERSION class method');
 {
@@ -135,17 +135,41 @@ foreach my $want_string ("abc", "a\nb") {
   
   foreach my $data
     (## no critic (RequireInterpolationOfMetachars)
+
+     # \cX including \c\
+
+     [ 0, '  "\\cA"  ' ],
+     [ 0, '  "\\cz"  ' ],
+     [ 0, '  "\\cm\\cj"  ' ],
+     [ 0, '  "\\c\\"  ' ],
+     [ 0, '  "\\c\\v"  ' ],
+     [ 0, '  "\\c\\z"  ' ],
+     [ 0, '  "\\c\\\\n"  ' ],
+     [ 1, '  "\\c\\\\v"  ' ],
+
+     [ 1, '  "\\c*"  ' ],
+     [ 2, '  "\\c1\\c2"  ' ],
+
+     # \c at end-of-string
+     [ 1, '  "\\c"  ' ],
+     [ 1, '  qq X\\cX  ' ],
+
+     # control-\ before interpolation
+     [ 1, q{  qq$\\c\\${\\scalar 123} $  } ],
+     [ 0, q{  qq@\\c\\${\\scalar 123} @  } ],
      
-     [ 0, 'qq{}' ],
-     [ 0, '""' ],
-     [ 1, '"\\z"' ],
-     [ 1, 'qq{\\z}' ],
-     [ 0, '"\\\\z"' ],
-     [ 0, 'qq{\\\\z}' ],
-     [ 1, '"\\\\\\z"' ],
-     [ 1, 'qq{\\\\\\z}' ],
-     [ 2, '"\\\\\\z\z"' ],
-     [ 2, 'qq{\\\\\\z\z}' ],
+
+     
+     [ 0, '  qq{}  ' ],
+     [ 0, '  ""  ' ],
+     [ 1, '  "\\z"  ' ],
+     [ 1, '  qq{\\z}  ' ],
+     [ 0, '  "\\\\z"  ' ],
+     [ 0, '  qq{\\\\z}  ' ],
+     [ 1, '  "\\\\\\z"  ' ],
+     [ 1, '  qq{\\\\\\z}  ' ],
+     [ 2, '  "\\\\\\z\z"  ' ],
+     [ 2, '  qq{\\\\\\z\z}  ' ],
      
      [ 0, '  "$"    ' ],  # dodgy interpolation, but not an unknown backslash
      [ 0, '  "\\$"  ' ],
@@ -206,14 +230,6 @@ HERE
      [ 0, '  "aa\\033\177\200\377\\xFF\\cJ\\N{COLON}bb"  ' ],
      [ 0, '  "aa\\Ua\\u\\LX\\l\\Q\\E"  ' ],
      
-     # \cX including \c\
-     [ 0, '"\\c"' ],
-     [ 0, '"\\c\\z"' ],
-     [ 1, '"\\c\\\\z"' ],
-     # end of string without a char is an error, but not fatal to the policy
-     [ 0, '"\\c"' ],
-     [ 0, 'qq X\\cX' ],
-     
      # close of singles and doubles
      [ 0, "  'aa\\\\'bb'  " ],
      [ 0, '  q{aa\\}bb}  ' ],
@@ -227,6 +243,7 @@ HERE
      
      # singles ok
      [ 0, q{  '\\xFF'  } ],
+     [ 0, q{  '\\c*'  } ],
      [ 0, q{  my $pat = '[0-9eE\\.\\-]'  } ],
      
      [ 1, 'use 5.005;  "\\N{COLON}"  ' ],
@@ -241,9 +258,6 @@ HERE
      [ 1, q{  "\\\\\\\\\\s"  } ],
      [ 0, q{  "\\\\\\\\\\\\s"  } ],
      [ 1, q{  "\\\\\\\\\\\\\\s"  } ],
-     
-     [ 1, q{  qq$\\c\\${\\scalar 123} $  } ],
-     [ 0, q{  qq@\\c\\${\\scalar 123} @  } ],
      
     ) {
     my ($want_count, $str) = @$data;
@@ -330,6 +344,9 @@ HERE
      [ 1, "  '\\\t'  " ],
      [ 1, "  '\\\f'  " ],
      [ 1, "  '\\ '  " ],
+
+     # two violations, not a control-\
+     [ 2, "  '\\c\\z '  " ],
 
     ) {
     my ($want_count, $str) = @$data;

@@ -23,7 +23,7 @@ use Perl::Critic::Pulp;
 use Perl::Critic::Utils ':severities';
 use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 26;
+our $VERSION = 27;
 
 use constant DEBUG => 0;
 
