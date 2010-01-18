@@ -1,4 +1,4 @@
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use Perl::Critic::Pulp;
 
-our $VERSION = 27;
+our $VERSION = 28;
 
 use constant DEBUG => 0;
 
@@ -367,12 +367,16 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash - don't use
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It checks for unknown backslash escapes like
 
-    print "\*.c";     # bad
+    print "\*.c";      # bad
 
 This is harmless, assuming the intention is a literal "*" (which it gives),
 but unnecessary, and on that basis this policy is under the C<cosmetic>
-theme (see L<Perl::Critic/POLICY THEMES>).  It's possible though an
-unnecessary backslash is a misunderstanding of interpolation, or a typo.
+theme (see L<Perl::Critic/POLICY THEMES>).  Sometimes it can be a
+misunderstanding a typo though, for instance a backslashed newline is a
+newline, but perhaps you thought it meant a continuation.
+
+    print "this\       # bad
+    is a newline";
 
 Perl already warns about unknown escaped alphanumerics like C<\v> under
 C<perl -w> or C<use warnings> (see L<perldiag/Unrecognized escape \\%c
@@ -502,7 +506,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009 Kevin Ryde
+Copyright 2009, 2010 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

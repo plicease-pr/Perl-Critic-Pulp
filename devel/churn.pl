@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -75,34 +75,41 @@ GetOptions
    apropos => sub {
      push @option_policies, 'Documentation::ProhibitBadAproposMarkup';
    },
-
-   # secret extras ...
    backslash => sub {
      push @option_policies, 'ValuesAndExpressions::ProhibitUnknownBackslash';
    },
-   qrm => sub {
-     push @option_policies, 'Compatibility::RegexpQrm';
+
+   # coming soon ...
+   testprint => sub {
+     push @option_policies, 'TestingAndDebugging::ProhibitTestPrint';
+   },
+   commanewline => sub {
+     push @option_policies, 'CodeLayout::RequireTrailingCommasAtNewline';
    },
   );
 
-my @dirs = @ARGV;
-if (! @dirs) {
-  if ($option_t_files) {
-    @dirs = split /\n/, `locate '*.t'`;
+my @files;
+if ($option_t_files) {
+  require File::Locate;
+  @files = File::Locate::locate ('*.t', '/var/cache/locate/locatedb');
+} else {
+  my @dirs = @ARGV;
+  if (! @dirs) {
   } else {
-    @dirs = ('/usr/share/perl5',
-            # '/usr/bin',
-            # '/bin',
-            # glob('/usr/share/perl/*.*.*')
+    @dirs = (
+             '/usr/share/perl5',
+             '/usr/bin',
+             '/bin',
+             glob('/usr/share/perl/*.*.*')
             );
   }
-}
-print "Directories:\n";
-foreach (@dirs) {
-  print "  ",$_,"\n";
+  print "Directories:\n";
+  foreach (@dirs) {
+    print "  ",$_,"\n";
+  }
+  @files = map { -d $_ ? Perl::Critic::Utils::all_perl_files($_) : $_ } @dirs;
 }
 
-my @files = map { -d $_ ? Perl::Critic::Utils::all_perl_files($_) : $_ } @dirs;
 @files = uniq_by_func (\&stat_dev_ino, @files);
 print "Files: ",scalar(@files),"\n";
 
@@ -110,11 +117,14 @@ print "Files: ",scalar(@files),"\n";
 sub uniq_by_func {
   my $func = shift;
   my %seen;
-  return grep { $seen{$func->($_)}++ == 0 } @_;
+  return grep { my $key = $func->($_);
+                defined $key && $seen{$key}++ == 0
+              } @_;
 }
 sub stat_dev_ino {
   my ($filename) = @_;
   my ($dev, $ino) = stat ($filename);
+  return if ! defined $dev;
   return "$dev,$ino";
 }
 

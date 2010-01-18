@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -28,18 +28,18 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 27;
+  my $want_version = 28;
   cmp_ok ($Pod::MinimumVersion::VERSION,
-          '>=', $want_version, 'VERSION variable');
+          '==', $want_version, 'VERSION variable');
   cmp_ok (Pod::MinimumVersion->VERSION,
-          '>=', $want_version, 'VERSION class method');
+          '==', $want_version, 'VERSION class method');
   {
     ok (eval { Pod::MinimumVersion->VERSION($want_version); 1 }, "VERSION class check $want_version");
     my $check_version = $want_version + 1000;
     ok (! eval { Pod::MinimumVersion->VERSION($check_version); 1 }, "VERSION class check $check_version");
   }
   { my $pmv = Pod::MinimumVersion->new;
-    cmp_ok ($pmv->VERSION, '>=', $want_version, 'VERSION object method');
+    cmp_ok ($pmv->VERSION, '==', $want_version, 'VERSION object method');
     ok (eval { $pmv->VERSION($want_version); 1 },
         "VERSION object check $want_version");
     my $check_version = $want_version + 1000;

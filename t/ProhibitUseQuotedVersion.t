@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -28,11 +28,11 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 27;
+my $want_version = 28;
 cmp_ok ($Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion::VERSION,
-        '>=', $want_version, 'VERSION variable');
+        '==', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION,
-        '>=', $want_version, 'VERSION class method');
+        '==', $want_version, 'VERSION class method');
 {
   ok (eval { Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;

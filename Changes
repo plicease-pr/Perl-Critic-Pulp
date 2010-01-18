@@ -1,4 +1,4 @@
-Copyright 2008, 2009 Kevin Ryde
+Copyright 2008, 2009, 2010 Kevin Ryde
 
 This file is part of Perl-Critic-Pulp.
 
@@ -15,6 +15,9 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+Version 28, January 2010
+    - new policy ProhibitUnixDevNull
 
 Version 27, December 2009
     - ProhibitUnknownBackslash also \c control chars

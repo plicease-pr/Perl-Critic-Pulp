@@ -42,7 +42,8 @@ while (my ($filename, $str) = $l->next) {
   while ($str =~ /(?:^|\G|[^\\])  # current pos or not a \
                   \\(?:\\\\)*     # odd number of \
                   # and an unknown
-                  ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])
+                  # ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])
+                  \n
                  /sgx) {
     my $char = $1;
     my $pos = pos($str);

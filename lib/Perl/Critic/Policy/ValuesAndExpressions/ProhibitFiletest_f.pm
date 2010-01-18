@@ -1,4 +1,4 @@
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use Perl::Critic::Pulp;
 
-our $VERSION = 27;
+our $VERSION = 28;
 
 sub supported_parameters { return; }
 sub default_severity     { return $SEVERITY_MEDIUM;   }
@@ -56,8 +56,8 @@ the "bugs" theme, see L<Perl::Critic/POLICY THEMES>).
 =item C<-f> is not the opposite of C<-d>
 
 If you're traversing a tree and want to distinguish files to process from
-directories to descend into then C<-d> should be used as it allows device
-files or pipes to be processed.
+directories to descend into then C<-d> should be used so device files or
+pipes can be processed.
 
     if (-f $filename) {      # bad
       process ($filename);
@@ -75,10 +75,10 @@ files or pipes to be processed.
 
 Char specials and named pipes are perfectly good for reading and writing,
 and char specials can support seeking.  Demanding C<-f> is an unnecessary
-restriction in your code.  You might only use ordinary files normally, but
-there's no need to prevent someone else running it on a tape drive,
-F</dev/null>, etc.  You should test each C<seek> etc for success, and that
-will tell you what can be done.
+restriction in your code.  You might only ever use ordinary files normally,
+but there's no need to prevent someone else running it on a tape drive,
+F</dev/null>, etc.  You must test each C<seek> etc for success anyway, and
+that will tell you if it's seekable.
 
     seek HANDLE, 123, 0
       or die "Error seeking: $!";
@@ -108,11 +108,11 @@ test and the open.
       open HANDLE, '<', $filename
     }
 
-If you want to know if you can open a file then open the file!  The error
-return from open must be checked, so a test beforehand only duplicates, and
-is an opportunity to wrongly anticipate what can or can't be done.  On
-opening C<ENOENT> will say if it's for no such file, or C<EISDIR> if it's in
-fact a directory.
+If you want to know if the file can be opened then open the file!  The error
+return from open must be checked, so a test beforehand only duplicates that,
+and is an opportunity to wrongly anticipate what the system can or can't do.
+On opening C<ENOENT> will say if there was no such file, or C<EISDIR> if
+it's in fact a directory.
 
     if (! open HANDLE, '<', $filename) {  # better
       if ($! == POSIX::ENOENT()) {
@@ -121,8 +121,8 @@ fact a directory.
     }
 
 If you really do want to enquire into the nature of the file, to only allow
-ordinary files, then C<-f> can be used on the opened handle.  But that's
-unusual outside an archiving or backup program.
+ordinary files, then C<-f> can be used on the opened handle.  That's unusual
+outside an archiving or backup program.
 
 Incidentally, for error messages C<$!> is normally the best thing to print.
 It can be slightly technical, but its values are familiar from other
@@ -133,13 +133,13 @@ programs and are translated into the user's locale.
 =head2 Disabling
 
 Most uses of C<-f> tend to be shell script style code written in Perl.  In
-the shell it's normally not possible to do much better (though C<-d> or
-C<-e> is generally wanted instead of C<-f>), but in Perl it is.
+the shell it's usually not possible to do better (though C<-d> or C<-e> is
+generally wanted instead of C<-f>), but in Perl it is.
 
-A blanket prohibition like this policy is bit harsh, but is meant as a
-building block or at least to make you think carefully whether C<-f> is
-really right.  As always though you can disable C<ProhibitFiletest_f> from
-your F<.perlcriticrc> in the usual way,
+A blanket prohibition like this policy is harsh, but is meant as a building
+block or at least to make you think carefully whether C<-f> is really right.
+As always though you can disable C<ProhibitFiletest_f> from your
+F<.perlcriticrc> in the usual way,
 
     [-ValuesAndExpressions::ProhibitFiletest_f]
 
@@ -154,7 +154,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009 Kevin Ryde
+Copyright 2009, 2010 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

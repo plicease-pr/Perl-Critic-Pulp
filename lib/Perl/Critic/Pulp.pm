@@ -1,4 +1,4 @@
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 27;
+our $VERSION = 28;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -154,15 +154,14 @@ the sections below.  They're under a new "pulp" theme plus other themes
 according to their purpose (see L<Perl::Critic/POLICY THEMES>).
 
 Roughly half are code related and half cosmetic.  You can always enable or
-disable the ones you do or don't want.
-
-It's normal to pick and choose what you want reported.  There's a lot of
-perlcritic builtin and add-on policies and they range from helpful things
-catching problems, to the bizarre or restrictive, and in some cases are even
-mutually contradictory.  Many are intended as building blocks for enforcing
-a house style.  If you try to pass everything then you give away lots of the
-language, so if you're not turning off or customizing about half then either
-you're not trying or you're much too easily lead!
+disable the ones you do or don't want.  It's normal to pick and choose what
+you want reported.  There's a lot of perlcritic builtin and add-on policies
+and they range from helpful things catching problems, to the bizarre or
+restrictive, and in some cases are mutually contradictory!  Many are
+intended as building blocks for enforcing a house style.  If you try to pass
+everything then you give away big parts of the language, so if you're not
+turning off or customizing about half then either you're not trying or
+you're much too easily lead!
 
 =head2 Bugs
 
@@ -214,6 +213,10 @@ Perl version declared against features used.
 
 Perl version declared against POD features used.
 
+=item L<Compatibility::ProhibitUnixDevNull|Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull>
+
+Prefer C<File::Spec-E<gt>devnull> over explicit F</dev/null>.
+
 =back
 
 =head2 Efficiency
@@ -258,24 +261,25 @@ Unknown C<\z> etc escapes in strings.
 
 =head1 OTHER NOTES
 
-In most of the perlcritic documentation, including Pulp here, policy names
-appear without the full C<Perl::Critic::Policy::...> class name.  In Emacs
-try C<man-completion.el> to automatically get the man page from a suffix
-part at point, or C<ffap-perl-module.el> to go to the source similarly.
+In most of the perlcritic documentation, including the Pulp here, policy
+names appear without the full C<Perl::Critic::Policy::...> class name.  In
+Emacs have a look at C<man-completion.el> to automatically get the man page
+from a suffix part at point, or C<ffap-perl-module.el> to go to the source
+similarly.
 
     http://user42.tuxfamily.org/man-completion/index.html
 
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
 In perlcritic's output you can ask for %P for the full policy name to copy
-or follow.  Here's a good format you can put in your F<.perlcriticrc> for
-file:line:column: which Emacs will recognise.  See
+or follow.  Here's a good format you can put in your F<.perlcriticrc>,
+including file:line:column: which Emacs will recognise.  See
 L<Perl::Critic::Violation> for all the C<%> escapes.
 
     verbose=%f:%l:%c:\n %P\n %m\n
 
-F<perlcritic.el> has patterns to match the perlcritic builtin formats, but
-it's easier to print file:line:column: in the first place.
+F<perlcritic.el> has patterns to match the builtin formats, but it's easier
+to print file:line:column: in the first place.
 
 =head1 SEE ALSO
 
@@ -287,7 +291,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009 Kevin Ryde
+Copyright 2008, 2009, 2010 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

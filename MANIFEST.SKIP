@@ -2,7 +2,7 @@
 
 # MANIFEST.SKIP -- my various excluded files
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is shared among several distributions.
 #
@@ -89,11 +89,13 @@ devel/h2xs/TestConstFoo/
 # special case mall executables
 devel/hblk
 devel/mallopt
+devel/mallstats
 
 # special htmlext environs
 ^test-dist/
 
 
+\.junk$
 \.bak$
 ^backup
 ^misc

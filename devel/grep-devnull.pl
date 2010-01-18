@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/perl
 
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,8 +17,33 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+use strict;
+use warnings;
+use Perl6::Slurp;
 
-locate \*.t \
-  | grep -v 5.004 \
-  | xargs egrep -n -w 'print|say' \
-  | egrep -v '"not|"ok|"#|[.][.]|:[ 	]*#|print STDERR'
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
+use Text::Tabs ();
+
+my $verbose = 0;
+
+my $l = MyLocatePerl->new;
+while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
+
+  pos($str) = 0;
+  $str =~ m{(qq?.|[\'\"])
+             \s*
+             (\+?(<|>>?)\s*)?
+             /dev/null
+          }gsx
+            or next;
+  my $pos = pos($str);
+  my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+
+  print "$filename:$line:$col: /dev/null\n",
+    MyStuff::line_at_pos($str, $pos);
+}
+
+exit 0;
