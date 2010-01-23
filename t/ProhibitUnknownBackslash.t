@@ -21,14 +21,14 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
-use Test::More tests => 339;
+use Test::More tests => 337;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 28;
+my $want_version = 29;
 cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, '==', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, '==', $want_version, 'VERSION class method');
 {
@@ -136,9 +136,9 @@ foreach my $want_string ("abc", "a\nb") {
   
   foreach my $data
     (## no critic (RequireInterpolationOfMetachars)
-
+     
      # \cX including \c\
-
+     
      [ 0, '  "\\cA"  ' ],
      [ 0, '  "\\cz"  ' ],
      [ 0, '  "\\cm\\cj"  ' ],
@@ -147,19 +147,19 @@ foreach my $want_string ("abc", "a\nb") {
      [ 0, '  "\\c\\z"  ' ],
      [ 0, '  "\\c\\\\n"  ' ],
      [ 1, '  "\\c\\\\v"  ' ],
-
+     
      [ 1, '  "\\c*"  ' ],
      [ 2, '  "\\c1\\c2"  ' ],
-
+     
      # \c at end-of-string
      [ 1, '  "\\c"  ' ],
      [ 1, '  qq X\\cX  ' ],
-
+     
      # control-\ before interpolation
      [ 1, q{  qq$\\c\\${\\scalar 123} $  } ],
      [ 0, q{  qq@\\c\\${\\scalar 123} @  } ],
      
-
+     
      
      [ 0, '  qq{}  ' ],
      [ 0, '  ""  ' ],
@@ -194,9 +194,13 @@ HERE
 " ],
      
      [ 1, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
-     [ 1, ($] >= 5.008
-           ? 'qq{\\'.chr(0x16A).'}' # 5.8 bytes U-with-macron
-           : '') ],                 # not 5.8, dummy passing
+
+     # not sure if wide chars are supposed to be allowed in an input string,
+     # presumably yes, but some combination of perl 5.8.3 and PPI 1.206
+     # threw an error on it
+     #      [ 1, ($] >= 5.008
+     #            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
+     #            : '') ],                 # not 5.8, dummy passing
      
      [ 1, 'use 5.005; "\\N{COLON}"' ],
      [ 1, 'use 5.005; "\\400"' ],
@@ -275,19 +279,19 @@ HERE
       is ($got_count, $want_count, $testname);
     }
   }
-
+  
   #-------------------
   # double=quotemeta
-
+  
   $policy->{_double} = 'quotemeta';
-
+  
   foreach my $data
     (## no critic (RequireInterpolationOfMetachars)
      
      # non-ascii allowed under default 'quotemeta'
      [ 0, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
      [ 1, ($] >= 5.008
-           ? 'qq{\\'.chr(0x16A).'}' # 5.8 bytes U-with-macron
+           ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
            : '') ],                 # not 5.8, dummy passing
      
      

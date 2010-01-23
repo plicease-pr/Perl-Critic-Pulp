@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 28;
+our $VERSION = 29;
 
 
 # The code here is shared by some of the modules, or might one day get into
@@ -52,11 +52,12 @@ sub parameter_parse_version {
 # return a version.pm object, or undef if invalid
 sub version_if_valid {
   my ($str) = @_;
-  # this is a nasty hack to notice "not a number" etc warnings
+  # this is a nasty hack to notice "not a number" warnings, and for version
+  # 0.81 possible errors too
   my $good = 1;
   my $version;
   { local $SIG{'__WARN__'} = sub { $good = 0 };
-    $version = version->new($str);
+    eval { $version = version->new($str) };
   }
   return ($good ? $version : undef);
 }

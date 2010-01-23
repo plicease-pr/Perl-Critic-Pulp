@@ -46,10 +46,12 @@ devel/posix-import.pl
 devel/posix-size.pl
 devel/posix-user.pl
 devel/PosixUser.pm
+devel/ppi-wide.pl
 devel/qrm.pl
 devel/TestAutoload.pm
 devel/unknown-backslash.pl
 devel/use-quoted.pl
+devel/version.pl
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm

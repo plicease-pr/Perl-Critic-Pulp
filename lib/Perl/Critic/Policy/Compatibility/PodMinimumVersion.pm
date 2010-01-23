@@ -20,12 +20,16 @@ package Perl::Critic::Policy::Compatibility::PodMinimumVersion;
 use 5.006;
 use strict;
 use warnings;
-use Pod::MinimumVersion;
+
+# 1.084 for Perl::Critic::Document highest_explicit_perl_version()
+use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Pulp;
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 28;
+use Pod::MinimumVersion;
+
+our $VERSION = 29;
 
 use constant DEBUG => 0;
 

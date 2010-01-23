@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 28;
+my $want_version = 29;
 cmp_ok ($Perl::Critic::Pulp::VERSION, '==', $want_version,
         'VERSION variable');
 cmp_ok (Perl::Critic::Pulp->VERSION, '==', $want_version,
@@ -46,12 +46,20 @@ cmp_ok (Perl::Critic::Pulp->VERSION, '==', $want_version,
 
 foreach my $elem ([ 1, '1' ],
                   [ 1, '1.5' ],
-                  [ 0, 'somebogosity' ],
                  ) {
   my ($want, $str) = @$elem;
   my $version = Perl::Critic::Pulp::version_if_valid($str);
   my $got = (defined $version ? 1 : 0);
   is ($want, $got, "version_if_valid '$str'");
+}
+
+{
+  # version.pm 0.77 relaxed what it accepts or rejects, so can't say whether
+  # "somebogosity" will pass or fail, but at least run version_if_valid(0 to
+  # see it doesn't error out
+  my $str = 'somebogosity';
+  Perl::Critic::Pulp::version_if_valid($str);
+  ok(1, "version_if_valid '$str'");
 }
 
 #-----------------------------------------------------------------------------

@@ -33,6 +33,7 @@
 # own distdir
 ^[A-Za-z][A-Za-z0-9-_]*-\d+/
 # own dist files
+\.tar$
 \.tar\.gz$
 \.deb$
 
@@ -90,6 +91,7 @@ devel/h2xs/TestConstFoo/
 devel/hblk
 devel/mallopt
 devel/mallstats
+devel/malltrim
 
 # special htmlext environs
 ^test-dist/

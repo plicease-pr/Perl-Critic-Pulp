@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 require Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull;
 
 #------------------------------------------------------------------------------
-my $want_version = 28;
+my $want_version = 29;
 cmp_ok ($Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::VERSION,
         '==', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,

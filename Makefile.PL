@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -34,12 +34,16 @@ MyMakeMakerExtras::WriteMakefile
    MIN_PERL_VERSION => '5.006',
 
    PREREQ_PM    => {
+                    # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
+                    'PPI' => '1.208',
+
                     # 1.082 or some such for new style parameter specs
-                    'Perl::Critic' => '1.082',
+                    # 1.084 for highest_explicit_perl_version() method
+                    'Perl::Critic' => '1.084',
                     # parts of Perl::Critic, used so name them explicitly
+                    'Perl::Critic::Policy' => '1.084',
                     'Perl::Critic::Utils' => 0,
                     'Perl::Critic::Utils::PPI' => 0,
-                    'Perl::Critic::Utils::PPIRegexp' => 0,
                     'Perl::Critic::Violation' => 0,
 
                     # Required by Perl::Critic itself anyway.
@@ -68,13 +72,7 @@ MyMakeMakerExtras::WriteMakefile
              => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
            },
         optional_features
-        => { maximum_examples
-             => { description => 'Be able to run all the examples programs.',
-                  requires => { 'Iterator' => 0,
-                                'Iterator::Simple' => 0,
-                              },
-                },
-             maximum_policies
+        => { maximum_policies
              => { description => 'Have the policies check as much as possible.',
                   requires => { 'Perl::MinimumVersion' => 0,
                               },
@@ -87,7 +85,22 @@ MyMakeMakerExtras::WriteMakefile
                 },
              maximum_devel
              => { description => 'Stuff used variously for development.',
-                  requires => { 'Perl6::Slurp' => 0,
+                  requires => { 'PPI::Document' => 0,
+                                'Encode' => 0,
+                                'Perl6::Slurp' => 0,
+                                'Regexp::Common' => 0,
+                                'Devel::Mallinfo' => 0,
+                                'IO::Uncompress::AnyInflate' => 0,
+                                'lib::abs' => 0,
+                                'IO::String' => 0,
+                                'Digest::MD5' => 0,
+                                'I18N::Langinfo' => 0,
+                                'Locale::TextDomain' => 0,
+                                'File::Locate' => 0,
+
+                                'File::Locate::Iterator' => 0, # mine
+                                # parts of File::Locate::Iterator
+                                'Iterator::Simple' => 0,
                                 'Iterator::Simple::Locate' => 0,
                               },
                 },

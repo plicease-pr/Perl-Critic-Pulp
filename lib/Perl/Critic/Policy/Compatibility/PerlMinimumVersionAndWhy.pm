@@ -18,12 +18,18 @@ use 5.006;
 use strict;
 use warnings;
 use version;
-use base 'Perl::Critic::Policy';
-use Perl::Critic::Pulp;
-use Perl::Critic::Utils ':severities';
-use Perl::Critic::Utils::PPIRegexp;
 
-our $VERSION = 28;
+# 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
+use PPI 1.208;
+
+# 1.084 for Perl::Critic::Document highest_explicit_perl_version()
+use Perl::Critic::Policy 1.084;
+use base 'Perl::Critic::Policy';
+use Perl::Critic::Utils ':severities';
+
+use Perl::Critic::Pulp;
+
+our $VERSION = 29;
 
 use constant DEBUG => 0;
 
@@ -127,8 +133,7 @@ sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
     (sub {
        my ($document, $elem) = @_;
        $elem->isa('PPI::Token::QuoteLike::Regexp') || return 0;
-
-       my %modifiers = Perl::Critic::Utils::PPIRegexp::get_modifiers ($elem);
+       my %modifiers = $elem->get_modifiers;
        if (DEBUG) {
          require Data::Dumper;
          print "  ", $elem->content,
