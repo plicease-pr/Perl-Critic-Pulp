@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(:severities
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 29;
+our $VERSION = 30;
 
 use constant DEBUG => 0;
 
@@ -190,6 +190,14 @@ sub _arg_string {
     } elsif ($elem->isa('PPI::Token::Number')) {
       # a number can work like a constant string
       $ret .= $elem->content;
+
+    } elsif ($elem->isa('PPI::Token::Word')) {
+      if (my $next = $elem->snext_sibling) {
+        if ($next->isa('PPI::Token::Operator') && $next eq '=>') {
+          $ret .= $elem->content;
+        }
+      }
+      last;
 
     } else {
       # some variable or something

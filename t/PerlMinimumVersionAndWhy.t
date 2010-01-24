@@ -21,13 +21,13 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
-use Test::More tests => 23;
+use Test::More tests => 39;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 #------------------------------------------------------------------------------
-my $want_version = 29;
+my $want_version = 30;
 cmp_ok ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION, '==', $want_version, 'VERSION variable');
 cmp_ok (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,  '==', $want_version, 'VERSION class method');
 {
@@ -55,8 +55,8 @@ my $have_perl_minimumversion = eval { require Perl::MinimumVersion };
 }
 
 SKIP: {
-  0 # $critic
-    or skip 'Perl::MinimumVersion not available', 17;
+  $critic
+    or skip 'Perl::MinimumVersion not available', 33;
 
   my ($policy) = $critic->policies;
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -67,6 +67,34 @@ SKIP: {
 
   foreach my $data (
                     ## no critic (RequireInterpolationOfMetachars)
+
+                    # _my_perl_5004_pack_format
+                    [ 1, 'use 5.002; pack "w", 123' ],
+                    [ 0, 'use 5.004; pack "w", 123' ],
+                    [ 0, 'use 5.002; pack "$w", 123' ],
+                    [ 1, "use 5.002; pack 'i'.<<HERE, 123
+w
+HERE
+" ],
+                    [ 1, "use 5.002; pack w => 123" ],
+                    [ 1, 'use 5.002; unpack "i".w => $bytes' ],
+                    [ 0, "use 5.002; pack MYFORMAT(), 123" ],
+                    [ 0, "use 5.002; pack MYFORMAT, 123" ],
+
+                    # _my_perl_5006_pack_format
+                    [ 1, 'use 5.005; pack ("Z", "hello")' ],
+                    [ 0, 'use 5.006; pack ("Z", "hello")' ],
+                    [ 1, 'use 5.005; pack ("Z#comment", "hello")' ],
+                    [ 0, 'use 5.006; pack ("Z#comment", "hello")' ],
+
+                    # _my_perl_5008_pack_format
+                    [ 1, 'use 5.006; pack ("F", 1.5)' ],
+                    [ 0, 'use 5.008; pack ("F", 1.5)' ],
+
+                    # _my_perl_5010_pack_format
+                    [ 1, 'use 5.008; unpack ("i<", $bytes)' ],
+                    [ 0, 'use 5.010; unpack ("i<", $bytes)' ],
+
 
                     # _my_perl_5010_qr_m_working_properly
                     #

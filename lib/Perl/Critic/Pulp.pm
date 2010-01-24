@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 29;
+our $VERSION = 30;
 
 
 # The code here is shared by some of the modules, or might one day get into

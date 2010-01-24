@@ -25,11 +25,13 @@ use PPI 1.208;
 # 1.084 for Perl::Critic::Document highest_explicit_perl_version()
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils ':severities';
+use Perl::Critic::Utils qw(:severities
+                           is_function_call
+                           parse_arg_list);
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 29;
+our $VERSION = 30;
 
 use constant DEBUG => 0;
 
@@ -96,10 +98,19 @@ sub violates {
 #---------------------------------------------------------------------------
 
 sub _setup_extra_checks {
+  my $v5004 = version->new('5.004');
+  my $v5006 = version->new('5.006');
+  my $v5008 = version->new('5.008');
   my $v5010 = version->new('5.010');
+
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_magic__fix}     = $v5010;
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_operators__fix} = $v5010;
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_working_properly} = $v5010;
+
+  $Perl::MinimumVersion::CHECKS{_my_perl_5004_pack_format} = $v5004;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5006_pack_format} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5008_pack_format} = $v5008;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5010_pack_format} = $v5010;
 }
 
 {
@@ -109,7 +120,7 @@ sub _setup_extra_checks {
   package Perl::MinimumVersion;
   use vars qw(%MATCHES);
   sub _my_perl_5010_operators__fix {
-    shift->Document->find_any
+    shift->Document->find_first
       (sub {
          $_[1]->isa('PPI::Token::Operator')
            and
@@ -117,7 +128,7 @@ sub _setup_extra_checks {
            } );
   }
   sub _my_perl_5010_magic__fix {
-    shift->Document->find_any
+    shift->Document->find_first
       (sub {
          $_[1]->isa('PPI::Token::Magic')
            and
@@ -129,7 +140,7 @@ sub _setup_extra_checks {
 sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
   my ($pmv) = @_;
   if (DEBUG) { print "_my_perl_5010_qr_m_working_properly check\n"; }
-  $pmv->Document->find_any
+  $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
        $elem->isa('PPI::Token::QuoteLike::Regexp') || return 0;
@@ -143,17 +154,62 @@ sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
      });
 }
 
-#---------------------------------------------------------------------------
-
-# return a version.pm object, or undef
-sub version_if_valid {
-  my ($str) = @_;
-  my $good = 1;
-  local $SIG{'__WARN__'} = sub { $good = 0 };
-  my $v = version->new($str);
-  return ($good ? $v : undef);
+sub Perl::MinimumVersion::_my_perl_5004_pack_format {
+  my ($pmv) = @_;
+  # w - BER integer
+  return _pack_format ($pmv, qr/w/);
+}
+sub Perl::MinimumVersion::_my_perl_5006_pack_format {
+  my ($pmv) = @_;
+  # Z - asciz
+  # q - signed quad
+  # Q - unsigned quad
+  # ! - native size
+  # / - counted string
+  # # - comment
+ return _pack_format ($pmv, qr{[ZqQ!/#]});
+}
+sub Perl::MinimumVersion::_my_perl_5008_pack_format {
+  my ($pmv) = @_;
+  # F - NV
+  # D - long double
+  # j - IV
+  # J - UV
+  # ( - group
+  return _pack_format ($pmv, qr/[FDjJ(]/);
+}
+sub Perl::MinimumVersion::_my_perl_5010_pack_format {
+  my ($pmv) = @_;
+  # < - little endian
+  # > - big endian
+  return _pack_format ($pmv, qr/[<>]/);
 }
 
+my %pack_func = (pack => 1, unpack => 1);
+sub _pack_format {
+  my ($pmv, $regexp) = @_;
+  require Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+
+       $elem->isa ('PPI::Token::Word') || return 0;
+       $pack_func{$elem->content} || return 0;
+       is_function_call($elem) || return 0;
+
+       my @args = parse_arg_list ($elem);
+       my $format_arg = $args[0];
+       if (DEBUG) { print "  format @$format_arg\n"; }
+
+       my ($str, $any_vars) = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::_arg_string ($format_arg);
+       if (DEBUG) { print "  str ``$str'' anyvars=",($any_vars?1:0),"\n"; }
+
+       if ($any_vars) { return 0; }
+       return ($str =~ $regexp);
+     });
+}
+
+#---------------------------------------------------------------------------
 
 1;
 __END__
@@ -166,8 +222,8 @@ Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy - explicit perl ve
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It requires that you have an explicit C<use 5.XXX> etc for the Perl
-syntax features you use as determined by
-L<C<Perl::MinimumVersion>|Perl::MinimumVersion>.  For example,
+syntax features you use, as determined by
+L<C<Perl::MinimumVersion>|Perl::MinimumVersion>.
 
     use 5.010;       # the // operator is new in perl 5.010
     print $x // $y;  # ok
@@ -198,7 +254,7 @@ reports (as of its version 1.20).
 =item *
 
 Pragma and module requirements like C<use warnings> are dropped, since you
-might get a back-port from CPAN etc and a need for a module is better
+might get a back-port from CPAN etc and the need for a module is better
 expressed in your distribution "prereq".
 
 =item *
@@ -220,6 +276,12 @@ normally reports.
 
 C<qr//m> requires Perl 5.10, as the "m" modifier doesn't propagate correctly
 on a C<qr> until then.
+
+=item *
+
+C<pack> and C<unpack> format strings are checked for various new conversions
+in 5.004 through 5.10.0.  Currently this only works on literal strings or
+here-documents without interpolations, plus C<.> operator concats of those.
 
 =back
 

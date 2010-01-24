@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 
-our $VERSION = 29;
+our $VERSION = 30;
 
 
 sub supported_parameters { return; }

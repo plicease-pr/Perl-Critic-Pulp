@@ -29,7 +29,7 @@ use Perl::Critic::Utils qw(:severities);
 
 use Pod::MinimumVersion;
 
-our $VERSION = 29;
+our $VERSION = 30;
 
 use constant DEBUG => 0;
 

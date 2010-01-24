@@ -21,6 +21,7 @@ devel/grep-devnull.pl
 devel/grep-each.pl
 devel/grep-filetest-f.pl
 devel/grep-makefile-exit.pl
+devel/grep-pack.pl
 devel/grep-pod-gt.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
@@ -41,6 +42,7 @@ devel/MyUniqByMD5.pm
 devel/name.pod
 devel/not.sh
 devel/notwithcompare.pl
+devel/perl-minimum.pl
 devel/pod-minimum.pl
 devel/posix-import.pl
 devel/posix-size.pl
@@ -48,6 +50,7 @@ devel/posix-user.pl
 devel/PosixUser.pm
 devel/ppi-wide.pl
 devel/qrm.pl
+devel/regexp-balanced.pl
 devel/TestAutoload.pm
 devel/unknown-backslash.pl
 devel/use-quoted.pl

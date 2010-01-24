@@ -20,15 +20,15 @@
 # for more tests, but they're optional author tests really and would
 # just make the build tools drag in more stuff.
 #
-# "Depends:" has "libversion-perl" for older perl or "perl-modules (>=
-# 5.10)" for builtin, the same as the Depends in libperl-critic-perl
-# itself.  Put libversion-perl first in the hope it makes "apt"
-# inclined to download that rather than upgrade perl.
+# "Depends:" has "libversion-perl" for older perl or "perl (>= 5.10)"
+# for builtin version.pm, the same as the Depends in
+# libperl-critic-perl itself.  Put libversion-perl first in the hope
+# it makes "apt" inclined to download that rather than upgrade perl.
 
 Source: libperl-critic-pulp-perl
 Section: perl
 Priority: optional
-Build-Depends: cdbs, debhelper (>= 5), libtest-more-perl | perl-modules (>= 5.6.2)
+Build-Depends: cdbs, debhelper (>= 5), libtest-more-perl | perl (>= 5.6.2)
 Maintainer: Kevin Ryde <user42@zip.com.au>
 Standards-Version: 3.8.3
 Homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
@@ -36,7 +36,7 @@ Bugs: mailto:user42@zip.com.au
 
 Package: libperl-critic-pulp-perl
 Architecture: all
-Depends: perl (>= 5.6), libperl-critic-perl (>= 1.084), libppi-perl (>= 1.208), libio-string-perl (>= 1.02), libversion-perl | perl-modules (>= 5.10), liblist-util-perl | perl-modules (>= 5.8), liblist-moreutils-perl, libscalar-util-perl | perl-modules (>= 5.8), ${misc:Depends}
+Depends: perl (>= 5.6), libperl-critic-perl (>= 1.084), libppi-perl (>= 1.208), libio-string-perl (>= 1.02), libversion-perl | perl (>= 5.10), liblist-util-perl | perl-modules (>= 5.8), liblist-moreutils-perl, libscalar-util-perl | perl-modules (>= 5.8), ${misc:Depends}
 Recommends: libperl-minimumversion-perl
 Description: Some add-on policies for perlcritic
  This is some further policies for perlcritic, checking for

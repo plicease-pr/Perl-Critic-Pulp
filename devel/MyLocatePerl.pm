@@ -1,4 +1,4 @@
-# Copyright 2009 Kevin Ryde.
+# Copyright 2009, 2010 Kevin Ryde.
 
 # This file is part of miscbits-el.
 #
@@ -35,10 +35,10 @@ my $suffixes_re = qr/\.(t|pm|pl|PL)($compressed_re)?$/o;
 
 sub new {
   my ($class) = @_;
-  my $self = $class->SUPER::new (globs => ['/bin/*',
-                                           '/usr/bin/*',
-                                           '/usr/local/bin/*',
-                                           '/usr/local/bin2/*'],
+  my $self = $class->SUPER::new (# globs => ['/bin/*',
+#                                            '/usr/bin/*',
+#                                            '/usr/local/bin/*',
+#                                            '/usr/local/bin2/*'],
                                  regexp => $suffixes_re);
   $self->{'uniq_ino'} = MyUniqByInode->new;
   $self->{'uniq_md5'} = MyUniqByMD5->new;
