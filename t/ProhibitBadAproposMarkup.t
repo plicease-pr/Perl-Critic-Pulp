@@ -25,11 +25,11 @@ use Test::More tests => 13;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 30;
-cmp_ok ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
-        '==', $want_version, 'VERSION variable');
-cmp_ok (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
-        '==', $want_version, 'VERSION class method');
+my $want_version = 31;
+is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
+    $want_version, 'VERSION variable');
+is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
+    $want_version, 'VERSION class method');
 {
   ok (eval { Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;

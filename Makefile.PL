@@ -86,6 +86,7 @@ MyMakeMakerExtras::WriteMakefile
              maximum_devel
              => { description => 'Stuff used variously for development.',
                   requires => { 'PPI::Document' => 0,
+                                'Perl::MinimumVersion' => 0,
                                 'Encode' => 0,
                                 'Perl6::Slurp' => 0,
                                 'Regexp::Common' => 0,

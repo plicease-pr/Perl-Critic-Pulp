@@ -21,16 +21,16 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
-use Test::More tests => 337;
+use Test::More tests => 339;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 30;
-cmp_ok ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, '==', $want_version, 'VERSION variable');
-cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, '==', $want_version, 'VERSION class method');
+my $want_version = 31;
+is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
+is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
   ok (eval { Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
@@ -43,6 +43,8 @@ cmp_ok (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VE
 # _pos_after_interpolate_variable()
 
 foreach my $elem (## no critic (RequireInterpolationOfMetachars)
+                  ['$#x blah', 3],
+                  ['$#{x} blah', 5],
                   ['$x blah', 2],
                   ['${\scalar @a} blah', 13],
                   ['${x} blah', 4],

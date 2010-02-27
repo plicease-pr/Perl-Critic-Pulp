@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 31, February 2010
+    - ProhibitUnknownBackslash fix for interpolated "$#array"
+
 Version 30, January 2010
     - PerlMinimumVersionAndWhy new pack/unpack format string checks
 

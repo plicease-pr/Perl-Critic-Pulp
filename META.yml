@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Perl-Critic-Pulp
-version:            30
+version:            31
 abstract:           Some add-on policies for Perl::Critic.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -55,6 +55,8 @@ optional_features:
             lib::abs:             0
             Locale::TextDomain:   0
             Perl6::Slurp:         0
+            Perl::MinimumVersion:  0
+            Pod::Simple::HTML:    0
             PPI::Document:        0
             Regexp::Common:       0
     maximum_policies:

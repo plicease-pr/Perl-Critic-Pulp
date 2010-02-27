@@ -31,7 +31,7 @@ use Perl::Critic::Utils qw(:severities
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 30;
+our $VERSION = 31;
 
 use constant DEBUG => 0;
 

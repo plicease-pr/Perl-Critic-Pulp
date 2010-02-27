@@ -28,11 +28,9 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 30;
-cmp_ok ($Perl::Critic::Pulp::VERSION, '==', $want_version,
-        'VERSION variable');
-cmp_ok (Perl::Critic::Pulp->VERSION, '==', $want_version,
-        'VERSION class method');
+my $want_version = 31;
+is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
+is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {
   ok (eval { Perl::Critic::Pulp->VERSION($want_version); 1 },
       "VERSION class check $want_version");

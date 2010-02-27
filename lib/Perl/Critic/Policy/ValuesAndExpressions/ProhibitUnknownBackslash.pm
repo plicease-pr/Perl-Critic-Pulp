@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(:severities);
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 30;
+our $VERSION = 31;
 
 use constant DEBUG => 0;
 
@@ -114,6 +114,11 @@ my $quotelike_re = qr/^(?:(q[qrwx]?)  # $1 "q" if present
                   (.)$  # $4 closing quote
                  /xs;
 
+# extra explanation for double-quote interpolations
+my %explain = ('%' => '  (hashes are not interpolated)',
+               '&' => '  (function calls are not interpolated)',
+              );
+
 sub violates {
   my ($self, $elem, $document) = @_;
 
@@ -181,7 +186,8 @@ sub violates {
     if (defined $1) {
       # $ or @
       unless ($single) {  # no variables in single-quote
-        pos($str) = _pos_after_interpolate_variable ($str, pos($str)-1);
+        pos($str) = _pos_after_interpolate_variable ($str,
+                                                     pos($str)-length($1));
       }
       next;
     }
@@ -232,10 +238,11 @@ sub violates {
       next;
     }
 
+    my $message = 'Unknown backslash \\' . _printable($c);
+    if ($c eq 'N') { $message .= ', until perl 5.6.0'; }
+    if (!$single) { $message .= ($explain{$c} || ''); }
     push @violations,
-      $self->violation ('Unknown backslash \\' . _printable($c)
-                        . ($c eq 'N' && ', until perl 5.6.0'),
-                        '', $elem);
+      $self->violation ($message, '', $elem);
 
     # would have to take into account HereDoc begins on next line ...
     # _violation_elem_offset ($violation, $elem, pos($str)-2);
@@ -248,8 +255,8 @@ sub violates {
 #
 sub _pos_after_interpolate_variable {
   my ($str, $pos) = @_;
-  if (DEBUG) { print "_pos_after_interpolate_variable\n"; }
   $str = substr ($str, $pos);
+  if (DEBUG) { print "_pos_after_interpolate_variable\n   $str\n"; }
 
   require PPI::Document;
   my $doc = PPI::Document->new(\$str);

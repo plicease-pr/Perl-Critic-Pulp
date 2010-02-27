@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(:severities);
 use Perl::Critic::Pulp;
 
-our $VERSION = 30;
+our $VERSION = 31;
 
 sub supported_parameters { return; }
 sub default_severity     { return $SEVERITY_MEDIUM;   }

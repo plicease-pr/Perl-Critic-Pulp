@@ -28,18 +28,16 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 30;
-  cmp_ok ($Pod::MinimumVersion::VERSION,
-          '==', $want_version, 'VERSION variable');
-  cmp_ok (Pod::MinimumVersion->VERSION,
-          '==', $want_version, 'VERSION class method');
+  my $want_version = 31;
+  is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
+  is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {
     ok (eval { Pod::MinimumVersion->VERSION($want_version); 1 }, "VERSION class check $want_version");
     my $check_version = $want_version + 1000;
     ok (! eval { Pod::MinimumVersion->VERSION($check_version); 1 }, "VERSION class check $check_version");
   }
   { my $pmv = Pod::MinimumVersion->new;
-    cmp_ok ($pmv->VERSION, '==', $want_version, 'VERSION object method');
+    is ($pmv->VERSION, $want_version, 'VERSION object method');
     ok (eval { $pmv->VERSION($want_version); 1 },
         "VERSION object check $want_version");
     my $check_version = $want_version + 1000;
