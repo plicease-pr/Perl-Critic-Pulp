@@ -22,19 +22,18 @@ use strict;
 use warnings;
 
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_function_call
+use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 use constant DEBUG => 0;
 
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_MEDIUM;   }
-sub default_themes   { return qw(pulp bugs);      }
-sub applies_to       { return 'PPI::Token::Word'; }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => 'PPI::Token::Word';
 
 my %funcs = (__x   => 1,
              __nx  => 1,
@@ -224,6 +223,8 @@ sub string_any_vars {
 
 1;
 __END__
+
+=for stopwords addon args arg Gettext Charset runtime Ryde
 
 =head1 NAME
 

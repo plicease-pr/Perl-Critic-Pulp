@@ -21,27 +21,25 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
+use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 
 sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_LOW;          }
+sub default_severity { return $Perl::Critic::Utils::SEVERITY_LOW; }
 sub default_themes   { return qw(pulp cosmetic);      }
 sub applies_to       { return 'PPI::Token::Operator'; }
-
-my %comma = (','  => 1,
-             '=>' => 1);
 
 sub violates {
   my ($self, $elem, $document) = @_;
 
-  $comma{$elem} or return;
+  $Perl::Critic::Pulp::Utils::COMMA{$elem} or return;
 
   my $prev = $elem->sprevious_sibling;
   if ($prev && ! ($prev->isa('PPI::Token::Operator')
-                  && $comma{$prev})) {
+                  && $Perl::Critic::Pulp::Utils::COMMA{$prev})) {
     # have a previous element and it's not a comma operator
     return;
   }
@@ -83,6 +81,8 @@ sub violates {
 
 1;
 __END__
+
+=for stopwords addon Ryde
 
 =head1 NAME
 

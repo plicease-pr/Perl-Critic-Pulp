@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,6 +20,7 @@
 
 # XML::RSS::TimingBot \cm\cj lower case
 
+use 5.005;
 use strict;
 use warnings;
 use Perl6::Slurp;

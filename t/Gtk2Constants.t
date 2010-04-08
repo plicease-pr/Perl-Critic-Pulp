@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::Compatibility::Gtk2Constants::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::Gtk2Constants->VERSION,

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2009 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,6 +21,7 @@
 # /usr/share/perl/5.10.1/Dumpvalue.pm            ->
 # /usr/share/perl/5.10.1/Test/Builder/Tester.pm  C<<Test>>
 
+use 5.005;
 use strict;
 use warnings;
 use Perl6::Slurp;
@@ -50,8 +51,6 @@ use strict;
 use warnings;
 use base 'Pod::Parser';
 
-use constant DEBUG => 0;
-
 sub parse_from_string {
   my ($self, $str, $filename) = @_;
 
@@ -69,9 +68,7 @@ sub verbatim {
 }
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
-  if (DEBUG) {
-    print "textblock\n";
-  }
+  ### textblock
 
   #   while ($text =~ /->[^[:space:]]/g) {
   #     my $pos = pos($text);

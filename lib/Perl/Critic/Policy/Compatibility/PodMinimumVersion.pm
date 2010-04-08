@@ -24,26 +24,23 @@ use warnings;
 # 1.084 for Perl::Critic::Document highest_explicit_perl_version()
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Pulp;
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
+use Perl::Critic::Pulp::Utils;
 
 use Pod::MinimumVersion;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-use constant DEBUG => 0;
+use constant supported_parameters
+  => ({ name        => 'above_version',
+        description => 'Check only things above this version of Perl.',
+        behavior    => 'string',
+        parser      => \&Perl::Critic::Pulp::Utils::parameter_parse_version,
+      });
+use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
+use constant default_themes   => qw(pulp compatibility);
+use constant applies_to       => 'PPI::Document';
 
-sub default_severity { return $SEVERITY_LOW;  }
-sub default_themes   { return qw(pulp compatibility); }
-sub applies_to       { return 'PPI::Document';   }
-
-sub supported_parameters {
-  return ({ name        => 'above_version',
-            description => 'Check only things above this version of Perl.',
-            behavior    => 'string',
-            parser      => \&Perl::Critic::Pulp::parameter_parse_version,
-          });
-}
 
 sub violates {
   my ($self, $document) = @_;
@@ -108,6 +105,8 @@ sub location {
 
 1;
 __END__
+
+=for stopwords addon CPAN config Ryde
 
 =head1 NAME
 

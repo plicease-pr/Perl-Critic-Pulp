@@ -21,13 +21,13 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
-use Test::More tests => 39;
+use Test::More tests => 50;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 #------------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,
@@ -58,7 +58,7 @@ my $have_perl_minimumversion = eval { require Perl::MinimumVersion };
 
 SKIP: {
   $critic
-    or skip 'Perl::MinimumVersion not available', 33;
+    or skip 'Perl::MinimumVersion not available', 44;
 
   my ($policy) = $critic->policies;
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -69,6 +69,23 @@ SKIP: {
 
   foreach my $data (
                     ## no critic (RequireInterpolationOfMetachars)
+
+                    # _my_perl_5006_delete_array
+                    [ 1, 'use 5.005; exists $x[0]' ],
+                    [ 0, 'use 5.006; exists $x[0]' ],
+                    [ 1, 'use 5.005; exists($x[1])' ],
+                    [ 1, 'use 5.005; delete $x[0]' ],
+                    [ 0, 'use 5.006; delete $x[0]' ],
+                    [ 1, 'use 5.005; delete($x[1])' ],
+
+                    # _my_perl_5006_exists_sub
+                    [ 1, 'use 5.005; exists &foo' ],
+                    [ 0, 'use 5.006; exists &foo' ],
+                    [ 1, 'use 5.005; exists(&foo)' ],
+
+                    # _my_perl_5005_bareword_colon_colon
+                    [ 1, 'use 5.004; foo(Foo::Bar::)' ],
+                    [ 0, 'use 5.005; foo(Foo::Bar::)' ],
 
                     # _my_perl_5004_pack_format
                     [ 1, 'use 5.002; pack "w", 123' ],

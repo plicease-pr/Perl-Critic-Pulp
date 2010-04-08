@@ -24,7 +24,7 @@ use List::Util;
 use version;
 use vars qw($VERSION @CHECKS);
 
-$VERSION = 31;
+$VERSION = 33;
 
 use constant DEBUG => 0;
 
@@ -255,6 +255,17 @@ use base 'Pod::Parser';
 
 use constant DEBUG => 0;
 
+sub new {
+  my $class = shift;
+  my $self = $class->SUPER::new(@_);
+  $self->errorsub ('error_handler'); # method name
+  return $self;
+}
+sub error_handler {
+  my ($self, $errmsg) = @_;
+  return 1;  # error handled
+}
+
 # sub begin_input {
 #   print "begin_input\n";
 # }
@@ -329,11 +340,13 @@ sub interior_sequence {
 1;
 __END__
 
+=for stopwords Ryde
+
 =head1 NAME
 
 Pod::MinimumVersion - Perl version for POD directives used
 
-=head1 SYNPOSIS
+=head1 SYNOPSIS
 
  use Pod::MinimumVersion;
  my $pmv = Pod::MinimumVersion->new (filename => '/some/foo.pl');
@@ -342,7 +355,7 @@ Pod::MinimumVersion - Perl version for POD directives used
 
 =head1 DESCRIPTION
 
-B<Caution: This is work in progress, don't use it yet.>
+B<Caution: This is work in progress.>
 
 C<Pod::MinimumVersion> parses the POD in a Perl script, module, or document,
 and reports what version of Perl is required to process the directives in
@@ -360,7 +373,7 @@ Z<>=for, =begin and =end new in 5.004.
 
 =item *
 
-LE<lt>display text|targetE<gt> display part, new in 5.005.
+LE<lt>display text|targetE<gt> style display part, new in 5.005.
 
 =item *
 
@@ -382,10 +395,14 @@ EE<lt>aposE<gt>, EE<lt>solE<gt>, EE<lt>verbarE<gt> chars, new in 5.8.0.
 
 =item *
 
-C<=encoding> command, new in 5.10.0.  (Documented in 5.8.0, but pod2man
+C<=encoding> command, new in 5.10.0.  (Documented in 5.8.0, but C<pod2man>
 doesn't recognise it until 5.10.)
 
 =back
+
+POD syntax errors are quietly ignored currently.  The intention is only to
+check what C<pod2man> would act on, but it's probably a good idea to use
+C<Pod::Checker> first.
 
 =head1 FUNCTIONS
 
@@ -415,8 +432,8 @@ are only about features above that level.
 Return the minimum Perl required for the document in C<$pmv>.
 
 C<minimum_version> returns a C<version> object (see L<version>).
-C<minimum_report> returns a C<Pod::MinimumVersion::Report> object described
-below (L</REPORT OBJECTS>).
+C<minimum_report> returns a C<Pod::MinimumVersion::Report> object (see
+L</REPORT OBJECTS> below).
 
 =item C<< @reports = $pmv->reports () >>
 
@@ -427,8 +444,8 @@ These multiple reports let you identify multiple places that a particular
 Perl is required.  With the C<above_version> option the reports are still
 only about things higher than that.
 
-The report from C<minimum_version> and C<minimum_report> is simply the
-highest Perl among these multiple reports.
+C<minimum_version> and C<minimum_report> simply give the highest Perl among
+these multiple reports.
 
 =back
 
@@ -440,7 +457,7 @@ fields are
 
     filename   string
     linenum    integer, with 1 for the first line
-    version    version object
+    version    version.pm object
     why        string
 
 =over 4

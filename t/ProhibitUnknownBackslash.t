@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -124,23 +124,23 @@ foreach my $want_string ("abc", "a\nb") {
      '-single-policy' => 'ValuesAndExpressions::ProhibitUnknownBackslash');
   my @policies = $critic->policies;
   is (scalar @policies, 1, 'single policy ProhibitUnknownBackslash');
-  
+
   my $policy = $policies[0];
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { $policy->VERSION($check_version); 1 },
       "VERSION object check $check_version");
-  
-  
+
+
   #---------------------
   # default
-  
+
   foreach my $data
     (## no critic (RequireInterpolationOfMetachars)
-     
+
      # \cX including \c\
-     
+
      [ 0, '  "\\cA"  ' ],
      [ 0, '  "\\cz"  ' ],
      [ 0, '  "\\cm\\cj"  ' ],
@@ -149,20 +149,20 @@ foreach my $want_string ("abc", "a\nb") {
      [ 0, '  "\\c\\z"  ' ],
      [ 0, '  "\\c\\\\n"  ' ],
      [ 1, '  "\\c\\\\v"  ' ],
-     
+
      [ 1, '  "\\c*"  ' ],
      [ 2, '  "\\c1\\c2"  ' ],
-     
+
      # \c at end-of-string
      [ 1, '  "\\c"  ' ],
      [ 1, '  qq X\\cX  ' ],
-     
+
      # control-\ before interpolation
      [ 1, q{  qq$\\c\\${\\scalar 123} $  } ],
      [ 0, q{  qq@\\c\\${\\scalar 123} @  } ],
-     
-     
-     
+
+
+
      [ 0, '  qq{}  ' ],
      [ 0, '  ""  ' ],
      [ 1, '  "\\z"  ' ],
@@ -173,15 +173,15 @@ foreach my $want_string ("abc", "a\nb") {
      [ 1, '  qq{\\\\\\z}  ' ],
      [ 2, '  "\\\\\\z\z"  ' ],
      [ 2, '  qq{\\\\\\z\z}  ' ],
-     
+
      [ 0, '  "$"    ' ],  # dodgy interpolation, but not an unknown backslash
      [ 0, '  "\\$"  ' ],
-     
+
      [ 0, "qx'echo \\z'" ],
      [ 1, "qx{echo \\z}" ],
-     
+
      [ 0, '"blah ${\scalar @array} blah"' ],
-     
+
      [ 0, "print <<'HERE'
 \\z
 HERE
@@ -194,7 +194,7 @@ HERE
 \\z
 HERE
 " ],
-     
+
      [ 1, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
 
      # not sure if wide chars are supposed to be allowed in an input string,
@@ -203,14 +203,14 @@ HERE
      #      [ 1, ($] >= 5.008
      #            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
      #            : '') ],                 # not 5.8, dummy passing
-     
+
      [ 1, 'use 5.005; "\\N{COLON}"' ],
      [ 1, 'use 5.005; "\\400"' ],
      [ 0, 'use 5.006; "\\N{COLON}"' ],
      [ 0, 'use 5.006; "\\400"' ],
      [ 0, '"\\N{COLON}"' ],
      [ 0, '"\\400"' ],
-     
+
      [ 0, 'use 5.005; "\\000"' ],
      [ 0, 'use 5.005; "\\100"' ],
      [ 0, 'use 5.005; "\\200"' ],
@@ -231,44 +231,44 @@ HERE
      [ 0, '"\\700"' ],
      [ 1, '"\\800"' ],
      [ 1, '"\\900"' ],
-     
+
      # the various known escapes
      [ 0, '  "aa\\t\\n\\r\\f\\b\\a\\ebb"  ' ],
      [ 0, '  "aa\\033\177\200\377\\xFF\\cJ\\N{COLON}bb"  ' ],
      [ 0, '  "aa\\Ua\\u\\LX\\l\\Q\\E"  ' ],
-     
+
      # close of singles and doubles
      [ 0, "  'aa\\\\'bb'  " ],
      [ 0, '  q{aa\\}bb}  ' ],
      [ 0, '  q{aa\\}bb}  ' ],
      [ 0, '  qq{aa\\}bb}  ' ],
      [ 0, '  qq  {aa\\}bb}  ' ],
-     
+
      [ 0, '  `aa\\nbb`  ' ],
      [ 0, '  qx{aa\\n\\}bb}  ' ],
      [ 0, q{  qx'aa\\nbb'  } ],
-     
+
      # singles ok
      [ 0, q{  '\\xFF'  } ],
      [ 0, q{  '\\c*'  } ],
      [ 0, q{  my $pat = '[0-9eE\\.\\-]'  } ],
-     
+
      [ 1, 'use 5.005;  "\\N{COLON}"  ' ],
      [ 1, 'use 5.005;  "\\777"       ' ],
      [ 0, 'use 5.006;  "\\N{COLON}"  ' ],
      [ 0, 'use 5.006;  "\\777"       ' ],
-     
-     
+
+
      [ 0, q{  "\\\\s"  } ],
      [ 1, q{  "\\\\\\s"  } ],
      [ 0, q{  "\\\\\\\\s"  } ],
      [ 1, q{  "\\\\\\\\\\s"  } ],
      [ 0, q{  "\\\\\\\\\\\\s"  } ],
      [ 1, q{  "\\\\\\\\\\\\\\s"  } ],
-     
+
     ) {
     my ($want_count, $str) = @$data;
-    
+
     foreach my $str ($str, $str . ';') {
       my @violations = $critic->critique (\$str);
       foreach my $violation (@violations) {
@@ -281,25 +281,25 @@ HERE
       is ($got_count, $want_count, $testname);
     }
   }
-  
+
   #-------------------
   # double=quotemeta
-  
+
   $policy->{_double} = 'quotemeta';
-  
+
   foreach my $data
     (## no critic (RequireInterpolationOfMetachars)
-     
+
      # non-ascii allowed under default 'quotemeta'
      [ 0, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
      [ 1, ($] >= 5.008
            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
            : '') ],                 # not 5.8, dummy passing
-     
-     
+
+
     ) {
     my ($want_count, $str) = @$data;
-    
+
     foreach my $str ($str, $str . ';') {
       my @violations = $critic->critique (\$str);
       foreach my $violation (@violations) {
@@ -340,7 +340,7 @@ HERE
 
      [ 1, "q{\\\374}" ],  # latin-1/unicode u-dieresis
      [ 1, ($] >= 5.008
-           ? 'q{\\'.chr(0x16A).'}' # 5.8 unicode U-with-macron  
+           ? 'q{\\'.chr(0x16A).'}' # 5.8 unicode U-with-macron
            : 'q{\\z}') ],          # not 5.8, dummy failing
      [ 1, ($] >= 5.008
            ? 'q{\\'.chr(0x2022).'}' # 5.8 unicode BULLET
@@ -381,24 +381,24 @@ HERE
 # foreach my $data ([ "'", "'x'" ],
 #                   [ '"', '"x"' ],
 #                   [ '`', '`echo hi`' ],
-# 
+#
 #                   [ 'q{', 'q{x}' ],
 #                   [ 'qq{', 'qq{x}' ],
 #                   [ 'qx{', 'qx{x}' ],
-# 
+#
 #                   [ 'q#', 'q#x#' ],
 #                   [ 'q{', "q #foo#\n{bar}" ],
 #                   [ 'q{', "q #foo\n#foo\n{bar}" ],
 #                   [ 'q{', "q #foo\n #foo\n{bar}" ],
 #                   [ 'q{', "q #foo\n #foo\n \t{bar}" ],
-# 
+#
 #                  ) {
 #   my ($want, $str) = @$data;
-# 
+#
 #   my $document = PPI::Document->new (\$str)
 #     or die $@->message;
 #   my $elem = $document->schild(0)->schild(0);
-#   
+#
 #   diag "elem: $elem";
 #   my $got = Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_quote_open($elem);
 #   is ($got, $want, "_quote_open: $str");

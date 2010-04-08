@@ -33,38 +33,39 @@ MyMakeMakerExtras::WriteMakefile
    SIGN         => 1,
    MIN_PERL_VERSION => '5.006',
 
-   PREREQ_PM    => {
-                    # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
-                    'PPI' => '1.208',
+   PREREQ_PM => {
+                 # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
+                 'PPI' => '1.208',
 
-                    # 1.082 or some such for new style parameter specs
-                    # 1.084 for highest_explicit_perl_version() method
-                    'Perl::Critic' => '1.084',
-                    # parts of Perl::Critic, used so name them explicitly
-                    'Perl::Critic::Policy' => '1.084',
-                    'Perl::Critic::Utils' => 0,
-                    'Perl::Critic::Utils::PPI' => 0,
-                    'Perl::Critic::Violation' => 0,
+                 # 1.082 or some such for new style parameter specs
+                 # 1.084 for highest_explicit_perl_version() method
+                 'Perl::Critic' => '1.084',
+                 # parts of Perl::Critic, used so name them explicitly
+                 'Perl::Critic::Policy' => '1.084',
+                 # Utils 1.100 for precedence_of() supporting -f etc filetests
+                 'Perl::Critic::Utils' => '1.100',
+                 'Perl::Critic::Utils::PPI' => 0,
+                 'Perl::Critic::Violation' => 0,
 
-                    # Required by Perl::Critic itself anyway.
-                    # 1.02 for avoiding leaks in perl 5.8 (probably
-                    # something even newer has more merit though)
-                    'IO::String' => '1.02',
+                 # Required by Perl::Critic itself anyway.
+                 # 1.02 for avoiding leaks in perl 5.8, probably
+                 # something newer has more merit though
+                 'IO::String' => '1.02',
 
-                    # Also used by Perl::Critic itself.  Maybe should
-                    # require 0.24 for various XS bugfixes.
-                    'List::MoreUtils' => 0,
+                 # Also used by Perl::Critic itself.  Maybe should
+                 # require 0.24 for various XS bugfixes.
+                 'List::MoreUtils' => 0,
 
-                    # Builtin in recent perl anyway.
-                    'List::Util' => 0,
-                    'Test::More' => 0,
-                    'Scalar::Util' => 0,
+                 # Builtin in recent perl anyway.
+                 'List::Util' => 0,
+                 'Test::More' => 0,
+                 'Scalar::Util' => 0,
 
-                    # Required by Perl::Critic itself anyway,
-                    # and comes with perl 5.10 anyway too.
-                    'version' => 0,
+                 # Required by Perl::Critic itself anyway,
+                 # and comes with perl 5.10 anyway too.
+                 'version' => 0,
 
-                   },
+                },
 
    META_MERGE
    => { resources

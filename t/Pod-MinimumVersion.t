@@ -21,14 +21,14 @@
 use strict;
 use warnings;
 use Pod::MinimumVersion;
-use Test::More tests => 50;
+use Test::More tests => 51;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 31;
+  my $want_version = 33;
   is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
   is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {
@@ -49,6 +49,8 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 #------------------------------------------------------------------------------
 foreach my $data (
                   [ 0, "=pod\n\nS<C<foo>C<bar>>" ],
+                  # unterminated C<
+                  [ 0, "=pod\n\nC<" ],
 
                   # doubles
                   [ 1, "=pod\n\nC<< foo >>" ],

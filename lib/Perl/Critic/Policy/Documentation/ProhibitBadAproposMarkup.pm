@@ -21,14 +21,14 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_LOWEST;  }
-sub default_themes   { return qw(pulp cosmetic); }
-sub applies_to       { return 'PPI::Document';   }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
+use constant default_themes       => qw(pulp cosmetic);
+use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -38,6 +38,8 @@ sub violates {
     (policy => $self,
      elem => $elem,
      str => $str);
+
+  require IO::String;
   my $fh = IO::String->new ($str);
   $parser->parse_from_filehandle ($fh);
   return @{$parser->{'violations'}};
@@ -47,13 +49,28 @@ package Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::Parser;
 use strict;
 use warnings;
 use base 'Pod::Parser';
-use IO::String;
 
 use constant DEBUG => 0;
 
 sub new {
   my $class = shift;
-  return $class->SUPER::new(@_, violations => []);
+  my $self = $class->SUPER::new(@_, violations => []);
+  $self->errorsub ('error_handler'); # method name
+  return $self;
+}
+sub error_handler {
+  my ($self, $errmsg) = @_;
+  return 1;  # error handled
+
+  # Don't think it's the place of this policy to report pod parse errors.
+  # Maybe within the NAME section, on the basis that could affect the
+  # goodness of the apropos, but better leave that to podchecker or other
+  # perlcritic policies.
+  #
+  #   my $policy = $self->{'policy'};
+  #   my $elem   = $self->{'elem'};
+  #   push @{$self->{'violations'}},
+  #     $policy->violation ("Pod::Parser $errmsg", '', $elem);
 }
 
 sub command {
@@ -96,7 +113,7 @@ sub interior_sequence {
     my $elem   = $self->{'elem'};
     my $str    = $self->{'str'};
     my $violation = $policy->violation
-      ("C<> markup in NAME section is bad for \"apropos\".",
+      ('C<> markup in NAME section is bad for "apropos".',
        '',
        $elem);
     require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
@@ -108,6 +125,8 @@ sub interior_sequence {
 
 1;
 __END__
+
+=for stopwords addon builtin Ryde
 
 =head1 NAME
 

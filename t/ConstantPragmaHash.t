@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #------------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::Compatibility::ConstantPragmaHash::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ConstantPragmaHash->VERSION,
@@ -159,7 +159,7 @@ foreach my $data (
                   # this is a syntax error, but shouldn't tickle the policy
                   [ 0, 'use constant \'1.02\' { GG => 1, HH => 2};' ],
 
-                  [ 0, '1;' ]
+                  [ 0, '1;' ],
 
                  ) {
   my ($want_count, $str) = @$data;

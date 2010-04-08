@@ -21,27 +21,26 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 
-sub supported_parameters {
-  return ({ name           => 'allow_perl4_semihash',
-            description    => 'Whether to allow Perl 4 style ";#" comments.',
-            behavior       => 'boolean',
-            default_string => '0',
-          });
-}
-sub default_severity { return $SEVERITY_MEDIUM;       }
-sub default_themes   { return qw(pulp cosmetic);      }
-sub applies_to       { return 'PPI::Statement::Null'; }
+use constant supported_parameters
+  => ({ name           => 'allow_perl4_semihash',
+        description    => 'Whether to allow Perl 4 style ";#" comments.',
+        behavior       => 'boolean',
+        default_string => '0',
+      });
+use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes   => qw(pulp cosmetic);
+use constant applies_to       => 'PPI::Statement::Null';
 
 sub violates {
   my ($self, $elem, $document) = @_;
 
   # if allow_perl4_semihash then ";# comment ..." ok
-  if ($self->{_allow_perl4_semihash} && is_perl4_semihash($elem)) {
+  if ($self->{'_allow_perl4_semihash'} && is_perl4_semihash($elem)) {
     return; # ok
   }
 
@@ -156,6 +155,8 @@ sub is_perl4_semihash {
 
 1;
 __END__
+
+=for stopwords addon ie ok boolean Ryde
 
 =head1 NAME
 

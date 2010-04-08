@@ -20,15 +20,15 @@ use strict;
 use warnings;
 
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-sub supported_parameters { return; }
-sub default_severity     { return $SEVERITY_MEDIUM;   }
-sub default_themes       { return qw(pulp bugs);      }
-sub applies_to           { return 'PPI::Token::Operator'; }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => 'PPI::Token::Operator';
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -39,6 +39,8 @@ sub violates {
 
 1;
 __END__
+
+=for stopwords addon seekable filename Ryde
 
 =head1 NAME
 

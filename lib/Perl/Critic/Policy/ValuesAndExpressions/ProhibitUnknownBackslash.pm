@@ -22,35 +22,33 @@ use warnings;
 # 1.084 for Perl::Critic::Document highest_explicit_perl_version()
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 use constant DEBUG => 0;
 
 
-sub supported_parameters {
-  return ({ name           => 'single',
-            description    => 'Checking of single-quote strings.',
-            behavior       => 'string',
-            default_string => 'none',
-          },
-          { name           => 'double',
-            description    => 'Checking of double-quote strings.',
-            behavior       => 'string',
-            default_string => 'all',
-          },
-          { name           => 'heredoc',
-            description    => 'Checking of interpolated here-documents.',
-            behavior       => 'string',
-            default_string => 'all',
-          });
-}
-
-sub default_severity { return $SEVERITY_MEDIUM;   }
-sub default_themes   { return qw(pulp cosmetic);  }
+use constant supported_parameters
+  => ({ name           => 'single',
+        description    => 'Checking of single-quote strings.',
+        behavior       => 'string',
+        default_string => 'none',
+      },
+      { name           => 'double',
+        description    => 'Checking of double-quote strings.',
+        behavior       => 'string',
+        default_string => 'all',
+      },
+      { name           => 'heredoc',
+        description    => 'Checking of interpolated here-documents.',
+        behavior       => 'string',
+        default_string => 'all',
+      });
+use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes   => qw(pulp cosmetic);
 
 sub applies_to {
   my ($policy) = @_;
@@ -368,6 +366,8 @@ sub _printable {
 1;
 __END__
 
+=for stopwords addon backslashed upcase FS unicode ascii ok alnum quotemeta backslashing backticks Ryde
+
 =head1 NAME
 
 Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash - don't use undefined backslash forms
@@ -382,7 +382,7 @@ addon.  It checks for unknown backslash escapes like
 This is harmless, assuming the intention is a literal "*" (which it gives),
 but unnecessary, and on that basis this policy is under the C<cosmetic>
 theme (see L<Perl::Critic/POLICY THEMES>).  Sometimes it can be a
-misunderstanding a typo though, for instance a backslashed newline is a
+misunderstanding or a typo though, for instance a backslashed newline is a
 newline, but perhaps you thought it meant a continuation.
 
     print "this\       # bad
@@ -392,7 +392,7 @@ Perl already warns about unknown escaped alphanumerics like C<\v> under
 C<perl -w> or C<use warnings> (see L<perldiag/Unrecognized escape \\%c
 passed through>).
 
-    print "\v";       # bad, and provokes Perl warning
+    print "\v";        # bad, and provokes Perl warning
 
 This policy extends to report on any unknown escape, with options below to
 vary the strictness and to check single-quote strings too if desired.
@@ -402,7 +402,7 @@ vary the strictness and to check single-quote strings too if desired.
 Control characters C<\cX> are checked and only the conventional A-Z a-z @ [
 \ ] ^ _ ? are considered known.
 
-    print "\c*";      # bad
+    print "\c*";       # bad
 
 Perl accepts any C<\c> and does an upcase and xor 0x40, so C<\c*> is the
 letter j, on an ASCII system at least.  But that's quite obscure and likely
@@ -413,9 +413,9 @@ backslash is not an escape, except for a closing quote character, which it
 does escape (basically because Perl scans for a closing quote before
 considering interpolations).  Thus,
 
-    print " \c\  ";     # ok
+    print " \c\  ";     # ok, control-\ FS
     print " \c\" ";     # bad, control-" is unknown
-    print qq[ \c\]  ];  # ok, control-]
+    print qq[ \c\]  ];  # ok, control-] GS
 
 =head2 Wide Chars
 
@@ -431,7 +431,7 @@ or if there's no C<use> version at all.
     use 5.005;
     print "\N{COLON}";       # bad
 
-The absense of a C<use> is treated as 5.6 because that's most likely,
+The absence of a C<use> is treated as 5.6 because that's most likely,
 especially if you have those escapes intentionally.  But perhaps this will
 change, or be configurable.
 
@@ -471,7 +471,7 @@ The possible values are
     all        report all unknowns
 
 "alnum" does no more than compiling with C<perl -w>, but might be good for
-checking code you don't want to run at all.
+checking code you don't want to run.
 
 "quotemeta" reports escapes not produced by C<quotemeta()>.  For example
 C<quotemeta> escapes a C<*>, so C<\*> is not reported, but it doesn't escape
@@ -501,7 +501,8 @@ left only as an option.
 
 For reference, single-quote here-documents C<E<lt>E<lt>'HERE'> don't have
 any backslash escapes and so are not considered by this policy.  C<qx{}>
-command backticks are normally double-quote, but C<qx''> is single-quote.
+command backticks are double-quote but as C<qx''> is single-quote and in
+each case treated under the corresponding single/double option.
 
 =back
 

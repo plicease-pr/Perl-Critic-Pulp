@@ -19,19 +19,16 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
+use Perl::Critic::Pulp::Utils;
 use version;
-use Perl::Critic::Pulp;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-use constant DEBUG => 0;
-
-
-sub supported_parameters { return; }
-sub default_severity     { return $SEVERITY_MEDIUM;   }
-sub default_themes       { return qw(pulp bugs);      }
-sub applies_to           { return 'PPI::Statement::Include'; }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => 'PPI::Statement::Include';
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -39,7 +36,7 @@ sub violates {
   defined ($elem->module) || return;    # if a "use 5.005" etc
   my $arg = $elem->schild(2) || return; # if a "use Foo" with no args
   $arg->isa('PPI::Token::Quote') || return;
-  _elem_is_last_of_statement ($arg) || return;
+  elem_is_last_of_statement($arg) || return;
 
   # This is a strict match of what a module version number is like.
   # Previously looser forms like '.500' were matched too, but of course
@@ -48,7 +45,7 @@ sub violates {
   # it's important.
   #
   my $str = $arg->string;
-  $str =~ $Perl::Critic::Pulp::use_module_version_number_re
+  $str =~ $Perl::Critic::Pulp::Utils::use_module_version_number_re
     or return;
 
   return $self->violation
@@ -60,7 +57,7 @@ sub violates {
 # return true if $elem is the last thing in its statement, apart from an
 # optional terminating ";"
 #
-sub _elem_is_last_of_statement {
+sub elem_is_last_of_statement {
   my ($elem) = @_;
   my $next = $elem->snext_sibling;
   return (! $next
@@ -71,6 +68,8 @@ sub _elem_is_last_of_statement {
 
 1;
 __END__
+
+=for stopwords addon builtin arg ok Ryde
 
 =head1 NAME
 

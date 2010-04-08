@@ -22,18 +22,18 @@ use strict;
 use warnings;
 use List::Util qw(min max);
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_perl_builtin
-                           is_perl_builtin_with_no_arguments
-                           precedence_of);
+# 1.100 for precedence_of() supporting -f etc filetests
+use Perl::Critic::Utils 1.100 qw(is_perl_builtin
+                                 is_perl_builtin_with_no_arguments
+                                 precedence_of);
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 
-sub supported_parameters { return (); }
-sub default_severity     { return $SEVERITY_MEDIUM;       }
-sub default_themes       { return qw(pulp bugs);          }
-sub applies_to           { return 'PPI::Token::Operator'; }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => 'PPI::Token::Operator';
 
 my %op_postfix = ('++'  => 1,
                   '--'  => 1);
@@ -118,7 +118,7 @@ sub violates {
         $state = 'postfix';
         next;  # can leave $elem undef for something dodgy like "! < 123"
       }
-      my $precedence = _my_precedence_of($op) or return;
+      my $precedence = precedence_of($op) || return;
 
       if ($precedence > $stop_precedence) {
         return;  # something below "==" etc, expression to ! is ok
@@ -215,21 +215,6 @@ sub violates {
   return;
 }
 
-# in perlcritic 1.088 precedence_of() doesn't recognise the filetest
-# operators like "-f"
-#
-sub _my_precedence_of {
-  my ($op) = @_;
-  my $precedence = precedence_of ($op);
-  if (! defined $precedence) {
-    if ($op =~ /^-[a-zA-Z]/) {
-      return precedence_of('>>'); # fakery
-    }
-    warn "NotWithCompare: oops, precedence_of() doesn't know operator '$op'";
-  }
-  return $precedence;
-}
-
 sub _snext_is_bang {
   my ($elem) = @_;
   my $next = $elem->snext_sibling;
@@ -282,6 +267,8 @@ sub _constants {
 
 1;
 __END__
+
+=for stopwords addon booleans varargs builtins args Ryde
 
 =head1 NAME
 

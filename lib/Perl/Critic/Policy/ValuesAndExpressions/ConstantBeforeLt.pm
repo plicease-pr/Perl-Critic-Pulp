@@ -22,13 +22,12 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_included_module_name
+use Perl::Critic::Utils qw(is_included_module_name
                            is_method_call
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -41,7 +40,7 @@ use constant DEBUG => 0;
 #
 
 sub supported_parameters { return ();               }
-sub default_severity     { return $SEVERITY_MEDIUM; }
+sub default_severity     { return $Perl::Critic::Utils::SEVERITY_MEDIUM; }
 sub default_themes       { return qw(pulp bugs);    }
 sub applies_to           { return 'PPI::Document';  }
 
@@ -204,6 +203,8 @@ sub _elem_and_ssiblings {
 
 1;
 __END__
+
+=for stopwords bareword addon autoloaded unprototyped readline parens ConstantBeforeLt POSIX Bareword filehandle mis Ryde
 
 =head1 NAME
 

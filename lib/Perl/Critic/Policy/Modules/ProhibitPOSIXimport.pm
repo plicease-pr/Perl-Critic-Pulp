@@ -23,20 +23,19 @@ use POSIX ('abort'); # must import something to initialize @POSIX::EXPORT
 use Scalar::Util;
 
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_function_call
+use Perl::Critic::Utils qw(is_function_call
                            split_nodes_on_comma);
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
-use Perl::Critic::Pulp;
+use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 use constant DEBUG => 0;
 use constant _ALLOWED_CALL_COUNT => 15;
 
 
 sub supported_parameters { return; }
-sub default_severity     { return $SEVERITY_LOW;   }
+sub default_severity     { return $Perl::Critic::Utils::SEVERITY_LOW;   }
 sub default_themes       { return qw(pulp efficiency);      }
 sub applies_to           { return 'PPI::Statement::Include'; }
 
@@ -55,7 +54,7 @@ sub violates {
 
   return unless ($elem->module||'') eq 'POSIX';  # "use POSIX"
   return unless (_inc_exporter_imports_type($elem) eq 'default');
-  return if _is_within_package_main($elem);      # within main ok
+  return if _is_in_package_main($elem);          # within main ok
   return if _count_posix_calls($document) >= _ALLOWED_CALL_COUNT;
 
   return $self->violation
@@ -75,7 +74,7 @@ sub _inc_exporter_imports_type {
   $inc->type eq 'use'
     or return 'no_import'; # "require Foo" or "no Foo" don't import
 
-  my $mfirst = Perl::Critic::Pulp::include_module_first_arg ($inc)
+  my $mfirst = Perl::Critic::Pulp::Utils::include_module_first_arg ($inc)
     || return 'default'; # no args or only a version check
 
   my @elems = _elem_and_snext_siblings ($mfirst);
@@ -95,24 +94,24 @@ sub _inc_exporter_imports_type {
 # return true if PPI $elem is within the "package main", either an explicit
 # "package main" or main as the default when no "package" statement at all
 #
-sub _is_within_package_main {
+sub _is_in_package_main {
   my ($elem) = @_;
-  my $package = _element_package($elem) || return 1; # no package statement
+  my $package = elem_package($elem) || return 1; # no package statement
   if (DEBUG) { print "within_package $package\n"; }
   return ($package->namespace eq 'main'); # explicit "package main"
 }
 
-# Return the PPI::Statement::Package containing $elem, or nothing if no
+# Return the PPI::Statement::Package containing $elem, or undef if no
 # package statement scoped on $elem.
 #
 # The search upwards begins with the element preceding $elem, so if $elem
 # itself is a PPI::Statement::Package then that's not the one returned,
 # rather its containing package.
 #
-sub _element_package {
+sub elem_package {
   my ($elem) = @_;
   for (;;) {
-    $elem = $elem->sprevious_sibling || $elem->parent || return;
+    $elem = $elem->sprevious_sibling || $elem->parent || return undef;
     if ($elem->isa ('PPI::Statement::Package')) {
       return $elem;
     }
@@ -254,6 +253,8 @@ sub _count_posix_calls {
 1;
 __END__
 
+=for stopwords POSIX addon kbytes Ryde
+
 =head1 NAME
 
 Perl::Critic::Policy::Modules::ProhibitPOSIXimport - don't import the whole of POSIX into a module
@@ -269,7 +270,7 @@ from that module if you're only using a few things.
 
 The aim is to save some memory, and maybe run a bit faster.  A full C<POSIX>
 import adds about 550 symbols to your module and that's about 30 to 40
-kbytes in Perl 5.10 on a 32-bit system, or about 115 kbytes in perl 5.8.  If
+kbytes in Perl 5.10 on a 32-bit system, or about 115 kbytes in Perl 5.8.  If
 lots of modules do this it adds up.
 
 As noted in the C<POSIX> docs, the way it exports everything by default is

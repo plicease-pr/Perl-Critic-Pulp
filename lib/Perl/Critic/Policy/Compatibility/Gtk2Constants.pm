@@ -21,19 +21,18 @@ use warnings;
 use List::Util;
 use version;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_function_call
+use Perl::Critic::Utils qw(is_function_call
                            is_method_call);
-use Perl::Critic::Pulp;
+use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 use constant DEBUG => 0;
 
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_MEDIUM;   }
-sub default_themes   { return qw(pulp bugs);      }
-sub applies_to       { return ('PPI::Token::Word', 'PPI::Token::Symbol'); }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => qw(PPI::Token::Word PPI::Token::Symbol);
 
 my $v1_190 = version->new('1.190');
 my $v1_210 = version->new('1.210');
@@ -129,6 +128,9 @@ sub violates {
      $elem);
 }
 
+# "Foo"            return (undef, "Foo")
+# "Foo::Bar::Quux" return ("Foo::Bar", "Quux")
+#
 sub _qualifier_and_basename {
   my ($str) = @_;
   return ($str =~ /(?:(.*)::)?(.*)/)
@@ -190,11 +192,11 @@ sub _highest_explicit_module_version {
 sub _include_module_version_with_exporter {
   my ($inc) = @_;
 
-  if (my $ver = Perl::Critic::Pulp::include_module_version ($inc)) {
+  if (my $ver = Perl::Critic::Pulp::Utils::include_module_version ($inc)) {
     return version->new ($ver->content);
   }
 
-  if (my $ver = Perl::Critic::Pulp::include_module_first_arg ($inc)) {
+  if (my $ver = Perl::Critic::Pulp::Utils::include_module_first_arg ($inc)) {
     if ($ver->isa('PPI::Token::Number')) {
       $ver = $ver->content;
     } elsif ($ver->isa('PPI::Token::Quote')) {
@@ -204,7 +206,7 @@ sub _include_module_version_with_exporter {
     }
     # Exporter looks only for a leading digit before calling ->VERSION, but
     # be tighter here to avoid errors from version.pm about bad values
-    if ($ver =~ $Perl::Critic::Pulp::use_module_version_number_re) {
+    if ($ver =~ $Perl::Critic::Pulp::Utils::use_module_version_number_re) {
       return version->new ($ver);
     }
   }
@@ -214,6 +216,8 @@ sub _include_module_version_with_exporter {
 
 1;
 __END__
+
+=for stopwords Gtk addon Ryde
 
 =head1 NAME
 

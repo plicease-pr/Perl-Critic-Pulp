@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 require Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull;
 
 #------------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,
@@ -98,7 +98,7 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
-                  
+
                   [ 1, 'open FH, "</dev/null"' ],
                   [ 1, "open FH, '/dev/null'" ],
                   [ 1, 'open FH, qq{>/dev/null}' ],

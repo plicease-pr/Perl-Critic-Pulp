@@ -21,11 +21,11 @@
 use strict;
 use warnings;
 use Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -54,6 +54,9 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  # unterminated C< quietly ignored
+                  [ 0, "=head1 SOMETHING\n\nC<" ],
+
                   [ 1, "=head1 NAME\n\nfoo - like C<bar>" ],
                   [ 1, "=head1 NAME \n\nfoo - like C<bar>" ],
                   [ 1, "=head1 \tNAME\t \n\nfoo - like C<bar>" ],

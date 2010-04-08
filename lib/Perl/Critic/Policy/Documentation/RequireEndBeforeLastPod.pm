@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Rydepod
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -21,14 +21,14 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_LOWEST;  }
-sub default_themes   { return qw(pulp cosmetic); }
-sub applies_to       { return 'PPI::Document';   }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
+use constant default_themes       => qw(pulp cosmetic);
+use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -72,6 +72,8 @@ sub violates {
 
 1;
 __END__
+
+=for stopwords addon ok SelfLoader Ryde
 
 =head1 NAME
 

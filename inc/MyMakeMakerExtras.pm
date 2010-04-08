@@ -260,7 +260,7 @@ pc:
 HERE
   # "podchecker -warnings -warnings" too much reporting every < and >
   $post .= $podcoverage . <<'HERE';
-	-podchecker $(LINT_FILES)
+	-podchecker `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
 	perlcritic $(LINT_FILES)
 unused:
 	for i in $(LINT_FILES); do perl -Mwarnings::unused -I lib -c $$i; done
@@ -288,6 +288,7 @@ check-copyright-years:
 	      | debian/patches/*.diff \
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
 	      | version.texi | */version.texi \
+	      | *utf16* \
 	      | *.mo | *.locatedb | t/samp.*) \
 	      continue ;; \
 	    esac; \
@@ -301,10 +302,10 @@ check-copyright-years:
 	  done; \
 	  exit $$result)
 
-# only a non-zero number is bad, allow an expression to copy a debug from
+# only a DEBUG non-zero number is bad, so an expression can copy a debug from
 # another package
 check-debug-constants:
-	if egrep -n 'DEBUG => [1-9]' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
+	if egrep -n 'DEBUG => [1-9]|^[ \t]*use Smart::Comments' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
 
 check-spelling:
 	if egrep -nHi 'continous|existant|explict|agument|destionation|\bthe the\b|\bnote sure\b' -r . \
@@ -388,7 +389,7 @@ lintian-source:
 	mv -T $(DISTVNAME) $(DEBNAME)-$(VERSION); \
 	dpkg-source -b $(DEBNAME)-$(VERSION) \
 	               $(DEBNAME)_$(VERSION).orig.tar.gz; \
-	lintian -i *.dsc; \
+	lintian -i -X missing-debian-source-format *.dsc; \
 	cd ..; \
 	rm -rf temp-lintian
 

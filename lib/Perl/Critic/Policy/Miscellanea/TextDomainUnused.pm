@@ -22,17 +22,14 @@ use strict;
 use warnings;
 
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_function_call);
+use Perl::Critic::Utils qw(is_function_call);
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-use constant DEBUG => 0;
-
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_LOW;   }
-sub default_themes   { return qw(pulp cosmetic);      }
-sub applies_to       { return 'PPI::Document';  }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
+use constant default_themes       => qw(pulp cosmetic);
+use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -106,6 +103,8 @@ sub _any_strings_locale_textdomain {
 
 1;
 __END__
+
+=for stopwords addon textdomain perlcritic TextDomainUnused eg TextDomain PPI Ryde
 
 =head1 NAME
 

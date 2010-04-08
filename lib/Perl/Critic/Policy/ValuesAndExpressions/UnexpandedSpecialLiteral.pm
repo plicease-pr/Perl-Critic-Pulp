@@ -23,16 +23,15 @@ use warnings;
 use List::Util qw(min max);
 
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_perl_builtin
+use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 31;
+our $VERSION = 33;
 
 
 sub supported_parameters { return (); }
-sub default_severity     { return $SEVERITY_MEDIUM;       }
+sub default_severity     { return $Perl::Critic::Utils::SEVERITY_MEDIUM; }
 sub default_themes       { return qw(pulp bugs);          }
 sub applies_to           { return 'PPI::Token::Word'; }
 
@@ -44,12 +43,12 @@ sub violates {
   my ($self, $elem, $document) = @_;
   $specials{$elem} or return;
 
-  if (is_left_of_big_comma ($elem)) {
+  if (elem_is_left_of_big_comma ($elem)) {
     return $self->violation
       ("$elem is the literal string '$elem' on the left of a =>",
        '', $elem);
   }
-  if (is_solo_subscript ($elem)) {
+  if (elem_is_solo_subscript ($elem)) {
     return $self->violation
       ("$elem is the literal string '$elem' in a hash subscript",
        '', $elem);
@@ -57,17 +56,16 @@ sub violates {
   return;
 }
 
-# Perl::Critic::Utils::is_hash_key() does a similar this to the following
+# Perl::Critic::Utils::is_hash_key() does a similar thing to the following
 # tests, identifying something on the left of "=>", or in a "{}" subscript.
-# But here want to distinguish those two cases since the subscript is only a
+# But here want those two cases separately since the subscript is only a
 # violation if $elem also has no siblings.  (Separate cases allow a custom
 # error message too.)
 #
-
 # { __FILE__ => 123 }
 # ( __FILE__ => 123 )
 #
-sub is_left_of_big_comma {
+sub elem_is_left_of_big_comma {
   my ($elem) = @_;
 
   my $next = $elem->snext_sibling
@@ -89,7 +87,7 @@ sub is_left_of_big_comma {
 #       PPI::Token::Operator    ','
 #       PPI::Token::Number      '123'
 #
-sub is_solo_subscript {
+sub elem_is_solo_subscript {
   my ($elem) = @_;
 
   # must be sole elem
@@ -105,6 +103,8 @@ sub is_solo_subscript {
 
 1;
 __END__
+
+=for stopwords addon filename parens Subhash Concated HashRef OOP Ryde
 
 =head1 NAME
 

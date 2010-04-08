@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -27,7 +27,7 @@ use strict;
 use warnings;
 use Perl6::Slurp;
 
-my @files = ($0, split /\n/, `locate \*.t \*.pm \*.pl`);
+my @files = ($0, split /\n/, `locate \\*.t \\*.pm \\*.pl`);
 
 print scalar(@files),"\n";
 foreach my $filename (@files) {

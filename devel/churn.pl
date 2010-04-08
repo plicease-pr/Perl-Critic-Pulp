@@ -78,6 +78,9 @@ GetOptions
    backslash => sub {
      push @option_policies, 'ValuesAndExpressions::ProhibitUnknownBackslash';
    },
+   semicolon => sub {
+     push @option_policies, 'ValuesAndExpressions::RequireFinalSemicolon';
+   },
 
    # coming soon ...
    testprint => sub {
@@ -95,12 +98,11 @@ if ($option_t_files) {
 } else {
   my @dirs = @ARGV;
   if (! @dirs) {
-  } else {
     @dirs = (
              '/usr/share/perl5',
              '/usr/bin',
              '/bin',
-             glob('/usr/share/perl/*.*.*')
+             glob('/usr/share/perl/*.*.*'),
             );
   }
   print "Directories:\n";

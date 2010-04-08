@@ -19,19 +19,17 @@ use 5.006;
 use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
+use Perl::Critic::Pulp::Utils;
 use version;
-use Perl::Critic::Pulp;
 
-our $VERSION = 31;
-
-use constant DEBUG => 0;
+our $VERSION = 33;
 
 
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_MEDIUM; }
-sub default_themes   { return qw(pulp compatibility); }
-sub applies_to       { return 'PPI::Document';  }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp compatibility);
+use constant applies_to           => 'PPI::Document';
 
 my $perl_ok_version = version->new('5.008');
 my $constant_ok_version = version->new('1.03');
@@ -48,7 +46,7 @@ sub violates {
   foreach my $inc (@$aref) {
 
     $inc->type eq 'use'
-      || ($inc->type eq 'require' && _in_BEGIN($inc))
+      || ($inc->type eq 'require' && elem_in_BEGIN($inc))
         || next;
 
     if (my $ver = $inc->version) {
@@ -67,7 +65,7 @@ sub violates {
 
     ($inc->module||'') eq 'constant' || next;
 
-    if (my $ver = Perl::Critic::Pulp::include_module_version ($inc)) {
+    if (my $ver = Perl::Critic::Pulp::Utils::include_module_version ($inc)) {
       $ver = version->new ($ver);
       if (! defined $modver || $ver > $modver) {
         $modver = $ver;
@@ -122,7 +120,7 @@ sub violates {
 #
 sub _use_constant_is_multi {
   my ($inc) = @_;
-  my $arg = Perl::Critic::Pulp::include_module_first_arg ($inc)
+  my $arg = Perl::Critic::Pulp::Utils::include_module_first_arg ($inc)
     || return 0; # empty "use constant" or version "use constant 1.05"
   return ($arg->isa('PPI::Structure::Constructor') # without version number
           || $arg->isa('PPI::Structure::Block'));  # with version number
@@ -130,7 +128,7 @@ sub _use_constant_is_multi {
 
 
 # return true if $elem is somewhere within a BEGIN block
-sub _in_BEGIN {
+sub elem_in_BEGIN {
   my ($elem) = @_;
   while ($elem = $elem->parent) {
     if ($elem->isa('PPI::Statement::Scheduled')) {
@@ -142,6 +140,8 @@ sub _in_BEGIN {
 
 1;
 __END__
+
+=for stopwords addon multi CPAN perl ok ConstantPragmaHash backports prereqs Ryde
 
 =head1 NAME
 

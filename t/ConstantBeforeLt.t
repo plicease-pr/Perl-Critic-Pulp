@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 require Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
 
 #------------------------------------------------------------------------------
-my $want_version = 31;
+my $want_version = 33;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,

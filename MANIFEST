@@ -6,7 +6,9 @@ debian/control
 debian/copyright
 debian/rules
 debian/watch
+devel/array-delete.pl
 devel/backslash-control.pl
+devel/bareword-colon.pl
 devel/churn-posix.pl
 devel/churn.pl
 devel/const-autoload.pl
@@ -76,6 +78,7 @@ lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitUnknownBackslash.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
+lib/Perl/Critic/Pulp/Utils.pm
 lib/Pod/MinimumVersion.pm
 Makefile.PL
 MANIFEST			This list of files
@@ -107,4 +110,5 @@ t/RequireEndBeforeLastPod.t
 t/TextDomainPlaceholders.t
 t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t
+t/Utils.t
 META.yml                                 Module meta-data (added by MakeMaker)

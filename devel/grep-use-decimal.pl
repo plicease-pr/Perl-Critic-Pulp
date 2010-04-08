@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -24,7 +24,7 @@ use Perl6::Slurp;
 # look for "use Foo .5" etc, with the version number not starting with a digit
 
 
-my @files = ($0, split /\n/, `locate \*.t \*.pm \*.pl`);
+my @files = ($0, split /\n/, `locate \\*.t \\*.pm \\*.pl`);
 
 print scalar(@files),"\n";
 foreach my $filename (@files) {

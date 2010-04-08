@@ -25,27 +25,22 @@ use PPI 1.208;
 # 1.084 for Perl::Critic::Document highest_explicit_perl_version()
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities
-                           is_function_call
+use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list);
+use Perl::Critic::Pulp::Utils;
 
-use Perl::Critic::Pulp;
+our $VERSION = 33;
 
-our $VERSION = 31;
+use constant supported_parameters =>
+  ({ name        => 'above_version',
+     description => 'Check only things above this version of Perl.',
+     behavior    => 'string',
+     parser      => \&Perl::Critic::Pulp::Utils::parameter_parse_version,
+   });
+use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
+use constant default_themes   => qw(pulp compatibility);
+use constant applies_to       => 'PPI::Document';
 
-use constant DEBUG => 0;
-
-sub default_severity { return $SEVERITY_LOW }
-sub default_themes   { return qw(pulp compatibility) }
-sub applies_to       { return 'PPI::Document' }
-
-sub supported_parameters {
-  return ({ name        => 'above_version',
-            description => 'Check only things above this version of Perl.',
-            behavior    => 'string',
-            parser      => \&Perl::Critic::Pulp::parameter_parse_version,
-          });
-}
 
 sub initialize_if_enabled {
   my ($self, $config) = @_;
@@ -67,7 +62,7 @@ sub violates {
 
   my @violations;
   foreach my $check (sort keys %Perl::MinimumVersion::CHECKS) {
-    next if $check eq '_constant_hash'; # better my ConstantPragmaHash
+    next if $check eq '_constant_hash'; # better by ConstantPragmaHash
     next if $check =~ /(_pragmas|_modules)$/;  # wrong for dual-life stuff
 
     my $check_version = $Perl::MinimumVersion::CHECKS{$check};
@@ -75,9 +70,7 @@ sub violates {
              && $check_version <= $explicit_version);
     next if (defined $config_above_version
              && $check_version <= $config_above_version);
-    if (DEBUG) {
-      print "$check\n";
-    }
+    ### $check
 
     my $elem = do {
       no warnings 'redefine';
@@ -96,9 +89,13 @@ sub violates {
 }
 
 #---------------------------------------------------------------------------
+# Crib note: $document->find_first wanted func returning undef means the
+# element is unwanted and also don't descend into its sub-elements.
+#
 
 sub _setup_extra_checks {
   my $v5004 = version->new('5.004');
+  my $v5005 = version->new('5.005');
   my $v5006 = version->new('5.006');
   my $v5008 = version->new('5.008');
   my $v5010 = version->new('5.010');
@@ -106,6 +103,9 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_magic__fix}     = $v5010;
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_operators__fix} = $v5010;
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_working_properly} = $v5010;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5006_exists_sub}        = $v5006;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5006_delete_array_elem} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5005_bareword_colon_colon} = $v5005;
 
   $Perl::MinimumVersion::CHECKS{_my_perl_5004_pack_format} = $v5004;
   $Perl::MinimumVersion::CHECKS{_my_perl_5006_pack_format} = $v5006;
@@ -139,18 +139,75 @@ sub _setup_extra_checks {
 
 sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
   my ($pmv) = @_;
-  if (DEBUG) { print "_my_perl_5010_qr_m_working_properly check\n"; }
+  ### _my_perl_5010_qr_m_working_properly check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
        $elem->isa('PPI::Token::QuoteLike::Regexp') || return 0;
        my %modifiers = $elem->get_modifiers;
-       if (DEBUG) {
-         require Data::Dumper;
-         print "  ", $elem->content,
-           " modifiers ",Data::Dumper::Dumper(\%modifiers),"\n";
+       ### content: $elem->content
+       ### modifiers: \%modifiers
+       return ($modifiers{'m'} ? 1 : 0);
+     });
+}
+
+my %delete_or_exists = (delete => 1, exists => 1);
+
+# delete $array[0] and exists $array[0] new in 5.6.0
+#
+sub Perl::MinimumVersion::_my_perl_5006_delete_array_elem {
+  my ($pmv) = @_;
+  ### _my_perl_5006_delete_array_elem check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $delete_or_exists{$elem}
+           && is_function_call($elem)
+           && ($elem = _symbol_or_list_symbol($elem->snext_sibling))
+           && $elem->symbol_type eq '@') {
+         return 1;
+       } else {
+         return 0;
        }
-       return $modifiers{'m'};
+     });
+}
+
+# exists &subr new in 5.6.0
+#
+sub Perl::MinimumVersion::_my_perl_5006_exists_sub {
+  my ($pmv) = @_;
+  ### _my_perl_5006_exists_sub check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $elem eq 'exists'
+           && is_function_call($elem)
+           && ($elem = _symbol_or_list_symbol($elem->snext_sibling))
+           && $elem->symbol_type eq '&') {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+# Foo::Bar:: bareword new in 5.005
+# generally a compile-time syntax error in 5.004
+#
+sub Perl::MinimumVersion::_my_perl_5005_bareword_colon_colon {
+  my ($pmv) = @_;
+  ### _my_perl_5005_bareword_colon_colon check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $elem =~ /::$/) {
+         return 1;
+       } else {
+         return 0;
+       }
      });
 }
 
@@ -199,24 +256,46 @@ sub _pack_format {
 
        my @args = parse_arg_list ($elem);
        my $format_arg = $args[0];
-       if (DEBUG) { print "  format @$format_arg\n"; }
+       ### format: @$format_arg
 
        my ($str, $any_vars) = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::_arg_string ($format_arg);
-       if (DEBUG) { print "  str ``$str'' anyvars=",($any_vars?1:0),"\n"; }
+       ### $str
+       ### $any_vars
 
        if ($any_vars) { return 0; }
        return ($str =~ $regexp);
      });
 }
 
+
+#---------------------------------------------------------------------------
+# generic
+
+# if $elem is a symbol or a List of a symbol then return that symbol elem,
+# otherwise return an empty list
+#
+sub _symbol_or_list_symbol {
+  my ($elem) = @_;
+  if ($elem->isa('PPI::Structure::List')) {
+    $elem = $elem->schild(0) || return;
+    $elem->isa('PPI::Statement::Expression') || return;
+    $elem = $elem->schild(0) || return;
+  }
+  $elem->isa('PPI::Token::Symbol') || return;
+  return $elem;
+}
+
+
 #---------------------------------------------------------------------------
 
 1;
 __END__
 
+=for stopwords addon config MinimumVersion Pragma CPAN prereq multi concats
+
 =head1 NAME
 
-Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy - explicit perl version for features used
+Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy - explicit Perl version for features used
 
 =head1 DESCRIPTION
 
@@ -279,9 +358,18 @@ on a C<qr> until then.
 
 =item *
 
+C<exists &subr>, C<exists $array[0]> or C<delete $array[0]> require Perl
+5.6.
+
+=item *
+
+C<Foo::Bar::> double-colon package name requires Perl 5.005;
+
+=item *
+
 C<pack> and C<unpack> format strings are checked for various new conversions
-in 5.004 through 5.10.0.  Currently this only works on literal strings or
-here-documents without interpolations, plus C<.> operator concats of those.
+in Perl 5.004 through 5.10.0.  Currently this only works on literal strings
+or here-documents without interpolations, or C<.> operator concats of those.
 
 =back
 

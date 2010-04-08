@@ -20,18 +20,16 @@ use strict;
 use warnings;
 use List::Util;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(:severities);
+use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 31;
+our $VERSION = 33;
 
-use constant DEBUG => 0;
-
-sub supported_parameters { return; }
-sub default_severity { return $SEVERITY_LOW;   }
-sub default_themes   { return qw(pulp bugs);      }
-sub applies_to       { return ('PPI::Token::Quote',
-                               'PPI::Token::QuoteLike::Words'); }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => qw(PPI::Token::Quote
+                                        PPI::Token::QuoteLike::Words);
 
 # See Perl_do_openn() for IsSPACE allowed leading, after mode and trailing.
 # No layers in a two-arg open, only < > >> etc.
@@ -77,6 +75,8 @@ sub violates {
 
 1;
 __END__
+
+=for stopwords addon filename backticks Ryde
 
 =head1 NAME
 
