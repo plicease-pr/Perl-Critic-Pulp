@@ -20,7 +20,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 450;
+use Test::More tests => 423;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 require Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull;
 
 #------------------------------------------------------------------------------
-my $want_version = 33;
+my $want_version = 34;
 is ($Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,
@@ -41,7 +41,7 @@ is (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,
 
 
 #------------------------------------------------------------------------------
-# _DEV_NULL_RE
+# _DEV_NULL_RE matching
 
 my $have_dev_null = (-e '/dev/null');
 
@@ -62,13 +62,15 @@ foreach my $data ([ 1, '', '/dev/null' ],
 
         my $oname = $pre_space . $mode . $mid_space . $filename . $post_space;
 
-      SKIP: {
-          ($want_match && $have_dev_null)
-            or skip "no /dev/null available", 1;
-          my $open_ok = open FH,$oname;
-          ok ($open_ok, "can in fact open '$oname'");
-          if ($open_ok) {
-            close FH or die "oops, cannot close '$oname'";
+        if ($want_match) {
+        SKIP: {
+            $have_dev_null
+              or skip "no /dev/null file exists", 1;
+            my $open_ok = open FH,$oname;
+            ok ($open_ok, "can in fact open '$oname'");
+            if ($open_ok) {
+              close FH or die "oops, cannot close '$oname'";
+            }
           }
         }
 

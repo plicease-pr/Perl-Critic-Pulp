@@ -28,7 +28,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 
 #------------------------------------------------------------------------------
-my $want_version = 33;
+my $want_version = 34;
 is ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION,

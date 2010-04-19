@@ -15,6 +15,11 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+Version 34, April 2010
+    - new policy ProhibitBarewordDoubleColon
+    - PerlMinimumVersionAndWhy new option skip_checks
+
 Version 33, April 2010
     - ProhibitBadAproposMarkup and Pod::MinimumVersion quietly ignore
       POD parse errors

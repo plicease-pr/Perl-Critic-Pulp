@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 33;
+our $VERSION = 34;
 
 1;
 __END__
@@ -34,9 +34,9 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a collection of add-on policies for C<Perl::Critic>, summarized in
-the sections below.  They're under a new "pulp" theme plus other themes
-according to their purpose (see L<Perl::Critic/POLICY THEMES>).
+This is a collection of add-on policies for C<Perl::Critic>, summarized
+below.  They're under a new "pulp" theme plus other themes according to
+their purpose (see L<Perl::Critic/POLICY THEMES>).
 
 Roughly half are code related and half cosmetic.  You can always enable or
 disable the ones you do or don't want.  It's normal to pick and choose what
@@ -44,7 +44,7 @@ you want reported.  There's a lot of perlcritic builtin and add-on policies
 and they range from helpful things catching problems, to the bizarre or
 restrictive, and in some cases are mutually contradictory!  Many are
 intended as building blocks for enforcing a house style.  If you try to pass
-everything then you give away big parts of the language, so if you're not
+everything then you'll give away big parts of the language, so if not
 turning off or customizing about half then either you're not trying or
 you're much too easily lead!
 
@@ -142,14 +142,18 @@ Stray semicolons C<;>
 
 Unknown C<\z> etc escapes in strings.
 
+=item L<ValuesAndExpressions::ProhibitBarewordDoubleColon|Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon>
+
+Double-colon barewords C<Foo::Bar::>
+
 =back
 
 =head1 OTHER NOTES
 
 In most of the perlcritic documentation, including the Pulp here, policy
 names appear without the full C<Perl::Critic::Policy::...> class name.  In
-Emacs have a look at C<man-completion.el> to automatically get the man page
-from a suffix part at point, or C<ffap-perl-module.el> to go to the source
+Emacs have a look at C<man-completion.el> for C<M-x man> to automatically
+expand a suffix part at point, or C<ffap-perl-module.el> to go to the source
 similarly.
 
     http://user42.tuxfamily.org/man-completion/index.html
@@ -157,8 +161,8 @@ similarly.
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
 In perlcritic's output you can ask for %P for the full policy name to copy
-or follow.  Here's a good format you can put in your F<.perlcriticrc>,
-including file:line:column: which Emacs will recognise.  See
+or follow.  Here's a good format you can put in your F<.perlcriticrc>, with
+a file:line:column: Emacs will recognise too.  See
 L<Perl::Critic::Violation> for all the C<%> escapes.
 
     verbose=%f:%l:%c:\n %P\n %m\n

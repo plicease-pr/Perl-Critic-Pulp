@@ -26,9 +26,7 @@ use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 33;
-
-use constant DEBUG => 0;
+our $VERSION = 34;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -48,7 +46,7 @@ sub violates {
   my $funcname = $elem->content;
   $funcname =~ s/^Locale::TextDomain:://;
   $funcs{$funcname} || return;
-  if (DEBUG) { print "TextDomainPlaceholders $elem\n"; }
+  ### TextDomainPlaceholders: $elem->content
 
   is_function_call($elem) || return;
 
@@ -70,7 +68,7 @@ sub violates {
   # each element of @args is an arrayref containing PPI elements making up
   # the arg
   my @args = parse_arg_list ($elem);
-  if (DEBUG) { print "  got total ",scalar(@args)," args\n"; }
+  ### got total arg count: scalar(@args)
 
   if ($funcname =~ /p/) {
     # msgctxt context arg to __p, __npx
@@ -96,7 +94,7 @@ sub violates {
     }
   }
 
-  if (DEBUG) { print "  got ",scalar(@args)," data args\n"; }
+  ### got data arg count: scalar(@args)
 
   my $args_any_vars = 0;
   my %arg_keys;
@@ -104,7 +102,9 @@ sub violates {
     my $arg = shift @args;
     my ($str, $any_vars) = _arg_word_or_string ($arg);
     $args_any_vars ||= $any_vars;
-    if (DEBUG) { print "  arg @$arg str='$str' any_vars=$any_vars\n"; }
+    ### arg: @$arg
+    ### $str
+    ### $any_vars
     if (! $any_vars) {
       $arg_keys{$str} = $arg;
     }
@@ -120,7 +120,7 @@ sub violates {
 
     while ($format_str =~ /\{(\w+)\}/g) {
       my $format_key = $1;
-      if (DEBUG) { print "  format key: '$format_key'\n"; }
+      ### $format_key
       $format_keys{$format_key} = 1;
 
       if (! $args_any_vars && ! exists $arg_keys{$format_key}) {
@@ -144,7 +144,7 @@ sub violates {
       }
     }
   }
-  if (DEBUG) { print "  total violations ",scalar(@violations),"\n"; }
+  ### total violation count: scalar(@violations)
 
   return @violations;
 }

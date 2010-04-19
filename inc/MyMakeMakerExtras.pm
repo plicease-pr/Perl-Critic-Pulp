@@ -249,7 +249,7 @@ HERE
   my $podcoverage = '';
   foreach my $class (@{$my_options{'MyMakeMakerExtras_Pod_Coverage'}}) {
     # the "." obscures it from MyExtractUse.pm
-    $podcoverage .= "\t-perl -e 'use "."Pod::Coverage package=>$class'\n";
+    $podcoverage .= "\t-\$(PERLRUNINST) -e 'use "."Pod::Coverage package=>$class'\n";
   }
 
   $post .= "LINT_FILES = $lint_files\n"
@@ -284,8 +284,9 @@ check-copyright-years:
 	  while read i; do \
 	    case $$i in \
 	      '' | */ \
+	      | ppport.h \
 	      | debian/changelog | debian/compat | debian/doc-base \
-	      | debian/patches/*.diff \
+	      | debian/patches/*.diff | debian/source/format \
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
 	      | version.texi | */version.texi \
 	      | *utf16* \

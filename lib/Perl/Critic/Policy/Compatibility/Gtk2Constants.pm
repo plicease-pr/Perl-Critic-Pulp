@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(is_function_call
                            is_method_call);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 33;
+our $VERSION = 34;
 
 use constant DEBUG => 0;
 

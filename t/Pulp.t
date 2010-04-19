@@ -27,7 +27,7 @@ SKIP: { eval 'use Test::NoWarnings; 1'
 
 require Perl::Critic::Pulp;
 
-my $want_version = 33;
+my $want_version = 34;
 is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {

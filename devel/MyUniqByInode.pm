@@ -1,4 +1,4 @@
-# Copyright 2009 Kevin Ryde.
+# Copyright 2009, 2010 Kevin Ryde.
 
 # This file is part of miscbits-el.
 #
@@ -21,8 +21,6 @@ package MyUniqByInode;
 use strict;
 use warnings;
 
-use constant DEBUG => 0;
-
 sub new {
   my ($class) = @_;
   return bless { seen => { },
@@ -38,11 +36,9 @@ sub uniq {
   if (! defined $dev) { return 1; } # error treated as unique
 
   my $key = "$dev,$ino";
-  if (DEBUG) {
-    print "key $key seen=",
-      (exists $self->{'seen'}->{$key} ? "yes" : "no"), "\n";
-  }
+  ### $key
   my $seen = $self->{'seen'};
+  ### seen: exists $seen->{$key}
   return (! exists $seen->{$key}
           && ($seen->{$key} = 1));
 }

@@ -17,9 +17,24 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-
+use 5.010;
 use strict;
 use warnings;
+
+{ package main::foo; sub x {} }
+{ package main::foo::bar; sub y {} }
+{
+  $, = ' ';
+  # print %main::;
+  my $stash = \%main::;
+  # print keys %$stash;
+  print $stash->{foo::}//'undef',"\n";
+
+  $stash = \%main::foo::;
+  print keys %$stash,"\n";
+  print $stash->{bar::}//'undef',"\n";
+  exit 0;
+}
 
 sub make {
   return "make: @_";

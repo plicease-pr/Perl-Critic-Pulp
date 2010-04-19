@@ -29,13 +29,17 @@ use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 33;
+our $VERSION = 34;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
      description => 'Check only things above this version of Perl.',
      behavior    => 'string',
      parser      => \&Perl::Critic::Pulp::Utils::parameter_parse_version,
+   },
+   { name        => 'skip_checks',
+     description => 'Version checks to skip (space separated list).',
+     behavior    => 'string',
    });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes   => qw(pulp compatibility);
@@ -56,12 +60,16 @@ sub initialize_if_enabled {
 sub violates {
   my ($self, $document) = @_;
 
+  my %skip_checks;
+  @skip_checks{split / /, $self->{_skip_checks}} = (); # hash slice
+
   my $pmv = Perl::MinimumVersion->new ($document);
   my $config_above_version = $self->{'above_version'};
   my $explicit_version = $document->highest_explicit_perl_version;
 
   my @violations;
   foreach my $check (sort keys %Perl::MinimumVersion::CHECKS) {
+    next if exists $skip_checks{$check};
     next if $check eq '_constant_hash'; # better by ConstantPragmaHash
     next if $check =~ /(_pragmas|_modules)$/;  # wrong for dual-life stuff
 
@@ -102,10 +110,11 @@ sub _setup_extra_checks {
 
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_magic__fix}     = $v5010;
   $Perl::MinimumVersion::CHECKS{_my_perl_5010_operators__fix} = $v5010;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_working_properly} = $v5010;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5006_exists_sub}        = $v5006;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_propagate_properly} = $v5010;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5006_exists_subr}       = $v5006;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5006_exists_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_my_perl_5006_delete_array_elem} = $v5006;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5005_bareword_colon_colon} = $v5005;
+  $Perl::MinimumVersion::CHECKS{_my_perl_5005_bareword_double_colon} = $v5005;
 
   $Perl::MinimumVersion::CHECKS{_my_perl_5004_pack_format} = $v5004;
   $Perl::MinimumVersion::CHECKS{_my_perl_5006_pack_format} = $v5006;
@@ -137,9 +146,9 @@ sub _setup_extra_checks {
   }
 }
 
-sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
+sub Perl::MinimumVersion::_my_perl_5010_qr_m_propagate_properly {
   my ($pmv) = @_;
-  ### _my_perl_5010_qr_m_working_properly check
+  ### _my_perl_5010_qr_m_propagate_properly check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -151,18 +160,26 @@ sub Perl::MinimumVersion::_my_perl_5010_qr_m_working_properly {
      });
 }
 
-my %delete_or_exists = (delete => 1, exists => 1);
-
 # delete $array[0] and exists $array[0] new in 5.6.0
+# two functions so the "exists" or "delete" appears in the check name
 #
+sub Perl::MinimumVersion::_my_perl_5006_exists_array_elem {
+  my ($pmv) = @_;
+  ### _my_perl_5006_exists_array_elem check
+  return _exists_or_delete_array_elem ($pmv, 'exists');
+}
 sub Perl::MinimumVersion::_my_perl_5006_delete_array_elem {
   my ($pmv) = @_;
   ### _my_perl_5006_delete_array_elem check
+  return _exists_or_delete_array_elem ($pmv, 'delete');
+}
+sub _exists_or_delete_array_elem {
+  my ($pmv, $which) = @_;
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
        if ($elem->isa('PPI::Token::Word')
-           && $delete_or_exists{$elem}
+           && $elem eq $which
            && is_function_call($elem)
            && ($elem = _symbol_or_list_symbol($elem->snext_sibling))
            && $elem->symbol_type eq '@') {
@@ -173,11 +190,11 @@ sub Perl::MinimumVersion::_my_perl_5006_delete_array_elem {
      });
 }
 
-# exists &subr new in 5.6.0
+# exists(&subr) new in 5.6.0
 #
-sub Perl::MinimumVersion::_my_perl_5006_exists_sub {
+sub Perl::MinimumVersion::_my_perl_5006_exists_subr {
   my ($pmv) = @_;
-  ### _my_perl_5006_exists_sub check
+  ### _my_perl_5006_exists_subr check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -196,9 +213,9 @@ sub Perl::MinimumVersion::_my_perl_5006_exists_sub {
 # Foo::Bar:: bareword new in 5.005
 # generally a compile-time syntax error in 5.004
 #
-sub Perl::MinimumVersion::_my_perl_5005_bareword_colon_colon {
+sub Perl::MinimumVersion::_my_perl_5005_bareword_double_colon {
   my ($pmv) = @_;
-  ### _my_perl_5005_bareword_colon_colon check
+  ### _my_perl_5005_bareword_double_colon check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -325,8 +342,8 @@ the policy completely from you F<~/.perlcriticrc> file in the usual way,
 
 =head2 MinimumVersion Mangling
 
-A little mangling is applied to what C<Perl::MinimumVersion> normally
-reports (as of its version 1.20).
+Some mangling is applied to what C<Perl::MinimumVersion> normally reports
+(as of its version 1.20).
 
 =over 4
 
@@ -363,13 +380,14 @@ C<exists &subr>, C<exists $array[0]> or C<delete $array[0]> require Perl
 
 =item *
 
-C<Foo::Bar::> double-colon package name requires Perl 5.005;
+C<Foo::Bar::> double-colon package name requires Perl 5.005.
 
 =item *
 
 C<pack> and C<unpack> format strings are checked for various new conversions
 in Perl 5.004 through 5.10.0.  Currently this only works on literal strings
-or here-documents without interpolations, or C<.> operator concats of those.
+or here-documents without interpolations, and C<.> operator concats of
+those.
 
 =back
 
@@ -388,6 +406,19 @@ string is anything L<C<version.pm>|version> understands.  For example,
 
 For example if you always use Perl 5.6 and set 5.006 like this then you can
 have C<our> package variables without an explicit C<use 5.006>.
+
+=item C<skip_checks> (list of check names, default none)
+
+Skip the given MinimumVersion checks (a space separated list).  The check
+names are shown in the violation message and come from
+C<Perl::MinimumVersion::CHECKS>.  For example,
+
+    [Compatibility::PerlMinimumVersionAndWhy]
+    skip_checks = _some_thing _another_thing
+
+This can be used for checks you believe are wrong, or where the
+compatibility matter only affects limited circumstances which you
+understand.
 
 =back
 

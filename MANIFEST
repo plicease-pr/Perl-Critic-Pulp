@@ -5,6 +5,7 @@ debian/compat
 debian/control
 debian/copyright
 debian/rules
+debian/source/format
 debian/watch
 devel/array-delete.pl
 devel/backslash-control.pl
@@ -36,6 +37,9 @@ devel/grep-use-quoted.pl
 devel/h2xs/PostModule.pm
 devel/h2xs/run.pl
 devel/h2xs/TestConstFoo.h
+devel/junk/test-more-like.pl
+devel/junk/TestMoreLikeModifiers.pm
+devel/junk/TestMoreLikeModifiers.t
 devel/Makefile
 devel/MyLocatePerl.pm
 devel/MyStuff.pm
@@ -72,6 +76,7 @@ lib/Perl/Critic/Policy/Modules/ProhibitPOSIXimport.pm
 lib/Perl/Critic/Policy/Modules/ProhibitUseQuotedVersion.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitBarewordDoubleColon.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitFiletest_f.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
@@ -94,10 +99,12 @@ t/ConstantBeforeLt.t
 t/ConstantPragmaHash.t
 t/Gtk2Constants.t
 t/NotWithCompare.t
+t/PerlMinimumVersionAndWhy-pmv.t
 t/PerlMinimumVersionAndWhy.t
 t/Pod-MinimumVersion.t
 t/PodMinimumVersion.t
 t/ProhibitBadAproposMarkup.t
+t/ProhibitBarewordDoubleColon.t
 t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
 t/ProhibitNullStatements.t

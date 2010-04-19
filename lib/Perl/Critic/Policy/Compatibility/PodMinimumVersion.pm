@@ -29,7 +29,7 @@ use Perl::Critic::Pulp::Utils;
 
 use Pod::MinimumVersion;
 
-our $VERSION = 33;
+our $VERSION = 34;
 
 use constant supported_parameters
   => ({ name        => 'above_version',

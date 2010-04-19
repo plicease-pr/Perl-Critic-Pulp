@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 33;
+our $VERSION = 34;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -50,8 +50,6 @@ use strict;
 use warnings;
 use base 'Pod::Parser';
 
-use constant DEBUG => 0;
-
 sub new {
   my $class = shift;
   my $self = $class->SUPER::new(@_, violations => []);
@@ -76,13 +74,13 @@ sub error_handler {
 sub command {
   my $self = shift;
   my ($command, $text, $linenum, $paraobj) = @_;
-  if (DEBUG) { print "command: $command -- ",
-                 (defined $text ? ">>$text<<" : 'undef'), "\n"; }
+  ### command: $command
+  ### $text
 
   if ($command eq 'head1') {
     $self->{'in_NAME'} = ($text =~ /^NAME\s*$/ ? 1 : 0);
   }
-  if (DEBUG) { print "  in_NAME now ",($self->{'in_NAME'}?1:0),"\n"; }
+  ### in_NAME now: $self->{'in_NAME'}
   return '';
 }
 
@@ -92,20 +90,18 @@ sub verbatim {
 
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
-  if (DEBUG) { print "textblock\n"; }
+  ### textblock
   return $self->interpolate ($text, $linenum);
 }
 
 sub interior_sequence {
   my ($self, $command, $arg, $seq_obj) = @_;
-  if (DEBUG) {
-    print "interior: $command -- $arg seq=$seq_obj\n";
-    print "  raw_text ", $seq_obj->raw_text, "\n";
-    print "  left ", $seq_obj->left_delimiter, "\n";
-    if (my $outer = $seq_obj->nested) {
-      print "  nested ", $outer->cmd_name, "\n";
-    }
-  }
+  ### interior: $command
+  ### $arg
+  ### $seq_obj
+  ### seq raw_text: $seq_obj->raw_text
+  ### seq left_delimiter: $seq_obj->left_delimiter
+  ### seq outer: do { my $outer = $seq_obj->nested; $outer && $outer->cmd_name }
 
   if ($self->{'in_NAME'} && $command eq 'C') {
     my ($filename, $linenum) = $seq_obj->file_line;

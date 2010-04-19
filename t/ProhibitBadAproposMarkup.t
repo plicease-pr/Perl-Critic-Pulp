@@ -25,7 +25,7 @@ use Test::More tests => 14;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 33;
+my $want_version = 34;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
