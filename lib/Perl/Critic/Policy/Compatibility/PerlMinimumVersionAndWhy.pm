@@ -25,11 +25,13 @@ use PPI 1.208;
 # 1.084 for Perl::Critic::Document highest_explicit_perl_version()
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils qw(is_function_call
-                           parse_arg_list);
+use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 34;
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+our $VERSION = 35;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -103,23 +105,33 @@ sub violates {
 
 sub _setup_extra_checks {
   my $v5004 = version->new('5.004');
-  my $v5005 = version->new('5.005');
   my $v5006 = version->new('5.006');
+  my $v5005 = version->new('5.005');
   my $v5008 = version->new('5.008');
   my $v5010 = version->new('5.010');
 
-  $Perl::MinimumVersion::CHECKS{_my_perl_5010_magic__fix}     = $v5010;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5010_operators__fix} = $v5010;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5010_qr_m_propagate_properly} = $v5010;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5006_exists_subr}       = $v5006;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5006_exists_array_elem} = $v5006;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5006_delete_array_elem} = $v5006;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5005_bareword_double_colon} = $v5005;
+  # 5.10.0
+  $Perl::MinimumVersion::CHECKS{_Pulp__5010_magic__fix}     = $v5010;
+  $Perl::MinimumVersion::CHECKS{_Pulp__5010_operators__fix} = $v5010;
+  $Perl::MinimumVersion::CHECKS{_Pulp__5010_qr_m_propagate_properly} = $v5010;
 
-  $Perl::MinimumVersion::CHECKS{_my_perl_5004_pack_format} = $v5004;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5006_pack_format} = $v5006;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5008_pack_format} = $v5008;
-  $Perl::MinimumVersion::CHECKS{_my_perl_5010_pack_format} = $v5010;
+  # 5.6.0
+  $Perl::MinimumVersion::CHECKS{_Pulp__exists_subr}       = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__exists_array_elem} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__delete_array_elem} = $v5006;
+
+  # 5.005
+  $Perl::MinimumVersion::CHECKS{_Pulp__bareword_double_colon} = $v5005;
+
+  # 5.004
+  $Perl::MinimumVersion::CHECKS{_Pulp__special_literal__PACKAGE__} = $v5004;
+  $Perl::MinimumVersion::CHECKS{_Pulp__use_version_number}         = $v5004;
+
+  # pack()/unpack()
+  $Perl::MinimumVersion::CHECKS{_Pulp__pack_format_5004} = $v5004;
+  $Perl::MinimumVersion::CHECKS{_Pulp__pack_format_5006} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__pack_format_5008} = $v5008;
+  $Perl::MinimumVersion::CHECKS{_Pulp__pack_format_5010} = $v5010;
 }
 
 {
@@ -128,7 +140,7 @@ sub _setup_extra_checks {
 
   package Perl::MinimumVersion;
   use vars qw(%MATCHES);
-  sub _my_perl_5010_operators__fix {
+  sub _Pulp__5010_operators__fix {
     shift->Document->find_first
       (sub {
          $_[1]->isa('PPI::Token::Operator')
@@ -136,7 +148,7 @@ sub _setup_extra_checks {
              $MATCHES{_perl_5010_operators}->{$_[1]->content}
            } );
   }
-  sub _my_perl_5010_magic__fix {
+  sub _Pulp__5010_magic__fix {
     shift->Document->find_first
       (sub {
          $_[1]->isa('PPI::Token::Magic')
@@ -146,9 +158,9 @@ sub _setup_extra_checks {
   }
 }
 
-sub Perl::MinimumVersion::_my_perl_5010_qr_m_propagate_properly {
+sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
   my ($pmv) = @_;
-  ### _my_perl_5010_qr_m_propagate_properly check
+  ### _Pulp__5010_qr_m_propagate_properly check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -163,14 +175,14 @@ sub Perl::MinimumVersion::_my_perl_5010_qr_m_propagate_properly {
 # delete $array[0] and exists $array[0] new in 5.6.0
 # two functions so the "exists" or "delete" appears in the check name
 #
-sub Perl::MinimumVersion::_my_perl_5006_exists_array_elem {
+sub Perl::MinimumVersion::_Pulp__exists_array_elem {
   my ($pmv) = @_;
-  ### _my_perl_5006_exists_array_elem check
+  ### _Pulp__exists_array_elem check
   return _exists_or_delete_array_elem ($pmv, 'exists');
 }
-sub Perl::MinimumVersion::_my_perl_5006_delete_array_elem {
+sub Perl::MinimumVersion::_Pulp__delete_array_elem {
   my ($pmv) = @_;
-  ### _my_perl_5006_delete_array_elem check
+  ### _Pulp__delete_array_elem check
   return _exists_or_delete_array_elem ($pmv, 'delete');
 }
 sub _exists_or_delete_array_elem {
@@ -180,7 +192,7 @@ sub _exists_or_delete_array_elem {
        my ($document, $elem) = @_;
        if ($elem->isa('PPI::Token::Word')
            && $elem eq $which
-           && is_function_call($elem)
+           && Perl::Critic::Utils::is_function_call($elem)
            && ($elem = _symbol_or_list_symbol($elem->snext_sibling))
            && $elem->symbol_type eq '@') {
          return 1;
@@ -192,15 +204,15 @@ sub _exists_or_delete_array_elem {
 
 # exists(&subr) new in 5.6.0
 #
-sub Perl::MinimumVersion::_my_perl_5006_exists_subr {
+sub Perl::MinimumVersion::_Pulp__exists_subr {
   my ($pmv) = @_;
-  ### _my_perl_5006_exists_subr check
+  ### _Pulp__exists_subr check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
        if ($elem->isa('PPI::Token::Word')
            && $elem eq 'exists'
-           && is_function_call($elem)
+           && Perl::Critic::Utils::is_function_call($elem)
            && ($elem = _symbol_or_list_symbol($elem->snext_sibling))
            && $elem->symbol_type eq '&') {
          return 1;
@@ -213,9 +225,9 @@ sub Perl::MinimumVersion::_my_perl_5006_exists_subr {
 # Foo::Bar:: bareword new in 5.005
 # generally a compile-time syntax error in 5.004
 #
-sub Perl::MinimumVersion::_my_perl_5005_bareword_double_colon {
+sub Perl::MinimumVersion::_Pulp__bareword_double_colon {
   my ($pmv) = @_;
-  ### _my_perl_5005_bareword_double_colon check
+  ### _Pulp__bareword_double_colon check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -228,12 +240,12 @@ sub Perl::MinimumVersion::_my_perl_5005_bareword_double_colon {
      });
 }
 
-sub Perl::MinimumVersion::_my_perl_5004_pack_format {
+sub Perl::MinimumVersion::_Pulp__pack_format_5004 {
   my ($pmv) = @_;
   # w - BER integer
   return _pack_format ($pmv, qr/w/);
 }
-sub Perl::MinimumVersion::_my_perl_5006_pack_format {
+sub Perl::MinimumVersion::_Pulp__pack_format_5006 {
   my ($pmv) = @_;
   # Z - asciz
   # q - signed quad
@@ -243,7 +255,7 @@ sub Perl::MinimumVersion::_my_perl_5006_pack_format {
   # # - comment
  return _pack_format ($pmv, qr{[ZqQ!/#]});
 }
-sub Perl::MinimumVersion::_my_perl_5008_pack_format {
+sub Perl::MinimumVersion::_Pulp__pack_format_5008 {
   my ($pmv) = @_;
   # F - NV
   # D - long double
@@ -252,7 +264,7 @@ sub Perl::MinimumVersion::_my_perl_5008_pack_format {
   # ( - group
   return _pack_format ($pmv, qr/[FDjJ(]/);
 }
-sub Perl::MinimumVersion::_my_perl_5010_pack_format {
+sub Perl::MinimumVersion::_Pulp__pack_format_5010 {
   my ($pmv) = @_;
   # < - little endian
   # > - big endian
@@ -269,7 +281,7 @@ sub _pack_format {
 
        $elem->isa ('PPI::Token::Word') || return 0;
        $pack_func{$elem->content} || return 0;
-       is_function_call($elem) || return 0;
+       Perl::Critic::Utils::is_function_call($elem) || return 0;
 
        my @args = parse_arg_list ($elem);
        my $format_arg = $args[0];
@@ -281,6 +293,46 @@ sub _pack_format {
 
        if ($any_vars) { return 0; }
        return ($str =~ $regexp);
+     });
+}
+
+# 5.004 new __PACKAGE__
+#
+sub Perl::MinimumVersion::_Pulp__special_literal__PACKAGE__ {
+  my ($pmv) = @_;
+  ### _Pulp__special_literal__PACKAGE__
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $elem eq '__PACKAGE__'
+           && ! Perl::Critic::Utils::is_hash_key($elem)) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+# 5.004 new "use VERSION"
+#
+# "use MODULE VERSION" is not as easy, fairly sure it depends whether the
+# target module uses Exporter.pm or not since the VERSION part is passed to
+# import() and Exporter.pm checks it.
+#
+sub Perl::MinimumVersion::_Pulp__use_version_number {
+  my ($pmv) = @_;
+  ### _Pulp__use_version_number
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       $elem->isa('PPI::Statement::Include') or return 0;
+       $elem->type eq 'use' or return 0;
+       if ($elem->version ne '') {  # empty string '' for not a "use VERSION"
+         return 1;
+       } else {
+         return 0;
+       }
      });
 }
 
@@ -384,6 +436,15 @@ C<Foo::Bar::> double-colon package name requires Perl 5.005.
 
 =item *
 
+C<use 5.005> and similar Perl version check new in Perl 5.004.  For earlier
+Perl it's C<BEGIN { require 5.003 }> or similar instead.
+
+=item *
+
+C<__PACKAGE__> special literal new in Perl 5.004.
+
+=item *
+
 C<pack> and C<unpack> format strings are checked for various new conversions
 in Perl 5.004 through 5.10.0.  Currently this only works on literal strings
 or here-documents without interpolations, and C<.> operator concats of
@@ -419,6 +480,9 @@ C<Perl::MinimumVersion::CHECKS>.  For example,
 This can be used for checks you believe are wrong, or where the
 compatibility matter only affects limited circumstances which you
 understand.
+
+The check names are likely to be a bit of a moving target, especially the
+Pulp additions.  Unknown checks in the list are silently ignored.
 
 =back
 

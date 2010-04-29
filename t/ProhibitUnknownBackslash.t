@@ -20,15 +20,17 @@
 
 use strict;
 use warnings;
-use Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 use Test::More tests => 339;
 
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+BEGIN {
+ SKIP: { eval 'use Test::NoWarnings; 1'
+           or skip 'Test::NoWarnings not available', 1; }
+}
+require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 34;
+my $want_version = 35;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -116,6 +118,9 @@ foreach my $want_string ("abc", "a\nb") {
 
 #-----------------------------------------------------------------------------
 # policy
+
+require PPI;
+diag "PPI version ",PPI->VERSION;
 
 {
   require Perl::Critic;
@@ -270,6 +275,7 @@ HERE
     my ($want_count, $str) = @$data;
 
     foreach my $str ($str, $str . ';') {
+      diag "str: ", $str;
       my @violations = $critic->critique (\$str);
       foreach my $violation (@violations) {
         diag $violation->description;

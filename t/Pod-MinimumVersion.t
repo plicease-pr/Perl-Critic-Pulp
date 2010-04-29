@@ -20,15 +20,18 @@
 
 use strict;
 use warnings;
-use Pod::MinimumVersion;
 use Test::More tests => 51;
 
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+BEGIN {
+ SKIP: { eval 'use Test::NoWarnings; 1'
+           or skip 'Test::NoWarnings not available', 1; }
+}
+require Pod::MinimumVersion;
+
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 34;
+  my $want_version = 35;
   is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
   is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {

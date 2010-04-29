@@ -20,15 +20,17 @@
 
 use strict;
 use warnings;
-use Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas;
 use Test::More tests => 29;
 
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+BEGIN {
+ SKIP: { eval 'use Test::NoWarnings; 1'
+           or skip 'Test::NoWarnings not available', 1; }
+}
+require Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 34;
+my $want_version = 35;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas->VERSION, $want_version, 'VERSION class method');
 {

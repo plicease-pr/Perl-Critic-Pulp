@@ -30,7 +30,7 @@ BEGIN {
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 34;
+my $want_version = 35;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon->VERSION, $want_version, 'VERSION class method');
 {

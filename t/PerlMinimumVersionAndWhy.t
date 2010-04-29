@@ -26,11 +26,12 @@ BEGIN {
  SKIP: { eval 'use Test::NoWarnings; 1'
            or skip 'Test::NoWarnings not available', 1; }
 }
-
 require Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 
+
+#------------------------------------------------------------------------------
 {
-  my $want_version = 34;
+  my $want_version = 35;
   is ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION,
       $want_version, 'VERSION variable');
   is (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,
@@ -41,6 +42,7 @@ require Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
   ok (! eval { Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
 
+#------------------------------------------------------------------------------
 require Perl::Critic;
 my $critic;
 eval {

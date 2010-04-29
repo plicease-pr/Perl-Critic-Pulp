@@ -233,7 +233,7 @@ HERE
 
   my $lint_files = $my_options{'MyMakeMakerExtras_LINT_FILES'};
   if (! defined $lint_files) {
-    $lint_files = '$(EXE_FILES) $(TO_INST_PM)';
+    $lint_files = 'Makefile.PL $(EXE_FILES) $(TO_INST_PM)';
     # would prefer not to lock down the 't' dir existance at ./Makefile.PL
     # time, but it's a bit hard without without GNU make extensions
     if (-d 't') { $lint_files .= ' t/*.t'; }
@@ -260,6 +260,7 @@ pc:
 HERE
   # "podchecker -warnings -warnings" too much reporting every < and >
   $post .= $podcoverage . <<'HERE';
+	-podlinkcheck `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
 	-podchecker `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
 	perlcritic $(LINT_FILES)
 unused:
@@ -282,6 +283,7 @@ check-copyright-years:
 	| sed 's:^.*$(DISTVNAME)/::' \
 	| (result=0; \
 	  while read i; do \
+	    GREP=grep; \
 	    case $$i in \
 	      '' | */ \
 	      | ppport.h \
@@ -291,11 +293,12 @@ check-copyright-years:
 	      | version.texi | */version.texi \
 	      | *utf16* \
 	      | *.mo | *.locatedb | t/samp.*) \
-	      continue ;; \
+	        continue ;; \
+	      *.gz) GREP=zgrep ;; \
 	    esac; \
 	    if test -e "$(srcdir)/$$i"; then f="$(srcdir)/$$i"; \
 	    else f="$$i"; fi; \
-	    if ! grep -q "Copyright.*$$year" $$f; then \
+	    if ! $$GREP -q "Copyright.*$$year" $$f; then \
 	      echo "$$i":"1: this file"; \
 	      grep Copyright $$f; \
 	      result=1; \

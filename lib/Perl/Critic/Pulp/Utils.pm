@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 34;
+our $VERSION = 35;
 
 
 our %COMMA = (','  => 1,
@@ -81,6 +81,11 @@ our $use_module_version_number_re = qr/^v?[0-9][0-9._]*$/;
 #
 # A module version is a literal number following the module name, with
 # either nothing else after it, or with no comma before the arglist.
+#
+# PPI::Statement::Include has a similar module_version() method, but as of
+# PPI 1.209 it's buggy, it takes all numbers as version numbers, whereas
+# Perl doesn't accept exponential format floats, only the restricted forms
+# of $use_module_version_number_re above.
 #
 sub include_module_version {
   my ($inc) = @_;

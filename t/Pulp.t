@@ -22,12 +22,13 @@ use strict;
 use warnings;
 use Test::More tests => 5;
 
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
-
+BEGIN {
+ SKIP: { eval 'use Test::NoWarnings; 1'
+           or skip 'Test::NoWarnings not available', 1; }
+}
 require Perl::Critic::Pulp;
 
-my $want_version = 34;
+my $want_version = 35;
 is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {

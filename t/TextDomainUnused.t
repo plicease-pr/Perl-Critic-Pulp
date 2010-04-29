@@ -20,15 +20,17 @@
 
 use strict;
 use warnings;
-use Perl::Critic::Policy::Miscellanea::TextDomainUnused;
 use Test::More tests => 22;
 
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+BEGIN {
+ SKIP: { eval 'use Test::NoWarnings; 1'
+           or skip 'Test::NoWarnings not available', 1; }
+}
+require Perl::Critic::Policy::Miscellanea::TextDomainUnused;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 34;
+my $want_version = 35;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,
