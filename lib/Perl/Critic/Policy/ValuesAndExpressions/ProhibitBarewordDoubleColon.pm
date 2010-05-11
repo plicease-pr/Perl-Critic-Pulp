@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 35;
+our $VERSION = 36;
 
 use constant supported_parameters
   => ({ name           => 'allow_indirect_syntax',
@@ -116,8 +116,8 @@ L<Perl::Critic/POLICY THEMES>).
 
 =head2 Indirect Object Syntax
 
-In the indirect object syntax (see L<perlobj/Indirect Object Syntax>) by
-default a double-colon is allowed (see L</CONFIGURATION> below)
+By default a double-colon is allowed in the indirect object syntax (see
+L<perlobj/Indirect Object Syntax>).
 
     my $obj = new Foo::Bar:: $arg1,$arg2;   # ok
 
@@ -128,8 +128,8 @@ C<Foo>.
 Whether you actually want indirect object syntax is a matter for other
 policies, like
 L<ProhibitIndirectSyntax|Perl::Critic::Policy::Objects::ProhibitIndirectSyntax>.
-If you don't want the double-colon bareword then switch to the arrow style
-C<< Foo::Bar->new($arg1,...) >>.
+If you don't want the double-colon bareword then switch to arrow style
+C<< Foo::Bar->new($arg,...) >>.
 
 =head2 Double-Colon Advantages
 
@@ -140,9 +140,9 @@ L<perldiag/Bareword "%s" refers to nonexistent package>)
     my $class = No::Such::Package::;  # perl warning
 
 This warning can help pick up typos, though it can't know if a package will
-be loaded later at runtime and will fire wrongly in that case.  For
-reference, a warning isn't given for the indirect object syntax (shown
-above), which rather limits its benefit.
+be loaded at runtime and so will fire wrongly in that case.  For reference,
+a warning isn't given for the indirect object syntax, which rather limits
+its benefit.
 
 =head2 Disabling
 
@@ -160,7 +160,7 @@ C<ProhibitBarewordDoubleColon> from your F<.perlcriticrc> in the usual way,
 If true then allow double-colon in the indirect object syntax as shown
 above.  If false then report double-colons everywhere as violations
 
-    # bad if allow_indirect_syntax=false
+    # bad under allow_indirect_syntax=false
     my $obj = new Foo::Bar:: $arg1,$arg2;
 
 This can be controlled from your F<~/.perlcriticrc> in the usual way.  For
@@ -174,7 +174,8 @@ example
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>, L<Perl::Critic>,
-L<Perl::Critic::Policy::Objects::ProhibitIndirectSyntax>
+L<Perl::Critic::Policy::Objects::ProhibitIndirectSyntax>,
+L<perl5005delta/C<Foo::> can be used as implicitly quoted package name>
 
 =head1 HOME PAGE
 

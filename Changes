@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 36, April 2010
+    - PerlMinimumVersionAndWhy add
+	- "foreach my $foo" lexical loop variable new in 5.004
+	- "$coderef->()" call new in 5.004
+
 Version 35, April 2010
     - PerlMinimumVersionAndWhy add
 	- special __PACKAGE__ new in 5.004

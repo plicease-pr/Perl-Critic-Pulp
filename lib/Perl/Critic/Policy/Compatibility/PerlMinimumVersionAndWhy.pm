@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 35;
+our $VERSION = 36;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -126,6 +126,9 @@ sub _setup_extra_checks {
   # 5.004
   $Perl::MinimumVersion::CHECKS{_Pulp__special_literal__PACKAGE__} = $v5004;
   $Perl::MinimumVersion::CHECKS{_Pulp__use_version_number}         = $v5004;
+  $Perl::MinimumVersion::CHECKS{_Pulp__for_loop_variable_using_my} = $v5004;
+  $Perl::MinimumVersion::CHECKS{_Pulp__arrow_coderef_call}         = $v5004;
+  $Perl::MinimumVersion::CHECKS{_Pulp__sysseek_builtin}            = $v5004;
 
   # pack()/unpack()
   $Perl::MinimumVersion::CHECKS{_Pulp__pack_format_5004} = $v5004;
@@ -336,6 +339,66 @@ sub Perl::MinimumVersion::_Pulp__use_version_number {
      });
 }
 
+# 5.004 new "foreach my $i" lexical loop variable
+#
+sub Perl::MinimumVersion::_Pulp__for_loop_variable_using_my {
+  my ($pmv) = @_;
+  ### _Pulp__for_loop_variable_using_my
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       $elem->isa('PPI::Statement::Compound') or return 0;
+       $elem->type eq 'foreach' or return 0;
+       my $second = $elem->schild(1) || return 0;
+       $second->isa('PPI::Token::Word') or return 0;
+       if ($second eq 'my') {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+# 5.004 new "$foo->(PARAMS)" coderef call
+#
+sub Perl::MinimumVersion::_Pulp__arrow_coderef_call {
+  my ($pmv) = @_;
+  ### _Pulp__arrow_coderef_call
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       $elem->isa('PPI::Token::Operator') or return 0;
+       ### operator: "$elem"
+       $elem eq '->' or return 0;
+       $elem = $elem->snext_sibling || return 0;
+       ### next: "$elem"
+       if ($elem->isa('PPI::Structure::List')) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+# 5.004 new sysseek()
+#
+# prototype() is newly documented in 5.004 but existed earlier, or something
+sub Perl::MinimumVersion::_Pulp__sysseek_builtin {
+  my ($pmv) = @_;
+  ### _Pulp__sysseek_builtin
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && ($elem eq 'sysseek' || $elem eq 'CORE::sysseek')
+           && Perl::Critic::Utils::is_function_call ($elem)) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
 
 #---------------------------------------------------------------------------
 # generic
@@ -442,6 +505,10 @@ Perl it's C<BEGIN { require 5.003 }> or similar instead.
 =item *
 
 C<__PACKAGE__> special literal new in Perl 5.004.
+
+=item *
+
+C<foreach my $foo> lexical loop variable new in Perl 5.004.
 
 =item *
 

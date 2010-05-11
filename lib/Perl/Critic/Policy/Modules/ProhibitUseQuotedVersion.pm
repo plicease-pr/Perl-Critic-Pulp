@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 35;
+our $VERSION = 36;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -33,7 +33,7 @@ use constant applies_to           => 'PPI::Statement::Include';
 sub violates {
   my ($self, $elem, $document) = @_;
 
-  defined ($elem->module) || return;    # if a "use 5.005" etc
+  defined($elem->module) || return;     # if a "use 5.005" etc
   my $arg = $elem->schild(2) || return; # if a "use Foo" with no args
   $arg->isa('PPI::Token::Quote') || return;
   elem_is_last_of_statement($arg) || return;
@@ -78,8 +78,8 @@ Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion - avoid quoted version n
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It prohibits a quoted version number string as the sole argument to
-a C<use> or C<no> statement.
+addon.  It asks you not to quote a version number string as the sole
+argument to a C<use> or C<no> statement.
 
     use Foo::Bar '1.50';      # bad
     use Foo::Bar 1.50;        # ok
@@ -87,28 +87,35 @@ a C<use> or C<no> statement.
     no Abc::Def '2.000_010';  # bad
     no Abc::Def 2.000_010;    # ok
 
-The unquoted form uses Perl's builtin module version check and always works.
-The quoted form relies on the module in question to do the check.  If it has
-no C<import> then the quoted form is silently ignored, without the intended
-check.
+The unquoted form uses Perl's builtin module version check (Perl 5.004 up)
+and is always enforced.  The quoted form is passed to the module's C<import>
+and relies on it to do the check.  If there's no C<import> then the quoted
+form is silently ignored.
 
-L<C<Exporter>|Exporter> which is used by many modules provides an C<import>
-that checks a version number arg, so those modules are fine.  But the idea
-of this policy is to do what works always, and on that basis is under the
-"bugs" theme (see L<Perl::Critic/POLICY THEMES>).
+L<C<Exporter>|Exporter> as used by many modules provides an C<import> which
+checks a version number arg, so those modules are fine.  But the idea of
+this policy is to do what works always and on that basis is under the "bugs"
+theme (see L<Perl::Critic/POLICY THEMES>).
 
-The policy only applies to a single version number string argument, anything
-else is taken to be some module parameter.
+The builtin module version check is new in Perl 5.004.  For earlier versions
+both forms behave the same, with the string or number going through to the
+module C<import> and so may or may not be checked.  But even in code
+supporting older Perl it's good to write the unquoted number so later Perl
+will be certain to enforce it.
+
+The policy only applies to a single number string argument, anything else is
+taken to be a module parameters.
 
     no Abc::Def '123', 'ABC';   # ok
     use lib '..';               # ok
 
-If you're a bit nervous about floating point version numbers because they're
-often not exactly representable in binary, well that's true, but in practice
-it works out ok, due to either converting the same way everywhere in the
-program or being treated as a string in the "version" module anyway.
+If you're a bit nervous about unquoting because floating point version
+numbers are often not exactly representable in binary, well, yes, that's
+true, but in practice it works out ok, either by converting the same way
+everywhere in the program or by treated as a string in the "version" module
+anyway.
 
-If you're confident about the C<import> in modules you use and prefer the
+If you're confident about the C<import()> in modules you use and prefer the
 string form you can always disable C<ProhibitUseQuotedVersion> from your
 F<.perlcriticrc> in the usual way,
 

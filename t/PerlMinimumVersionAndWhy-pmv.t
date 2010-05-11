@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 55;
+plan tests => 68;
 
 SKIP: { eval 'use Test::NoWarnings; 1'
           or skip 'Test::NoWarnings not available', 1; }
@@ -48,7 +48,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 35;
+  my $want_version = 36;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -58,7 +58,24 @@ diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
-                  
+
+                  # _Pulp__arrow_coderef_call
+                  [ 1, '$coderef->()' ],
+                  [ 1, '$coderef->(1,2,3)' ],
+                  [ 1, '$hashref->{code}->()' ],
+                  [ 1, '$hashref->{code}->(1,2,3)' ],
+                  [ 0, 'use 5.004; $coderef->()' ],
+
+                  # _Pulp__for_loop_variable_using_my
+                  [ 1, 'foreach my $i (1,2,3) { }' ],
+                  [ 0, 'use 5.004; foreach my $i (1,2,3) { }' ],
+                  [ 0, 'foreach $i (1,2,3) { }' ],
+                  [ 0, 'foreach (1,2,3) { }' ],
+                  [ 1, 'for my $i (1,2,3) { }' ],
+                  [ 0, 'use 5.004; for my $i (1,2,3) { }' ],
+                  [ 0, 'for $i (1,2,3) { }' ],
+                  [ 0, 'for (1,2,3) { }' ],
+
                   # _Pulp__use_version_number
                   [ 1, 'use 5' ],
                   [ 1, 'use 5.003' ],

@@ -90,6 +90,7 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 SIGNATURE
+t/0-exe-shebang.t
 t/0-META-read.t
 t/0-Test-DistManifest.t
 t/0-Test-Pod.t

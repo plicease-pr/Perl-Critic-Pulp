@@ -30,7 +30,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 35;
+my $want_version = 36;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -275,7 +275,6 @@ HERE
     my ($want_count, $str) = @$data;
 
     foreach my $str ($str, $str . ';') {
-      diag "str: ", $str;
       my @violations = $critic->critique (\$str);
       foreach my $violation (@violations) {
         diag $violation->description;
@@ -298,6 +297,7 @@ HERE
 
      # non-ascii allowed under default 'quotemeta'
      [ 0, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
+
      [ 1, ($] >= 5.008
            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
            : '') ],                 # not 5.8, dummy passing
@@ -307,6 +307,8 @@ HERE
     my ($want_count, $str) = @$data;
 
     foreach my $str ($str, $str . ';') {
+      diag "str printable: ", Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_printable($str);
+
       my @violations = $critic->critique (\$str);
       foreach my $violation (@violations) {
         diag $violation->description;

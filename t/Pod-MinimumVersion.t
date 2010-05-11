@@ -31,7 +31,7 @@ require Pod::MinimumVersion;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 35;
+  my $want_version = 36;
   is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
   is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {

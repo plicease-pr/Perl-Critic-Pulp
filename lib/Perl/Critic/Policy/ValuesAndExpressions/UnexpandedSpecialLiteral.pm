@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 35;
+our $VERSION = 36;
 
 
 sub supported_parameters { return (); }
@@ -137,21 +137,26 @@ Expression forms like
 
     'MyExtra::'.__PACKAGE__ => 123    # bad
 
-are still bad because the word immediately to the left of any C<< => >> is
-quoted even when the word is part of an expression.
+are still bad because the word immediately to the left of a C<< => >> is
+quoted even when that word is part of an expression.
 
 If you really do want a string C<"__FILE__"> etc then the suggestion is to
 write the quotes, even if you're not in the habit of using quotes in hash
 constructors etc.  It'll pass this policy and make it clear to everyone that
 you really did want the literal string.
 
+The C<__PACKAGE__> literal is new in Perl 5.004 but this policy is applied
+to all code.  Even if you're targeting an earlier Perl extra quotes will
+make it clear to users of later Perl that a literal string C<"__PACKAGE__">
+is indeed intended.
+
 =head2 Class Data
 
 C<< $obj->{__PACKAGE__} >> can arise when you're trying to hang extra data
-on an object with your package name hopefully not to clash with the object's
-native fields.  An unexpanded C<__PACKAGE__> is a mistake you'll probably
-only make once; after that the irritation of writing extra parens or similar
-will keep it fresh in your mind!
+on an object using your package name to hopefully not clash with the
+object's native fields.  An unexpanded C<__PACKAGE__> is a mistake you'll
+probably only make once; after that the irritation of writing extra parens
+or similar will keep it fresh in your mind!
 
 As usual there's more than one way to do it when adding extra data to an
 object.  As a crib here are some ways,
@@ -173,20 +178,22 @@ multidimensional arrays/hashes (see L<perlvar/$;>).
 
 Again entries in C<$obj>, but key formed by concatenation and an explicit
 unlikely separator.  The advantage over C<,> is that the key is a constant
-(after constant folding), instead of a C<join> on every access (because
-C<$;> could change).
+(after constant folding), instead of a C<join> on every access because C<$;>
+could change.
 
 =item Separate C<Tie::HashRef::Weak>
 
 Use the object as a hash key and the value whatever data you want to
-associate.  Keeps completely out of the object's hair and works with objects
-which use a "restricted hash" (see L<Hash::Util>) to prevent extra keys.
+associate.  Keeps completely out of the object's hair and also works with
+objects which use a "restricted hash" (see L<Hash::Util>) to prevent extra
+keys.
 
 =item Inside-Out C<Hash::Util::FieldHash>
 
 Similar to HashRef with object as key and any value you want as the data,
 outside the object, hence the jargon "inside out".  If you're not into OOP
-you'll have to read a few times to understand what's going on!
+you'll have to read three or four times to understand that it's actually
+fairly simple!
 
 =back
 
