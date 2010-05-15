@@ -30,7 +30,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 36;
+my $want_version = 37;
 is ($Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare->VERSION,

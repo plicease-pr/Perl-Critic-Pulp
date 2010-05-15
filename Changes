@@ -16,7 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Version 36, April 2010
+Version 37, May 2010
+    - tests don't try wide chars in PPI input string, doesn't work in
+      5.8.6 and not sure if it's meant to
+
+Version 36, May 2010
     - PerlMinimumVersionAndWhy add
 	- "foreach my $foo" lexical loop variable new in 5.004
 	- "$coderef->()" call new in 5.004

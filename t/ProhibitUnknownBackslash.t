@@ -20,7 +20,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 339;
+use Test::More tests => 337;
 
 BEGIN {
  SKIP: { eval 'use Test::NoWarnings; 1'
@@ -30,7 +30,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 36;
+my $want_version = 37;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -202,9 +202,10 @@ HERE
 
      [ 1, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
 
-     # not sure if wide chars are supposed to be allowed in an input string,
+     # Not sure if wide chars are supposed to be allowed in an input string,
      # presumably yes, but some combination of perl 5.8.3 and PPI 1.206
-     # threw an error on it
+     # threw an error on it.  It runs ok with 5.10.1.
+     #
      #      [ 1, ($] >= 5.008
      #            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
      #            : '') ],                 # not 5.8, dummy passing
@@ -298,9 +299,13 @@ HERE
      # non-ascii allowed under default 'quotemeta'
      [ 0, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
 
-     [ 1, ($] >= 5.008
-           ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
-           : '') ],                 # not 5.8, dummy passing
+     # Not sure if literal wide chars are supposed to be allowed in an input
+     # string, presumably yes, but some combination of perl 5.8.6 and PPI
+     # 1.212 threw an error on it.  It runs ok with 5.10.1.
+     #
+     #      [ 1, ($] >= 5.008
+     #            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
+     #            : '') ],                 # not 5.8, dummy passing
 
 
     ) {

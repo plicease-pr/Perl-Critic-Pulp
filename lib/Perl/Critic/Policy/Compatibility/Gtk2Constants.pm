@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(is_function_call
                            is_method_call);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 36;
+our $VERSION = 37;
 
 use constant DEBUG => 0;
 
@@ -300,7 +300,7 @@ the respective module has been included.
 
 In the latter form there's no check for C<:constants> or explicit import in
 the C<use>, it's assumed that if you've used Gtk2 then C<EVENT_PROPAGATE>
-means its one no matter how the imports might be arranged.
+means that one no matter how the imports might be arranged.
 
 =head1 SEE ALSO
 

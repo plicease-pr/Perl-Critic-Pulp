@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 36;
+our $VERSION = 37;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -139,9 +139,9 @@ example,
 
     foo - like the C<bar> program     # bad
 
-C<pod2man> uses macros for "CE<lt>E<gt>" which "man-db"'s C<lexgrog> program
-doesn't expand, resulting in unattractive description lines from C<apropos
-foo> like
+C<pod2man> formats "CE<lt>E<gt>" using nroff macros which "man-db"'s
+C<lexgrog> program doesn't expand, resulting in unattractive description
+lines from C<apropos> like
 
     foo - like the *(C`bar*(C' program
 
@@ -150,9 +150,9 @@ just surrounded by *(C bits.  On that basis this policy is low priority and
 under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The NAME section is everything from "=head1 NAME" to the next "=head1".
-Other markup like "BE<lt>E<gt>", "IE<lt>E<gt>" and "FE<lt>E<gt>" are
-allowed, because C<pod2man> uses builtin "\fB" etc directives for them,
-which C<lexgrog> recognises.
+Other markup like "BE<lt>E<gt>", "IE<lt>E<gt>" and "FE<lt>E<gt>" are allowed
+because C<pod2man> uses builtin "\fB" etc directives for them, which
+C<lexgrog> recognises.
 
 As always if you don't care about this you can disable
 C<ProhibitBadAproposMarkup> from your F<.perlcriticrc> in the usual way,

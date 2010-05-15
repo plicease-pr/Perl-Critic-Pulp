@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 36;
+our $VERSION = 37;
 
 
 our %COMMA = (','  => 1,

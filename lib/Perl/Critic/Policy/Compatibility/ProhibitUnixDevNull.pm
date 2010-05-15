@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 36;
+our $VERSION = 37;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -94,8 +94,8 @@ L<Perl::Critic/POLICY THEMES>) on the basis that even if you're on a Unix
 system now you never know where your code might travel in the future.
 
 The checks for F</dev/null> are unsophisticated.  A violation is reported
-for any string C</dev/null>, possibly with an C<open> style mode, or a C<qw>
-containing C</dev/null>.
+for any string C</dev/null>, possibly with an C<open> style mode part, or a
+C<qw> containing C</dev/null>.
 
     open my $fh, '< /dev/null';                    # bad
     do_something ("/dev/null");                    # bad
@@ -107,7 +107,7 @@ such but likely some sort of cross-platform check.
     if ($f eq '/dev/null') { ... }                 # ok
     return ($f ne '>/dev/null');                   # ok
 
-Other string appearances of "/dev/null" are allowed, including things like
+"/dev/null" as just part of a string is allowed, including things like
 backticks and C<system>.
 
     print "Flames to /dev/null please\n"           # ok
