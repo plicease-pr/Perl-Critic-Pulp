@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -18,6 +18,7 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
 use Test::More;
@@ -27,8 +28,7 @@ my $critic;
 eval {
   $critic = Perl::Critic->new
     ('-profile' => '',
-     '-single-policy' => 'Compatibility::PerlMinimumVersionAndWhy',
-    );
+     '-single-policy' => '^Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy$');
   1;
 }
   or plan skip_all => "cannot create Critic object -- $@";
@@ -38,17 +38,18 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 68;
+plan tests => 67;
 
-SKIP: { eval 'use Test::NoWarnings; 1'
-          or skip 'Test::NoWarnings not available', 1; }
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
 
 is (scalar @policies, 1, 'single policy PerlMinimumVersionAndWhy');
 my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 37;
+  my $want_version = 39;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -85,41 +86,41 @@ foreach my $data (
                   # [ 1, 'require 5.003; use Foo 1.0' ],
                   # [ 0, 'require 5.004; use Foo 1.0' ],
                   # [ 0, 'use Foo 1.0, 2.0' ],  # args not ver num
-                  
+
                   # _Pulp__special_literal__PACKAGE__
                   [ 1, 'require 5.003; my $str = __PACKAGE__;' ],
                   [ 0, 'use 5.004; my $str = __PACKAGE__;' ],
                   [ 0, 'require 5.003; my %hash = (__PACKAGE__ => 1);' ],
                   [ 1, 'require 5.003; my %hash = (__PACKAGE__,   1);' ],
                   [ 0, 'require 5.003; my $elem = $hash{__PACKAGE__};' ],
-                  
+
                   # _Pulp__delete_array_elem
                   [ 1, 'use 5.005; delete $x[0]' ],
                   [ 0, 'use 5.006; delete $x[0]' ],
                   [ 1, 'use 5.005; delete($x[1])' ],
                   [ 0, 'use 5.005; delete $x[0]',
                     { _skip_checks => '_Pulp__delete_array_elem'} ],
-                  
+
                   # _Pulp__exists_array_elem
                   [ 1, 'use 5.005; exists $x[0]' ],
                   [ 0, 'use 5.006; exists $x[0]' ],
                   [ 0, 'use 5.005; exists($x[1])',
                     { _skip_checks => '_Pulp__delete_array_elem _Pulp__exists_array_elem'} ],
-                  
+
                   # _Pulp__exists_sub
                   [ 1, 'use 5.005; exists &foo' ],
                   [ 0, 'use 5.006; exists &foo' ],
                   [ 1, 'use 5.005; exists(&foo)' ],
-                  
+
                   # _Pulp__bareword_double_colon
                   [ 1, 'use 5.004; foo(Foo::Bar::)' ],
                   [ 0, 'use 5.005; foo(Foo::Bar::)' ],
-                  
-                  
+
+
                   #
                   # pack(), unpack()
                   #
-                  
+
                   # _Pulp__5004_pack_format
                   [ 1, 'require 5.002; pack "w", 123' ],
                   [ 0, 'use 5.004; pack "w", 123' ],
@@ -132,22 +133,22 @@ HERE
                   [ 1, 'require 5.002; unpack "i".w => $bytes' ],
                   [ 0, "require 5.002; pack MYFORMAT(), 123" ],
                   [ 0, "require 5.002; pack MYFORMAT, 123" ],
-                  
+
                   # _Pulp__5006_pack_format
                   [ 1, 'use 5.005; pack ("Z", "hello")' ],
                   [ 0, 'use 5.006; pack ("Z", "hello")' ],
                   [ 1, 'use 5.005; pack ("Z#comment", "hello")' ],
                   [ 0, 'use 5.006; pack ("Z#comment", "hello")' ],
-                  
+
                   # _Pulp__5008_pack_format
                   [ 1, 'use 5.006; pack ("F", 1.5)' ],
                   [ 0, 'use 5.008; pack ("F", 1.5)' ],
-                  
+
                   # _Pulp__5010_pack_format
                   [ 1, 'use 5.008; unpack ("i<", $bytes)' ],
                   [ 0, 'use 5.010; unpack ("i<", $bytes)' ],
-                  
-                  
+
+
                   # _Pulp__5010_qr_m_working_properly
                   #
                   [ 1, 'use 5.008; qr/^x$/m' ],
@@ -168,25 +169,25 @@ HERE
                   [ 0, 'use 5.006; my $re = qr/pattern/i;' ],
                   [ 0, 'use 5.006; my $re = qr/pattern/x;' ],
                   [ 0, 'use 5.006; my $re = qr/pattern/o;' ],
-                  
-                  
+
+
                   # _Pulp__5010_magic__fix
                   # _Pulp__5010_operators__fix
                   #
                   [ 1, "1 // 2" ],
                   [ 1, "use 5.008; 1 // 2" ],
                   [ 0, "use 5.010; 1 // 2" ],
-                  
+
                  ) {
   my ($want_count, $str, $options) = @$data;
   $policy->{'_skip_checks'} = ''; # default
-  
+
   my $name = "str: '$str'";
   foreach my $key (keys %$options) {
     $name .= " $key=$options->{$key}";
     $policy->{$key} = $options->{$key};
   }
-  
+
   my @violations = $critic->critique (\$str);
   foreach (@violations) {
     diag ($_->description);

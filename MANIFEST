@@ -7,6 +7,7 @@ debian/copyright
 debian/rules
 debian/source/format
 debian/watch
+devel/apropos-markup.pl
 devel/array-delete.pl
 devel/backslash-control.pl
 devel/bareword-colon.pl
@@ -23,9 +24,11 @@ devel/grep-condsub.pl
 devel/grep-devnull.pl
 devel/grep-each.pl
 devel/grep-filetest-f.pl
+devel/grep-foreach-splice.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
 devel/grep-pod-gt.pl
+devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
 devel/grep-synopsis.pl
@@ -63,12 +66,14 @@ devel/use-quoted.pl
 devel/version.pl
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
+lib/Perl/Critic/Policy/CodeLayout/RequireFinalSemicolon.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
 lib/Perl/Critic/Policy/Compatibility/PerlMinimumVersionAndWhy.pm
 lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
 lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
@@ -83,6 +88,7 @@ lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitUnknownBackslash.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
+lib/Perl/Critic/Pulp/PodParser.pm
 lib/Perl/Critic/Pulp/Utils.pm
 lib/Pod/MinimumVersion.pm
 Makefile.PL
@@ -90,7 +96,6 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 SIGNATURE
-t/0-exe-shebang.t
 t/0-META-read.t
 t/0-Test-DistManifest.t
 t/0-Test-Pod.t
@@ -99,6 +104,7 @@ t/0-Test-YAML-Meta.t
 t/ConstantBeforeLt.t
 t/ConstantPragmaHash.t
 t/Gtk2Constants.t
+t/MyTestHelpers.pm
 t/NotWithCompare.t
 t/PerlMinimumVersionAndWhy-pmv.t
 t/PerlMinimumVersionAndWhy.t
@@ -113,8 +119,10 @@ t/ProhibitPOSIXimport.t
 t/ProhibitUnixDevNull.t
 t/ProhibitUnknownBackslash.t
 t/ProhibitUseQuotedVersion.t
+t/ProhibitVerbatimMarkup.t
 t/Pulp.t
 t/RequireEndBeforeLastPod.t
+t/RequireFinalSemicolon.t
 t/TextDomainPlaceholders.t
 t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t

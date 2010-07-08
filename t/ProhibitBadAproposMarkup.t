@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -18,19 +18,20 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
 use Test::More tests => 15;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings();
+
 require Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 37;
+my $want_version = 39;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -45,7 +46,7 @@ is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
 require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => 'Documentation::ProhibitBadAproposMarkup');
+   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup$');
 { my @p = $critic->policies;
   is (scalar @p, 1,
       'single policy ProhibitBadAproposMarkup');
@@ -66,6 +67,12 @@ foreach my $data (
                   [ 1, "=head1 NAME \n\nfoo - like C<bar>" ],
                   [ 1, "=head1 \tNAME\t \n\nfoo - like C<bar>" ],
 
+                  [ 0,
+                    "\n## no critic (ProhibitBadAproposMarkup)\n\n"
+                    . "=head1 NAME\n\nfoo - like C<bar>\n\n"
+                    . "=cut\n\n"
+                    . "more_code();" ],
+
                   [ 0, "=head1 NAME\n\nfoo - like B<bar>" ],
                   [ 0, ("=head1 NAME\n\nfoo - like bar\n\n"
                         . "=head1 NEWSECT\n\nfoo - like C<bar>\n\n") ],
@@ -77,7 +84,7 @@ foreach my $data (
 
   my @violations = $critic->critique (\$str);
   foreach (@violations) {
-    diag ($_->description);
+    diag "violation: ",$_->description;
   }
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: '$str'");

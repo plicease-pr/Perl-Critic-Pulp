@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -92,6 +92,9 @@ systems.
 This policy is under the C<maintenance> theme (see
 L<Perl::Critic/POLICY THEMES>) on the basis that even if you're on a Unix
 system now you never know where your code might travel in the future.
+
+C<devnull> is new in C<File::Spec> version 0.8, so you should require that
+version.  That version is included in Perl 5.6.0 and up.
 
 The checks for F</dev/null> are unsophisticated.  A violation is reported
 for any string C</dev/null>, possibly with an C<open> style mode part, or a

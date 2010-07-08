@@ -21,12 +21,12 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 1;
 __END__
 
-=for stopwords perlcritic builtin multi Gtk perlcritic's Ryde
+=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords
 
 =head1 NAME
 
@@ -35,22 +35,22 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 =head1 DESCRIPTION
 
 This is a collection of add-on policies for C<Perl::Critic>, summarized
-below.  They're under a new "pulp" theme plus other themes according to
-their purpose (see L<Perl::Critic/POLICY THEMES>).
+below.  They're under a "pulp" theme plus other themes according to their
+purpose (see L<Perl::Critic/POLICY THEMES>).
 
 Roughly half are code related and half cosmetic.  You can always enable or
-disable the ones you do or don't want.  It's normal to pick and choose what
-you want reported.  There's a lot of perlcritic builtin and add-on policies
-and they range from helpful things catching problems, to the bizarre or
-restrictive, and in some cases are mutually contradictory!  Many are
-intended as building blocks for enforcing a house style.  If you try to pass
-everything then you'll give away big parts of the language, so if not
-turning off or customizing about half then either you're not trying or
-you're much too easily lead!
+disable the ones you do or don't want.  It's normal to pick and choose
+things reported.  There's a lot of perlcritic policies both built-in and
+add-on and they range from helpful things catching problems through to the
+bizarre or restrictive, and in some cases mutually contradictory!  Many are
+only intended as building blocks for enforcing a house style.  If you try to
+pass everything then you'll give away big parts of the language, so if
+you're not turning off or customizing about half then you're either not
+trying or you're much too easily lead!
 
 =head2 Bugs
 
-=over 4
+=over
 
 =item L<Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 
@@ -80,7 +80,7 @@ Literal use of C<__PACKAGE__> etc.
 
 =head2 Compatibility
 
-=over 4
+=over
 
 =item L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>
 
@@ -106,7 +106,7 @@ Prefer C<File::Spec-E<gt>devnull> over explicit F</dev/null>.
 
 =head2 Efficiency
 
-=over 4
+=over
 
 =item L<Documentation::RequireEndBeforeLastPod|Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 
@@ -124,11 +124,11 @@ Don't import the whole of C<POSIX>.
 
 =head2 Cosmetic
 
-=over 4
+=over
 
-=item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
+=item L<CodeLayout::RequireFinalSemicolon|Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon>
 
-Avoid CE<lt>E<gt> in NAME section, bad for man's "apropos" output.
+Semicolon C<;> on the last statement of a subroutine or block.
 
 =item L<ValuesAndExpressions::ProhibitEmptyCommas|Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas>
 
@@ -148,11 +148,25 @@ Double-colon barewords C<Foo::Bar::>
 
 =back
 
+=head2 Documentation
+
+=over
+
+=item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
+
+Avoid CE<lt>E<gt> in NAME section, bad for man's "apropos" output.
+
+=item L<Documentation::ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>
+
+Verbatim paragraphs not expanding CE<lt>E<gt> markup etc.
+
+=back
+
 =head1 OTHER NOTES
 
-In most of the perlcritic documentation, including the Pulp here, policy
-names appear without the full C<Perl::Critic::Policy::...> class name.  In
-Emacs have a look at C<man-completion.el> for C<M-x man> to automatically
+In most of the perlcritic documentation, including the Pulp stuff here,
+policy names appear without the full C<Perl::Critic::Policy::...> class
+part.  In Emacs try C<man-completion.el> to have C<M-x man> automatically
 expand a suffix part at point, or C<ffap-perl-module.el> to go to the source
 similarly.
 
@@ -161,14 +175,14 @@ similarly.
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
 In perlcritic's output you can ask for %P for the full policy name to copy
-or follow.  Here's a good format you can put in your F<.perlcriticrc>, with
-a file:line:column: Emacs will recognise too.  See
-L<Perl::Critic::Violation> for all the C<%> escapes.
+or follow.  Here's a good format you can put in your F<.perlcriticrc>,
+including file:line:column: style Emacs will recognise.
 
     verbose=%f:%l:%c:\n %P\n %m\n
 
-F<perlcritic.el> has patterns to match the builtin formats, but it's easier
-to print file:line:column: in the first place.
+See L<Perl::Critic::Violation> for all the C<%> escapes.  F<perlcritic.el>
+has patterns for Emacs to match the builtin perlcritic formats, but it's
+easier to print file:line:column:.
 
 =head1 SEE ALSO
 

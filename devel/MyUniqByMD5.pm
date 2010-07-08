@@ -1,4 +1,4 @@
-# Copyright 2009 Kevin Ryde.
+# Copyright 2009, 2010 Kevin Ryde.
 
 # This file is part of miscbits-el.
 #
@@ -23,7 +23,8 @@ use warnings;
 use Digest::MD5;
 use Perl6::Slurp;
 
-use constant DEBUG => 0;
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 sub new {
   my ($class) = @_;
@@ -41,13 +42,9 @@ sub uniq_file {
 sub uniq_str {
   my ($self, $str) = @_;
   my $key = Digest::MD5::md5 ($str);
-  if (DEBUG >= 2) {
-    print "MyUniqByMD5: key $key seen=",
-      (exists $self->{'seen'}->{$key} ? "yes" : "no"), "\n";
-  }
-  if (DEBUG) {
-    if (exists $self->{'seen'}->{$key}) { print "MyUniqByMD5:  suppress\n"; }
-  }
+  ### MyUniqByMD5 key: $key
+  ### seen: exists $self->{'seen'}->{$key}
+  # if (exists $self->{'seen'}->{$key}) { print "MyUniqByMD5:  suppress\n"; }
 
   my $seen = $self->{'seen'};
   return (! exists $seen->{$key}

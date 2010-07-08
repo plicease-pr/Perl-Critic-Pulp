@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -18,19 +18,20 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 22;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
+
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 37;
+my $want_version = 39;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION, $want_version, 'VERSION class method');
 {
@@ -43,7 +44,7 @@ is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION,
 require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => 'ValuesAndExpressions::ProhibitNullStatements');
+   '-single-policy' => '^Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements$');
 my @policies = $critic->policies;
 is (scalar @policies, 1, 'single policy ProhibitNullStatements');
 

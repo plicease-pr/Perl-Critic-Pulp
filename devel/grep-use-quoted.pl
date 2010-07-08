@@ -23,6 +23,7 @@
 #    use Foo '1.5';
 #
 
+use 5.006;
 use strict;
 use warnings;
 use Perl6::Slurp;

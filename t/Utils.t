@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -18,18 +18,19 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 92;
+use Test::More tests => 97;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
+
 require Perl::Critic::Pulp::Utils;
 
 #-----------------------------------------------------------------------------
-my $want_version = 37;
+my $want_version = 39;
 is ($Perl::Critic::Pulp::Utils::VERSION,$want_version, 'VERSION variable');
 is (Perl::Critic::Pulp::Utils->VERSION, $want_version, 'VERSION class method');
 {
@@ -38,6 +39,24 @@ is (Perl::Critic::Pulp::Utils->VERSION, $want_version, 'VERSION class method');
   my $check_version = $want_version + 1000;
   ok (! eval { Perl::Critic::Pulp::Utils->VERSION($check_version); 1 },
       "VERSION class check $check_version");
+}
+
+#------------------------------------------------------------------------------
+# _str_line_n()
+
+foreach my $data ([ "one",   1, "one" ],
+                  [ "one\n", 1, "one" ],
+                  [ "one\ntwo\n", 1, "one" ],
+                  [ "one\ntwo\n", 2, "two" ],
+                  [ "one\ntwo\n\nfour\n", 3, "" ],
+                  [ "one\ntwo\n\nfour\n", 4, "four" ],
+                 ) {
+  my ($str, $n, $want) = @$data;
+
+  ## no critic (ProtectPrivateSubs)
+  my $got = Perl::Critic::Pulp::Utils::_str_line_n
+    ($str, $n);
+  is ($got, $want, "n=$n str=$str");
 }
 
 #-----------------------------------------------------------------------------

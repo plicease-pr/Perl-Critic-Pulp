@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -63,7 +63,9 @@ sub violates {
   my ($self, $document) = @_;
 
   my %skip_checks;
-  @skip_checks{split / /, $self->{_skip_checks}} = (); # hash slice
+  if (defined (my $skip_checks = $self->{_skip_checks})) {
+    @skip_checks{split / /, $self->{_skip_checks}} = (); # hash slice
+  }
 
   my $pmv = Perl::MinimumVersion->new ($document);
   my $config_above_version = $self->{'above_version'};
@@ -119,6 +121,7 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_Pulp__exists_subr}       = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__exists_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__delete_array_elem} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__0b_number}         = $v5006;
 
   # 5.005
   $Perl::MinimumVersion::CHECKS{_Pulp__bareword_double_colon} = $v5005;
@@ -175,6 +178,8 @@ sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
      });
 }
 
+#-----------------------------------------------------------------------------
+
 # delete $array[0] and exists $array[0] new in 5.6.0
 # two functions so the "exists" or "delete" appears in the check name
 #
@@ -225,6 +230,23 @@ sub Perl::MinimumVersion::_Pulp__exists_subr {
      });
 }
 
+# 0b110011 binary literals new in 5.6.0
+#
+sub Perl::MinimumVersion::_Pulp__0b_number {
+  my ($pmv) = @_;
+  ### _Pulp__0b_number check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Number::Binary')) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+#-----------------------------------------------------------------------------
 # Foo::Bar:: bareword new in 5.005
 # generally a compile-time syntax error in 5.004
 #
@@ -423,7 +445,7 @@ sub _symbol_or_list_symbol {
 1;
 __END__
 
-=for stopwords addon config MinimumVersion Pragma CPAN prereq multi concats
+=for stopwords addon config MinimumVersion Pragma CPAN prereq multi-constant concats
 
 =head1 NAME
 
@@ -495,12 +517,16 @@ C<exists &subr>, C<exists $array[0]> or C<delete $array[0]> require Perl
 
 =item *
 
+C<0b110011> binary number literals require Perl 5.6.
+
+=item *
+
 C<Foo::Bar::> double-colon package name requires Perl 5.005.
 
 =item *
 
 C<use 5.005> and similar Perl version check new in Perl 5.004.  For earlier
-Perl it's C<BEGIN { require 5.003 }> or similar instead.
+Perl it should be C<BEGIN { require 5.003 }> or similar instead.
 
 =item *
 

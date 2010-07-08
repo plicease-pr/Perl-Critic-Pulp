@@ -16,6 +16,14 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 39, July 2010
+    - PerlMinimumVersionAndWhy add
+	- 0b110011 binary literals new in 5.006
+    - new policy ProhibitVerbatimMarkup
+
+Version 38, June 2010
+    - new policy RequireFinalSemicolon
+
 Version 37, May 2010
     - tests don't try wide chars in PPI input string, doesn't work in
       5.8.6 and not sure if it's meant to

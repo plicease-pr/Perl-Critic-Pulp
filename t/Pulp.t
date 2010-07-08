@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -20,15 +20,15 @@
 
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 4;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
+
 require Perl::Critic::Pulp;
 
-my $want_version = 37;
+my $want_version = 39;
 is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {

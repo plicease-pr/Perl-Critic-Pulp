@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 
 use constant supported_parameters => ();
@@ -141,7 +141,7 @@ sub elem_in_BEGIN {
 1;
 __END__
 
-=for stopwords addon multi CPAN perl ok ConstantPragmaHash backports prereqs Ryde
+=for stopwords addon multi-constant CPAN perl ok ConstantPragmaHash backports prereqs Ryde
 
 =head1 NAME
 

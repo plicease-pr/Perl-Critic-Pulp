@@ -26,6 +26,7 @@
 # The options select just one of the policies.
 #
 
+use 5.006;
 use strict;
 use warnings;
 use Getopt::Long;
@@ -79,7 +80,13 @@ GetOptions
      push @option_policies, 'ValuesAndExpressions::ProhibitUnknownBackslash';
    },
    semicolon => sub {
-     push @option_policies, 'ValuesAndExpressions::RequireFinalSemicolon';
+     push @option_policies, 'CodeLayout::RequireFinalSemicolon';
+   },
+   cend => sub {
+     push @option_policies, 'Documentation::ProhibitCommaEnd$';
+   },
+   verb => sub {
+     push @option_policies, 'Documentation::ProhibitVerbatimMarkup$';
    },
 
    # coming soon ...

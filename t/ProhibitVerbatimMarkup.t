@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -18,38 +18,37 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 12;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings(1);
 
-require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
+require Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup;
 
 
 #------------------------------------------------------------------------------
 my $want_version = 39;
-is ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
+is ($Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::VERSION,
     $want_version, 'VERSION variable');
-is (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,
+is (Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION,
     $want_version, 'VERSION class method');
 {
-  ok (eval { Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  ok (eval { Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION($check_version); 1 }, "VERSION class check $check_version");
+  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
 
 #------------------------------------------------------------------------------
 require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => '^Perl::Critic::Policy::Compatibility::PodMinimumVersion$');
+   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup$');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-      'single policy PodMinimumVersion');
+      'single policy ProhibitVerbatimMarkup');
 
   my $policy = $p[0];
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -60,18 +59,12 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
-                  [ 1, "=pod\n\nC<< foo >>" ],
+                  [ 1, "=pod\n\n    Some C<markup>" ],
+                  [ 1, "=pod\n\n    E<gt>" ],
+                  [ 1, "=pod\n\n    J<< something >>" ],
+                  [ 1, "=pod\n\n    I<italic>" ],
+                  [ 1, "=pod\n\n    bold\n\n    B<bold>" ],
 
-                  [ 0, "=pod\n\nC<foo>" ],
-                  [ 0, "=pod\n\nS<C<foo>C<bar>>" ],
-                  [ 1, "=pod\n\nL< C<< foo >> >" ],
-                  [ 1, "=pod\n\nL<foo|bar>" ],
-                  [ 1, "use 5.004;\n\n=pod\n\nL<foo|bar>" ],
-                  [ 0, "use 5.005;\n\n=pod\n\nL<foo|bar>" ],
-
-                  [ 1, "=encoding" ],
-                  [ 1, "=encoding\n\nuse 5.010;" ],
-                  [ 0, "use 5.010;\n\n=encoding\n" ],
                  ) {
   my ($want_count, $str) = @$data;
   $str = "$str";
@@ -81,7 +74,7 @@ foreach my $data (
     diag ($_->description);
   }
   my $got_count = scalar @violations;
-  is ($got_count, $want_count, "str: $str");
+  is ($got_count, $want_count, "str: '$str'");
 }
 
 exit 0;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009 Kevin Ryde
+# Copyright 2008, 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,6 +20,7 @@
 
 # Churn ProhibitPOSIXimport over all .pm files.
 
+use 5.006;
 use strict;
 use warnings;
 use Getopt::Long;

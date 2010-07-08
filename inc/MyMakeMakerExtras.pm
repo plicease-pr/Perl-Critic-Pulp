@@ -87,7 +87,7 @@ sub _meta_merge_shared_tests {
   }
   if (-e 't/0-Test-YAML-Meta.t') {
     _meta_merge_req_add (_meta_merge_maximum_tests($opts),
-                         'Test::YAML::Meta' => '0.13');
+                         'Test::YAML::Meta' => '0.15');
   }
   if (-e 't/0-META-read.t') {
     if (_min_perl_version_lt ($opts, 5.00307)) {
@@ -292,6 +292,7 @@ check-copyright-years:
 	      | COPYING | MANIFEST* | SIGNATURE | META.yml \
 	      | version.texi | */version.texi \
 	      | *utf16* \
+	      | */MathImage/ln2.gz | */MathImage/pi.gz \
 	      | *.mo | *.locatedb | t/samp.*) \
 	        continue ;; \
 	      *.gz) GREP=zgrep ;; \
@@ -309,7 +310,7 @@ check-copyright-years:
 # only a DEBUG non-zero number is bad, so an expression can copy a debug from
 # another package
 check-debug-constants:
-	if egrep -n 'DEBUG => [1-9]|^[ \t]*use Smart::Comments' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
+	if egrep -nH 'DEBUG => [1-9]|^[ \t]*use Smart::Comments' $(EXE_FILES) $(TO_INST_PM); then exit 1; else exit 0; fi
 
 check-spelling:
 	if egrep -nHi 'requrie|noticable|continous|existant|explict|agument|destionation|\bthe the\b|\bnote sure\b' -r . \

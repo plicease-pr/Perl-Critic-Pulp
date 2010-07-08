@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2009, 2010 Kevin Ryde
 
@@ -18,19 +18,20 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 337;
+use Test::More tests => 234;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
+
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 37;
+my $want_version = 39;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -103,10 +104,12 @@ foreach my $want_string ("abc", "a\nb") {
          || $elem->isa('PPI::Token::QuoteLike'))
           or die "Oops, didn't get Quote or QuoteLike: $str";
 
-        ## no critic (ProtectPrivateSubs)
-        my ($got_string) = Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_string($elem);
-        is ($got_string, $want_string, "string of: $str");
+        # unused ...
+        #        ## no critic (ProtectPrivateSubs)
+        #         my ($got_string) = Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_string($elem);
+        #         is ($got_string, $want_string, "string of: $str");
 
+        # unused ...
         # my ($got_q, $got_open, $got_close) = Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_quote_delims($elem);
         # is ($got_q,      $want_q,      "q of: $str");
         # is ($got_open,   $want_open,   "open of: $str");
@@ -126,7 +129,7 @@ diag "PPI version ",PPI->VERSION;
   require Perl::Critic;
   my $critic = Perl::Critic->new
     ('-profile' => '',
-     '-single-policy' => 'ValuesAndExpressions::ProhibitUnknownBackslash');
+     '-single-policy' => '^Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash$');
   my @policies = $critic->policies;
   is (scalar @policies, 1, 'single policy ProhibitUnknownBackslash');
 
@@ -294,7 +297,7 @@ HERE
   $policy->{_double} = 'quotemeta';
 
   foreach my $data
-    (## no critic (RequireInterpolationOfMetachars)
+    (# no critic (RequireInterpolationOfMetachars)
 
      # non-ascii allowed under default 'quotemeta'
      [ 0, "qq{\\\374}" ],  # latin-1/unicode u-dieresis

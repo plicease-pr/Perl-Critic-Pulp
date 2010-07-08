@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_included_module_name
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 # set this to 1 for some diagnostic prints
 use constant DEBUG => 0;
@@ -204,7 +204,7 @@ sub _elem_and_ssiblings {
 1;
 __END__
 
-=for stopwords bareword addon autoloaded unprototyped readline parens ConstantBeforeLt POSIX Bareword filehandle mis Ryde
+=for stopwords bareword addon autoloaded unprototyped readline parens ConstantBeforeLt POSIX Bareword filehandle mis-ordering Ryde
 
 =head1 NAME
 

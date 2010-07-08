@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 use constant DEBUG => 0;
 
@@ -185,7 +185,7 @@ sub violates {
       # $ or @
       unless ($single) {  # no variables in single-quote
         pos($str) = _pos_after_interpolate_variable ($str,
-                                                     pos($str)-length($1));
+                                                     pos($str) - length($1));
       }
       next;
     }
@@ -287,20 +287,6 @@ sub _pos_after_interpolate_variable {
   return $pos;
 }
 
-# $elem is a PPI::Token::Quote, PPI::Token::QuoteLike or PPI::Token::HereDoc
-sub _string {
-  my ($elem) = @_;
-  if ($elem->can('heredoc')) {
-    return join ('', $elem->heredoc);
-  }
-  if ($elem->can('string')) {
-    return $elem->string;
-  }
-  $elem =~ $quotelike_re
-    or die "Oops, didn't match quote_re";
-  return $3;
-}
-
 # use Perl::Critic::Policy::Compatibility::PodMinimumVersion;
 sub _violation_elem_offset {
   my ($violation, $elem, $offset) = @_;
@@ -313,7 +299,7 @@ sub _violation_elem_offset {
   #   my $document = $elem->document;
   #   my $doc_str = $document->content;
   #
-  #   return Perl::Critic::Policy::Compatibility::PodMinimumVersion::_violation_override_linenum ($violation, $doc_str, $newlines - 1);
+  #   return Perl::Critic::Pulp::Utils::_violation_override_linenum ($violation, $doc_str, $newlines - 1);
 }
 
 sub _printable {
@@ -325,6 +311,20 @@ sub _printable {
 
 #-----------------------------------------------------------------------------
 # unused bits
+
+# # $elem is a PPI::Token::Quote, PPI::Token::QuoteLike or PPI::Token::HereDoc
+# sub _string {
+#   my ($elem) = @_;
+#   if ($elem->can('heredoc')) {
+#     return join ('', $elem->heredoc);
+#   }
+#   if ($elem->can('string')) {
+#     return $elem->string;
+#   }
+#   $elem =~ $quotelike_re
+#     or die "Oops, didn't match quote_re";
+#   return $3;
+# }
 
 # # $elem is a PPI::Token::Quote or PPI::Token::QuoteLike
 # # return ($q, $open, $close) where $q is the "q" intro or empty string if
@@ -366,7 +366,7 @@ sub _printable {
 1;
 __END__
 
-=for stopwords addon backslashed upcase FS unicode ascii ok alnum quotemeta backslashing backticks Ryde
+=for stopwords addon backslashed upcase FS unicode ascii non-ascii ok alnum quotemeta backslashing backticks Ryde
 
 =head1 NAME
 
@@ -467,7 +467,7 @@ The possible values are
 
     none       don't report anything
     alnum      report unknown alphanumerics, like Perl's warning
-    quotemeta  report anything C<quotemeta> doesn't escape
+    quotemeta  report anything quotemeta() doesn't escape
     all        report all unknowns
 
 "alnum" does no more than compiling with C<perl -w>, but might be good for

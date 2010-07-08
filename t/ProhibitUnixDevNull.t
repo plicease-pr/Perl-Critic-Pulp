@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2010 Kevin Ryde
 
@@ -18,18 +18,19 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 423;
+use Test::More tests => 422;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
+
 require Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull;
 
 #------------------------------------------------------------------------------
-my $want_version = 37;
+my $want_version = 39;
 is ($Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,
@@ -44,41 +45,44 @@ is (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,
 #------------------------------------------------------------------------------
 # _DEV_NULL_RE matching
 
-my $have_dev_null = (-e '/dev/null');
+{
+  ## no critic (ProhibitUnixDevNull)
+  my $have_dev_null = (-e '/dev/null');
 
-foreach my $data ([ 1, '', '/dev/null' ],
-                  [ 1, '<', '/dev/null' ],
-                  [ 1, '>', '/dev/null' ],
-                  [ 1, '>>', '/dev/null' ],
-                  [ 1, '+<', '/dev/null' ],
-                  [ 1, '+>', '/dev/null' ],
-                  [ 1, '+>>', '/dev/null' ],
-                  [ 0, '>&', '/dev/null' ],
-                 ) {
-  my ($want_match, $mode, $filename) = @$data;
+  foreach my $data ([ 1, '', '/dev/null' ],
+                    [ 1, '<', '/dev/null' ],
+                    [ 1, '>', '/dev/null' ],
+                    [ 1, '>>', '/dev/null' ],
+                    [ 1, '+<', '/dev/null' ],
+                    [ 1, '+>', '/dev/null' ],
+                    [ 1, '+>>', '/dev/null' ],
+                    [ 0, '>&', '/dev/null' ],
+                   ) {
+    my ($want_match, $mode, $filename) = @$data;
 
-  for my $pre_space ('', ' ', "\t\r\n\f") {
-    for my $mid_space ('', ' ', "\t\r\n\f") {
-      for my $post_space ('', ' ', "\t\r\n\f") {
+    for my $pre_space ('', ' ', "\t\r\n\f") {
+      for my $mid_space ('', ' ', "\t\r\n\f") {
+        for my $post_space ('', ' ', "\t\r\n\f") {
 
-        my $oname = $pre_space . $mode . $mid_space . $filename . $post_space;
+          my $oname = $pre_space . $mode . $mid_space . $filename . $post_space;
 
-        if ($want_match) {
-        SKIP: {
-            $have_dev_null
-              or skip "no /dev/null file exists", 1;
-            my $open_ok = open FH,$oname;
-            ok ($open_ok, "can in fact open '$oname'");
-            if ($open_ok) {
-              close FH or die "oops, cannot close '$oname'";
+          if ($want_match) {
+          SKIP: {
+              $have_dev_null
+                or skip "no /dev/null file exists", 1;
+              my $open_ok = open FH,$oname;
+              ok ($open_ok, "can in fact open '$oname'");
+              if ($open_ok) {
+                close FH or die "oops, cannot close '$oname'";
+              }
             }
           }
-        }
 
-        ## no critic (ProtectPrivateSubs)
-        my $got_match = ($oname =~ Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::_DEV_NULL_RE()
-                         ? 1 : 0);
-        is ($got_match, $want_match, "_DEV_NULL_RE match $oname");
+          ## no critic (ProtectPrivateSubs)
+          my $got_match = ($oname =~ Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::_DEV_NULL_RE()
+                           ? 1 : 0);
+          is ($got_match, $want_match, "_DEV_NULL_RE match $oname");
+        }
       }
     }
   }
@@ -88,7 +92,7 @@ foreach my $data ([ 1, '', '/dev/null' ],
 require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => 'Compatibility::ProhibitUnixDevNull');
+   '-single-policy' => '^Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull$');
 { my @p = $critic->policies;
   is (scalar @p, 1, 'single policy ProhibitUnixDevNull');
 

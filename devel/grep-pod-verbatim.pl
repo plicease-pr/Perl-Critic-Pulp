@@ -17,7 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-use 5.006;
+
+# various
+# some DB<1> debugger prompts
+
+use 5.005;
 use strict;
 use warnings;
 use Perl6::Slurp;
@@ -37,26 +41,40 @@ while (my ($filename, $str) = $l->next) {
     substr ($str, $-[0], length($str), '');
   }
 
-  $str =~ s/#.*//mg;
+  my $parser = MyParser->new;
+  $parser->errorsub(sub{1}); # no error prints
+  $parser->parse_from_string ($str, $filename);
+}
 
-  while ($str =~ /^([ \t])+(sub [[:alnum:]]|\b(BEGIN|END|CHECK|INIT)\b)/mg) {
-    my $pos = pos($str);
+package MyParser;
+use strict;
+use warnings;
+use base 'Pod::Parser';
 
-    my ($indent) = Text::Tabs::expand ($1);
-    $indent = length ($indent);
+sub parse_from_string {
+  my ($self, $str, $filename) = @_;
 
-    my $before = substr ($str, 0, $pos);
-    $indent--;
-    $before =~ /^ {0,$indent}(if|unless)\b/m
-      or next;
-    my $before_pos = $-[0];
+  require IO::String;
+  my $fh = IO::String->new ($str);
+  $self->{_INFILE} = $filename;
+  return $self->parse_from_filehandle ($fh);
+}
+sub command {
+  return '';
+}
+sub verbatim {
+  my ($self, $text, $linenum, $paraobj) = @_;
+  ### verbatim
 
-    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-
-    print "$filename:$line:$col:\n",
-      MyStuff::line_at_pos($str, $before_pos),
-          MyStuff::line_at_pos($str, $pos);
+  while ($text =~ /([IBCLFSXZ]<)/g) {
+    my $markup = $1;
+    my $filename = $self->{_INFILE};
+    print "$filename:$linenum:1: markup in verbatim: $markup\n";
   }
+}
+sub textblock {
+  my ($self, $text, $linenum, $paraobj) = @_;
+  return '';
 }
 
 exit 0;

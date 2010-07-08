@@ -23,7 +23,10 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 37;
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+our $VERSION = 39;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -32,44 +35,16 @@ use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  my $str = $elem->serialize;
-
   my $parser = Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::Parser->new
-    (policy => $self,
-     elem => $elem,
-     str => $str);
-
-  require IO::String;
-  my $fh = IO::String->new ($str);
-  $parser->parse_from_filehandle ($fh);
-  return @{$parser->{'violations'}};
+    (policy => $self);
+  $parser->parse_from_elem ($elem);
+  return $parser->violations;
 }
 
 package Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::Parser;
 use strict;
 use warnings;
-use base 'Pod::Parser';
-
-sub new {
-  my $class = shift;
-  my $self = $class->SUPER::new(@_, violations => []);
-  $self->errorsub ('error_handler'); # method name
-  return $self;
-}
-sub error_handler {
-  my ($self, $errmsg) = @_;
-  return 1;  # error handled
-
-  # Don't think it's the place of this policy to report pod parse errors.
-  # Maybe within the NAME section, on the basis that could affect the
-  # goodness of the apropos, but better leave that to podchecker or other
-  # perlcritic policies.
-  #
-  #   my $policy = $self->{'policy'};
-  #   my $elem   = $self->{'elem'};
-  #   push @{$self->{'violations'}},
-  #     $policy->violation ("Pod::Parser $errmsg", '', $elem);
-}
+use base 'Perl::Critic::Pulp::PodParser';
 
 sub command {
   my $self = shift;
@@ -81,10 +56,6 @@ sub command {
     $self->{'in_NAME'} = ($text =~ /^NAME\s*$/ ? 1 : 0);
   }
   ### in_NAME now: $self->{'in_NAME'}
-  return '';
-}
-
-sub verbatim {
   return '';
 }
 
@@ -101,20 +72,14 @@ sub interior_sequence {
   ### $seq_obj
   ### seq raw_text: $seq_obj->raw_text
   ### seq left_delimiter: $seq_obj->left_delimiter
-  ### seq outer: do { my $outer = $seq_obj->nested; $outer && $outer->cmd_name }
+  ### seq outer: do {my $outer=$seq_obj->nested; $outer&&$outer->cmd_name}
 
   if ($self->{'in_NAME'} && $command eq 'C') {
     my ($filename, $linenum) = $seq_obj->file_line;
-    my $policy = $self->{'policy'};
-    my $elem   = $self->{'elem'};
-    my $str    = $self->{'str'};
-    my $violation = $policy->violation
+
+    $self->violation_at_linenum
       ('C<> markup in NAME section is bad for "apropos".',
-       '',
-       $elem);
-    require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
-    Perl::Critic::Policy::Compatibility::PodMinimumVersion::_violation_override_linenum ($violation, $str, $linenum);
-    push @{$self->{'violations'}}, $violation;
+       $linenum);
   }
   return '';
 }
@@ -122,7 +87,7 @@ sub interior_sequence {
 1;
 __END__
 
-=for stopwords addon builtin Ryde
+=for stopwords addon builtin Ryde nroff
 
 =head1 NAME
 
@@ -135,6 +100,8 @@ addon.  It asks you not to write CE<lt>E<gt> markup in the NAME section of
 the POD because it comes out badly in man's "apropos" database.  For
 example,
 
+=for ProhibitVerbatimMarkup allow next
+
     =head1 NAME
 
     foo - like the C<bar> program     # bad
@@ -146,24 +113,35 @@ lines from C<apropos> like
     foo - like the *(C`bar*(C' program
 
 Man's actual formatted output is fine, and the desired text is in there,
-just surrounded by *(C bits.  On that basis this policy is low priority and
-under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
+just surrounded by *(C bits.  On that basis this policy is lowest priority
+and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The NAME section is everything from "=head1 NAME" to the next "=head1".
 Other markup like "BE<lt>E<gt>", "IE<lt>E<gt>" and "FE<lt>E<gt>" are allowed
 because C<pod2man> uses builtin "\fB" etc directives for them, which
 C<lexgrog> recognises.
 
-As always if you don't care about this you can disable
-C<ProhibitBadAproposMarkup> from your F<.perlcriticrc> in the usual way,
+=head2 Disabling
+
+If want markup in the NAME line, perhaps if printed output is more important
+than C<apropos>, then you can always disable from your F<.perlcriticrc> in
+the usual way,
 
     [-Documentation::ProhibitBadAproposMarkup]
 
+As of C<Perl::Critic> 1.108 a C<## no critic (ProhibitBadAproposMarkup)>
+works if the NAME part is before an C<__END__> token (but not after it, and
+after it is quite common).
+
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
 L<Perl::Critic::Policy::Documentation::RequirePackageMatchesPodName>,
-L<Perl::Critic::Policy::Documentation::RequirePodSections>
+L<Perl::Critic::Policy::Documentation::RequirePodSections>,
+L<Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>
+
+L<man(1)>, L<apropos(1)>, L<lexgrog(1)>
 
 =head1 HOME PAGE
 

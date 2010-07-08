@@ -25,7 +25,7 @@ use Perl::Critic::Utils qw(is_function_call
                            is_method_call);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 use constant DEBUG => 0;
 
@@ -133,7 +133,7 @@ sub violates {
 #
 sub _qualifier_and_basename {
   my ($str) = @_;
-  return ($str =~ /(?:(.*)::)?(.*)/)
+  return ($str =~ /(?:(.*)::)?(.*)/);
 }
 
 # return true if $document has a "use" of $module (string name of a package)
@@ -217,7 +217,7 @@ sub _include_module_version_with_exporter {
 1;
 __END__
 
-=for stopwords Gtk addon Ryde
+=for stopwords Gtk2 addon Ryde
 
 =head1 NAME
 

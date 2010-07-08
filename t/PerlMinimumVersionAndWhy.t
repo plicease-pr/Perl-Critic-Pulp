@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010 Kevin Ryde
 
@@ -20,18 +20,18 @@
 
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 5;
 
-BEGIN {
- SKIP: { eval 'use Test::NoWarnings; 1'
-           or skip 'Test::NoWarnings not available', 1; }
-}
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings(1);
+
 require Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 37;
+  my $want_version = 39;
   is ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION,
       $want_version, 'VERSION variable');
   is (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,
@@ -48,7 +48,7 @@ my $critic;
 eval {
   $critic = Perl::Critic->new
     ('-profile' => '',
-     '-single-policy' => 'Compatibility::PerlMinimumVersionAndWhy',
+     '-single-policy' => '^Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy$',
     );
   1;
 } or diag "cannot create Critic object -- $@";

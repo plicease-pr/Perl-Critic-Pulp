@@ -80,8 +80,7 @@ MyMakeMakerExtras::WriteMakefile
                 },
              maximum_tests
              => { description => 'Have "make test" do as much as possible.',
-                  requires => { 'Test::NoWarnings' => 0,
-                                'Perl::MinimumVersion' => 0,
+                  requires => { 'Perl::MinimumVersion' => 0,
                               },
                 },
              maximum_devel

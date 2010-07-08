@@ -29,7 +29,7 @@ use Perl::Critic::Pulp::Utils;
 
 use Pod::MinimumVersion;
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 use constant supported_parameters
   => ({ name        => 'above_version',
@@ -59,34 +59,10 @@ sub violates {
       ("Pod requires perl $report->{'version'} due to: $report->{'why'}.",
        '',
        $document);
-    _violation_override_linenum ($violation, $str, $report->{'linenum'});
+    Perl::Critic::Pulp::Utils::_violation_override_linenum
+        ($violation, $str, $report->{'linenum'});
 
   } @reports;
-}
-
-# Hack to set Perl::Critic::Violation location to $linenum in $doc_str.
-# Have thought about validating _location and _source fields before mangling
-# them, but hopefully there'll be a documented interface to use before long.
-#
-sub _violation_override_linenum {
-  my ($violation, $doc_str, $linenum) = @_;
-
-  #   if ($violation->can('set_line_number_offset')) {
-  #     $violation->set_line_number_offset ($linenum - 1);
-  #   } else {
-
-  bless $violation, 'Perl::Critic::Pulp::PodMinimumVersionViolation';
-  $violation->{_Pulp_linenum_offset} = $linenum - 1;
-  $violation->{'_source'} = _str_line_n ($doc_str, $linenum);
-
-  return $violation;
-}
-
-# starting from $n==0 for first line
-sub _str_line_n {
-  my ($str, $n) = @_;
-  $n--;
-  return ($str =~ /^(.*\n){$n}(.*)/ ? $2 : '');
 }
 
 package Perl::Critic::Pulp::PodMinimumVersionViolation;
@@ -117,6 +93,8 @@ Perl::Critic::Policy::Compatibility::PodMinimumVersion - check Perl version decl
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It checks that the POD features you use don't exceed your target
 Perl version as indicated by C<use 5.008> etc.
+
+=for ProhibitVerbatimMarkup allow next
 
     use 5.005;
 

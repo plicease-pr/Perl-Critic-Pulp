@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 37;
+our $VERSION = 39;
 
 
 sub supported_parameters { return (); }
@@ -191,9 +191,14 @@ keys.
 =item Inside-Out C<Hash::Util::FieldHash>
 
 Similar to HashRef with object as key and any value you want as the data,
-outside the object, hence the jargon "inside out".  If you're not into OOP
-you'll have to read three or four times to understand that it's actually
-fairly simple!
+outside the object, hence the jargon "inside out".  The docs are very heavy
+going, especially if you're not into OOP, but it's actually fairly simple.
+
+=item C<Scalar::Footnote>
+
+Key/value pairs attached to an object using its "magic" list.  Doesn't touch
+the object's contents but separate footnote users must be careful not to let
+their keys clash.
 
 =back
 
