@@ -58,9 +58,9 @@ my %table =
    'netrc'        => 'http://linux.die.net/man/5/netrc',
 
    # no online man pages apparently at http://man-db.nongnu.org/
-   'man'      => 'http://ftp.parisc-linux.org/cgi-bin/man/man2html?man+1'
+   'man'      => 'http://ftp.parisc-linux.org/cgi-bin/man/man2html?man+1',
    'lexgrog'  => 'http://ftp.parisc-linux.org/cgi-bin/man/man2html?lexgrog+1',
-   'apropos'  => 'http://ftp.parisc-linux.org/cgi-bin/man/man2html?apropos+1'
+   'apropos'  => 'http://ftp.parisc-linux.org/cgi-bin/man/man2html?apropos+1',
   );
 
 sub resolve_man_page_link {

@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 40, July 2010
+    - new policy ProhibitModuleShebang
+
 Version 39, July 2010
     - PerlMinimumVersionAndWhy add
 	- 0b110011 binary literals new in 5.006

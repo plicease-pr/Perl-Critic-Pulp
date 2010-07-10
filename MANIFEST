@@ -31,6 +31,7 @@ devel/grep-pod-gt.pl
 devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
+devel/grep-shebang-pm.pl
 devel/grep-synopsis.pl
 devel/grep-t-print.pl
 devel/grep-use-decimal.pl
@@ -77,6 +78,7 @@ lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
+lib/Perl/Critic/Policy/Modules/ProhibitModuleShebang.pm
 lib/Perl/Critic/Policy/Modules/ProhibitPOSIXimport.pm
 lib/Perl/Critic/Policy/Modules/ProhibitUseQuotedVersion.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
@@ -114,6 +116,7 @@ t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
 t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
+t/ProhibitModuleShebang.t
 t/ProhibitNullStatements.t
 t/ProhibitPOSIXimport.t
 t/ProhibitUnixDevNull.t

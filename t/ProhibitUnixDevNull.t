@@ -30,7 +30,7 @@ MyTestHelpers::nowarnings(1);
 require Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull;
 
 #------------------------------------------------------------------------------
-my $want_version = 39;
+my $want_version = 40;
 is ($Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull->VERSION,

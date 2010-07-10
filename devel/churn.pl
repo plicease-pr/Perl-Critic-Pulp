@@ -88,6 +88,9 @@ GetOptions
    verb => sub {
      push @option_policies, 'Documentation::ProhibitVerbatimMarkup$';
    },
+   shebang => sub {
+     push @option_policies, 'Modules::ProhibitModuleShebang$';
+   },
 
    # coming soon ...
    testprint => sub {

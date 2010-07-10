@@ -24,9 +24,10 @@ use List::Util;
 use version;
 use vars qw($VERSION @CHECKS);
 
-$VERSION = 39;
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
-use constant DEBUG => 0;
+$VERSION = 40;
 
 sub new {
   my ($class, %self) = @_;
@@ -59,7 +60,7 @@ sub analyze {
   return if $self->{'analyzed'};
   $self->{'analyzed'} = 1;
 
-  if (DEBUG) { print "MinVer analyze\n"; }
+  ### Pod-MinVer analyze()
 
   my %checks;
   foreach my $elem (@CHECKS) {
@@ -253,8 +254,6 @@ use strict;
 use warnings;
 use base 'Pod::Parser';
 
-use constant DEBUG => 0;
-
 sub new {
   my $class = shift;
   my $self = $class->SUPER::new(@_);
@@ -285,8 +284,9 @@ sub parse_from_string {
 sub command {
   my $self = shift;
   my ($command, $text, $linenum, $paraobj) = @_;
-  if (DEBUG) { print "command: $command -- ",
-                 (defined $text ? $text : 'undef'), "\n"; }
+  ### command
+  ### $command
+  ### $text
 
   if ($command eq 'for'
       && $text =~ /^Pod::MinimumVersion\s+use\s+(v?[0-9._]+)/) {
@@ -305,22 +305,19 @@ sub verbatim {
 
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
-  if (DEBUG) {
-    print "textblock\n";
-  }
+  ### textblock
   return $self->interpolate ($text, $linenum);
 }
 
 sub interior_sequence {
   my ($self, $command, $arg, $seq_obj) = @_;
-  if (DEBUG) {
-    print "interior: $command -- $arg seq=$seq_obj\n";
-    print "  raw_text ", $seq_obj->raw_text, "\n";
-    print "  left ", $seq_obj->left_delimiter, "\n";
-    if (my $outer = $seq_obj->nested) {
-      print "  nested ", $outer->cmd_name, "\n";
-    }
-  }
+  ### interior
+  ### $command
+  ### $arg
+  ### $seq_obj
+  ### raw_text: $seq_obj->raw_text
+  ### left: $seq_obj->left_delimiter
+  ### nested: do { my $outer = $seq_obj->nested; $outer && $outer->cmd_name }
 
   # J<> from Pod::MultiLang -- doubled C<<>> or L<|display> are allowed
   # ENHANCE-ME: might prefer to make parse_tree() not descend into J<> at

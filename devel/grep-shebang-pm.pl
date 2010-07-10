@@ -1,4 +1,6 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+#!/usr/bin/perl
+
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -15,18 +17,35 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-package PostModule;
+use 5.006;
 use strict;
 use warnings;
-use TestConstFoo ('MYCONST');
+use Perl6::Slurp;
+use File::Locate::Iterator;
 
-BEGIN {
-  print "PostModule MYCONST is ",TestConstFoo::MYCONST(),"\n";
-  my $proto = prototype(\&MYCONST);
-  print "proto '",(defined $proto ? $proto : 'undef'),"'\n";
+use FindBin;
+my $progname = $FindBin::Script;
+
+my $verbose = 0;
+
+my $it = File::Locate::Iterator->new (glob => '*.pm');
+my $count = 0;
+
+my %seen;
+
+while (defined (my $filename = $it->next)) {
+  open my $in, '<', $filename or next;
+  if ($verbose) { print "$filename\n"; }
+  $count++;
+  my $line = <$in>;
+  close $in or die;
+
+  defined $line or next;
+  $line =~ m{^#!\s*((/usr/bin/env\s*)?\S*)} or next;
+  print "$filename:1:1: $line";
+  $seen{$1}++;
 }
-
-# bad unless MYCONST()
-if (MYCONST < 10) { print "yes\n"; } else { print "no\n"; }
-
-1;
+print "count $count\n";
+{ local $,="\n";
+  print "saw:",keys %seen,''; }
+exit 0;

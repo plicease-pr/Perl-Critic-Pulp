@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 39;
+our $VERSION = 40;
 
 1;
 __END__
@@ -145,6 +145,10 @@ Unknown C<\z> etc escapes in strings.
 =item L<ValuesAndExpressions::ProhibitBarewordDoubleColon|Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon>
 
 Double-colon barewords C<Foo::Bar::>
+
+=item L<Modules::ProhibitModuleShebang|Perl::Critic::Policy::Modules::ProhibitModuleShebang>
+
+No C<#!> interpreter line in F<.pm> files.
 
 =back
 

@@ -25,9 +25,10 @@ use Perl::Critic::Utils qw(is_function_call
                            is_method_call);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 39;
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
-use constant DEBUG => 0;
+our $VERSION = 40;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -167,13 +168,12 @@ sub _highest_explicit_module_version {
     || return; # if no Includes at all
   my @incs = grep {$_->type eq 'use'
                      && (($_->module || '') eq $module)} @$aref;
-  if (DEBUG) { local $, = "\n";
-               print " all incs",@$aref,'';
-               print " matched incs",@incs,''; }
+  ### all incs: @$aref
+  ### matched incs: @incs
   if (! @incs) { return undef; }
 
   my @vers = map { _include_module_version_with_exporter($_) } @incs;
-  if (DEBUG) { local $,=' / '; print " versions",@vers,"\n"; }
+  ### versions: @vers
   @vers = grep {defined} @vers;
   if (! @vers) { return 0; }
 
