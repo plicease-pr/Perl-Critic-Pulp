@@ -25,12 +25,12 @@ use Test::More tests => 17;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon->VERSION, $want_version, 'VERSION class method');
 {

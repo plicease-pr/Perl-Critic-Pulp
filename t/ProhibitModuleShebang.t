@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2010 Kevin Ryde
 
@@ -17,19 +17,19 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-
+use 5.006;
 use strict;
 use warnings;
 use Test::More tests => 15;
 
 # use lib 't';
 # use MyTestHelpers;
-# MyTestHelpers::nowarnings(1);
+# BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Modules::ProhibitModuleShebang;
 
 #-----------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Modules::ProhibitModuleShebang::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitModuleShebang->VERSION,
@@ -61,9 +61,7 @@ my $policy;
 
 my $dir = File::Temp->newdir;
 
-foreach my $data (## no critic (RequireInterpolationOfMetachars)
-
-                  [ 1, 'Foo.pm', '#!/usr/bin/perl -w' ],
+foreach my $data ([ 1, 'Foo.pm', '#!/usr/bin/perl -w' ],
                   [ 1, 'Foo.pm', '#!perl' ],
 
                   [ 0, 'Foo.pm', '#!/bin/false',

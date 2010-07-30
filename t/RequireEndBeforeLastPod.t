@@ -25,13 +25,13 @@ use Test::More tests => 21;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION,

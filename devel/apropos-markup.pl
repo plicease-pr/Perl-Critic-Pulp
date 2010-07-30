@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2010 Kevin Ryde
 
@@ -53,6 +53,8 @@ foreach my $file ($filename) {
 }
 exit 0;
 
+__END__
+
 ## no critic (ProhibitBadAproposMarkup)
 
 =pod
@@ -62,10 +64,6 @@ blah
 =cut
 
 =head1 NAME
-
-=cut
-
-=pod
 
 Foo - some C<markup> blah
 

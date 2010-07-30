@@ -25,13 +25,13 @@ use Test::More tests => 47;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Compatibility::Gtk2Constants;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Compatibility::Gtk2Constants::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::Gtk2Constants->VERSION,

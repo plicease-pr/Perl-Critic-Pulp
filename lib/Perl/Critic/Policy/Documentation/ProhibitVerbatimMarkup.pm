@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 40;
+our $VERSION = 41;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -113,7 +113,7 @@ sub textblock {
 1;
 __END__
 
-=for stopwords addon Ryde
+=for stopwords addon Ryde fontification ascii unindented verbatimness ok ProhibitVerbatimMarkup
 
 =head1 NAME
 
@@ -139,12 +139,12 @@ of two things,
 
 =over
 
-=item
+=item *
 
 You wanted markup -- it should be a plain paragraph not an indented verbatim
 one.  An C<=over> can be used for indentation if desired.
 
-=item
+=item *
 
 You wanted verbatim -- drop the markup in favour of some ascii approximation
 like C<func()> or even C<*bold*> or C<_underline_>.

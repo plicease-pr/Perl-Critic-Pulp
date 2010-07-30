@@ -25,14 +25,14 @@ use Test::More tests => 50;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Pod::MinimumVersion;
 
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 40;
+  my $want_version = 41;
   is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
   is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {

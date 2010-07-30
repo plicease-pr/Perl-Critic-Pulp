@@ -20,9 +20,10 @@
 package MyTestHelpers;
 use strict;
 use warnings;
+use Exporter;
+use vars qw(@ISA @EXPORT_OK %EXPORT_TAGS);
 
-use base 'Exporter';
-use vars qw(@EXPORT_OK %EXPORT_TAGS);
+@ISA = ('Exporter');
 @EXPORT_OK = qw(findrefs
                 main_iterations
                 warn_suppress_gtk_icon
@@ -31,7 +32,7 @@ use vars qw(@EXPORT_OK %EXPORT_TAGS);
                 nowarnings);
 %EXPORT_TAGS = (all => \@EXPORT_OK);
 
-use constant DEBUG => 0;
+sub DEBUG { 0 }
 
 
 #-----------------------------------------------------------------------------

@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 40;
+our $VERSION = 41;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -85,7 +85,7 @@ sub violates {
         || do {
           # if it looks like a keyword symbol foo=> or 'foo' etc
           my ($str, $any_vars) = _arg_word_or_string ($count_arg);
-          ($str =~ /^\w+$/ && ! $any_vars)
+          ($str =~ /^[[:alpha:]_]\w*$/ && ! $any_vars)
         }) {
       push @violations, $self->violation
         ("Probably missing 'count' argument to $funcname",
@@ -300,10 +300,10 @@ noticed by this policy.  For example,
                numfiles => $numfiles);   # bad
 
 If the count argument looks like a key then it's reported as a probable
-mistake.  Such a check is not the main aim of this policy but it's done
-because otherwise no violations would be reported at all.  (The next
-argument would be the key, and normally being an expression it would be
-assumed to fulfil the format strings at runtime.)
+mistake.  This is not the main aim of this policy but it's done because
+otherwise no violations would be reported at all.  (The next argument would
+be the key, and normally being an expression it would be assumed to fulfil
+the format strings at runtime.)
 
 =head1 SEE ALSO
 

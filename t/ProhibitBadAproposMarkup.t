@@ -21,17 +21,17 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 17;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings();
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -78,16 +78,29 @@ foreach my $data (
                         . "=head1 NEWSECT\n\nfoo - like C<bar>\n\n") ],
 
                   [ 0, "=head1 NAME OTHER\n\nfoo - like C<bar>\n" ],
+
+                  [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n=head1 NAME OTHER\n\nfoo - like C<bar>\n" ],
+
+                  [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n__END__\n\n=head1 NAME OTHER\n\nfoo - like C<bar>\n",
+                    1.109 ],
+
                  ) {
-  my ($want_count, $str) = @$data;
+  my ($want_count, $str, $pcver) = @$data;
   $str = "$str";
 
-  my @violations = $critic->critique (\$str);
-  foreach (@violations) {
-    diag "violation: ",$_->description;
+ SKIP: {
+    if (defined $pcver && Perl::Critic->VERSION < $pcver) {
+      skip "older Perl-Critic doesn't do no critic after __END__", 1;
+      next;
+    }
+
+    my @violations = $critic->critique (\$str);
+    foreach (@violations) {
+      diag "violation: ",$_->description;
+    }
+    my $got_count = scalar @violations;
+    is ($got_count, $want_count, "str: '$str'");
   }
-  my $got_count = scalar @violations;
-  is ($got_count, $want_count, "str: '$str'");
 }
 
 exit 0;

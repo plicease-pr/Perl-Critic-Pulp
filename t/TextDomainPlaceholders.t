@@ -21,17 +21,17 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 58;
+use Test::More tests => 60;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,
@@ -129,6 +129,8 @@ HERE' ],
 
                   [ 0, '__nx(\'{foo}\', \'{foo}s\', $n, foo => 123)' ],
                   [ 0, '__nx(\'{foo}\', \'{foo}s\', $n, "foo", $foo)' ],
+                  [ 0, '__nx(\'{foo}\', \'{foo}s\', 123, "foo", $foo)' ],
+                  [ 0, '__nx(\'{foo}\', \'{foo}s\', -1, "foo", $foo)' ],
                   [ 1, '__nx(\'{foo}\', \'{bar}\',  $n, foo => 123)' ],
                   [ 2, '__nx(\'{foo}\', \'{bar}\',  $n)' ],
                   [ 3, '__nx(\'{foo}\', \'{bar}\',  $n, quux => 123)' ],

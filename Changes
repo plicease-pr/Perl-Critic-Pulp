@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 41, July 2010
+    - TextDomainPlaceholders allow literal number for __xn() count
+
 Version 40, July 2010
     - new policy ProhibitModuleShebang
 

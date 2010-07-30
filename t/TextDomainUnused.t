@@ -25,13 +25,13 @@ use Test::More tests => 21;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Miscellanea::TextDomainUnused;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,

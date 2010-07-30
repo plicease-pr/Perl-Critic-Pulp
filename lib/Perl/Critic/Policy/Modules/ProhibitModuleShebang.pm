@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 40;
+our $VERSION = 41;
 
 use constant supported_parameters
   => ({ name           => 'allow_bin_false',
@@ -81,6 +81,8 @@ sub _document_shebang_line {
 
 1;
 __END__
+
+=for stopwords addon filename boolean ProhibitModuleShebang Ryde
 
 =head1 NAME
 

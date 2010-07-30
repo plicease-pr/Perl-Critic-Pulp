@@ -24,11 +24,11 @@ use Test::More tests => 4;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Pulp;
 
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {

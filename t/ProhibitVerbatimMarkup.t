@@ -17,20 +17,20 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-
+use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 14;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings(1);
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 40;
+my $want_version = 41;
 is ($Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION,
@@ -65,16 +65,29 @@ foreach my $data (
                   [ 1, "=pod\n\n    I<italic>" ],
                   [ 1, "=pod\n\n    bold\n\n    B<bold>" ],
 
+                  [ 0, "\n## no critic (ProhibitVerbatimMarkup)\n\n=pod\n\n    bold\n\n    B<bold>\n\n=cut\n\nprint 'pod not last thing'\n" ],
+
+                  [ 0, "\n## no critic (ProhibitVerbatimMarkup)\n\n__END__\n\n=pod\n\n    bold\n\n    B<bold>\n\nBlah\n\n=cut\n\n# pod not last thing\n",
+                    1.109 ],
+
                  ) {
-  my ($want_count, $str) = @$data;
+  my ($want_count, $str, $pcver) = @$data;
   $str = "$str";
 
-  my @violations = $critic->critique (\$str);
-  foreach (@violations) {
-    diag ($_->description);
+ SKIP: {
+    if (defined $pcver && Perl::Critic->VERSION < $pcver) {
+      skip "older Perl-Critic doesn't do no critic after __END__", 1;
+      next;
+    }
+
+    my @violations = $critic->critique (\$str);
+    foreach (@violations) {
+      diag ("violation: ", $_->description,
+            "\nline_number=", $_->line_number);
+    }
+    my $got_count = scalar @violations;
+    is ($got_count, $want_count, "str: '$str'");
   }
-  my $got_count = scalar @violations;
-  is ($got_count, $want_count, "str: '$str'");
 }
 
 exit 0;
