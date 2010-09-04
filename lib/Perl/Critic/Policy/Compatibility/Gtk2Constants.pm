@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 41;
+our $VERSION = 42;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -238,15 +238,15 @@ of a high enough version of those modules.
 
 The following C<Gtk2> constants are checked,
 
-    GTK_PRIORITY_RESIZE       # new in Gtk2 1.190
+    GTK_PRIORITY_RESIZE       # new in Gtk2 1.200 (devel 1.190)
     GDK_PRIORITY_EVENTS
     GDK_PRIORITY_REDRAW
     GDK_CURRENT_TIME
 
-    EVENT_PROPAGATE           # new in Gtk2 1.210
+    EVENT_PROPAGATE           # new in Gtk2 1.220 (devel 1.210)
     EVENT_STOP
 
-    GTK_PATH_PRIO_LOWEST      # new in Gtk2 1.211
+    GTK_PATH_PRIO_LOWEST      # new in Gtk2 1.220 (devel 1.211)
     GTK_PATH_PRIO_GTK
     GTK_PATH_PRIO_APPLICATION
     GTK_PATH_PRIO_THEME
@@ -255,7 +255,7 @@ The following C<Gtk2> constants are checked,
 
 and the following C<Glib> constants
 
-    SOURCE_CONTINUE           # new in Glib 1.210
+    SOURCE_CONTINUE           # new in Glib 1.220 (devel 1.210)
     SOURCE_REMOVE
 
 The idea is to keep you from using the constants without a new enough

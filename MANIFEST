@@ -27,6 +27,7 @@ devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
+devel/grep-pod-blankline.pl
 devel/grep-pod-gt.pl
 devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl

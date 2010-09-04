@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 41;
+our $VERSION = 42;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -133,8 +133,8 @@ Or in an individual file with C<## no critic>
 
     ## no critic (ProhibitBadAproposMarkup)
 
-though that annotation must be before an C<__END__>, and C<Perl::Critic>
-1.109 or higher is required if the NAME part is after the C<__END__>.
+though that annotation must be before any C<__END__>, and if the NAME part
+is after the C<__END__> then C<Perl::Critic> 1.110 or higher is required.
 
 =head1 SEE ALSO
 

@@ -26,7 +26,8 @@ use IO::Uncompress::AnyInflate;
 use MyUniqByInode;
 use MyUniqByMD5;
 
-use constant DEBUG => 0;
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 my $compressed_re = qr/\.gz$/;
 my $suffixes_re = qr/\.(t|pm|pl|PL)($compressed_re)?$/o;
@@ -49,7 +50,7 @@ sub next {
   my ($self) = @_;
   for (;;) {
     defined(my $filename = $self->SUPER::next) or return;
-    if (DEBUG) { print "consider $filename\n"; }
+    ### consider: $filename
 
     next if $filename =~ m{/blib/};
 
@@ -60,10 +61,10 @@ sub next {
       $io = IO::File->new ($filename, 'r');
     }
     $io or next;
-    $self->{'uniq_ino'}->uniq($io) or next;
+    $self->{'uniq_ino'}->uniq($filename) or next;  # or $io ???
 
     my $content = _slurp_if_perl ($filename, $io);
-    if (DEBUG) { print "  content ", (defined $content ?"ok":"undef"), "\n"; }
+    ### content: $content && "ok"
     next if ! defined $content;
 
     $self->{'uniq_md5'}->uniq_str($content) or next;
@@ -74,23 +75,23 @@ sub next {
 
 sub _slurp_if_perl {
   my ($filename, $io) = @_;
-  if (DEBUG) { print "  slurp $io\n"; }
+  ### slurp: "$io"
 
   my $first = '';
   if ($filename !~ $suffixes_re) {
     # file in /bin etc must have #!.../perl
     $io->read($first, 128) or return;
-    if (DEBUG) { print "first part $first\n"; }
+    ### first part: $first
 
     if ($first !~ m{^#!([^\r\n]*/|[ \t]*)perl[ \t\r\n]}) {
-      if (DEBUG) { print "  no #!perl\n"; }
+      ### no #!perl
       return;
     }
   }
 
   my $rest = do { local $/; $io->getline }; # slurp
   if (! defined $rest) {
-    if (DEBUG) { print "  read error: $!\n"; }
+    ### read error: $!
     return;
   }
   return $first . $rest;

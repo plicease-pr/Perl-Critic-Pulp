@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 42, September 2010
+    - tests avoid warnings from Pod::Parser 1.37 on empty =encoding
+    - tests and docs Perl::Critic 1.110 for annotations past __END__
+
 Version 41, July 2010
     - TextDomainPlaceholders allow literal number for __xn() count
 

@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 41;
+our $VERSION = 42;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -192,9 +192,9 @@ often in modules which themselves operate on POD.
 
         write chars with E<gt> etc
 
-C<## no critic (ProhibitVerbatimMarkup)> works except that as of
-C<Perl::Critic> 1.108 not for POD which is after an C<__END__>.  C<=for> has
-the advantage of being immediately before the exception.
+C<## no critic (ProhibitVerbatimMarkup)> works (though C<Perl::Critic> 1.110
+is required if the POD is after an C<__END__> token).  C<=for> has the
+advantage of being immediately before the exception.
 
 As always if you don't care at all about this at all then disable
 C<ProhibitVerbatimMarkup> from your F<.perlcriticrc> in the usual way,

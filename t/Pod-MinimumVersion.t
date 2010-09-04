@@ -28,11 +28,12 @@ use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
 require Pod::MinimumVersion;
+diag "Pod::Parser version ", Pod::Parser->VERSION;
 
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 41;
+  my $want_version = 42;
   is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
   is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {

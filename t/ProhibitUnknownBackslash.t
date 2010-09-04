@@ -25,13 +25,13 @@ use Test::More tests => 234;
 
 use lib 't';
 use MyTestHelpers;
-BEGIN { MyTestHelpers::nowarnings() }
+#BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 41;
+my $want_version = 42;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {

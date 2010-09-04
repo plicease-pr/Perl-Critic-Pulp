@@ -30,7 +30,7 @@ require Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 41;
+my $want_version = 42;
 is ($Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION,
@@ -67,8 +67,10 @@ foreach my $data (
 
                   [ 0, "\n## no critic (ProhibitVerbatimMarkup)\n\n=pod\n\n    bold\n\n    B<bold>\n\n=cut\n\nprint 'pod not last thing'\n" ],
 
+                  # annotations in Perl::Critic::Annotation only act past an
+                  # __END__ in P::C 1.110
                   [ 0, "\n## no critic (ProhibitVerbatimMarkup)\n\n__END__\n\n=pod\n\n    bold\n\n    B<bold>\n\nBlah\n\n=cut\n\n# pod not last thing\n",
-                    1.109 ],
+                    1.110 ],
 
                  ) {
   my ($want_count, $str, $pcver) = @$data;

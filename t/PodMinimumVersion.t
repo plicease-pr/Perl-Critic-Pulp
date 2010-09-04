@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 41;
+my $want_version = 42;
 is ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,
@@ -69,9 +69,9 @@ foreach my $data (
                   [ 1, "use 5.004;\n\n=pod\n\nL<foo|bar>" ],
                   [ 0, "use 5.005;\n\n=pod\n\nL<foo|bar>" ],
 
-                  [ 1, "=encoding" ],
-                  [ 1, "=encoding\n\nuse 5.010;" ],
-                  [ 0, "use 5.010;\n\n=encoding\n" ],
+                  [ 1, "=encoding utf-8" ],
+                  [ 1, "=encoding utf-8\n\nuse 5.010;" ],
+                  [ 0, "use 5.010;\n\n=encoding utf-8\n" ],
                  ) {
   my ($want_count, $str) = @$data;
   $str = "$str";

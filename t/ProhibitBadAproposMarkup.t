@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 41;
+my $want_version = 42;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -82,7 +82,7 @@ foreach my $data (
                   [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n=head1 NAME OTHER\n\nfoo - like C<bar>\n" ],
 
                   [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n__END__\n\n=head1 NAME OTHER\n\nfoo - like C<bar>\n",
-                    1.109 ],
+                    1.110 ],
 
                  ) {
   my ($want_count, $str, $pcver) = @$data;

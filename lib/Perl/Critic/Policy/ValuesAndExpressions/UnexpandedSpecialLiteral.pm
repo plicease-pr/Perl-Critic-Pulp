@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 41;
+our $VERSION = 42;
 
 
 sub supported_parameters { return (); }
@@ -192,7 +192,8 @@ keys.
 
 Similar to HashRef with object as key and any value you want as the data,
 outside the object, hence the jargon "inside out".  The docs are very heavy
-going, especially if you're not into OOP, but it's actually fairly simple.
+going (as of version 1.04), especially if you're not into OOP, but it's key
+actually fairly simple.
 
 =item C<Scalar::Footnote>
 

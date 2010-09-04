@@ -24,7 +24,36 @@ use File::Spec;
 use Pod::MinimumVersion;
 use Data::Dumper;
 
+# uncomment this to run the ### lines
+use Smart::Comments;
+
 my $script_filename = File::Spec->catfile ($FindBin::Bin, $FindBin::Script);
+
+{
+  my $pmv = Pod::MinimumVersion->new
+    (
+     # string => "use 5.010; =encoding\n",
+     string => "=encoding",
+     # string => "=pod\n\nC<< foo >>",
+     # filename => $script_filename,
+     # filehandle => do { require IO::String; IO::String->new("=pod\n\nE<sol> E<verbar>") },
+     #  string => "=pod\n\nL<foo|bar>",
+     one_report_per_version => 1,
+     above_version => '5.005',
+    );
+
+  ### $pmv
+  ### min: $pmv->minimum_version
+  ### $pmv
+
+  my @reports = $pmv->reports;
+  foreach my $report (@reports) {
+    print $report->as_string,"\n";
+    # my $loc = $report->PPI_location;
+    # print Data::Dumper->new ([\$loc],['loc'])->Indent(0)->Dump,"\n";
+  }
+  exit 0;
+}
 
 {
   require Perl::Critic;
@@ -51,30 +80,6 @@ my $script_filename = File::Spec->catfile ($FindBin::Bin, $FindBin::Script);
     print "Caught exception in \"$filename\": $exception\n";
   }
   exit 0;
-}
-
-{
-  my $pmv = Pod::MinimumVersion->new
-    (
-     # string => "use 5.010; =encoding\n",
-     # string => "=pod\n\nC<< foo >>",
-     # filename => $script_filename,
-     # filehandle => do { require IO::String; IO::String->new("=pod\n\nE<sol> E<verbar>") },
-      string => "=pod\n\nL<foo|bar>",
-     one_report_per_version => 1,
-     above_version => '5.005',
-    );
-
-  print Dumper($pmv);
-  print "min ", $pmv->minimum_version, "\n";
-  print Dumper($pmv);
-
-  my @reports = $pmv->reports;
-  foreach my $report (@reports) {
-    my $loc = $report->PPI_location;
-    print $report->as_string,"\n";
-    print Data::Dumper->new ([\$loc],['loc'])->Indent(0)->Dump,"\n";
-  }
 }
 
 use 5.002;
