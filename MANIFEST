@@ -25,6 +25,7 @@ devel/grep-devnull.pl
 devel/grep-each.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
+devel/grep-import-tag.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
 devel/grep-pod-blankline.pl
@@ -99,11 +100,6 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 README
 SIGNATURE
-t/0-META-read.t
-t/0-Test-DistManifest.t
-t/0-Test-Pod.t
-t/0-Test-Synopsis.t
-t/0-Test-YAML-Meta.t
 t/ConstantBeforeLt.t
 t/ConstantPragmaHash.t
 t/Gtk2Constants.t
@@ -131,4 +127,9 @@ t/TextDomainPlaceholders.t
 t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t
 t/Utils.t
+xt/0-META-read.t
+xt/0-Test-DistManifest.t
+xt/0-Test-Pod.t
+xt/0-Test-Synopsis.t
+xt/0-Test-YAML-Meta.t
 META.yml                                 Module meta-data (added by MakeMaker)

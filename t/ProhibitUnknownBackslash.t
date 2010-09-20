@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 234;
+use Test::More tests => 230;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 42;
+my $want_version = 43;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -203,15 +203,15 @@ HERE
 HERE
 " ],
 
-     [ 1, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
-
-     # Not sure if wide chars are supposed to be allowed in an input string,
-     # presumably yes, but some combination of perl 5.8.3 and PPI 1.206
-     # threw an error on it.  It runs ok with 5.10.1.
+     # Not sure if wide chars and/or non-ascii are supposed to be allowed in
+     # an input string, presumably yes, but some combination of perl 5.8.3
+     # and PPI 1.206 threw an error on wide chars.  It runs ok with 5.10.1.
      #
      #      [ 1, ($] >= 5.008
      #            ? 'qq{\\'.chr(0x16A).'}' # 5.8 wide U-with-macron
      #            : '') ],                 # not 5.8, dummy passing
+     #
+     [ 1, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
 
      [ 1, 'use 5.005; "\\N{COLON}"' ],
      [ 1, 'use 5.005; "\\400"' ],
@@ -355,12 +355,17 @@ HERE
      [ 2, q{  my $pat = '[0-9eE\\.\\-]'  } ],
 
      [ 1, "q{\\\374}" ],  # latin-1/unicode u-dieresis
-     [ 1, ($] >= 5.008
-           ? 'q{\\'.chr(0x16A).'}' # 5.8 unicode U-with-macron
-           : 'q{\\z}') ],          # not 5.8, dummy failing
-     [ 1, ($] >= 5.008
-           ? 'q{\\'.chr(0x2022).'}' # 5.8 unicode BULLET
-           : 'q{\\z}') ],           # not 5.8, dummy failing
+
+     # Not sure if wide chars and/or non-ascii are supposed to be allowed in
+     # an input string, presumably yes, but some combination of perl 5.8.3
+     # and PPI 1.206 threw an error on wide chars.  It runs ok with 5.10.1.
+     #
+     #      [ 1, ($] >= 5.008
+     #            ? 'q{\\'.chr(0x16A).'}' # 5.8 unicode U-with-macron
+     #            : 'q{\\z}') ],          # not 5.8, dummy failing
+     #      [ 1, ($] >= 5.008
+     #            ? 'q{\\'.chr(0x2022).'}' # 5.8 unicode BULLET
+     #            : 'q{\\z}') ],           # not 5.8, dummy failing
 
      # backslash then some whitespaces
      [ 1, "  '\\\n'  " ],
