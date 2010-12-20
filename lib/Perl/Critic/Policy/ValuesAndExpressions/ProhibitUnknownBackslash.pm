@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 43;
+our $VERSION = 44;
 
 use constant DEBUG => 0;
 

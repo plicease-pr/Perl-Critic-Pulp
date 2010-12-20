@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 44, December 2010
+    - tests fix some version number checks
+
 Version 43, September 2010
     - test manifest only as an author test
     - tests drop backslash of more wide chars which bomb on 5.8.x, maybe

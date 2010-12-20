@@ -36,6 +36,7 @@ MyMakeMakerExtras::WriteMakefile
    PREREQ_PM => {
                  # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
                  'PPI' => '1.208',
+                 'PPI::Document' => 0,
 
                  # 1.082 or some such for new style parameter specs
                  # 1.084 for highest_explicit_perl_version() method
@@ -54,7 +55,7 @@ MyMakeMakerExtras::WriteMakefile
 
                  # Also used by Perl::Critic itself.  Maybe should
                  # require 0.24 for various XS bugfixes.
-                 'List::MoreUtils' => 0,
+                 'List::MoreUtils' => '0.24', # 0.24 for stack growing, maybe
 
                  # Builtin in recent perl anyway.
                  'List::Util' => 0,

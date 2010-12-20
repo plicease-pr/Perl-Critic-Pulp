@@ -30,7 +30,7 @@ require Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 43;
+my $want_version = 44;
 is ($Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION,
@@ -77,8 +77,8 @@ foreach my $data (
   $str = "$str";
 
  SKIP: {
-    if (defined $pcver && Perl::Critic->VERSION < $pcver) {
-      skip "older Perl-Critic doesn't do no critic after __END__", 1;
+    if (defined $pcver && !eval{Perl::Critic->VERSION($pcver);1}) {
+      skip "Perl-Critic before $pcver doesn't support \"no critic\" after __END__", 1;
       next;
     }
 

@@ -27,7 +27,7 @@ use vars qw($VERSION @CHECKS);
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-$VERSION = 43;
+$VERSION = 44;
 
 sub new {
   my ($class, %self) = @_;
