@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 44;
+our $VERSION = 45;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -123,14 +123,16 @@ Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup - unexpanded CE<lt>E
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It reports POD verbatim paragraphs which contain markup like
-CE<lt>E<gt>.  That markup will appear literally in the formatted output
-where you may have meant fontification.
+BE<lt>E<gt> or CE<lt>E<gt>.  That markup will appear literally in the
+formatted output where you may have meant fontification.
 
 =for ProhibitVerbatimMarkup allow next
 
+    =head1 SOME THING
+
     Paragraph of text introducing an example,
 
-        # call the C<foo> function     # bad
+        # call the C<foo> function      # bad
         &foo();
 
 This is purely cosmetic so this policy is low priority and under the
@@ -157,6 +159,8 @@ So if you forget the blank the verbatimness continues
 
 =for ProhibitVerbatimMarkup allow next
 
+    =pod
+
         $some->sample;
         code();
     And this was I<meant> to be plain text.    # bad
@@ -168,33 +172,34 @@ The check for markup is unsophisticated.  Any of the POD specified "IE<lt>"
 
 =for ProhibitVerbatimMarkup allow next
 
-    C<      # bad
-    J<      # bad
+    C<       # bad
+    J<       # bad
 
 It's possible a C<E<lt>> might be something mathematical like "XE<lt>Y", but
 in practice spaces S<"X E<lt> Y"> or lower case letters are more common and
 are ok.
 
-Sample debugger output is exempted.  Although it won't be common, it also
-isn't likely to have meant C<BE<lt>E<gt>> bold.
+Sample debugger output is exempted.  Although it won't be common, it's
+unlikely to have meant C<BE<lt>E<gt>> bold.
 
-    DB<123> dump b      # ok
+    DB<123> dump b        # ok
 
 =head2 Disabling
 
 If a verbatim paragraph is showing how to write POD markup then you can add
 an C<=for> to tell ProhibitVerbatimMarkup to allow it.  This happens most
-often in modules which themselves operate on POD.
+often in documentation for modules which themselves operate on POD markup.
 
 =for ProhibitVerbatimMarkup allow next
 
     =for ProhibitVerbatimMarkup allow next
 
-        write chars with E<gt> etc
+        blah blah E<gt> etc
 
-C<## no critic (ProhibitVerbatimMarkup)> works (though C<Perl::Critic> 1.110
-is required if the POD is after an C<__END__> token).  C<=for> has the
-advantage of being immediately before the exception.
+The usual C<## no critic (ProhibitVerbatimMarkup)> works too, though if the
+POD is after an C<__END__> token then C<Perl::Critic> 1.112 is required (and
+the annotation must be before the C<__END__>).  An C<=for> has the advantage
+of being immediately before the exception.
 
 As always if you don't care at all about this at all then disable
 C<ProhibitVerbatimMarkup> from your F<.perlcriticrc> in the usual way,

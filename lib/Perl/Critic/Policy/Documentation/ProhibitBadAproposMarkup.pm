@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 44;
+our $VERSION = 45;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -117,7 +117,7 @@ just surrounded by *(C bits.  On that basis this policy is lowest priority
 and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The NAME section is everything from "=head1 NAME" to the next "=head1".
-Other markup like "BE<lt>E<gt>", "IE<lt>E<gt>" and "FE<lt>E<gt>" are allowed
+Other markup like "BE<lt>E<gt>", "IE<lt>E<gt>" and "FE<lt>E<gt>" is allowed
 because C<pod2man> uses builtin "\fB" etc directives for them, which
 C<lexgrog> recognises.
 
@@ -129,12 +129,13 @@ the usual way,
 
     [-Documentation::ProhibitBadAproposMarkup]
 
-Or in an individual file with C<## no critic>
+Or in an individual file with the usual C<## no critic>
 
     ## no critic (ProhibitBadAproposMarkup)
 
-though that annotation must be before any C<__END__>, and if the NAME part
-is after the C<__END__> then C<Perl::Critic> 1.110 or higher is required.
+though if the NAME part is after an C<__END__> token then C<Perl::Critic>
+1.112 or higher is required (and the annotation must be before the
+C<__END__>).
 
 =head1 SEE ALSO
 

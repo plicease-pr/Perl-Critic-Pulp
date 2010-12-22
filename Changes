@@ -16,8 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 45, December 2010
+    - oops, tests really fix ProhibitVerbatimMarkup.t
+
 Version 44, December 2010
-    - tests fix some version number checks
+    - tests fix ProhibitVerbatimMarkup.t some version number checks
 
 Version 43, September 2010
     - test manifest only as an author test

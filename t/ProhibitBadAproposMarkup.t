@@ -33,7 +33,7 @@ require Perl::Critic;
 diag "Perl::Critic version ", Perl::Critic->VERSION;
 
 #------------------------------------------------------------------------------
-my $want_version = 44;
+my $want_version = 45;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -46,6 +46,7 @@ is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
 
 #------------------------------------------------------------------------------
 require Perl::Critic;
+diag "Perl::Critic version ",Perl::Critic->VERSION;
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup$');
@@ -81,10 +82,13 @@ foreach my $data (
 
                   [ 0, "=head1 NAME OTHER\n\nfoo - like C<bar>\n" ],
 
-                  [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n=head1 NAME OTHER\n\nfoo - like C<bar>\n" ],
-
-                  [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n__END__\n\n=head1 NAME OTHER\n\nfoo - like C<bar>\n",
-                    1.110 ],
+                  # the offending pod can't be the last thing or "no critic"
+                  # doesn't recognise it, or some such
+                  #
+                  [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n=head1 NAME\n\nfoo - like C<bar>\n\n=cut\n\nfoo()\n" ],
+                  #
+                  [ 0, "## no critic (ProhibitBadAproposMarkup)\n\n__END__\n\n=head1 NAME\n\nfoo - like C<bar>\n\n=cut\n\nfoo()\n",
+                    1.112 ],
 
                  ) {
   my ($want_count, $str, $pcver) = @$data;
