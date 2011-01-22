@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 45;
+our $VERSION = 46;
 
 
 use constant supported_parameters => ();
@@ -150,9 +150,9 @@ Perl::Critic::Policy::Compatibility::ConstantPragmaHash - new enough "constant" 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It requires that when you use the hash style multiple constants with
-C<use constant> you explicitly declare either Perl 5.8 or C<constant> 1.03,
-or higher.
+addon.  It requires that when you use the hash style multiple constants of
+C<use constant> that you explicitly declare either Perl 5.8 or C<constant>
+1.03 or higher.
 
     use constant { AA => 1, BB => 2 };       # bad
 
@@ -165,7 +165,7 @@ or higher.
     use constant 1.03 { GG => 1, HH => 2 };  # ok
 
 The idea is to keep you from using the multi-constant feature in code which
-might run on Perl 5.6 or might in principle still run there.  On that basis
+might run on Perl 5.6, or might in principle still run there.  On that basis
 this policy is under the "compatibility" theme (see L<Perl::Critic/POLICY
 THEMES>).
 
@@ -238,7 +238,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

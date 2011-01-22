@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -22,16 +22,18 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 45;
+our $VERSION = 46;
 
+use base 'Exporter';
+our @EXPORT_OK = qw(parameter_parse_version
+                    version_if_valid
+                    include_module_version
+                    elem_package
+                    %COMMA);
 
 our %COMMA = (','  => 1,
               '=>' => 1);
 
-
-# A parameter parser function for a "supported_parameters" entry which takes
-# a version number as a string.
-#
 sub parameter_parse_version {
   my ($self, $parameter, $str) = @_;
 
@@ -71,22 +73,6 @@ sub version_if_valid {
 #
 our $use_module_version_number_re = qr/^v?[0-9][0-9._]*$/;
 
-# $inc is a PPI::Statement::Include.
-# If it has a version number for a module "use" or "no" then return that
-# element.  As of PPI 1.203 there's no v-number parsing, so the version
-# element is always a PPI::Token::Number.
-#
-# A "require" is treated the same as "use" and "no", though a module version
-# number like "require Foo::Bar 1.5" is actually a syntax error.
-#
-# A module version is a literal number following the module name, with
-# either nothing else after it, or with no comma before the arglist.
-#
-# PPI::Statement::Include has a similar module_version() method, but as of
-# PPI 1.209 it's buggy, it takes all numbers as version numbers, whereas
-# Perl doesn't accept exponential format floats, only the restricted forms
-# of $use_module_version_number_re above.
-#
 sub include_module_version {
   my ($inc) = @_;
 
@@ -172,6 +158,17 @@ sub _str_line_n {
   return ($str =~ /^(.*\n){$n}(.*)/ ? $2 : '');
 }
 
+sub elem_package {
+  my ($elem) = @_;
+  for (;;) {
+    $elem = $elem->sprevious_sibling || $elem->parent
+      || return undef;
+    if ($elem->isa ('PPI::Statement::Package')) {
+      return $elem;
+    }
+  }
+}
+
 1;
 __END__
 
@@ -187,7 +184,74 @@ Perl::Critic::Pulp::Utils - shared helper code for the Pulp perlcritic add-on
 
 =head1 DESCRIPTION
 
-This is only meant for internal use just yet.
+This is slightly preliminary, but works as far as it goes.
+
+=head1 FUNCTIONS
+
+=head2 Element Functions
+
+=over
+
+=item C<$pkgelem = Perl::Critic::Pulp::Utils::elem_package ($elem)>
+
+C<$elem> is a C<PPI::Element>.  Return the C<PPI::Statement::Package>
+containing C<$elem>, or undef if C<$elem> is not in the scope of any package
+statement.
+
+The search upwards begins with the element preceding C<$elem>, so if
+C<$elem> itself is a C<PPI::Statement::Package> then that's not the one
+returned, instead its containing package.
+
+=cut
+
+# Not sure about this just yet.  This first_arg would be a matching pair.
+# 
+# =item C<$numelem = Perl::Critic::Pulp::Utils::include_module_version ($incelem)>
+# 
+# C<$incelem> is a C<PPI::Statement::Include>.  If it's a module type C<use>
+# or C<no> with a version number for Perl to check then return that version
+# number element, otherwise return C<undef>.
+# 
+#     use Foo 1.23 qw(arg1 arg2);
+#     no Bar 0.1;
+# 
+# A module version is a literal number following the module name, with either
+# nothing after it for that statement, or with no comma before the statement
+# arguments.
+# 
+# C<Exporter> and other module C<import> handlers may interpret a number
+# argument as a version to be checked, but C<include_module_version> looks
+# only for version numbers which Perl itself will check.
+# 
+# A module C<require> type C<$incelem> is treated the same as C<use> and
+# C<no>, but a module version number like "require Foo::Bar 1.5" is a Perl
+# syntax error.  A Perl version C<$incelem> like C<use 5.004> is not a module
+# include and the return is C<undef> for it.
+# 
+# As of PPI 1.203 there's no v-number parsing, so the returned element is only
+# ever a C<PPI::Token::Number>.  Perhaps that will change.
+# 
+# C<PPI::Statement::Include> has a similar C<$incelem-E<gt>module_version>
+# method, but it's wrong as of PPI 1.209.  It takes all numbers as version
+# numbers, whereas Perl doesn't accept exponential format floats, only the
+# restricted number forms of Perl's F<toke.c> C<S_force_version()>.
+
+=back
+
+=head2 Policy Parameter Functions
+
+=over
+
+=item C<Perl::Critic::Pulp::Utils::parameter_parse_version ($self, $parameter, $str)>
+
+This is designed for use as the C<parser> field of a policy
+C<supported_parameters> entry for a parameter which is a version number.
+
+Parse C<$str> with the C<version.pm> module.  If valid then set
+C<$self->{$paramter->get_name}> to the resulting C<version> object, if not
+then call C<throw_parameter_value_exception>.
+
+=back
 
 =head1 SEE ALSO
 
@@ -199,7 +263,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

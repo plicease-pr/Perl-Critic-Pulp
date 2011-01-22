@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -27,10 +27,10 @@ use Perl::Critic::Utils qw(is_included_module_name
                            is_perl_builtin_with_no_arguments
                            split_nodes_on_comma);
 
-our $VERSION = 45;
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
-# set this to 1 for some diagnostic prints
-use constant DEBUG => 0;
+our $VERSION = 46;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -39,10 +39,10 @@ use constant DEBUG => 0;
 # or if it does then leave it to another policy to address.
 #
 
-sub supported_parameters { return ();               }
-sub default_severity     { return $Perl::Critic::Utils::SEVERITY_MEDIUM; }
-sub default_themes       { return qw(pulp bugs);    }
-sub applies_to           { return 'PPI::Document';  }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => ('PPI::Document');
 
 sub violates {
   my ($self, $document) = @_;
@@ -125,7 +125,7 @@ sub _use_constants {
                  && $constant_modules{$elem->module || ''});
 
   $elem = $elem->schild(2) or return; # could be "use constant" alone
-  if (DEBUG) { print "  start at ",$elem->content,"\n"; }
+  ### start at: $elem->content
 
   my $single = 1;
   if ($elem->isa ('PPI::Structure::Constructor')) {
@@ -162,10 +162,7 @@ sub _use_constants {
   my @nodes = _elem_and_ssiblings ($elem);
   my @arefs = split_nodes_on_comma (@nodes);
 
-  if (DEBUG >= 2) {
-    require Data::Dumper;
-    print Data::Dumper::Dumper(\@arefs);
-  }
+  ### @arefs
 
   if ($single) {
     $#arefs = 0;  # first elem only
@@ -182,11 +179,7 @@ sub _use_constants {
         next;
       }
     }
-    if (DEBUG) {
-      require Data::Dumper;
-      print "ConstantBeforeLt: skip non-name constant: ",
-        Data::Dumper::Dumper($aref);
-    }
+    ### ConstantBeforeLt skip non-name constant: $aref
   }
   return @constants;
 }
@@ -282,7 +275,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

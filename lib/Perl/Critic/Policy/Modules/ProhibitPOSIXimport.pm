@@ -1,4 +1,4 @@
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2011 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,23 +28,23 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 45;
+our $VERSION = 46;
 
 use constant DEBUG => 0;
 use constant _ALLOWED_CALL_COUNT => 15;
 
 
-sub supported_parameters { return; }
-sub default_severity     { return $Perl::Critic::Utils::SEVERITY_LOW;   }
-sub default_themes       { return qw(pulp efficiency);      }
-sub applies_to           { return 'PPI::Statement::Include'; }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
+use constant default_themes       => qw(pulp efficiency);
+use constant applies_to           => ('PPI::Statement::Include');
 
 my %posix_function;
 
 sub initialize_if_enabled {
   my ($self, $config) = @_;
   @posix_function{@POSIX::EXPORT} = ();
-  if (DEBUG) { print "POSIX::EXPORT ",scalar(@POSIX::EXPORT)," funcs\n"; }
+  ### POSIX EXPORT count: scalar(@POSIX::EXPORT)
   return 1;
 }
 
@@ -79,7 +79,8 @@ sub _inc_exporter_imports_type {
 
   my @elems = _elem_and_snext_siblings ($mfirst);
   _chomp_trailing_semi (\@elems);
-  if (DEBUG) { print "elems: ",scalar(@elems)," @elems\n"; }
+  ### elems count: scalar(@elems)
+  ### elems: "@elems"
   if (@elems == 1 && _elem_is_empty_list($elems[0])) {
     return 'no_import'; # "use Foo ()" doesn't call import() at all
   }
@@ -96,33 +97,17 @@ sub _inc_exporter_imports_type {
 #
 sub _is_in_package_main {
   my ($elem) = @_;
-  my $package = elem_package($elem) || return 1; # no package statement
-  if (DEBUG) { print "within_package $package\n"; }
+  my $package = Perl::Critic::Pulp::Utils::elem_package($elem)
+    || return 1; # no package statement
+  ### within_package: "$package"
   return ($package->namespace eq 'main'); # explicit "package main"
-}
-
-# Return the PPI::Statement::Package containing $elem, or undef if no
-# package statement scoped on $elem.
-#
-# The search upwards begins with the element preceding $elem, so if $elem
-# itself is a PPI::Statement::Package then that's not the one returned,
-# rather its containing package.
-#
-sub elem_package {
-  my ($elem) = @_;
-  for (;;) {
-    $elem = $elem->sprevious_sibling || $elem->parent || return undef;
-    if ($elem->isa ('PPI::Statement::Package')) {
-      return $elem;
-    }
-  }
 }
 
 sub _parse_args {
   my @first = split_nodes_on_comma (@_);
+  ### first split: scalar(@first)
   if (DEBUG) {
     require PPI::Dumper;
-    print "first split: ",scalar(@first),"\n";
     foreach my $aref (@first) {
       print "  aref:\n";
       foreach my $elem (@$aref) {
@@ -156,9 +141,9 @@ sub _parse_args {
     push @ret, $aref;
   }
 
+  ### final ret: scalar(@ret)
   if (DEBUG) {
     require PPI::Dumper;
-    print "final ret: ",scalar(@ret),"\n";
     foreach my $aref (@ret) {
       print "  aref:\n";
       foreach my $elem (@$aref) {
@@ -237,7 +222,7 @@ sub _count_posix_calls {
   my $count = List::MoreUtils::true
     { exists $posix_function{$_->content} && is_function_call($_)
     } @$aref;
-  if (DEBUG) { print "count func calls $count\n"; }
+  ### count func calls: $count
 
   # symbol references \&dup or calls &dup(6)
   $aref = $document->find ('PPI::Token::Symbol') || [];
@@ -245,7 +230,7 @@ sub _count_posix_calls {
     { my $symbol = $_->symbol;
       $symbol =~ /^&/ && exists $posix_function{substr($symbol,1)}
     } @$aref;
-  if (DEBUG) { print "  plus symbols gives $count\n"; }
+  ###   plus symbols gives: $count
 
   return $count;
 }
@@ -334,7 +319,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010 Kevin Ryde
+Copyright 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

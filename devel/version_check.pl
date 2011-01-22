@@ -20,29 +20,20 @@
 use strict;
 use warnings;
 
-{
-  use Perl::Critic::Utils 1.0;
-  use Perl::Critic::Utils 1.0 'precedence_of';
-  print Perl::Critic::Utils->VERSION,"\n";
-  exit 0;
-}
+use lib '.';
+use lib 'devel';
+# use version_check 1.1;
 
 {
-  my $x = '1e6';
-  print ($x > 2);
-  exit 0;
+  my $v = version_check->VERSION;
+  print "ref: ",ref $v,"\n";
 }
 {
-  require version;
-  print "version.pm ", version->VERSION, "\n";
-  my $v = version->new('1.234.567');
-  print "v $v\n";
-  print "done\n";
-  exit 0;
+  my $ret = version_check->VERSION('0');
+  print "ret $ret\n";
 }
-
 {
-  require AptPkg::Policy;
-  print AptPkg::Policy->VERSION,"\n";
-  exit 0;
+  my $ret = version_check->VERSION('0');
+  print "ret $ret\n";
 }
+print "done\n";

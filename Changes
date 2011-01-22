@@ -1,4 +1,4 @@
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 This file is part of Perl-Critic-Pulp.
 
@@ -15,6 +15,9 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+Version 46, January 2011
+    - new policy RequireNumericVERSION
 
 Version 45, December 2010
     - oops, tests really fix ProhibitVerbatimMarkup.t

@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 45;
+our $VERSION = 46;
 
 1;
 __END__
@@ -59,6 +59,10 @@ Check keyword arguments to C<__x>, C<__nx>, etc.
 =item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
 
 Don't quote version requirement C<use Foo '1.5'>
+
+=item L<ValuesAndExpressions::RequireNumericVersion|Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion>
+
+C<$VERSION> a plain number for comparisons and checking.
 
 =item L<ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
 
@@ -198,7 +202,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -27,13 +27,12 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 45;
+our $VERSION = 46;
 
-
-sub supported_parameters { return (); }
-sub default_severity     { return $Perl::Critic::Utils::SEVERITY_MEDIUM; }
-sub default_themes       { return qw(pulp bugs);          }
-sub applies_to           { return 'PPI::Token::Word'; }
+use constant supported_parameters => ();
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
+use constant default_themes       => qw(pulp bugs);
+use constant applies_to           => ('PPI::Token::Word');
 
 my %specials = ('__FILE__'    => 1,
                 '__LINE__'    => 1,
@@ -213,7 +212,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,6 +1,6 @@
 # MyTestHelpers.pm -- my shared test script helpers
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # MyTestHelpers.pm is shared by several distributions.
 #
@@ -63,6 +63,9 @@ sub DEBUG { 0 }
   }
 }
 
+#-----------------------------------------------------------------------------
+# Test::Weaken and other weaking
+
 sub findrefs {
   my ($obj) = @_;
   require Test::More;
@@ -77,6 +80,23 @@ sub findrefs {
     Test::More::diag (Devel::FindRef::track($obj, 8));
   } else {
     Test::More::diag ("Devel::FindRef not available -- $@\n");
+  }
+}
+
+sub test_weaken_show_leaks {
+  my ($leaks) = @_;
+  $leaks || return;
+  eval { # explain new in 0.82
+    Test::More::diag ("Test-Weaken ",Test::More::explain($leaks));
+  };
+
+  my $unfreed = $leaks->unfreed_proberefs;
+  foreach my $proberef (@$unfreed) {
+    Test::More::diag ("  unfreed $proberef");
+  }
+  foreach my $proberef (@$unfreed) {
+    Test::More::diag ("search $proberef");
+    MyTestHelpers::findrefs($proberef);
   }
 }
 

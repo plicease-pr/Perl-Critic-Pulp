@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -90,6 +90,9 @@ GetOptions
    },
    shebang => sub {
      push @option_policies, 'Modules::ProhibitModuleShebang$';
+   },
+   numver => sub {
+     push @option_policies, 'ValuesAndExpressions::RequireNumericVersion';
    },
 
    # coming soon ...

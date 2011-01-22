@@ -1,4 +1,4 @@
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -29,7 +29,7 @@ use Perl::Critic::Pulp::Utils;
 
 use Pod::MinimumVersion;
 
-our $VERSION = 45;
+our $VERSION = 46;
 
 use constant supported_parameters
   => ({ name        => 'above_version',
@@ -162,7 +162,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010 Kevin Ryde
+Copyright 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

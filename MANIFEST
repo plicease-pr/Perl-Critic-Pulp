@@ -24,6 +24,7 @@ devel/grep-backslash.pl
 devel/grep-condsub.pl
 devel/grep-devnull.pl
 devel/grep-each.pl
+devel/grep-exporter.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
 devel/grep-import-tag.pl
@@ -41,6 +42,7 @@ devel/grep-use-decimal.pl
 devel/grep-use-langinfo.pl
 devel/grep-use-posix.pl
 devel/grep-use-quoted.pl
+devel/grep-version-nonnum.pl
 devel/h2xs/PostModule.pm
 devel/h2xs/run.pl
 devel/h2xs/TestConstFoo.h
@@ -68,6 +70,8 @@ devel/TestAutoload.pm
 devel/unknown-backslash.pl
 devel/use-quoted.pl
 devel/version.pl
+devel/version_check.pl
+devel/version_check.pm
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireFinalSemicolon.pm
@@ -91,6 +95,7 @@ lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitFiletest_f.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitUnknownBackslash.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/RequireNumericVersion.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/UnexpandedSpecialLiteral.pm
 lib/Perl/Critic/Pulp.pm
 lib/Perl/Critic/Pulp/PodParser.pm
@@ -117,6 +122,7 @@ t/ProhibitFiletest_f.t
 t/ProhibitModuleShebang.t
 t/ProhibitNullStatements.t
 t/ProhibitPOSIXimport.t
+t/ProhibitUnixDevNull-load.t
 t/ProhibitUnixDevNull.t
 t/ProhibitUnknownBackslash.t
 t/ProhibitUseQuotedVersion.t
@@ -124,6 +130,7 @@ t/ProhibitVerbatimMarkup.t
 t/Pulp.t
 t/RequireEndBeforeLastPod.t
 t/RequireFinalSemicolon.t
+t/RequireNumericVersion.t
 t/TextDomainPlaceholders.t
 t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -113,4 +113,5 @@ MyMakeMakerExtras::WriteMakefile
       },
 
    MY_NO_HTML => 1,
+   MY_EXTRA_FILE_PART_OF => '|miscbits-el',
   );

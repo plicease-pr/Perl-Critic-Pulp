@@ -1,5 +1,3 @@
-#!/usr/bin/perl -w
-
 # Copyright 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
@@ -17,32 +15,10 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+package version_check;
 use strict;
 use warnings;
-
-{
-  use Perl::Critic::Utils 1.0;
-  use Perl::Critic::Utils 1.0 'precedence_of';
-  print Perl::Critic::Utils->VERSION,"\n";
-  exit 0;
-}
-
-{
-  my $x = '1e6';
-  print ($x > 2);
-  exit 0;
-}
-{
-  require version;
-  print "version.pm ", version->VERSION, "\n";
-  my $v = version->new('1.234.567');
-  print "v $v\n";
-  print "done\n";
-  exit 0;
-}
-
-{
-  require AptPkg::Policy;
-  print AptPkg::Policy->VERSION,"\n";
-  exit 0;
-}
+use base 'Exporter';
+our @EXPORT_OK = ('foo');
+# our $VERSION = '1.100_100';
+our $VERSION = '0.000';

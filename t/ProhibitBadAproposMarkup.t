@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -33,7 +33,7 @@ require Perl::Critic;
 diag "Perl::Critic version ", Perl::Critic->VERSION;
 
 #------------------------------------------------------------------------------
-my $want_version = 45;
+my $want_version = 46;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,

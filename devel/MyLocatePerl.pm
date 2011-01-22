@@ -35,12 +35,14 @@ my $suffixes_re = qr/\.(t|pm|pl|PL)($compressed_re)?$/o;
 # glob => '/usr/share/perl5/Debconf/FrontEnd/*'
 
 sub new {
-  my ($class) = @_;
-  my $self = $class->SUPER::new (# globs => ['/bin/*',
-#                                            '/usr/bin/*',
-#                                            '/usr/local/bin/*',
-#                                            '/usr/local/bin2/*'],
-                                 regexp => $suffixes_re);
+  my $class = shift;
+  my $self = $class->SUPER::new (
+                                 # globs => ['/bin/*',
+                                 #           '/usr/bin/*',
+                                 #           '/usr/local/bin/*',
+                                 #           '/usr/local/bin2/*'],
+                                 regexp => $suffixes_re,
+                                 @_);
   $self->{'uniq_ino'} = MyUniqByInode->new;
   $self->{'uniq_md5'} = MyUniqByMD5->new;
   return $self;

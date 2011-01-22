@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,8 +17,36 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+use 5.005;
 use strict;
 use warnings;
-use Regexp::Common qw /balanced/;
-print $RE{balanced}{-begin=>'b'}{-end=>'e'};
+use Perl6::Slurp;
+
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
+use Text::Tabs ();
+
+my $verbose = 0;
+
+my $l = MyLocatePerl->new (regexp => qr/\.pm$/);
+while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
+
+  $str =~ s/#.*$//mg;
+  next if $str =~ /^[^#]*use\s+(base|parent)\s+(qw)?'Exporter'/m;
+  next if $str =~ /^[^#]*(use|require)\s+Exporter/m;
+
+  while ($str =~ /'Exporter'(.*)$/mg) {
+    my $pos = pos($str) - 1;
+    my $end = $1;
+    next if ($end =~ /\s*=>/);
+
+    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+    my $s = MyStuff::line_at_pos($str, $pos);
+
+    print "$filename:$line:$col: exporter\n  $s";
+  }
+}
+
 exit 0;
