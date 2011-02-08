@@ -23,15 +23,15 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
 
-use constant supported_parameters
-  => ({ name           => 'allow_perl4_semihash',
-        description    => 'Whether to allow Perl 4 style ";#" comments.',
-        behavior       => 'boolean',
-        default_string => '0',
-      });
+use constant supported_parameters =>
+  ({ name           => 'allow_perl4_semihash',
+     description    => 'Whether to allow Perl 4 style ";#" comments.',
+     behavior       => 'boolean',
+     default_string => '0',
+   });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp cosmetic);
 use constant applies_to       => 'PPI::Statement::Null';

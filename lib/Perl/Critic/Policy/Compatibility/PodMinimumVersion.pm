@@ -29,14 +29,14 @@ use Perl::Critic::Pulp::Utils;
 
 use Pod::MinimumVersion;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
-use constant supported_parameters
-  => ({ name        => 'above_version',
-        description => 'Check only things above this version of Perl.',
-        behavior    => 'string',
-        parser      => \&Perl::Critic::Pulp::Utils::parameter_parse_version,
-      });
+use constant supported_parameters =>
+  ({ name        => 'above_version',
+     description => 'Check only things above this version of Perl.',
+     behavior    => 'string',
+     parser      => \&Perl::Critic::Pulp::Utils::parameter_parse_version,
+   });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes   => qw(pulp compatibility);
 use constant applies_to       => 'PPI::Document';

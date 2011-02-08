@@ -96,6 +96,9 @@ GetOptions
    },
 
    # coming soon ...
+   fatnewline => sub {
+     push @option_policies, 'ProhibitFatCommaAfterNewline';
+   },
    testprint => sub {
      push @option_policies, 'TestingAndDebugging::ProhibitTestPrint';
    },

@@ -28,14 +28,14 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
-use constant supported_parameters
-  => ({ name           => 'allow_indirect_syntax',
-        description    => 'Whether to allow double-colon in indirect object syntax "new Foo:: arg,arg".',
-        behavior       => 'boolean',
-        default_string => '1',
-      });
+use constant supported_parameters =>
+  ({ name           => 'allow_indirect_syntax',
+     description    => 'Whether to allow double-colon in indirect object syntax "new Foo:: arg,arg".',
+     behavior       => 'boolean',
+     default_string => '1',
+   });
 
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOWEST;
 use constant default_themes   => qw(pulp cosmetic);

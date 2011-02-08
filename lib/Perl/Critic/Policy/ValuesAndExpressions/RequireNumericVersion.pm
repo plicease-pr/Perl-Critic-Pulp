@@ -33,13 +33,14 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 46;
+our $VERSION = 47;
 
 sub violates {
   my ($self, $elem, $document) = @_;
 
   ### canonical: $elem->canonical
-  $elem->canonical eq '$VERSION' or return;
+  $elem->canonical eq '$VERSION' ## no critic (RequireInterpolationOfMetachars)
+    or return;
 
   {
     my $package = Perl::Critic::Pulp::Utils::elem_package($elem)
@@ -113,6 +114,8 @@ sub _following_expression {
 
 1;
 __END__
+
+=for stopwords addon toplevel ie CPAN pre-release args exponentials multi-dots v-nums YYYYMMDD Ryde
 
 =head1 NAME
 
@@ -203,7 +206,7 @@ gets the raw string from C<$VERSION> and thus a non-numeric warning and
 truncation.  Perhaps applications should let C<UNIVERSAL.pm> do the check
 with say
 
-    if (eval { Foo-E<gt>VERSION(1.234) }) {
+    if (eval { Foo->VERSION(1.234) }) {
 
 or apply C<version-E<gt>new()> to one of the args.  (Could have another
 policy to not explicitly compare C<$VERSION>, or perhaps an option to

@@ -17,6 +17,7 @@ devel/const-autoload.pl
 devel/const-noproto.pl
 devel/const-post.pl
 devel/empty.pl
+devel/fat-comma.pl
 devel/gettext.pl
 devel/grep-arg-unpack.pl
 devel/grep-backslash-control.pl

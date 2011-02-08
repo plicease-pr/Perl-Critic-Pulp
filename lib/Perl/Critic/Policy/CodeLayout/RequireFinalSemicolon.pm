@@ -27,19 +27,19 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
-use constant supported_parameters
-  => ({ name           => 'except_same_line',
-        description    => 'Whether to allow no semicolon at the end of blocks with the } closing brace on the same line as the last statement.',
-        behavior       => 'boolean',
-        default_string => '1',
-      },
-      { name           => 'except_expression_blocks',
-        description    => 'Whether to allow no semicolon at the end of do{} expression blocks.',
-        behavior       => 'boolean',
-        default_string => '1',
-      });
+use constant supported_parameters =>
+  ({ name           => 'except_same_line',
+     description    => 'Whether to allow no semicolon at the end of blocks with the } closing brace on the same line as the last statement.',
+     behavior       => 'boolean',
+     default_string => '1',
+   },
+   { name           => 'except_expression_blocks',
+     description    => 'Whether to allow no semicolon at the end of do{} expression blocks.',
+     behavior       => 'boolean',
+     default_string => '1',
+   });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes   => qw(pulp cosmetic);
 use constant applies_to       => 'PPI::Structure::Block';

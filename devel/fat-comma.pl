@@ -1,3 +1,6 @@
+
+#!/usr/bin/perl -w
+
 # Copyright 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
@@ -15,10 +18,24 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-package version_check;
+
 use strict;
-use warnings;
-use base 'Exporter';
-our @EXPORT_OK = ('foo');
-# our $VERSION = '1.100_100';
-our $VERSION = '47';
+
+# uncomment this to run the ### lines
+use Smart::Comments;
+
+{
+  my %hash = (__PACKAGE__
+              =>
+              123);
+  ### %hash
+  exit 0;
+}
+
+{
+  my @x = (
+           print                         	       => 123
+          );
+  print @x;
+  exit 0;
+}

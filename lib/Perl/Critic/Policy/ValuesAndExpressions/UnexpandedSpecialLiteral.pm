@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 46;
+our $VERSION = 47;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -42,7 +42,7 @@ sub violates {
   my ($self, $elem, $document) = @_;
   $specials{$elem} or return;
 
-  if (elem_is_left_of_big_comma ($elem)) {
+  if (elem_is_quoted_by_big_comma ($elem)) {
     return $self->violation
       ("$elem is the literal string '$elem' on the left of a =>",
        '', $elem);
@@ -64,12 +64,19 @@ sub violates {
 # { __FILE__ => 123 }
 # ( __FILE__ => 123 )
 #
-sub elem_is_left_of_big_comma {
+sub elem_is_quoted_by_big_comma {
   my ($elem) = @_;
 
-  my $next = $elem->snext_sibling
-    || return 0;  # nothing following
-  return ($next->isa('PPI::Token::Operator') && $next->content eq '=>');
+  my $next = $elem;
+  for (;;) {
+    $next = $next->next_sibling
+      || return 0;  # nothing following
+    if ($next->isa('PPI::Token::Whitespace')
+        && $next->content !~ /\n/) {
+      next;
+    }
+    return ($next->isa('PPI::Token::Operator') && $next->content eq '=>');
+  }
 }
 
 # $hash{__FILE__}
@@ -103,7 +110,7 @@ sub elem_is_solo_subscript {
 1;
 __END__
 
-=for stopwords addon filename parens Subhash Concated HashRef OOP Ryde
+=for stopwords addon filename parens Subhash Concated HashRef OOP Ryde bareword
 
 =head1 NAME
 
@@ -128,7 +135,7 @@ C<"__PACKAGE__">, like
     return ('At:__LINE__' => 123);
     $obj->{'__PACKAGE__'}->{'myextra'} = 123;
 
-where you almost certainly meant it to expand to the filename etc.  On that
+where almost certainly it was meant to expand to the filename etc.  On that
 basis this policy is under the "bugs" theme (see L<Perl::Critic/POLICY
 THEMES>).
 
@@ -148,6 +155,20 @@ The C<__PACKAGE__> literal is new in Perl 5.004 but this policy is applied
 to all code.  Even if you're targeting an earlier Perl extra quotes will
 make it clear to users of later Perl that a literal string C<"__PACKAGE__">
 is indeed intended.
+
+=head2 Fat Comma After Newline
+
+A C<< => >> fat comma only quotes when it's on the same line as the
+preceding bareword, so in the following C<__PACKAGE__> is not quoted and is
+therefore not reported by this policy,
+
+    my %hash = (__PACKAGE__   # ok, expands
+                =>
+                'blah');
+
+Of course whether or not writing this is a good idea is another matter.  It
+might be a bit subtle to depend on the newline.  Probably a plain C<,> comma
+would make the intention clearer than C<< => >>.
 
 =head2 Class Data
 

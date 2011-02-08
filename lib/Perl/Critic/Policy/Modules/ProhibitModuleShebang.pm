@@ -27,14 +27,14 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
-use constant supported_parameters
-  => ({ name           => 'allow_bin_false',
-        description    => 'Whether to allow #!/bin/false',
-        behavior       => 'boolean',
-        default_string => '1',
-      });
+use constant supported_parameters =>
+  ({ name           => 'allow_bin_false',
+     description    => 'Whether to allow #!/bin/false',
+     behavior       => 'boolean',
+     default_string => '1',
+   });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes   => ('pulp', 'cosmetic');
 use constant applies_to       => 'PPI::Document';
@@ -99,14 +99,15 @@ file.
     ...
 
 This C<#!> does nothing, and might make a reader think it's supposed to be a
-program instead of a module.  Often it's a leftover from cutting and pasting
-code or a copyright notice from one file into another.
+program instead of a module.  Often the C<#!> is a leftover cut and paste
+from a script into a module, perhaps when grabbing a copyright notice or
+similar intro.
 
 Of course a module works the same with or without, so this policy is low
 priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
-Only the first line of a file is a prospective C<#!> interpreter.
-A C<#!> later is allowed, for example in code which generates other code,
+Only the first line of a file is a prospective C<#!> interpreter.  A C<#!>
+anywhere later is allowed, for example in code which generates other code,
 
     sub foo {
       print <<HERE;
@@ -115,9 +116,9 @@ A C<#!> later is allowed, for example in code which generates other code,
     ...
 
 This policy applies only to F<.pm> files.  Anything else, such as C<.pl> or
-C<.t> scripts can have C<#!> (or not) in the usual way.  The F<.pm> filename
-is used because it's quite hard to distinguish a module from a script just
-from its contents.
+C<.t> scripts can have C<#!>, or not, in the usual way.  The F<.pm> filename
+is used because it's hard to distinguish a module from a script just from
+its contents.
 
 =head2 Disabling
 
@@ -137,9 +138,9 @@ If true then allow C<#!/bin/false> in module files.
     #! /bin/false           <-- ok
 
 This will prevent execution of the code if accidentally run as a script, but
-whether you think you want this is personal preference.  Insofar as it
-indicates a module is not a script it accords with ProhibitModuleShebang,
-but in general is probably unnecessary.
+whether you want this is a personal preference.  Insofar as it indicates a
+module is not a script it accords with ProhibitModuleShebang, but in general
+it's probably unnecessary.
 
 =back
 

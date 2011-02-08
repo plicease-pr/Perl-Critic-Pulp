@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -75,7 +75,8 @@ sub violates {
   foreach my $check (sort keys %Perl::MinimumVersion::CHECKS) {
     next if exists $skip_checks{$check};
     next if $check eq '_constant_hash'; # better by ConstantPragmaHash
-    next if $check =~ /(_pragmas|_modules)$/;  # wrong for dual-life stuff
+    # next if $check =~ /_pragmas$/;  # usually impossible in earlier
+    next if $check =~ /_modules$/;  # wrong for dual-life stuff
 
     my $check_version = $Perl::MinimumVersion::CHECKS{$check};
     next if (defined $explicit_version
@@ -486,9 +487,13 @@ Some mangling is applied to what C<Perl::MinimumVersion> normally reports
 
 =item *
 
-Pragma and module requirements like C<use warnings> are dropped, since you
-might get a back-port from CPAN etc and the need for a module is better
-expressed in your distribution "prereq".
+Module requirements like C<use Errno> are dropped, since you might get a
+back-port from CPAN etc and the need for a module is better expressed in
+your distribution "prereq".
+
+(The same doesn't normally apply to pragma type modules like C<use warnings>
+since they're normally an interface to a feature new in the Perl version it
+comes with.)
 
 =item *
 
@@ -512,16 +517,16 @@ on a C<qr> until then.
 
 =item *
 
-C<exists &subr>, C<exists $array[0]> or C<delete $array[0]> require Perl
+C<exists &subr>, C<exists $array[0]> or C<delete $array[0]> new in Perl
 5.6.
 
 =item *
 
-C<0b110011> binary number literals require Perl 5.6.
+C<0b110011> binary number literals new in Perl 5.6.
 
 =item *
 
-C<Foo::Bar::> double-colon package name requires Perl 5.005.
+C<Foo::Bar::> double-colon package name new in Perl 5.005.
 
 =item *
 
@@ -586,5 +591,26 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>,
 L<C<Perl::Critic::Policy::Modules::PerlMinimumVersion>|Perl::Critic::Policy::Modules::PerlMinimumVersion>
 is similar, but compares against a Perl version configured in your
 F<~/.perlcriticrc> rather than a version in the document.
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
+
+=head1 COPYRIGHT
+
+Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+
+Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Perl-Critic-Pulp is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

@@ -94,6 +94,8 @@
 ^diff\.tmp
 # inc/MyMakefileExtras.pm "lintian-source"
 ^temp-lintian
+# some of my im module testing
+^tempfile\.png$
 
 
 # my dists

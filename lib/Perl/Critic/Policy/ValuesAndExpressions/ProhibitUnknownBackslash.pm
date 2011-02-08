@@ -26,27 +26,27 @@ use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
 use constant DEBUG => 0;
 
 
-use constant supported_parameters
-  => ({ name           => 'single',
-        description    => 'Checking of single-quote strings.',
-        behavior       => 'string',
-        default_string => 'none',
-      },
-      { name           => 'double',
-        description    => 'Checking of double-quote strings.',
-        behavior       => 'string',
-        default_string => 'all',
-      },
-      { name           => 'heredoc',
-        description    => 'Checking of interpolated here-documents.',
-        behavior       => 'string',
-        default_string => 'all',
-      });
+use constant supported_parameters =>
+  ({ name           => 'single',
+     description    => 'Checking of single-quote strings.',
+     behavior       => 'string',
+     default_string => 'none',
+   },
+   { name           => 'double',
+     description    => 'Checking of double-quote strings.',
+     behavior       => 'string',
+     default_string => 'all',
+   },
+   { name           => 'heredoc',
+     description    => 'Checking of interpolated here-documents.',
+     behavior       => 'string',
+     default_string => 'all',
+   });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp cosmetic);
 
@@ -101,8 +101,8 @@ use constant _KNOWN => (
                         . '@'    # non-interpolation
                        );
 
-use constant _CONTROL_KNOWN
-  => '?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz';
+use constant _CONTROL_KNOWN =>
+  '?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz'; ## no critic (RequireInterpolationOfMetachars)
 
 my $quotelike_re = qr/^(?:(q[qrwx]?)  # $1 "q" if present
                     (?:(?:\s(?:\s*\#[^\n]*\n)*)\s*)?  # possible comments

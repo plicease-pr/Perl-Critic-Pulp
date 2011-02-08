@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 46;
+our $VERSION = 47;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version
@@ -195,8 +195,8 @@ This is slightly preliminary, but works as far as it goes.
 =item C<$pkgelem = Perl::Critic::Pulp::Utils::elem_package ($elem)>
 
 C<$elem> is a C<PPI::Element>.  Return the C<PPI::Statement::Package>
-containing C<$elem>, or undef if C<$elem> is not in the scope of any package
-statement.
+containing C<$elem>, or C<undef> if C<$elem> is not in the scope of any
+package statement.
 
 The search upwards begins with the element preceding C<$elem>, so if
 C<$elem> itself is a C<PPI::Statement::Package> then that's not the one

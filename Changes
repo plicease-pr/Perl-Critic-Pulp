@@ -16,8 +16,13 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 47, February 2011
+    - fix Makefile.PL for perl 5.6
+    - UnexpandedSpecialLiteral allow fat comma after newline
+    - PerlMinimumVersionAndWhy report pragmas too
+
 Version 46, January 2011
-    - new policy RequireNumericVERSION
+    - new policy RequireNumericVersion
 
 Version 45, December 2010
     - oops, tests really fix ProhibitVerbatimMarkup.t

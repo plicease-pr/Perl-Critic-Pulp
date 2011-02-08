@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 37;
+use Test::More tests => 40;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 46;
+my $want_version = 47;
 is ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION, $want_version, 'VERSION class method');
 {
@@ -52,6 +52,16 @@ is (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSIO
   my @h = (%$hash);
   is_deeply (\@h, [ 'Foo__FILE__', 123 ],
              'hash constructor literal on right of a . expression');
+}
+{ my @array = (__PACKAGE__
+               => 123);
+  is_deeply (\@array, [ 'main', 123 ],
+             "fat comma doesn't quote across newline");
+}
+{ my @array = (__PACKAGE__  # and with a comment
+               => 123);
+  is_deeply (\@array, [ 'main', 123 ],
+             "fat comma doesn't quote across comment and newline");
 }
 
 
@@ -94,6 +104,7 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 0, '$hash{__PACKAGE__.""}' ],
 
                   [ 1, '$href = { __PACKAGE__ => 123 }' ],
+                  [ 0, "\$href = { __PACKAGE__ \n => 123 }" ],
                   [ 1, '$href = { __FILE__ => 123 }' ],
                   [ 1, '$href = { __LINE__ => 123 }' ],
                   [ 0, '$href = { SOMETHING => 123 }' ],
