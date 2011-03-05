@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 47;
+our $VERSION = 48;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -172,15 +172,23 @@ The check for markup is unsophisticated.  Any of the POD specified "IE<lt>"
 
 =for ProhibitVerbatimMarkup allow next
 
+    I<       # bad
+    B<       # bad
     C<       # bad
+    L<       # bad
+    E<       # bad
+    F<       # bad
+    S<       # bad
+    X<       # bad
+    Z<       # bad
     J<       # bad
 
 It's possible a C<E<lt>> might be something mathematical like "XE<lt>Y", but
 in practice spaces S<"X E<lt> Y"> or lower case letters are more common and
 are ok.
 
-Sample debugger output is exempted.  Although it won't be common, it's
-unlikely to have meant C<BE<lt>E<gt>> bold.
+Sample debugger output is exempted.  It's uncommon, but also unlikely to
+have meant C<BE<lt>E<gt>> bold.
 
     DB<123> dump b        # ok
 

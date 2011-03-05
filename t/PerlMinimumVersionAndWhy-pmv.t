@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 67;
+plan tests => 76;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 47;
+  my $want_version = 48;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -57,8 +57,28 @@ diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
       "VERSION object check $check_version");
 }
 
+my $have_pulp_bareword_double_colon
+  = exists $Perl::MinimumVersion::CHECKS{_Pulp__bareword_double_colon};
+diag "pulp bareword double colon: ",($have_pulp_bareword_double_colon||0);
+
+my $have_pulp_5010_magic_fix
+  = exists $Perl::MinimumVersion::CHECKS{_Pulp__5010_magic__fix};
+diag "pulp magic fix: ",($have_pulp_5010_magic_fix||0);
+
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
+
+                  # _Pulp__fat_comma_across_newline
+                  [ 0, "return (foo =>\n123)" ],
+                  [ 1, "return (foo\n=>\n123)" ],
+                  [ 1, "return (foo\t\n\t=>\n123)" ],
+                  [ 1, "return (foo # foo\n=>\n123)" ],
+                  [ 1, "return (foo # foo\n\n=>\n123)" ],
+                  [ 1, "return (foo # 'comment'\n \n # 'comment'\n=>\n123)" ],
+                  # method calls
+                  [ 0, "return (Foo->bar => 123" ],
+                  [ 0, "return (Foo->bar \n => 123" ],
+                  [ 0, "return (Foo -> bar \n => 123" ],
 
                   # _Pulp__arrow_coderef_call
                   [ 1, '$coderef->()' ],
@@ -113,9 +133,9 @@ foreach my $data (
                   [ 1, 'use 5.005; exists(&foo)' ],
 
                   # _Pulp__bareword_double_colon
-                  [ 1, 'use 5.004; foo(Foo::Bar::)' ],
+                  [ ($have_pulp_bareword_double_colon ? 1 : 0),
+                    'use 5.004; foo(Foo::Bar::)' ],
                   [ 0, 'use 5.005; foo(Foo::Bar::)' ],
-
 
                   #
                   # pack(), unpack()
@@ -174,8 +194,8 @@ HERE
                   # _Pulp__5010_magic__fix
                   # _Pulp__5010_operators__fix
                   #
-                  [ 1, "1 // 2" ],
-                  [ 1, "use 5.008; 1 // 2" ],
+                  [ ($have_pulp_5010_magic_fix ? 1 : 0), "1 // 2" ],
+                  [ ($have_pulp_5010_magic_fix ? 1 : 0), "use 5.008; 1 // 2" ],
                   [ 0, "use 5.010; 1 // 2" ],
 
                  ) {
@@ -189,8 +209,12 @@ HERE
   }
 
   my @violations = $critic->critique (\$str);
-  foreach (@violations) {
-    diag ($_->description);
+
+  # only the Pulp ones, not any Perl::MinimumVersion itself might gain
+  @violations = grep {$_->description =~ /^_Pulp_/} @violations;
+
+  foreach my $violation (@violations) {
+    diag ('violation: ', $violation->description);
   }
   my $got_count = scalar @violations;
   is ($got_count, $want_count, $name);

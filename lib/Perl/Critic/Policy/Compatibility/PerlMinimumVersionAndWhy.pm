@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 47;
+our $VERSION = 48;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -107,27 +107,37 @@ sub violates {
 #
 
 sub _setup_extra_checks {
-  my $v5004 = version->new('5.004');
-  my $v5006 = version->new('5.006');
-  my $v5005 = version->new('5.005');
-  my $v5008 = version->new('5.008');
-  my $v5010 = version->new('5.010');
 
   # 5.10.0
-  $Perl::MinimumVersion::CHECKS{_Pulp__5010_magic__fix}     = $v5010;
-  $Perl::MinimumVersion::CHECKS{_Pulp__5010_operators__fix} = $v5010;
+  my $v5010 = version->new('5.010');
+  unless (eval { Perl::MinimumVersion->VERSION(1.28); 1 }) {
+    # fixed in 1.28 up
+    $Perl::MinimumVersion::CHECKS{_Pulp__5010_magic__fix}     = $v5010;
+    $Perl::MinimumVersion::CHECKS{_Pulp__5010_operators__fix} = $v5010;
+  }
   $Perl::MinimumVersion::CHECKS{_Pulp__5010_qr_m_propagate_properly} = $v5010;
 
+  # 5.8.0
+  my $v5008 = version->new('5.008');
+  $Perl::MinimumVersion::CHECKS{_Pulp__fat_comma_across_newline} = $v5008;
+
   # 5.6.0
+  my $v5006 = version->new('5.006');
   $Perl::MinimumVersion::CHECKS{_Pulp__exists_subr}       = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__exists_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__delete_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__0b_number}         = $v5006;
 
   # 5.005
-  $Perl::MinimumVersion::CHECKS{_Pulp__bareword_double_colon} = $v5005;
+  my $v5005 = version->new('5.005');
+  unless (exists
+          $Perl::MinimumVersion::CHECKS{_bareword_ends_with_double_colon}) {
+    # adopted into Perl::MinimumVersion 1.28
+    $Perl::MinimumVersion::CHECKS{_Pulp__bareword_double_colon} = $v5005;
+  }
 
   # 5.004
+  my $v5004 = version->new('5.004');
   $Perl::MinimumVersion::CHECKS{_Pulp__special_literal__PACKAGE__} = $v5004;
   $Perl::MinimumVersion::CHECKS{_Pulp__use_version_number}         = $v5004;
   $Perl::MinimumVersion::CHECKS{_Pulp__for_loop_variable_using_my} = $v5004;
@@ -142,8 +152,8 @@ sub _setup_extra_checks {
 }
 
 {
-  # Perl::MinimumVersion as of 1.22 has 'PPI::Token::Operator' and
-  # 'PPI::Token::Magic' swapped between the tests
+  # Perl::MinimumVersion prior to 1.28 had 'PPI::Token::Operator' and
+  # 'PPI::Token::Magic' swapped between the respective operator/magic tests
 
   package Perl::MinimumVersion;
   use vars qw(%MATCHES);
@@ -177,6 +187,57 @@ sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
        ### modifiers: \%modifiers
        return ($modifiers{'m'} ? 1 : 0);
      });
+}
+
+#-----------------------------------------------------------------------------
+# foo \n => fat comma across newline new in 5.8.0
+# extra code in 5.8 toke.c under comment "not a keyword" checking for =>
+#
+
+# =item *
+# 
+# C<word [newline] =E<gt>> fat comma quoting across newline new in Perl 5.8.
+
+
+sub Perl::MinimumVersion::_Pulp__fat_comma_across_newline {
+  my ($pmv) = @_;
+  ### _Pulp__fat_comma_across_newline check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       ### elem: "$elem"
+       if ($elem->isa('PPI::Token::Operator')
+           && $elem->content eq '=>') {
+         my ($prev, $saw_newline) = sprevious_sibling_and_newline($elem);
+         ### prev: "$prev"
+         ### $saw_newline
+         if ($saw_newline
+             && $prev
+             && $prev->isa('PPI::Token::Word')
+             && $prev !~ /^-/   # -foo self-quotes
+             && ! Perl::Critic::Utils::is_method_call($prev)) { # ->foo
+           return 1; # found
+         }
+       }
+       return 0; # continue searching
+     });
+}
+
+sub sprevious_sibling_and_newline {
+  my ($elem) = @_;
+  ### sprevious_sibling_and_newline()
+  my $saw_newline;
+  for (;;) {
+    $elem = $elem->previous_sibling || last;
+    if ($elem->isa('PPI::Token::Whitespace')) {
+      $saw_newline ||= ($elem->content =~ /\n/);
+    } elsif ($elem->isa('PPI::Token::Comment')) {
+      $saw_newline = 1;
+    } else {
+      last;
+    }
+  }
+  return ($elem, $saw_newline);
 }
 
 #-----------------------------------------------------------------------------
@@ -583,6 +644,16 @@ The check names are likely to be a bit of a moving target, especially the
 Pulp additions.  Unknown checks in the list are silently ignored.
 
 =back
+
+=head1 OTHER NOTES
+
+C<use warnings> is reported as a Perl 5.6.0 feature since the
+lexically-scoped fine grain warnings control is new in that version.  If
+targeting earlier versions then it's often enough to make sure your code
+works under S<< C<perl -w> >> and leave it to applications to run C<-w> or
+not.  (C<warnings::compat> offers a C<use warnings> for earlier versions,
+but it's not lexical and globally setting C<$^W> from a module is probably
+not a good idea.)
 
 =head1 SEE ALSO
 

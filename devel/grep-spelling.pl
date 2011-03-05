@@ -1,4 +1,6 @@
-# Copyright 2010, 2011 Kevin Ryde
+#!/usr/bin/perl -w
+
+# Copyright 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -15,10 +17,32 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-package version_check;
 use strict;
 use warnings;
-use base 'Exporter';
-our @EXPORT_OK = ('foo');
-# our $VERSION = '1.100_100';
-our $VERSION = '48';
+use Perl6::Slurp;
+
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
+
+my $verbose = 0;
+
+my $l = MyLocatePerl->new (include_pod => 1);
+my $count = 0;
+while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
+
+  while ($str =~ /\b(then\s+then)\b/sg) {
+    # while ($str =~ /\b(note\s+sure)\b/sg) {
+
+    my $bad = $1;
+    my $pos = $-[1];
+    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+    print "$filename:$line:$col: \"$bad\"\n",
+      MyStuff::line_at_pos($str, $pos);
+    $count++;
+  }
+}
+print "total $count\n";
+
+exit 0;

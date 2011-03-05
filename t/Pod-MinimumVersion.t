@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 50;
+use Test::More tests => 53;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ diag "Pod::Parser version ", Pod::Parser->VERSION;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 47;
+  my $want_version = 48;
   is ($Pod::MinimumVersion::VERSION, $want_version, 'VERSION variable');
   is (Pod::MinimumVersion->VERSION,  $want_version, 'VERSION class method');
   {
@@ -82,6 +82,14 @@ foreach my $data (
                     above_version => '5.006' ],
                   [ 0, "=pod\n\nL<http://www.foo.com/index.html>",
                     above_version => '5.008' ],
+
+                  # links - url and text
+                  # 5.005 for text, 5.012 for url+text
+                  [ 2, "=pod\n\nL<some text|http://www.foo.com/index.html>" ],
+                  [ 1, "=pod\n\nL<some text|http://www.foo.com/index.html>",
+                    above_version => '5.010' ],
+                  [ 0, "=pod\n\nL<some text|http://www.foo.com/index.html>",
+                    above_version => '5.012' ],
 
                   [ 0, "=pos\n\nE<lt>\n" ],
                   [ 0, "=pos\n\nE<gt>\n" ],

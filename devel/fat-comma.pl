@@ -20,9 +20,48 @@
 
 
 use strict;
+use vars '$VERSION';
+$VERSION = 999;
 
 # uncomment this to run the ### lines
-use Smart::Comments;
+use Data::Dumper 'Dumper';
+
+BEGIN {
+  sub mysub () { return 'fufu'; }
+}
+{
+  my %hash = (main
+              ->
+              VERSION
+              =>
+              123,
+
+              mysub
+              +
+              mysub
+              =>
+              123);
+  print Dumper(\%hash);
+  exit 0;
+}
+
+{
+  # use constant CON => 'abc';
+  # use constant CON
+  #   => 'def';
+  print abc();
+  exit 0;
+}
+{
+  my @dash = (-POSIX::DBL_MAX());
+  print Dumper(\@dash);
+  exit 0;
+}
+{
+  my %hash = (andx              => 123);
+  print Dumper(\%hash);
+  exit 0;
+}
 
 {
   my %hash = (__PACKAGE__

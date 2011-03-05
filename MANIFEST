@@ -26,6 +26,7 @@ devel/grep-condsub.pl
 devel/grep-devnull.pl
 devel/grep-each.pl
 devel/grep-exporter.pl
+devel/grep-fat-comma.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
 devel/grep-import-tag.pl
@@ -37,6 +38,7 @@ devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
 devel/grep-shebang-pm.pl
+devel/grep-spelling.pl
 devel/grep-synopsis.pl
 devel/grep-t-print.pl
 devel/grep-use-decimal.pl

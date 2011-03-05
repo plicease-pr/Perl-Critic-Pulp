@@ -27,7 +27,7 @@ use vars qw($VERSION @CHECKS);
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-$VERSION = 47;
+$VERSION = 48;
 
 sub new {
   my ($class, %self) = @_;
@@ -186,7 +186,7 @@ sub analyze {
     # this regexp as recommended by perlpodspec of perl 5.10.0
     if ($command eq 'L' && $arg =~ m/\A\w+:[^:\s]\S*\z/) {
       $self->report ('link_url', $v5008, $seq_obj,
-                     'URL in L<> link');
+                     'L<> link to URL');
     }
   }
 }
@@ -205,6 +205,26 @@ sub analyze {
     my ($self, $command, $text, $para_obj) = @_;
     if ($command eq 'encoding') {
       $self->report ('encoding', $v5010, $para_obj, '=encoding command');
+    }
+  }
+}
+
+#------------------------------------------------------------------------------
+# 5.012
+
+{
+  my $v5012 = version->new('5.012');
+
+  # L<text|url> documented in 5.12.0 where previously explicitly prohibited,
+  # rate it as a 5012 feature
+  #
+  push @CHECKS, [ \&_check_link_url_with_text, 'interior_sequence', $v5012 ];
+  sub _check_link_url_with_text {
+    my ($self, $command, $arg, $seq_obj) = @_;
+    # this regexp adapted from recommendation of perlpodspec from perl 5.10.0
+    if ($command eq 'L' && $arg =~ m/\A.*\|\w+:[^:\s]\S*\z/) {
+      $self->report ('link_url_with_text', $v5012, $seq_obj,
+                     'L<> link with URL and text');
     }
   }
 }

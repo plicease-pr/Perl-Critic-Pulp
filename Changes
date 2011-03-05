@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 48, March 2011
+    - PerlMinimumVersionAndWhy some bits now in Perl::MinimumVersion itself
+
 Version 47, February 2011
     - fix Makefile.PL for perl 5.6
     - UnexpandedSpecialLiteral allow fat comma after newline

@@ -1,4 +1,4 @@
-# Copyright 2009, 2010 Kevin Ryde.
+# Copyright 2009, 2010, 2011 Kevin Ryde.
 
 # This file is part of miscbits-el.
 #
@@ -31,18 +31,23 @@ use MyUniqByMD5;
 
 my $compressed_re = qr/\.gz$/;
 my $suffixes_re = qr/\.(t|pm|pl|PL)($compressed_re)?$/o;
+my $suffixes_re_with_pod = qr/\.(t|pm|pl|PL|pod)($compressed_re)?$/o;
 
 # glob => '/usr/share/perl5/Debconf/FrontEnd/*'
 
 sub new {
-  my $class = shift;
+  my ($class, %options) = @_;
+  my $re = $suffixes_re;
+  if (delete $options{'include_pod'}) {
+    $re = $suffixes_re_with_pod;
+  }
   my $self = $class->SUPER::new (
                                  # globs => ['/bin/*',
                                  #           '/usr/bin/*',
                                  #           '/usr/local/bin/*',
                                  #           '/usr/local/bin2/*'],
-                                 regexp => $suffixes_re,
-                                 @_);
+                                 regexp => $re,
+                                 %options);
   $self->{'uniq_ino'} = MyUniqByInode->new;
   $self->{'uniq_md5'} = MyUniqByMD5->new;
   return $self;
@@ -55,6 +60,10 @@ sub next {
     ### consider: $filename
 
     next if $filename =~ m{/blib/};
+    next if $filename =~ m{/DateTime/TimeZone/};  # data .pm's
+    next if $filename =~ m{/Date/Manip/TZ/};      # data .pm's
+    next if $filename =~ m{/Date/Manip/Offset/};  # data .pm's
+    next if $filename =~ m{/junk.pl};
 
     my $io;
     if ($filename =~ $compressed_re) {
