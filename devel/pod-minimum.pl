@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -28,32 +28,6 @@ use Data::Dumper;
 use Smart::Comments;
 
 my $script_filename = File::Spec->catfile ($FindBin::Bin, $FindBin::Script);
-
-{
-  my $pmv = Pod::MinimumVersion->new
-    (
-     # string => "use 5.010; =encoding\n",
-     string => "=encoding",
-     # string => "=pod\n\nC<< foo >>",
-     # filename => $script_filename,
-     # filehandle => do { require IO::String; IO::String->new("=pod\n\nE<sol> E<verbar>") },
-     #  string => "=pod\n\nL<foo|bar>",
-     one_report_per_version => 1,
-     above_version => '5.005',
-    );
-
-  ### $pmv
-  ### min: $pmv->minimum_version
-  ### $pmv
-
-  my @reports = $pmv->reports;
-  foreach my $report (@reports) {
-    print $report->as_string,"\n";
-    # my $loc = $report->PPI_location;
-    # print Data::Dumper->new ([\$loc],['loc'])->Indent(0)->Dump,"\n";
-  }
-  exit 0;
-}
 
 {
   require Perl::Critic;

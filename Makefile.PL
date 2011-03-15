@@ -57,6 +57,10 @@ MyMakeMakerExtras::WriteMakefile
                  # require 0.24 for various XS bugfixes.
                  'List::MoreUtils' => '0.24', # 0.24 for stack growing, maybe
 
+                 # Could make this optional, but it doesn't drag in anything
+                 # outrageous.
+                 'Pod::MinimumVersion' => 49, # v.49 first separate dist
+
                  # Builtin in recent perl anyway.
                  'List::Util' => 0,
                  'Test::More' => 0,

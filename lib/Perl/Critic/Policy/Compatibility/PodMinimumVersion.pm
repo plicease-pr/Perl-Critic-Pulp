@@ -27,9 +27,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
-use Pod::MinimumVersion;
-
-our $VERSION = 48;
+our $VERSION = 49;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -41,6 +39,13 @@ use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes   => qw(pulp compatibility);
 use constant applies_to       => 'PPI::Document';
 
+
+# but actually Pod::MinimumVersion is a hard dependency at the moment ...
+sub initialize_if_enabled {
+  my ($self, $config) = @_;
+  # when Pod::MinimumVersion is available
+  return (eval { require Pod::MinimumVersion; 1 } || 0);
+}
 
 sub violates {
   my ($self, $document) = @_;
@@ -106,9 +111,9 @@ POD doesn't affect how the code runs, so this policy is low priority, and
 under the "compatibility" theme (see L<Perl::Critic/POLICY THEMES>).
 
 See L<C<Pod::MinimumVersion>|Pod::MinimumVersion> for the POD version checks
-applied.  The key idea is for instance when targeting Perl 5.005 to avoid
-using double-angles S<C<CE<lt>E<lt> E<gt>E<gt>>>, since C<pod2man> in 5.005
-didn't support them.  It's always possible to get newer versions of the POD
+applied.  The key idea is for example when targeting Perl 5.005 to avoid
+double-angles S<C<CE<lt>E<lt> E<gt>E<gt>>>, since C<pod2man> in 5.005 didn't
+support them.  It might be possible to get newer versions of the POD
 translators from CPAN, but whether they run on an older Perl and whether you
 want to require that of users is another matter.
 
@@ -120,12 +125,6 @@ policy from your F<.perlcriticrc> in the usual way,
     [-Compatibility::PodMinimumVersion]
 
 =head2 Other Notes
-
-S<C<JE<lt>E<lt> E<gt>E<gt>>> for L<C<Pod::MultiLang>|Pod::MultiLang> is
-recognised and is allowed for any Perl, including its double-angles.  The
-assumption is that if you're writing that then you'll be crunching it with
-the C<Pod::MultiLang> tools, so it's not important what C<pod2man> thinks of
-it.
 
 The C<Compatibility::RequirePodLinkText> policy asks you to use the
 C<LE<lt>target|displayE<gt>> style always.  That feature is new in Perl
@@ -153,8 +152,10 @@ exceeding any C<use 5.xxx> in the file).
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Pod::MinimumVersion>, L<Perl::Critic>,
-L<Perl::Critic::Policy::Compatibility::RequirePodLinkText>
+L<Perl::Critic::Pulp>, L<Pod::MinimumVersion>, L<Perl::Critic>
+
+L<Perl::Critic::Policy::Compatibility::RequirePodLinkText>,
+L<Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy>
 
 =head1 HOME PAGE
 

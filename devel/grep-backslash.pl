@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -40,11 +40,15 @@ while (my ($filename, $str) = $l->next) {
   # strip comments
   #  $str =~ s/#.*//mg;
 
-  while ($str =~ /(?:^|\G|[^\\])  # current pos or not a \
-                  \\(?:\\\\)*     # odd number of \
-                  # and an unknown
-                  # ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])
-                  \n
+  # while ($str =~ /(?:^|\G|[^\\])  # current pos or not a \
+  #                 \\(?:\\\\)*     # odd number of \
+  #                 # and an unknown
+  #                 # ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])
+  #                 \n
+  #                /sgx) {
+  while ($str =~ /\G\$\w+
+                  (?:::\w+)*
+                  \\(:)
                  /sgx) {
     my $char = $1;
     my $pos = pos($str);

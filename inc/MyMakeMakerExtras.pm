@@ -366,8 +366,8 @@ HERE
               : 'all');
   chomp($arch);
   my $debname = (defined $makemaker->{'EXE_FILES'}
-                 ? '$(DISTNAME)'
-                 : "\Llib$makemaker->{'DISTNAME'}-perl");
+                 ? lc($makemaker->{'DISTNAME'})
+                 : lc("lib$makemaker->{'DISTNAME'}-perl"));
   $post .=
     "DEBNAME = $debname\n"
       . "DPKG_ARCH = $arch\n"
@@ -411,8 +411,9 @@ lintian-source:
 	cd temp-lintian; \
 	cp ../$(DISTVNAME).tar.gz $(DEBNAME)_$(VERSION).orig.tar.gz; \
 	tar xfz $(DEBNAME)_$(VERSION).orig.tar.gz; \
-        echo 'empty-debian-diff' \
-             >$(DISTVNAME)/debian/source.lintian-overrides; \
+# don't seem to need this ...
+#        echo 'empty-debian-diff' \
+#             >$(DISTVNAME)/debian/source.lintian-overrides; \
 	mv -T $(DISTVNAME) $(DEBNAME)-$(VERSION); \
 	dpkg-source -b $(DEBNAME)-$(VERSION) \
 	               $(DEBNAME)_$(VERSION).orig.tar.gz; \

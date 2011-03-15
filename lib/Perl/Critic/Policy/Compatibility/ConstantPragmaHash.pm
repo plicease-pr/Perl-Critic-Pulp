@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 48;
+our $VERSION = 49;
 
 
 use constant supported_parameters => ();

@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 48;
+our $VERSION = 49;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -129,7 +129,7 @@ filename, line number or package name.
     $obj->{__PACKAGE__}->{myextra} = 123;  # bad
 
 In each case you get a string C<"__FILE__">, C<"__LINE__"> or
-C<"__PACKAGE__">, like
+C<"__PACKAGE__">, as if
 
     my $seen = { '__FILE__' => 1 };
     return ('At:__LINE__' => 123);
@@ -172,11 +172,11 @@ would make the intention clearer than C<< => >>.
 
 =head2 Class Data
 
-C<< $obj->{__PACKAGE__} >> can arise when you're trying to hang extra data
-on an object using your package name to hopefully not clash with the
-object's native fields.  An unexpanded C<__PACKAGE__> is a mistake you'll
-probably only make once; after that the irritation of writing extra parens
-or similar will keep it fresh in your mind!
+A bad C<< $obj->{__PACKAGE__} >> can arise when you're trying to hang extra
+data on an object using your package name to hopefully not clash with the
+object's native fields.  Unexpanded C<__PACKAGE__> like that is a mistake
+you'll probably only make once; after that the irritation of writing extra
+parens or similar will keep it fresh in your mind!
 
 As usual there's more than one way to do it when adding extra data to an
 object.  As a crib here are some ways,
@@ -211,8 +211,8 @@ keys.
 =item Inside-Out C<Hash::Util::FieldHash>
 
 Similar to HashRef with object as key and any value you want as the data,
-outside the object, hence the jargon "inside out".  The docs are very heavy
-going (as of version 1.04), especially if you're not into OOP, but it's key
+outside the object, hence the jargon "inside out".  The docs are very hard
+to follow (as of version 1.04), especially if you're not into OOP, but it's
 actually fairly simple.
 
 =item C<Scalar::Footnote>
