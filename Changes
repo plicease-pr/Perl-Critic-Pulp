@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 50, March 2011
+    - fix Compatibility::PodMinimumVersion to use its documented
+      "above_version", as reported by Mark Gardner
+    - fix Perl::Critic::Pulp::Utils parameter_parse_version() to store
+      with __set_parameter_value(), so field "_foo" not "foo"
+
 Version 49, March 2011
     - split out Pod::MinimumVersion
 

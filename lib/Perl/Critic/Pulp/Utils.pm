@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 49;
+our $VERSION = 50;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version
@@ -48,7 +48,7 @@ sub parameter_parse_version {
          'invalid version number string');
     }
   }
-  $self->{$parameter->get_name} = $version;
+  $self->__set_parameter_value ($parameter, $version);
 }
 
 # return a version.pm object, or undef if $str is invalid
@@ -244,12 +244,20 @@ returned, instead its containing package.
 
 =item C<Perl::Critic::Pulp::Utils::parameter_parse_version ($self, $parameter, $str)>
 
-This is designed for use as the C<parser> field of a policy
+This is designed for use as the C<parser> field of a policy's
 C<supported_parameters> entry for a parameter which is a version number.
 
-Parse C<$str> with the C<version.pm> module.  If valid then set
-C<$self->{$paramter->get_name}> to the resulting C<version> object, if not
-then call C<throw_parameter_value_exception>.
+    { name        => 'above_version',
+      description => 'Check only above this version of Perl.',
+      behavior    => 'string',
+      parser      => \&Perl::Critic::Pulp::Utils::parameter_parse_version,
+    }    
+
+C<$str> is parsed with the C<version.pm> module.  If valid then the
+parameter is set with C<$self-E<gt>__set_parameter_value> to the resulting
+C<version> object (so for example field $self->{'_above_version'}).  If
+invalid then an exception is thrown per
+C<$self-E<gt>throw_parameter_value_exception>.
 
 =back
 

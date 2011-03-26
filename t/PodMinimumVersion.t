@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 25;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 49;
+my $want_version = 50;
 is ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,
@@ -47,11 +47,12 @@ require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => '^Perl::Critic::Policy::Compatibility::PodMinimumVersion$');
+my $policy;
 { my @p = $critic->policies;
   is (scalar @p, 1,
       'single policy PodMinimumVersion');
 
-  my $policy = $p[0];
+  $policy = $p[0];
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -59,6 +60,7 @@ my $critic = Perl::Critic->new
       "VERSION object check $check_version");
 }
 
+require version;
 foreach my $data (
                   [ 1, "=pod\n\nC<< foo >>" ],
 
@@ -66,22 +68,40 @@ foreach my $data (
                   [ 0, "=pod\n\nS<C<foo>C<bar>>" ],
                   [ 1, "=pod\n\nL< C<< foo >> >" ],
                   [ 1, "=pod\n\nL<foo|bar>" ],
+
                   [ 1, "use 5.004;\n\n=pod\n\nL<foo|bar>" ],
                   [ 0, "use 5.005;\n\n=pod\n\nL<foo|bar>" ],
+
+                  [ 1, "=pod\n\nL<foo|bar>", version->new('5.004') ],
+                  [ 0, "=pod\n\nL<foo|bar>", version->new('5.005') ],
+
+                  [ 1, "use 5.004;\n\n=pod\n\nL<foo|bar>",
+                    version->new('5.004') ],
+                  [ 0, "use 5.004;\n\n=pod\n\nL<foo|bar>",
+                    version->new('5.005') ],
+                  [ 0, "use 5.005;\n\n=pod\n\nL<foo|bar>",
+                    version->new('5.004') ],
+                  [ 0, "use 5.005;\n\n=pod\n\nL<foo|bar>",
+                    version->new('5.005') ],
 
                   [ 1, "=encoding utf-8" ],
                   [ 1, "=encoding utf-8\n\nuse 5.010;" ],
                   [ 0, "use 5.010;\n\n=encoding utf-8\n" ],
+                  [ 1, "=encoding utf-8\n", version->new('5.8.9') ],
+                  [ 0, "=encoding utf-8\n", version->new('5.10.0') ],
                  ) {
-  my ($want_count, $str) = @$data;
+  my ($want_count, $str, $above_version) = @$data;
   $str = "$str";
+  local $policy->{'_above_version'} = $above_version;
 
   my @violations = $critic->critique (\$str);
   foreach (@violations) {
     diag ($_->description);
   }
   my $got_count = scalar @violations;
-  is ($got_count, $want_count, "str: $str");
+  my $name = "str: $str\nwith above_version "
+    . (defined $above_version ? $above_version : '[undef]');
+  is ($got_count, $want_count, $name);
 }
 
 exit 0;

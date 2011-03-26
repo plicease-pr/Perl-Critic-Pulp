@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 49;
+our $VERSION = 50;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -61,6 +61,7 @@ sub initialize_if_enabled {
 
 sub violates {
   my ($self, $document) = @_;
+  ### $self
 
   my %skip_checks;
   if (defined (my $skip_checks = $self->{_skip_checks})) {
@@ -68,7 +69,7 @@ sub violates {
   }
 
   my $pmv = Perl::MinimumVersion->new ($document);
-  my $config_above_version = $self->{'above_version'};
+  my $config_above_version = $self->{'_above_version'};
   my $explicit_version = $document->highest_explicit_perl_version;
 
   my @violations;
@@ -528,14 +529,16 @@ nasty hacks are used to extract reasons and locations from
 C<Perl::MinimumVersion>.
 
 This policy is under the "compatibility" theme (see L<Perl::Critic/POLICY
-THEMES>).  Its best use is when it picks up things like C<//> or C<qr> only
-available in a newer Perl than you thought to support.
+THEMES>).  Its best use is when it picks up things like C<//> or C<qr> which
+are only available in a newer Perl than you meant to target.
 
-An explicit C<use 5.xxx> in your code can be tedious, but makes it clear
-what you need (or think you need) and it gets a good error message if run on
-an older Perl.  The config below lets you limit how far back you might go.
-Or if you don't care at all about this sort of thing you can always disable
-the policy completely from you F<~/.perlcriticrc> file in the usual way,
+An explicit C<use 5.xxx> can be tedious, but makes it clear what's needed
+(or supposed to be needed) and it gives a good error message if run on an
+older Perl.
+
+The config options below let you limit how far back to go.  Or if you don't
+care at all about this sort of thing you can always disable the policy
+completely from you F<~/.perlcriticrc> file in the usual way,
 
     [-Compatibility::PerlMinimumVersionAndWhy]
 
@@ -548,19 +551,19 @@ Some mangling is applied to what C<Perl::MinimumVersion> normally reports
 
 =item *
 
-Module requirements like C<use Errno> are dropped, since you might get a
-back-port from CPAN etc and the need for a module is better expressed in
-your distribution "prereq".
-
-(The same doesn't normally apply to pragma type modules like C<use warnings>
-since they're normally an interface to a feature new in the Perl version it
-comes with.)
-
-=item *
-
 A multi-constant hash with the L<C<constant>|constant> module is not
 reported, since that's covered better by
 L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>.
+
+=item *
+
+Module requirements like C<use Errno> are dropped, since you might get a
+back-port from CPAN etc and any need for a module is better expressed in a
+distribution "prereq".
+
+The same rationale generally doesn't apply to pragma type modules like C<use
+warnings> since they're normally an interface to a feature new in the Perl
+version it comes with and can't be back-ported.
 
 =back
 
@@ -573,41 +576,41 @@ normally reports.
 
 =item *
 
-C<qr//m> requires Perl 5.10, as the "m" modifier doesn't propagate correctly
-on a C<qr> until then.
+5.10 for C<qr//m>, since the "m" modifier doesn't propagate correctly on a
+C<qr> until then.
 
 =item *
 
-C<exists &subr>, C<exists $array[0]> or C<delete $array[0]> new in Perl
-5.6.
+5.6 new C<exists &subr>, C<exists $array[0]> or C<delete $array[0]>
+support.
 
 =item *
 
-C<0b110011> binary number literals new in Perl 5.6.
+5.6 new C<0b110011> binary number literals.
 
 =item *
 
-C<Foo::Bar::> double-colon package name new in Perl 5.005.
+5.005 new C<Foo::Bar::> double-colon package name.
 
 =item *
 
-C<use 5.005> and similar Perl version check new in Perl 5.004.  For earlier
-Perl it should be C<BEGIN { require 5.003 }> or similar instead.
+5.004 new C<use 5.006> version check in a C<use>.  For earlier Perl it can
+be C<BEGIN { require 5.006 }> etc.
 
 =item *
 
-C<__PACKAGE__> special literal new in Perl 5.004.
+5.004 new C<__PACKAGE__> special literal.
 
 =item *
 
-C<foreach my $foo> lexical loop variable new in Perl 5.004.
+5.004 new C<foreach my $foo> lexical loop variable.
 
 =item *
 
 C<pack> and C<unpack> format strings are checked for various new conversions
-in Perl 5.004 through 5.10.0.  Currently this only works on literal strings
-or here-documents without interpolations, and C<.> operator concats of
-those.
+in Perl 5.004 through 5.10.0.  Currently this only works on formats given as
+literal strings or here-documents, without interpolations, or C<.> operator
+concats of those.
 
 =back
 
@@ -617,9 +620,9 @@ those.
 
 =item C<above_version> (version string, default none)
 
-Set a minimum version of Perl you always use, so reports are only about
-things both higher than this and higher than the document declares.  The
-string is anything L<C<version.pm>|version> understands.  For example,
+Set a minimum version of Perl you always use, so that reports are only about
+things higher than this and higher than the document declares.  The value is
+anything the L<C<version.pm>|version> module understands.
 
     [Compatibility::PerlMinimumVersionAndWhy]
     above_version = 5.006
@@ -641,7 +644,7 @@ compatibility matter only affects limited circumstances which you
 understand.
 
 The check names are likely to be a bit of a moving target, especially the
-Pulp additions.  Unknown checks in the list are silently ignored.
+Pulp additions.  Unknown checks in the list are quietly ignored.
 
 =back
 
@@ -650,10 +653,13 @@ Pulp additions.  Unknown checks in the list are silently ignored.
 C<use warnings> is reported as a Perl 5.6.0 feature since the
 lexically-scoped fine grain warnings control is new in that version.  If
 targeting earlier versions then it's often enough to make sure your code
-works under S<< C<perl -w> >> and leave it to applications to run C<-w> or
-not.  (C<warnings::compat> offers a C<use warnings> for earlier versions,
-but it's not lexical and globally setting C<$^W> from a module is probably
-not a good idea.)
+works under S<< C<perl -w> >> and leave it to applications to use C<-w> (or
+set C<$^W>) or not, as it might desire.
+
+C<warnings::compat> offers a C<use warnings> for earlier versions, but it's
+not lexical, instead setting C<$^W> globally.  Doing that from a module is
+probably not a good idea, but in a script it could be an alternative to
+S<C<#!/usr/bin/perl -w>> (per L<perlrun>).
 
 =head1 SEE ALSO
 

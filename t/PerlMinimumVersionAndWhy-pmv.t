@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 76;
+plan tests => 78;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 49;
+  my $want_version = 50;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -167,6 +167,10 @@ HERE
                   # _Pulp__5010_pack_format
                   [ 1, 'use 5.008; unpack ("i<", $bytes)' ],
                   [ 0, 'use 5.010; unpack ("i<", $bytes)' ],
+                  [ 1, 'unpack ("i<", $bytes)', 
+                    { _above_version => version->new('5.8.0') } ],
+                  [ 0, 'unpack ("i<", $bytes)',
+                    { _above_version => version->new('5.10.0') } ],
 
 
                   # _Pulp__5010_qr_m_working_properly
@@ -200,7 +204,8 @@ HERE
 
                  ) {
   my ($want_count, $str, $options) = @$data;
-  $policy->{'_skip_checks'} = ''; # default
+  $policy->{'_skip_checks'} = '';      # default
+  $policy->{'_above_version'} = undef; # default
 
   my $name = "str: '$str'";
   foreach my $key (keys %$options) {

@@ -27,7 +27,10 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 49;
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+our $VERSION = 50;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -49,11 +52,19 @@ sub initialize_if_enabled {
 
 sub violates {
   my ($self, $document) = @_;
+  ### $self
 
-  my $doc_version = $document->highest_explicit_perl_version;
+  # whichever of highest_explicit_perl_version() or "above_version" is greater
+  my $above_version = $self->{'_above_version'};
+  if (defined (my $doc_version = $document->highest_explicit_perl_version)) {
+    if (! defined $above_version || $doc_version > $above_version) {
+      $above_version = $doc_version;
+    }
+  }
+
   my $str = $document->serialize;
   my $pmv = Pod::MinimumVersion->new (string => $str,
-                                      above_version => $doc_version,
+                                      above_version => $above_version,
                                       one_report_per_version => 1,
                                      );
   my @reports = $pmv->reports;
@@ -105,17 +116,17 @@ Perl version as indicated by C<use 5.008> etc.
 
     =pod
 
-    C<< something >>     # bad, no angles before 5.006
+    C<< something >>    # bad, double angles needs 5.006
 
 POD doesn't affect how the code runs, so this policy is low priority, and
 under the "compatibility" theme (see L<Perl::Critic/POLICY THEMES>).
 
 See L<C<Pod::MinimumVersion>|Pod::MinimumVersion> for the POD version checks
-applied.  The key idea is for example when targeting Perl 5.005 to avoid
-double-angles S<C<CE<lt>E<lt> E<gt>E<gt>>>, since C<pod2man> in 5.005 didn't
-support them.  It might be possible to get newer versions of the POD
-translators from CPAN, but whether they run on an older Perl and whether you
-want to require that of users is another matter.
+applied.  The key idea is for example when targeting Perl 5.005 you avoid
+things like double-angles S<C<CE<lt>E<lt> E<gt>E<gt>>>, since C<pod2man> in
+5.005 didn't support them.  It may be possible to get newer versions of the
+POD translators from CPAN, but whether they run on an older Perl and whether
+you want to require that of users is another matter.
 
 Adding the sort of C<use 5.006> etc to declare a target Perl can be a bit
 tedious.  The config option below lets you set a base version you use.  As
@@ -124,7 +135,7 @@ policy from your F<.perlcriticrc> in the usual way,
 
     [-Compatibility::PodMinimumVersion]
 
-=head2 Other Notes
+=head2 C<RequirePodLinkText> Policy
 
 The C<Compatibility::RequirePodLinkText> policy asks you to use the
 C<LE<lt>target|displayE<gt>> style always.  That feature is new in Perl
@@ -137,9 +148,9 @@ C<LE<lt>target|displayE<gt>> style always.  That feature is new in Perl
 
 =item C<above_version> (version string, default none)
 
-Report only things about Perl versions above this.  The string is any
-version number style L<C<version.pm>|version> understands.  For example if
-you always use Perl 5.6 or higher then set
+Report only things about Perl versions above this.  The string is anything
+the L<C<version.pm>|version> module understands.  For example if you always
+use Perl 5.6 or higher then set
 
     [Compatibility::PodMinimumVersion]
     above_version = 5.006
