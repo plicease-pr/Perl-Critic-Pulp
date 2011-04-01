@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 51, April 2011
+    - depend on Pod::MinimumVersion 50 for fix to =item C<< >> detection
+
 Version 50, March 2011
     - fix Compatibility::PodMinimumVersion to use its documented
       "above_version", as reported by Mark Gardner

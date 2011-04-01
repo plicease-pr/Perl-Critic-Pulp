@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 26;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 50;
+my $want_version = 51;
 is ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,
@@ -62,6 +62,8 @@ my $policy;
 
 require version;
 foreach my $data (
+                  [ 2, "=pod\n\nC<< foo >>\n\n=for something\n", undef ],
+
                   [ 1, "=pod\n\nC<< foo >>" ],
 
                   [ 0, "=pod\n\nC<foo>" ],
@@ -89,8 +91,9 @@ foreach my $data (
                   [ 0, "use 5.010;\n\n=encoding utf-8\n" ],
                   [ 1, "=encoding utf-8\n", version->new('5.8.9') ],
                   [ 0, "=encoding utf-8\n", version->new('5.10.0') ],
+
                  ) {
-  my ($want_count, $str, $above_version) = @$data;
+  my ($want_count, $str, $above_version, $want_minimum_version) = @$data;
   $str = "$str";
   local $policy->{'_above_version'} = $above_version;
 
@@ -102,6 +105,12 @@ foreach my $data (
   my $name = "str: $str\nwith above_version "
     . (defined $above_version ? $above_version : '[undef]');
   is ($got_count, $want_count, $name);
+
+  if (defined $want_minimum_version) {
+    my $v = $violations[0];
+    if (defined $v) { $v = $v->description; } else { $v = ''; }
+    like ($v, /\Q$want_minimum_version/, "want_minimum_version");
+  }
 }
 
 exit 0;

@@ -59,7 +59,7 @@ MyMakeMakerExtras::WriteMakefile
 
                  # Could make this optional, but it doesn't drag in anything
                  # outrageous.
-                 'Pod::MinimumVersion' => 49, # v.49 first separate dist
+                 'Pod::MinimumVersion' => 50, # v.50 fix text in =item etc
 
                  # Builtin in recent perl anyway.
                  'List::Util' => 0,
