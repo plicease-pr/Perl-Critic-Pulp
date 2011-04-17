@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 52, April 2011
+    - new policy ConstantLeadingUnderscore
+    - Perl::Critic::Pulp::Utils new elem_in_BEGIN()
+
 Version 51, April 2011
     - depend on Pod::MinimumVersion 50 for fix to =item C<< >> detection
 
@@ -26,7 +30,7 @@ Version 50, March 2011
       with __set_parameter_value(), so field "_foo" not "foo"
 
 Version 49, March 2011
-    - split out Pod::MinimumVersion
+    - split Pod::MinimumVersion to its own distribution
 
 Version 48, March 2011
     - PerlMinimumVersionAndWhy some bits now in Perl::MinimumVersion itself

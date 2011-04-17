@@ -122,6 +122,9 @@ sub _meta_merge_shared_devel {
   _meta_merge_req_add (_meta_merge_maximum_devel($opts),
                        # the "make unused" target below
                        'warnings::unused' => 0);
+  _meta_merge_req_add (_meta_merge_maximum_devel($opts),
+                       # used a lot
+                       'Smart::Comments' => 0);
   if (-e 'inc/my_pod2html') {
     if (_min_perl_version_lt ($opts, 5.009003)) {
       _meta_merge_req_add (_meta_merge_maximum_devel($opts),
@@ -259,29 +262,51 @@ HERE
     }
   }
 
-  my $podcoverage = '';
-  foreach (@{$my_options{'MyMakeMakerExtras_Pod_Coverage'}}) {
-      my $class = $_;
-    # the "." obscures it from MyExtractUse.pm
-    $podcoverage .= "\t-\$(PERLRUNINST) -e 'use "."Pod::Coverage package=>$class'\n";
-  }
-
   $post .= "LINT_FILES = $lint_files\n"
     . <<'HERE';
 lint:
 	perl -MO=Lint $(LINT_FILES)
+HERE
+
+  # ------ pc: ------
+  $post .= <<'HERE';
 pc:
 HERE
-  # "podchecker -warnings -warnings" too much reporting every < and >
-  $post .= $podcoverage . <<'HERE';
+
+  # ------ pc: podcoverage ------
+  foreach (@{$my_options{'MyMakeMakerExtras_Pod_Coverage'}}) {
+      my $class = $_;
+    # the "." obscures it from MyExtractUse.pm
+    $post .= "\t-\$(PERLRUNINST) -e 'use "."Pod::Coverage package=>$class'\n";
+  }
+
+  # ------ pc: podlinkcheck ------
+  $post .= <<'HERE';
 	-podlinkcheck -I lib `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
+HERE
+
+  # ------ pc: podchecker ------
+  # "podchecker -warnings -warnings" too much reporting every < and >
+  $post .= <<'HERE';
 	-podchecker `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
 	perlcritic $(LINT_FILES)
+HERE
+
+  # ------ cpants_lint ------
+  $post .= <<'HERE';
+kw:
+	make $(DISTVNAME).tar.gz
+	-cpants_lint $(DISTVNAME).tar.gz
+HERE
+
+  # ------ unused ------
+  $post .= <<'HERE';
 unused:
 	for i in $(LINT_FILES); do perl -Mwarnings::unused -I lib -c $$i; done
 
 HERE
 
+  # ------ myman ------
   $post .= <<'HERE';
 myman:
 	-mv MANIFEST MANIFEST.old
@@ -366,6 +391,7 @@ HERE
               : 'all');
   chomp($arch);
   my $debname = (defined $makemaker->{'EXE_FILES'}
+                 && $makemaker->{'EXE_FILES'}->[0] !~ /^gtk2/
                  ? lc($makemaker->{'DISTNAME'})
                  : lc("lib$makemaker->{'DISTNAME'}-perl"));
   $post .=

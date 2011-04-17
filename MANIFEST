@@ -16,13 +16,16 @@ devel/churn.pl
 devel/const-autoload.pl
 devel/const-noproto.pl
 devel/const-post.pl
+devel/constant-underscore.pl
 devel/empty.pl
 devel/fat-comma.pl
 devel/gettext.pl
 devel/grep-arg-unpack.pl
+devel/grep-array-slice-single.pl
 devel/grep-backslash-control.pl
 devel/grep-backslash.pl
 devel/grep-condsub.pl
+devel/grep-constant-underscore.pl
 devel/grep-devnull.pl
 devel/grep-each.pl
 devel/grep-exporter.pl
@@ -30,8 +33,10 @@ devel/grep-fat-comma.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
 devel/grep-import-tag.pl
+devel/grep-links-adjacent.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
+devel/grep-para-dots.pl
 devel/grep-pod-blankline.pl
 devel/grep-pod-gt.pl
 devel/grep-pod-verbatim.pl
@@ -78,6 +83,7 @@ devel/version_check.pm
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireFinalSemicolon.pm
+lib/Perl/Critic/Policy/Compatibility/ConstantLeadingUnderscore.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
 lib/Perl/Critic/Policy/Compatibility/PerlMinimumVersionAndWhy.pm
@@ -109,6 +115,7 @@ MANIFEST.SKIP
 README
 SIGNATURE
 t/ConstantBeforeLt.t
+t/ConstantLeadingUnderscore.t
 t/ConstantPragmaHash.t
 t/Gtk2Constants.t
 t/MyTestHelpers.pm

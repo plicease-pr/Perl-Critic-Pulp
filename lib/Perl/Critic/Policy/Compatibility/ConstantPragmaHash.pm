@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 51;
+our $VERSION = 52;
 
 
 use constant supported_parameters => ();
@@ -46,7 +46,8 @@ sub violates {
   foreach my $inc (@$aref) {
 
     $inc->type eq 'use'
-      || ($inc->type eq 'require' && elem_in_BEGIN($inc))
+      || ($inc->type eq 'require'
+          && Perl::Critic::Pulp::Utils::elem_in_BEGIN($inc))
         || next;
 
     if (my $ver = $inc->version) {
@@ -126,17 +127,6 @@ sub _use_constant_is_multi {
           || $arg->isa('PPI::Structure::Block'));  # with version number
 }
 
-
-# return true if $elem is somewhere within a BEGIN block
-sub elem_in_BEGIN {
-  my ($elem) = @_;
-  while ($elem = $elem->parent) {
-    if ($elem->isa('PPI::Statement::Scheduled')) {
-      return ($elem->type eq 'BEGIN');
-    }
-  }
-  return 0;
-}
 
 1;
 __END__
@@ -228,9 +218,13 @@ F<.perlcriticrc> in the usual way,
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
+L<Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore>,
 L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma>,
 L<Perl::Critic::Policy::Modules::RequirePerlVersion>
+
+L<perlsub/Constant Functions>
 
 =head1 HOME PAGE
 

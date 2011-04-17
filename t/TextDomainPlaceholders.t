@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 51;
+my $want_version = 52;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,
@@ -60,7 +60,7 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                  ) {
   my ($str, $want) = @$data;
 
-  my $got = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::string_any_vars($str) ? 1 : 0;
+  my $got = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::_string_any_vars($str) ? 1 : 0;
   is ($got, $want, "str: \"$str\"");
 }
 

@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 51;
+our $VERSION = 52;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -171,7 +171,9 @@ sub _arg_string {
       my $str = $elem->string;
       if ($elem->isa('PPI::Token::Quote::Double')
           || $elem->isa('PPI::Token::Quote::Interpolate')) {
-        $any_vars ||= string_any_vars ($str);
+        # ENHANCE-ME: use $arg->interpolations() when available also on
+        # PPI::Token::Quote::Interpolate
+        $any_vars ||= _string_any_vars ($str);
       }
       $ret .= $str;
 
@@ -182,7 +184,7 @@ sub _arg_string {
         $any_vars = 1;
       } elsif ($elem !~ /'$/) {
         # explicit "HERE" or default HERE expand vars
-        $any_vars ||= string_any_vars ($str);
+        $any_vars ||= _string_any_vars ($str);
       }
       $ret .= $str;
 
@@ -216,7 +218,7 @@ sub _arg_string {
 
 # $str is the contents of a "" or qq{} string
 # return true if it has any $ or @ interpolation forms
-sub string_any_vars {
+sub _string_any_vars {
   my ($str) = @_;
   return ($str =~ /(^|[^\\])(\\\\)*[\$@]/);
 }

@@ -40,5 +40,5 @@ Depends: perl (>= 5.6), libperl-critic-perl (>= 1.084), libppi-perl (>= 1.208), 
 Recommends: libperl-minimumversion-perl
 Description: Some add-on policies for perlcritic
  This is some further policies for perlcritic, checking for
- miscellaneous bugs, compatibility, efficiency, and cosmetic things.
+ miscellaneous bugs, compatibility, efficiency, and cosmetics.
  See the Perl::Critic::Pulp man page for the full list.

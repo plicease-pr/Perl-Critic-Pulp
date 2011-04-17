@@ -22,7 +22,7 @@ use warnings;
 use Perl::Critic::Pulp::Utils;
 use base 'Pod::Parser';
 
-our $VERSION = 51;
+our $VERSION = 52;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -132,7 +132,10 @@ Perl::Critic::Pulp::PodParser - shared POD parsing code for the Pulp perlcritic 
 
 =head1 DESCRIPTION
 
-This is only meant for internal use just yet.
+This is only meant for internal use yet.
+
+It's some shared parse-from-element, error suppression, no output, violation
+accumulation and violation linenum things for POD parsing in policies.
 
 =head1 SEE ALSO
 

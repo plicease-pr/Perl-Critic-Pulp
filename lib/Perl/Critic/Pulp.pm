@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 51;
+our $VERSION = 52;
 
 1;
 __END__
@@ -89,6 +89,10 @@ Literal use of C<__PACKAGE__> etc.
 =item L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>
 
 Perl version for hash style multi-constants.
+
+=item L<Compatibility::ConstantLeadingUnderscore|Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore>
+
+Perl version for constants with leading underscore.
 
 =item L<Compatibility::Gtk2Constants|Perl::Critic::Policy::Compatibility::Gtk2Constants>
 

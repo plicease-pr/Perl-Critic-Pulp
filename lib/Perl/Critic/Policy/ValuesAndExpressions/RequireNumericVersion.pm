@@ -25,6 +25,9 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils 'precedence_of';
 use Perl::Critic::Pulp::Utils;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
 use constant supported_parameters => ();
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp bugs);
@@ -33,10 +36,11 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 51;
+our $VERSION = 52;
 
 sub violates {
   my ($self, $elem, $document) = @_;
+  ### NumericVersion violates()
 
   ### canonical: $elem->canonical
   $elem->canonical eq '$VERSION' ## no critic (RequireInterpolationOfMetachars)
@@ -51,11 +55,15 @@ sub violates {
   }
 
   my $assign = $elem->snext_sibling || return;
+  ### assign: "$assign"
   $assign eq '=' or return;
 
   my $value = $assign->snext_sibling || return;
-  $value->isa('PPI::Token::Quote')
-    or return; # an expression not a string
+  ### value: "$value"
+  if (! $value->isa('PPI::Token::Quote')) {
+    ### an expression not a string
+    return;
+  }
 
   if (_following_expression ($value)) {
     ### can't check an expression ...
@@ -65,7 +73,7 @@ sub violates {
   my $str = $value->string;
   if ($value->isa ('PPI::Token::Quote::Double')
       || $value->isa ('PPI::Token::Quote::Interpolate')) {
-    # double quote, check only up to an interpolation
+    ### double quote, check only up to an interpolation
     $str =~ s/[\$\@].*//;
   }
 

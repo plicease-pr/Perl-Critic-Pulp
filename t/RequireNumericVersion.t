@@ -20,7 +20,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 25;
 
 use lib 't';
 use MyTestHelpers;
@@ -29,7 +29,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion;
 
 #-----------------------------------------------------------------------------
-my $want_version = 51;
+my $want_version = 52;
 is ($Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion::VERSION,
     $want_version,
     'VERSION variable');
@@ -51,7 +51,7 @@ my $critic = Perl::Critic->new
    '-single-policy' => 'ValuesAndExpressions::RequireNumericVersion');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-     'single policy RequireNumericVersion');
+      'single policy RequireNumericVersion');
 
   my $policy = $p[0];
   is ($policy->VERSION, $want_version, 'VERSION object method');
@@ -63,6 +63,10 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
+                  [ 1, 'package Foo; our $VERSION = qq{1e6}' ],
+                  [ 1, 'package Foo; use 5.008; $VERSION = qq{1e6}' ],
+                  [ 1, 'package Foo; use 5.010; $VERSION = qq{1e6}' ],
 
                   [ 0, 'package Foo; $VERSION = 1' ],
                   [ 0, 'package Foo; $VERSION = 0.123456789' ],
@@ -81,10 +85,6 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 1, 'package Foo; use 5.008; $VERSION = q{1.123.456}' ],
                   [ 0, 'package Foo; use 5.010; $VERSION = q{1.123.456}' ],
 
-                  [ 1, 'package Foo; our $VERSION = qq{1e6}' ],
-                  [ 1, 'package Foo; use 5.008; $VERSION = qq{1e6}' ],
-                  [ 1, 'package Foo; use 5.010; $VERSION = qq{1e6}' ],
-
                   ## use critic
                  ) {
   my ($want_count, $str) = @$data;
@@ -96,5 +96,17 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str");
 }
+
+#-----------------------------------------------------------------------------
+# version.pm
+
+require version;
+my $ret = eval { version->new('1e6') };
+my $err = $@;
+diag "version.pm on 1e6: ", $ret;
+diag "version.pm err: ",$err;
+
+ok (! defined(Perl::Critic::Pulp::Utils::version_if_valid('1e6')),
+    'version.pm rejects 1e6, as claimed in RequireNumericVersion pod');
 
 exit 0;

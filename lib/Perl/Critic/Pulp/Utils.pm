@@ -22,13 +22,14 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 51;
+our $VERSION = 52;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version
                     version_if_valid
                     include_module_version
                     elem_package
+                    elem_in_BEGIN
                     %COMMA);
 
 our %COMMA = (','  => 1,
@@ -169,6 +170,16 @@ sub elem_package {
   }
 }
 
+sub elem_in_BEGIN {
+  my ($elem) = @_;
+  while ($elem = $elem->parent) {
+    if ($elem->isa('PPI::Statement::Scheduled')) {
+      return ($elem->type eq 'BEGIN');
+    }
+  }
+  return 0;
+}
+
 1;
 __END__
 
@@ -184,7 +195,7 @@ Perl::Critic::Pulp::Utils - shared helper code for the Pulp perlcritic add-on
 
 =head1 DESCRIPTION
 
-This is slightly preliminary, but works as far as it goes.
+This is a bit of a grab bag, but works as far as it goes.
 
 =head1 FUNCTIONS
 
@@ -201,6 +212,11 @@ package statement.
 The search upwards begins with the element preceding C<$elem>, so if
 C<$elem> itself is a C<PPI::Statement::Package> then that's not the one
 returned, instead its containing package.
+
+=item C<$bool = Perl::Critic::Pulp::Utils::elem_in_BEGIN ($elem)>
+
+Return true if C<$elem> (a C<PPI::Element>) is within a C<BEGIN> block
+(ie. a C<PPI::Statement::Scheduled> of type "BEGIN").
 
 =cut
 
@@ -263,7 +279,9 @@ C<$self-E<gt>throw_parameter_value_exception>.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
+L<PPI>
 
 =head1 HOME PAGE
 
