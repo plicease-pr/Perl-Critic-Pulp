@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters =>
   ({ name           => 'allow_bin_false',
@@ -123,7 +123,8 @@ its contents.
 =head2 Disabling
 
 If you don't care about this you can always disable C<ProhibitModuleShebang>
-from your F<.perlcriticrc> in the usual way,
+from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Modules::ProhibitModuleShebang]
 

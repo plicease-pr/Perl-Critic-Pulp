@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 
 use constant supported_parameters => ();
@@ -212,7 +212,7 @@ or F<Build.PL> prereqs.
 
 As always if you don't care about this and in particular if you only ever
 use Perl 5.8 anyway then you can disable C<ConstantPragmaHash> from your
-F<.perlcriticrc> in the usual way,
+F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-Compatibility::ConstantPragmaHash]
 

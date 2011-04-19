@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -132,7 +132,8 @@ it like this policy, but as of C<perlcritic> version 1.092 no checks at all
 are applied to SelfLoader sections.
 
 As always if you don't care about C<__END__> you can disable
-C<RequireEndBeforeLastPod> from your F<.perlcriticrc> in the usual way,
+C<RequireEndBeforeLastPod> from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Documentation::RequireEndBeforeLastPod]
 

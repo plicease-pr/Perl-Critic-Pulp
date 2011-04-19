@@ -33,6 +33,7 @@ devel/grep-fat-comma.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
 devel/grep-import-tag.pl
+devel/grep-linked-urls.pl
 devel/grep-links-adjacent.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
@@ -92,6 +93,7 @@ lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
+lib/Perl/Critic/Policy/Documentation/RequireLinkedURLs.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
 lib/Perl/Critic/Policy/Modules/ProhibitModuleShebang.pm
@@ -138,6 +140,7 @@ t/ProhibitVerbatimMarkup.t
 t/Pulp.t
 t/RequireEndBeforeLastPod.t
 t/RequireFinalSemicolon.t
+t/RequireLinkedURLs.t
 t/RequireNumericVersion.t
 t/TextDomainPlaceholders.t
 t/TextDomainUnused.t

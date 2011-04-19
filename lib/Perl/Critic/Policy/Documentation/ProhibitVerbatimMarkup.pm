@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -210,7 +210,8 @@ the annotation must be before the C<__END__>).  An C<=for> has the advantage
 of being immediately before the exception.
 
 As always if you don't care at all about this at all then disable
-C<ProhibitVerbatimMarkup> from your F<.perlcriticrc> in the usual way,
+C<ProhibitVerbatimMarkup> from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Documentation::ProhibitVerbatimMarkup]
 

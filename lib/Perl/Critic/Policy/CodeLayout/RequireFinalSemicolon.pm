@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -292,7 +292,7 @@ maximum clarity.
 =head2 Disabling
 
 If you don't care about this you can always disable from your
-F<.perlcriticrc> file in the usual way,
+F<.perlcriticrc> file in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-CodeLayout::RequireFinalSemicolon]
 

@@ -30,7 +30,7 @@ use Perl::Critic::Utils qw(is_included_module_name
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -246,7 +246,7 @@ If you're confident the modules you use don't play tricks with their
 constants (including only using POSIX on Perl 5.10.0 or higher) then you
 might find ConstantBeforeLt too pessimistic.  It normally triggers rather
 rarely anyway, but you can always disable it altogether in your
-F<.perlcriticrc> file,
+F<.perlcriticrc> file (see L<Perl::Critic/CONFIGURATION>),
 
     [-ValuesAndExpressions::ConstantBeforeLt]
 

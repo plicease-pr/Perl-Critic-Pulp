@@ -30,7 +30,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -131,13 +131,14 @@ you want to require that of users is another matter.
 Adding the sort of C<use 5.006> etc to declare a target Perl can be a bit
 tedious.  The config option below lets you set a base version you use.  As
 always if you don't care at all about this sort of thing you can disable the
-policy from your F<.perlcriticrc> in the usual way,
+policy from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Compatibility::PodMinimumVersion]
 
-=head2 C<RequirePodLinkText> Policy
+=head2 C<RequirePodLinksIncludeText> Policy
 
-The C<Compatibility::RequirePodLinkText> policy asks you to use the
+The C<Documentation::RequirePodLinksIncludeText> policy asks you to use the
 C<LE<lt>target|displayE<gt>> style always.  That feature is new in Perl
 5.005 and will be reported by C<PodMinimumVersion> unless you've got C<use
 5.005> or higher or set C<above_version> below.
@@ -165,8 +166,9 @@ exceeding any C<use 5.xxx> in the file).
 
 L<Perl::Critic::Pulp>, L<Pod::MinimumVersion>, L<Perl::Critic>
 
-L<Perl::Critic::Policy::Compatibility::RequirePodLinkText>,
-L<Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy>
+L<Perl::Critic::Policy::Documentation::RequirePodLinksIncludeText>,
+L<Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy>,
+L<Perl::Critic::Policy::Modules::PerlMinimumVersion>
 
 =head1 HOME PAGE
 

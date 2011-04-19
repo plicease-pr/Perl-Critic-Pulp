@@ -28,7 +28,7 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant DEBUG => 0;
 use constant _ALLOWED_CALL_COUNT => 15;
@@ -304,7 +304,8 @@ explicit imports.
 =head2 Disabling
 
 If you don't care this sort of thing you can always disable
-C<ProhibitPOSIXimport> from your F<.perlcriticrc> in the usual way,
+C<ProhibitPOSIXimport> from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Modules::ProhibitPOSIXimport]
 

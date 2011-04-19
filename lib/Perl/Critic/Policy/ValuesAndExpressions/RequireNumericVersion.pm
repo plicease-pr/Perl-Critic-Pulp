@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -246,7 +246,7 @@ anyway.
 =head2 Disabling
 
 If you don't care about this policy at all then you can disable from your
-F<.perlcriticrc> in the usual way,
+F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-ValuesAndExpressions::RequireNumericVersion]
 

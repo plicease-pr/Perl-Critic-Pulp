@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -125,7 +125,7 @@ C<lexgrog> recognises.
 
 If want markup in the NAME line, perhaps if printed output is more important
 than C<apropos>, then you can always disable from your F<.perlcriticrc> in
-the usual way,
+the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-Documentation::ProhibitBadAproposMarkup]
 

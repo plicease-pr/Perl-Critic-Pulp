@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -94,7 +94,7 @@ L<Perl::Critic/POLICY THEMES>) on the basis that even if you're on a Unix
 system now you never know where your code might travel in the future.
 
 C<devnull> is new in C<File::Spec> version 0.8, so you should require that
-version.  That version is included in Perl 5.6.0 and up.
+version (it's included in Perl 5.6.0 and up).
 
 The checks for F</dev/null> are unsophisticated.  A violation is reported
 for any string C</dev/null>, possibly with an C<open> style mode part, or a
@@ -117,12 +117,16 @@ backticks and C<system>.
     system ('rmdir /foo/bar >/dev/null 2>&1');     # ok
     $hi = `echo hi </dev/null`;                    # ok
 
-Whether F</dev/null> is a good idea in commands depends what sort of shell
-you reach and how much of Unix it might emulate on a non-Unix system.
+Whether F</dev/null> is a good idea in such command strings depends what
+sort of shell you reach and how much of Unix it might emulate on a non-Unix
+system.
+
+=head2 Disabling
 
 If you only ever use a system with F</dev/null>, or if everything else you
 write is hopelessly wedded to Unix anyway, then you can disable
-C<ProhibitUnixDevNull> from your F<.perlcriticrc> in the usual way,
+C<ProhibitUnixDevNull> from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Compatibility::ProhibitUnixDevNull]
 

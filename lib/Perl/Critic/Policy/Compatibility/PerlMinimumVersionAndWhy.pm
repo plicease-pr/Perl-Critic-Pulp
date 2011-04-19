@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -538,7 +538,8 @@ older Perl.
 
 The config options below let you limit how far back to go.  Or if you don't
 care at all about this sort of thing you can always disable the policy
-completely from you F<~/.perlcriticrc> file in the usual way,
+completely from your F<~/.perlcriticrc> file in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Compatibility::PerlMinimumVersionAndWhy]
 
@@ -663,11 +664,14 @@ S<C<#!/usr/bin/perl -w>> (per L<perlrun>).
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>
 
-L<C<Perl::Critic::Policy::Modules::PerlMinimumVersion>|Perl::Critic::Policy::Modules::PerlMinimumVersion>
-is similar, but compares against a Perl version configured in your
-F<~/.perlcriticrc> rather than a version in the document.
+L<Perl::Critic::Policy::Modules::PerlMinimumVersion> which is similar, but
+compares against a Perl version configured in your F<~/.perlcriticrc> rather
+than a version in the document.
+
+L<Perl::Critic::Policy::Modules::RequirePerlVersion>
 
 =head1 HOME PAGE
 

@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -117,7 +117,7 @@ anyway.
 
 If you're confident about the C<import()> in modules you use and prefer the
 string form you can always disable C<ProhibitUseQuotedVersion> from your
-F<.perlcriticrc> in the usual way,
+F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-Modules::ProhibitUseQuotedVersion]
 

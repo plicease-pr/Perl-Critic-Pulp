@@ -27,7 +27,7 @@ use version;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -236,7 +236,8 @@ F<Makefile.PL> or F<Build.PL> prereqs.
 
 As always if you don't care about this and in particular if you only ever
 use Perl 5.6 anyway then you can disable C<ConstantLeadingUnderscore> from
-your F<.perlcriticrc> in the usual way,
+your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Compatibility::ConstantLeadingUnderscore]
 

@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -141,7 +141,7 @@ generally wanted instead of C<-f>), but in Perl it is.
 A blanket prohibition like this policy is harsh, but is meant as a building
 block or at least to make you think carefully whether C<-f> is really right.
 As always though you can disable C<ProhibitFiletest_f> from your
-F<.perlcriticrc> in the usual way,
+F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-ValuesAndExpressions::ProhibitFiletest_f]
 

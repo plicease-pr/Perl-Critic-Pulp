@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 1;
 __END__
@@ -171,6 +171,10 @@ Avoid CE<lt>E<gt> in NAME section, bad for man's "apropos" output.
 =item L<Documentation::ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>
 
 Verbatim paragraphs not expanding CE<lt>E<gt> markup etc.
+
+=item L<Documentation::RequireLinkedURLs|Perl::Critic::Policy::Documentation::RequireLinkedURLs>
+
+Use C<LE<lt>E<gt>> markup on URLs.
 
 =back
 

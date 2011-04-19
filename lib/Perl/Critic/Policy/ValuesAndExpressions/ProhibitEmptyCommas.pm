@@ -24,7 +24,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 
 use constant supported_parameters => ();
@@ -128,7 +128,7 @@ to mandate them!).
 
 If you use multiple commas in some systematic way for code layout you can
 always disable C<ProhibitEmptyCommas> from your F<.perlcriticrc> file in the
-usual way,
+usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-ValuesAndExpressions::ProhibitEmptyCommas]
 

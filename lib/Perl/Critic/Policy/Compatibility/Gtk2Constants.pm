@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -268,7 +268,8 @@ You're probably best off rounding up to a "stable" one like 1.200 or 1.220.
 
 As always if you don't care about this and in particular if for instance you
 only ever use Gtk2 1.220 or higher anyway then you can disable
-C<Gtk2Constants> from your F<.perlcriticrc> in the usual way,
+C<Gtk2Constants> from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-Compatibility::Gtk2Constants]
 

@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 52;
+our $VERSION = 53;
 
 use constant DEBUG => 0;
 
@@ -449,7 +449,8 @@ a string?>).
     print "this ${\(some()+thing())}";   # ok
 
 As always, if you're not interested in any of this then you can disable
-C<ProhibitUnknownBackslash> from your F<.perlcriticrc> in the usual way,
+C<ProhibitUnknownBackslash> from your F<.perlcriticrc> in the usual way (see
+L<Perl::Critic/CONFIGURATION>),
 
     [-ValuesAndExpressions::ProhibitUnknownBackslash]
 
