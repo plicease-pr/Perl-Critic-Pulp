@@ -28,7 +28,7 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 53;
+our $VERSION = 54;
 
 use constant DEBUG => 0;
 use constant _ALLOWED_CALL_COUNT => 15;

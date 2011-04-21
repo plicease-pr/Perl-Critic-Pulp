@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 78;
+plan tests => 100;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 53;
+  my $want_version = 54;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -67,6 +67,38 @@ diag "pulp magic fix: ",($have_pulp_5010_magic_fix||0);
 
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
+
+                  # _Pulp__delete_array_elem
+                  [ 1, 'use 5.005; delete $x[0]' ],
+                  [ 0, 'use 5.006; delete $x[0]' ],
+                  [ 1, 'use 5.005; delete($x[1])' ],
+                  [ 0, 'use 5.005; delete $x[0]',
+                    { _skip_checks => '_Pulp__delete_array_elem'} ],
+                  #
+                  [ 1, 'delete $x[0][1]' ],
+                  [ 1, 'delete($x[0][1])' ],
+                  [ 1, 'delete((((($x[0][1])))))' ],
+                  [ 1, 'delete(($x[0][1]))' ],
+                  [ 0, 'delete $x[0]{key}' ],
+                  [ 0, 'delete($x[0]{key})' ],
+                  [ 0, 'delete $x[0]->{key}' ],
+                  [ 1, 'delete $x[0]->{key}->[123]' ],
+                  [ 1, 'delete $x[0]->{key}[123]' ],
+                  [ 1, 'delete $x[0]{key}->[123]' ],
+                  [ 1, 'delete $x[0]{key}[123]' ],
+                  [ 1, 'delete($x[0]{key}[123])' ],
+
+                  # _Pulp__my_list_with_undef
+                  [ 1, 'my (undef, $y)' ],
+                  [ 1, 'my (undef, $y) = @_' ],
+                  [ 0, 'my ($x)' ],
+                  [ 0, 'my ($x, $y)' ],
+                  [ 1, 'my ($x, ($y, undef), $z) = @_' ],
+                  [ 1, 'my ($x, ($y, (undef, $w)), $z) = @_' ],
+                  [ 1, 'my ((((((undef))))))' ],
+                  [ 1, 'my (undef' ],
+                  [ 1, 'my ((((((undef' ],
+                  [ 0, 'use 5.005; my (undef, $y)' ],
 
                   # _Pulp__fat_comma_across_newline
                   [ 0, "return (foo =>\n123)" ],
@@ -113,13 +145,6 @@ foreach my $data (
                   [ 0, 'require 5.003; my %hash = (__PACKAGE__ => 1);' ],
                   [ 1, 'require 5.003; my %hash = (__PACKAGE__,   1);' ],
                   [ 0, 'require 5.003; my $elem = $hash{__PACKAGE__};' ],
-
-                  # _Pulp__delete_array_elem
-                  [ 1, 'use 5.005; delete $x[0]' ],
-                  [ 0, 'use 5.006; delete $x[0]' ],
-                  [ 1, 'use 5.005; delete($x[1])' ],
-                  [ 0, 'use 5.005; delete $x[0]',
-                    { _skip_checks => '_Pulp__delete_array_elem'} ],
 
                   # _Pulp__exists_array_elem
                   [ 1, 'use 5.005; exists $x[0]' ],

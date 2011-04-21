@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 53;
+our $VERSION = 54;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -61,7 +61,6 @@ sub initialize_if_enabled {
 
 sub violates {
   my ($self, $document) = @_;
-  ### $self
 
   my %skip_checks;
   if (defined (my $skip_checks = $self->{_skip_checks})) {
@@ -136,6 +135,7 @@ sub _setup_extra_checks {
     # adopted into Perl::MinimumVersion 1.28
     $Perl::MinimumVersion::CHECKS{_Pulp__bareword_double_colon} = $v5005;
   }
+  $Perl::MinimumVersion::CHECKS{_Pulp__my_list_with_undef} = $v5005;
 
   # 5.004
   my $v5004 = version->new('5.004');
@@ -195,11 +195,6 @@ sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
 # extra code in 5.8 toke.c under comment "not a keyword" checking for =>
 #
 
-# =item *
-# 
-# C<word [newline] =E<gt>> fat comma quoting across newline new in Perl 5.8.
-
-
 sub Perl::MinimumVersion::_Pulp__fat_comma_across_newline {
   my ($pmv) = @_;
   ### _Pulp__fat_comma_across_newline check
@@ -256,21 +251,64 @@ sub Perl::MinimumVersion::_Pulp__delete_array_elem {
   ### _Pulp__delete_array_elem check
   return _exists_or_delete_array_elem ($pmv, 'delete');
 }
+#use Smart::Comments;
 sub _exists_or_delete_array_elem {
   my ($pmv, $which) = @_;
+  ### _exists_or_delete_array_elem()
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
        if ($elem->isa('PPI::Token::Word')
            && $elem eq $which
            && Perl::Critic::Utils::is_function_call($elem)
-           && ($elem = _symbol_or_list_symbol($elem->snext_sibling))
-           && $elem->symbol_type eq '@') {
+           && _arg_is_array_elem($elem->snext_sibling)) {
          return 1;
        } else {
          return 0;
        }
      });
+}
+sub _arg_is_array_elem {
+  my ($elem) = @_;
+  ### _arg_is_array_elem: "$elem"
+
+  (($elem = _descend_through_lists($elem))
+   && $elem->isa('PPI::Token::Symbol')
+   && $elem->raw_type eq '$'
+   && ($elem = $elem->snext_sibling))
+    or return 0;
+
+  my $ret = 0;
+  for (;;) {
+    if ($elem->isa('PPI::Structure::Subscript')) {
+      # adjacent $x{key}[123]
+      $ret = ($elem->start eq '[');
+    } elsif ($elem->isa('PPI::Structure::List')) {
+      # $x[0]->() function call
+      return 0;
+    } elsif ($elem->isa('PPI::Token::Operator')
+             && $elem eq '->') {
+      # subscript ->, continue
+    } else {
+      # anything else below -> precedence, stop
+      last;
+    }
+    $elem = $elem->snext_sibling || last;
+  }
+  ### $ret
+  return $ret;
+}
+#no Smart::Comments;
+
+sub _descend_through_lists {
+  my ($elem) = @_;
+  while ($elem
+         && ($elem->isa('PPI::Structure::List')
+        || $elem->isa('PPI::Statement::Expression')
+             || $elem->isa('PPI::Statement'))) {
+    $elem = $elem->schild(0);
+  }
+  return $elem;
 }
 
 # exists(&subr) new in 5.6.0
@@ -327,6 +365,68 @@ sub Perl::MinimumVersion::_Pulp__bareword_double_colon {
        }
      });
 }
+
+# my ($x, undef, $y), undef in a my() list new in 5.005
+# usually something like my (undef, $x) = @values
+#
+sub Perl::MinimumVersion::_Pulp__my_list_with_undef {
+  my ($pmv) = @_;
+  ### _Pulp__my_list_with_undef check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $elem eq 'my'
+           && _list_contains_undef ($elem->snext_sibling)) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+# $elem is a PPI::Element or false
+# return true if it's a list and there's an 'undef' element in the list
+#
+#     PPI::Structure::List    ( ... )
+#       PPI::Statement::Expression
+#         PPI::Token::Symbol   '$x'
+#         PPI::Token::Operator         ','
+#         PPI::Token::Word     'undef'
+#         PPI::Token::Operator         ','
+#         PPI::Token::Symbol   '$y'
+#
+# Or for multi-parens: my ((undef)) with PPI::Statement in the middle
+#
+#     PPI::Structure::List    ( ... )
+#       PPI::Statement
+#         PPI::Structure::List        ( ... )
+#           PPI::Statement::Expression
+#            PPI::Token::Word         'undef'
+#
+sub _list_contains_undef {
+  my ($elem) = @_;
+  ### _list_contains_undef: "$elem"
+  $elem or return;
+  $elem->isa('PPI::Structure::List') or return;
+  my @search = ($elem);
+  while (@search) {
+    $elem = pop @search;
+    ### elem: "$elem"
+    if ($elem->isa('PPI::Structure::List')
+        || $elem->isa('PPI::Statement::Expression')
+        || $elem->isa('PPI::Statement')) {
+      push @search, $elem->schildren;
+    } elsif ($elem->isa('PPI::Token::Word')
+             && $elem eq 'undef') {
+      return 1;
+    }
+  }
+}
+
+
+#-----------------------------------------------------------------------------
+# pack() / unpack()
 
 sub Perl::MinimumVersion::_Pulp__pack_format_5004 {
   my ($pmv) = @_;
@@ -465,9 +565,12 @@ sub Perl::MinimumVersion::_Pulp__arrow_coderef_call {
      });
 }
 
-# 5.004 new sysseek()
+# 5.004 new sysseek() function
 #
-# prototype() is newly documented in 5.004 but existed earlier, or something
+# Crib note: the prototype() function is newly documented in 5.004 but
+# existed earlier, or something.  Might have returned a trailing "\0" in
+# 5.003.
+#
 sub Perl::MinimumVersion::_Pulp__sysseek_builtin {
   my ($pmv) = @_;
   ### _Pulp__sysseek_builtin
@@ -562,9 +665,9 @@ Module requirements like C<use Errno> are dropped, since you might get a
 back-port from CPAN etc and any need for a module is better expressed in a
 distribution "prereq".
 
-The same rationale generally doesn't apply to pragma type modules like C<use
-warnings> since they're normally an interface to a feature new in the Perl
-version it comes with and can't be back-ported.
+The same rationale doesn't apply to pragma modules like C<use warnings>
+since they're normally an interface to a feature new in the Perl version it
+comes with and can't be back-ported.
 
 =back
 
@@ -575,43 +678,93 @@ normally reports.
 
 =over 4
 
+=item 5.10
+
+=over
+
 =item *
 
-5.10 for C<qr//m>, since the "m" modifier doesn't propagate correctly on a
-C<qr> until then.
+C<qr//m>, since the "m" modifier doesn't propagate correctly on a C<qr>
+until 5.10
+
+=back
+
+=item 5.8
+
+=over
 
 =item *
 
-5.6 new C<exists &subr>, C<exists $array[0]> or C<delete $array[0]>
+new C<word [newline] =E<gt>> fat comma quoting across a newline.
+
+For earlier Perl C<word> ended up a function call.  It's presumed such code
+is meant to quote in the 5.8 style, and thus requires 5.8 or higher.
+
+=back
+
+=item 5.6
+
+=over
+
+=item *
+
+new C<exists &subr>, C<exists $array[0]> or C<delete $array[0]>
 support.
 
 =item *
 
-5.6 new C<0b110011> binary number literals.
+new C<0b110011> binary number literals.
+
+=back
+
+=item 5.005
+
+=over
 
 =item *
 
-5.005 new C<Foo::Bar::> double-colon package name.
+new C<Foo::Bar::> double-colon package name
 
 =item *
 
-5.004 new C<use 5.006> version check in a C<use>.  For earlier Perl it can
-be C<BEGIN { require 5.006 }> etc.
+new C<my ($x, undef, $y) = @values> using C<undef> as a dummy in a
+C<my> list
+
+=back
+
+=item 5.004
+
+=over
 
 =item *
 
-5.004 new C<__PACKAGE__> special literal.
+new C<use 5.000> Perl version check through C<use>.  For earlier Perl it can
+be C<BEGIN { require 5.000 }> etc
 
 =item *
 
-5.004 new C<foreach my $foo> lexical loop variable.
+new C<__PACKAGE__> special literal
 
 =item *
 
-C<pack> and C<unpack> format strings are checked for various new conversions
-in Perl 5.004 through 5.10.0.  Currently this only works on formats given as
-literal strings or here-documents, without interpolations, or C<.> operator
-concats of those.
+new C<foreach my $foo> lexical loop variable
+
+=item *
+
+new C<$coderef-E<gt>()> call with C<-E<gt>>
+
+=item *
+
+new C<sysseek> builtin function
+
+=back
+
+=item 5.004 through 5.10.0
+
+C<pack> and C<unpack> format strings are checked for various new
+conversions.  Currently this only works on formats given as literal strings
+or here-documents, without interpolations, or C<.> operator concats of
+those.
 
 =back
 
@@ -651,23 +804,23 @@ Pulp additions.  Unknown checks in the list are quietly ignored.
 
 =head1 OTHER NOTES
 
-C<use warnings> is reported as a Perl 5.6.0 feature since the
-lexically-scoped fine grain warnings control is new in that version.  If
-targeting earlier versions then it's often enough to make sure your code
-works under S<< C<perl -w> >> and leave it to applications to use C<-w> (or
-set C<$^W>) or not, as it might desire.
+C<use warnings> is reported as a Perl 5.6 feature since its lexically-scoped
+fine grain warnings control is new in that version.  If targeting earlier
+versions then it's often enough to drop C<use warnings>, make sure your code
+runs cleanly under S<< C<perl -w> >>, and leave it to applications to use
+C<-w> (or set C<$^W>) or not, as they might desire.
 
-C<warnings::compat> offers a C<use warnings> for earlier versions, but it's
-not lexical, instead setting C<$^W> globally.  Doing that from a module is
+C<warnings::compat> offers a C<use warnings> for earlier Perl, but it's not
+lexical, instead setting C<$^W> globally.  Doing that from a module is
 probably not a good idea, but in a script it could be an alternative to
-S<C<#!/usr/bin/perl -w>> (per L<perlrun>).
+S<C<#!/usr/bin/perl -w>> (as per L<perlrun>).
 
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>,
 L<Perl::Critic>
 
-L<Perl::Critic::Policy::Modules::PerlMinimumVersion> which is similar, but
+L<Perl::Critic::Policy::Modules::PerlMinimumVersion>, which is similar, but
 compares against a Perl version configured in your F<~/.perlcriticrc> rather
 than a version in the document.
 

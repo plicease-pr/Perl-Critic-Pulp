@@ -16,11 +16,18 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 54, April 2011
+    - PerlMinimumVersionAndWhy
+        - new check 5.005 for "my (undef,$x)",
+        - fix for "delete $array[0]{'key'}" is hash not array
+        - document 5.8 for "=>" across newline
+        - document 5.004 for "$coderef->()" call and "sysseek()" func
+
 Version 53, April 2011
-    - new policy RequireLinkedURLs
+    - new policy Documentation::RequireLinkedURLs
 
 Version 52, April 2011
-    - new policy ConstantLeadingUnderscore
+    - new policy Compatibility::ConstantLeadingUnderscore
     - Perl::Critic::Pulp::Utils new elem_in_BEGIN()
 
 Version 51, April 2011
@@ -44,7 +51,7 @@ Version 47, February 2011
     - PerlMinimumVersionAndWhy report pragmas too
 
 Version 46, January 2011
-    - new policy RequireNumericVersion
+    - new policy ValuesAndExpressions::RequireNumericVersion
 
 Version 45, December 2010
     - oops, tests really fix ProhibitVerbatimMarkup.t
@@ -64,15 +71,15 @@ Version 41, July 2010
     - TextDomainPlaceholders allow literal number for __xn() count
 
 Version 40, July 2010
-    - new policy ProhibitModuleShebang
+    - new policy Modules::ProhibitModuleShebang
 
 Version 39, July 2010
     - PerlMinimumVersionAndWhy add
 	- 0b110011 binary literals new in 5.006
-    - new policy ProhibitVerbatimMarkup
+    - new policy Documentation::ProhibitVerbatimMarkup
 
 Version 38, June 2010
-    - new policy RequireFinalSemicolon
+    - new policy CodeLayout::RequireFinalSemicolon
 
 Version 37, May 2010
     - tests don't try wide chars in PPI input string, doesn't work in
@@ -89,7 +96,7 @@ Version 35, April 2010
 	- "use VERSION" or "use MODULE VERSION" new in 5.004
 
 Version 34, April 2010
-    - new policy ProhibitBarewordDoubleColon
+    - new policy ValuesAndExpressions::ProhibitBarewordDoubleColon
     - PerlMinimumVersionAndWhy new option skip_checks
 
 Version 33, April 2010
@@ -111,25 +118,25 @@ Version 29, January 2010
     - fix dependency, P::C 1.084 for highest_explicit_perl_version()
 
 Version 28, January 2010
-    - new policy ProhibitUnixDevNull
+    - new policy Compatibility::ProhibitUnixDevNull
 
 Version 27, December 2009
     - ProhibitUnknownBackslash also \c control chars
 
 Version 26, December 2009
-    - new policy ProhibitUnknownBackslash
+    - new policy ValuesAndExpressions::ProhibitUnknownBackslash
 
 Version 25, December 2009
-    - new policy ProhibitFiletest_f
+    - new policy ValuesAndExpressions::ProhibitFiletest_f
 
 Version 24, December 2009
-    - new policy ProhibitBadAproposMarkup
+    - new policy Documentation::ProhibitBadAproposMarkup
 
 Version 23, November 2009
     - PodMinimumVersion 5.004 for =for, =begin, =end
 
 Version 22, September 2009
-    - new policy ProhibitPOSIXimport
+    - new policy Modules::ProhibitPOSIXimport
     - TextDomainPlaceholders -- allow non-ascii keys
 
 Version 21, August 2009
@@ -141,10 +148,11 @@ Version 20, August 2009
     - ProhibitNullStatements -- workaround incompatible changes in PPI 1.205
 
 Version 19, June 2009
-    - new policies PerlMinimumVersionAndWhy and PodMinimumVersion
+    - new policy Compatibility::PerlMinimumVersionAndWhy
+    - new policy Compatibility::PodMinimumVersion
 
 Version 18, June 2009
-    - new policy Gtk2Constants
+    - new policy Compatibility::Gtk2Constants
     - TextDomainPlaceholders -- check __px() and __npx(), and try to
       notice a missing count arg in __nx(), __xn() and __npx()
 
@@ -153,10 +161,10 @@ Version 17, May 2009
       1.17, as advised by Guido Flohr
 
 Version 16, April 2009
-    - new policy ProhibitUseQuotedVersion
+    - new policy Modules::ProhibitUseQuotedVersion
 
 Version 15, March 2009
-    - new policy TextDomainUnused
+    - new policy Miscellanea::TextDomainUnused
 
 Version 14, January 2009
     - ConstantPragmaHash -- fix for document with no includes at all
@@ -165,16 +173,16 @@ Version 13, January 2009
     - ConstantPragmaHash -- fix location reported
 
 Version 12, January 2009
-    - new policy ConstantPragmaHash
+    - new policy Compatibility::ConstantPragmaHash
 
 Version 11, December 2008
     - oops, in the tests PPI 1.203 doesn't like an empty document
 
 Version 10, December 2008
-    - new policy RequireEndBeforeLastPod
+    - new policy Documentation::RequireEndBeforeLastPod
 
 Version 9, December 2008
-    - new policy ProhibitEmptyCommas
+    - new policy ValuesAndExpressions::ProhibitEmptyCommas
 
 Version 8, October 2008
     - UnexpandedSpecialLiteral -- rename from LiteralSpecialLiteral,
@@ -184,10 +192,10 @@ Version 7, August 2008
     - new policy LiteralSpecialLiteral
 
 Version 6, August 2008
-    - new policy TextDomainPlaceholders
+    - new policy Miscellanea::TextDomainPlaceholders
 
 Version 5, July 2008
-    - new policy NotWithCompare
+    - new policy ValuesAndExpressions::NotWithCompare
 
 Version 4, July 2008
     - another go at the CPAN indexing

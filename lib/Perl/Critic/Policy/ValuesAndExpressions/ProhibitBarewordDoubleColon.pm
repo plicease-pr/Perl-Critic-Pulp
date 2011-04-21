@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 53;
+our $VERSION = 54;
 
 use constant supported_parameters =>
   ({ name           => 'allow_indirect_syntax',
