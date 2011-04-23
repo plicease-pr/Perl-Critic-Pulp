@@ -33,7 +33,7 @@ require Perl::Critic;
 diag "Perl::Critic version ", Perl::Critic->VERSION;
 
 #------------------------------------------------------------------------------
-my $want_version = 54;
+my $want_version = 55;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,

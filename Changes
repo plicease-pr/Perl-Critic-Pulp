@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 55, April 2011
+    - PerlMinimumVersionAndWhy add 5.8 pack() "[123]" brackets
+
 Version 54, April 2011
     - PerlMinimumVersionAndWhy
         - new check 5.005 for "my (undef,$x)",
@@ -208,4 +211,4 @@ Version 2, July 2008
     - ConstantBeforeLt -- depends on prototyping, not perl version
 
 Version 1, June 2008
-    - the first version
+    - the first version, with ConstantBeforeLt and ProhibitNullStatements

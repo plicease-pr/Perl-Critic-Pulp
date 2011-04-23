@@ -21,9 +21,9 @@
 # just make the build tools drag in more stuff.
 #
 # "Depends:" has "libversion-perl" for older perl or "perl (>= 5.10)"
-# for builtin version.pm, the same as the Depends in
+# for builtin version.pm, the same as the "Depends:" in
 # libperl-critic-perl itself.  Put libversion-perl first in the hope
-# it makes "apt" inclined to download that rather than upgrade perl.
+# it makes "apt" inclined to download that one rather than upgrade perl.
 
 Source: libperl-critic-pulp-perl
 Section: perl
@@ -39,6 +39,6 @@ Architecture: all
 Depends: perl (>= 5.6), libperl-critic-perl (>= 1.084), libppi-perl (>= 1.208), pod-minimumversion (>= 50), libversion-perl | perl (>= 5.10), libio-string-perl (>= 1.02), liblist-moreutils-perl, libscalar-list-utils-perl | perl-modules (>= 5.8), ${perl:Depends}, ${misc:Depends}
 Recommends: libperl-minimumversion-perl
 Description: Some add-on policies for perlcritic
- This is some further policies for perlcritic, checking for
+ This is about 25 further policies for perlcritic, checking for
  miscellaneous bugs, compatibility, efficiency, and cosmetics.
  See the Perl::Critic::Pulp man page for the full list.

@@ -75,6 +75,7 @@ devel/PosixUser.pm
 devel/ppi-wide.pl
 devel/qrm.pl
 devel/regexp-balanced.pl
+devel/regexp-string.pl
 devel/TestAutoload.pm
 devel/unknown-backslash.pl
 devel/use-quoted.pl

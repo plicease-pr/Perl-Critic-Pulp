@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 54;
+our $VERSION = 55;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -450,7 +450,8 @@ sub Perl::MinimumVersion::_Pulp__pack_format_5008 {
   # j - IV
   # J - UV
   # ( - group
-  return _pack_format ($pmv, qr/[FDjJ(]/);
+  # [ - in a repeat count like "L[20]"
+  return _pack_format ($pmv, qr/[FDjJ([]/);
 }
 sub Perl::MinimumVersion::_Pulp__pack_format_5010 {
   my ($pmv) = @_;
@@ -458,6 +459,7 @@ sub Perl::MinimumVersion::_Pulp__pack_format_5010 {
   # > - big endian
   return _pack_format ($pmv, qr/[<>]/);
 }
+# Think nothing new in 5012 ...
 
 my %pack_func = (pack => 1, unpack => 1);
 sub _pack_format {
@@ -687,6 +689,10 @@ normally reports.
 C<qr//m>, since the "m" modifier doesn't propagate correctly on a C<qr>
 until 5.10
 
+=item *
+
+C<pack()> C<E<lt>> and C<E<gt>> endianness.
+
 =back
 
 =item 5.8
@@ -699,6 +705,11 @@ new C<word [newline] =E<gt>> fat comma quoting across a newline.
 
 For earlier Perl C<word> ended up a function call.  It's presumed such code
 is meant to quote in the 5.8 style, and thus requires 5.8 or higher.
+
+=item *
+
+C<pack()> C<F> native NV, C<D> long double, C<i> IV, C<j> UV, C<()> group,
+C<[]> repeat count
 
 =back
 
@@ -714,6 +725,11 @@ support.
 =item *
 
 new C<0b110011> binary number literals.
+
+=item *
+
+C<pack()> C<Z> asciz, C<q>,C<Q> quads, C<!> native size, C</> counted
+string, C<#> comment
 
 =back
 
@@ -757,16 +773,17 @@ new C<$coderef-E<gt>()> call with C<-E<gt>>
 
 new C<sysseek> builtin function
 
-=back
+=item *
 
-=item 5.004 through 5.10.0
-
-C<pack> and C<unpack> format strings are checked for various new
-conversions.  Currently this only works on formats given as literal strings
-or here-documents, without interpolations, or C<.> operator concats of
-those.
+C<pack()> C<w> BER integer
 
 =back
+
+=back
+
+C<pack()> and C<unpack()> format strings are only checked if they're literal
+strings or here-documents without interpolations, or C<.> operator concats
+of those.
 
 =head1 CONFIGURATION
 

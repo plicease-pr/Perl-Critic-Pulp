@@ -20,14 +20,14 @@ use warnings;
 use List::Util;
 
 use base 'Perl::Critic::Policy';
-use Perl::Critic::Utils;
+use Perl::Critic::Utils 0.21;  # version 0.21 for shebang_line()
 use Perl::Critic::Pulp;
 use Perl::Critic::Pulp::Utils;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 54;
+our $VERSION = 55;
 
 use constant supported_parameters =>
   ({ name           => 'allow_bin_false',
@@ -38,6 +38,9 @@ use constant supported_parameters =>
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes   => ('pulp', 'cosmetic');
 use constant applies_to       => 'PPI::Document';
+
+# only ever gives one violation
+use constant default_maximum_violations_per_document => 1;
 
 sub prepare_to_scan_document {
   my ($self, $document) = @_;
@@ -50,7 +53,7 @@ sub violates {
   my ($self, $elem, $document) = @_;
   ### ProhibitModuleShebang elem: $elem->content
 
-  my $shebang = _document_shebang_line($document)
+  my $shebang = Perl::Critic::Utils::shebang_line($document)
     || return;  # no #! at all
 
   if ($self->{'_allow_bin_false'}) {
@@ -61,22 +64,6 @@ sub violates {
   return $self->violation ('Don\'t use #! in a module file',
                            '',
                            $document);
-}
-
-# $document is a PPI::Document
-# return a "#!..." line at the start of it, or undef if no such line
-#
-sub _document_shebang_line {
-  my ($document) = @_;
-
-  if (my $elem = $document->child(0)) {
-    if ($elem->isa('PPI::Token::Comment')) {
-      if ($elem->content =~ /^(#![^\n]*)/) {
-        return $1
-      }
-    }
-  }
-  return undef;
 }
 
 1;

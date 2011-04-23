@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 100;
+plan tests => 102;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 54;
+  my $want_version = 55;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -188,6 +188,8 @@ HERE
                   # _Pulp__5008_pack_format
                   [ 1, 'use 5.006; pack ("F", 1.5)' ],
                   [ 0, 'use 5.008; pack ("F", 1.5)' ],
+                  [ 1, 'use 5.006; pack ("L[20]", 1.5)' ],
+                  [ 0, 'use 5.008; pack ("L[20]", 1.5)' ],
 
                   # _Pulp__5010_pack_format
                   [ 1, 'use 5.008; unpack ("i<", $bytes)' ],

@@ -23,12 +23,15 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 54;
+our $VERSION = 55;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
 use constant default_themes       => qw(pulp cosmetic);
 use constant applies_to           => 'PPI::Document';
+
+# only ever gives one violation
+use constant default_maximum_violations_per_document => 1;
 
 sub violates {
   my ($self, $elem, $document) = @_;
