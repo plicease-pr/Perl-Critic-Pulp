@@ -41,17 +41,44 @@ exit 0;
 
 package MyParser;
 use base 'Perl::Critic::Pulp::PodParser';
+my %command_non_text = (for   => 1,
+                        begin => 1,
+                        end   => 1,
+                        cut   => 1);
+sub command_as_textblock {
+  my ($self, $command, $text, $linenum, $paraobj) = @_;
+  ### command: $command
+  unless ($command_non_text{$command}) {
+    $self->textblock ($text, $linenum, $paraobj);
+  }
+  return '';
+}
+sub command {
+  my $self = shift;
+  $self->command_as_textblock (@_);
+}
+*command = \&command_as_textblock;
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
-  # if ($text =~ /[^.]\.\.\s*$/sg) {
-  #   print "$filename:$linenum: end with dots\n";
-  #   $count++;
-  # }
-  # $[. is ok
-  # :-(. sad face
-  # !. not too bad
-  if ($text =~ /[,;\\!?({[<]\.\s*$/sg) {
+
+  # Pod::ParseLink for display part of L<>
+
+  # ,.  probably wrong
+  # ;.  doubtful, but maybe some code or :-;. smiley
+  # ;.  doubtful, but maybe some code
+  #
+  if ($text =~ /[^.]\.\.\s*$/sg) {
     print "$filename:$linenum: end with dots\n";
     $count++;
   }
+
+  # $[. is ok
+  # :-(. sad face
+  # !. not too bad
+  # 
+  #
+  # if ($text =~ /[,;\\!?({[<]\.\s*$/sg) {
+  #   print "$filename:$linenum: end with dots\n";
+  #   $count++;
+  # }
 }

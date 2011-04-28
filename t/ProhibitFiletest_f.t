@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f->VERSION,
@@ -76,9 +76,11 @@ is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f->VERSION,
 
     foreach my $str ($str, $str . ';') {
       my @violations = $critic->critique (\$str);
-      foreach my $violation (@violations) {
-        diag $violation->description;
-      }
+
+      # foreach my $violation (@violations) {
+      #   diag $violation->description;
+      # }
+
       my $got_count = scalar @violations;
       require Data::Dumper;
       my $testname = Data::Dumper->new([$str],['str'])->Useqq(1)->Dump;

@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION,
@@ -87,9 +87,11 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
   my ($want_count, $str) = @$data;
 
   my @violations = $critic->critique (\$str);
-  foreach (@violations) {
-    diag ($_->description);
-  }
+
+  # foreach (@violations) {
+  #   diag ($_->description);
+  # }
+
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str");
 }

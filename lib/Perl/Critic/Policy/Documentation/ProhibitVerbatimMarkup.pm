@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -40,13 +40,13 @@ sub violates {
   my ($self, $elem, $document) = @_;
   ### ProhibitVerbatimMarkup on: $elem->content
 
-  my $parser = Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::Parser->new
+  my $parser = Perl::Critic::PodParser::ProhibitVerbatimMarkup->new
     (policy => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
 
-package Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::Parser;
+package Perl::Critic::PodParser::ProhibitVerbatimMarkup;
 use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
@@ -207,7 +207,7 @@ often in documentation for modules which themselves operate on POD markup.
 The usual C<## no critic (ProhibitVerbatimMarkup)> works too, though if the
 POD is after an C<__END__> token then C<Perl::Critic> 1.112 is required (and
 the annotation must be before the C<__END__>).  An C<=for> has the advantage
-of being immediately before the exception.
+of being with the exception.
 
 As always if you don't care at all about this at all then disable
 C<ProhibitVerbatimMarkup> from your F<.perlcriticrc> in the usual way (see

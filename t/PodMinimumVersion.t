@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::PodMinimumVersion;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Policy::Compatibility::PodMinimumVersion::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::PodMinimumVersion->VERSION,
@@ -98,9 +98,11 @@ foreach my $data (
   local $policy->{'_above_version'} = $above_version;
 
   my @violations = $critic->critique (\$str);
-  foreach (@violations) {
-    diag ($_->description);
-  }
+
+  # foreach (@violations) {
+  #   diag ($_->description);
+  # }
+
   my $got_count = scalar @violations;
   my $name = "str: $str\nwith above_version "
     . (defined $above_version ? $above_version : '[undef]');

@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 56, April 2011
+    - new policy Documentation::ProhibitAdjacentLinks
+    - PerlMinimumVersionAndWhy new 5.6 syswrite() length optional
+
 Version 55, April 2011
     - PerlMinimumVersionAndWhy add 5.8 pack() "[123]" brackets
 

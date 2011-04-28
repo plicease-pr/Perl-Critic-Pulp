@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -127,6 +127,7 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_Pulp__exists_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__delete_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__0b_number}         = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__syswrite_length_optional} = $v5006;
 
   # 5.005
   my $v5005 = version->new('5.005');
@@ -340,6 +341,26 @@ sub Perl::MinimumVersion::_Pulp__0b_number {
     (sub {
        my ($document, $elem) = @_;
        if ($elem->isa('PPI::Token::Number::Binary')) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+# syswrite($fh,$str) length optional in 5.6.0
+#
+sub Perl::MinimumVersion::_Pulp__syswrite_length_optional {
+  my ($pmv) = @_;
+  ### _Pulp__syswrite_length_optional check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       my @args;
+       if ($elem->isa('PPI::Token::Word')
+           && $elem eq 'syswrite'
+           && Perl::Critic::Utils::is_function_call($elem)
+           && (@args = Perl::Critic::Utils::parse_arg_list($elem)) == 2) {
          return 1;
        } else {
          return 0;
@@ -651,7 +672,7 @@ L<Perl::Critic/CONFIGURATION>),
 =head2 MinimumVersion Mangling
 
 Some mangling is applied to what C<Perl::MinimumVersion> normally reports
-(as of its version 1.20).
+(as of its version 1.28).
 
 =over 4
 
@@ -667,35 +688,34 @@ Module requirements like C<use Errno> are dropped, since you might get a
 back-port from CPAN etc and any need for a module is better expressed in a
 distribution "prereq".
 
-The same rationale doesn't apply to pragma modules like C<use warnings>
-since they're normally an interface to a feature new in the Perl version it
-comes with and can't be back-ported.
+But pragma modules like C<use warnings> are still reported.  They're
+normally an interface to a feature new in the Perl version it comes with and
+can't be back-ported.  (See L</OTHER NOTES> below too.)
 
 =back
 
 =head2 MinimumVersion Extras
 
-The following extra checks are added to what C<Perl::MinimumVersion>
-normally reports.
+The following extra checks are added to C<Perl::MinimumVersion>.
 
 =over 4
 
-=item 5.10
+=item 5.10 for
 
 =over
 
 =item *
 
-C<qr//m>, since the "m" modifier doesn't propagate correctly on a C<qr>
-until 5.10
+C<qr//m>, since "m" modifier doesn't propagate correctly on a C<qr> until
+5.10
 
 =item *
 
-C<pack()> C<E<lt>> and C<E<gt>> endianness.
+C<pack()> new C<E<lt>> and C<E<gt>> endianness
 
 =back
 
-=item 5.8
+=item 5.8 for
 
 =over
 
@@ -708,19 +728,18 @@ is meant to quote in the 5.8 style, and thus requires 5.8 or higher.
 
 =item *
 
-C<pack()> C<F> native NV, C<D> long double, C<i> IV, C<j> UV, C<()> group,
-C<[]> repeat count
+C<pack()> new C<F> native NV, C<D> long double, C<i> IV, C<j> UV, C<()>
+group, C<[]> repeat count
 
 =back
 
-=item 5.6
+=item 5.6 for
 
 =over
 
 =item *
 
-new C<exists &subr>, C<exists $array[0]> or C<delete $array[0]>
-support.
+new C<exists &subr>, C<exists $array[0]> and C<delete $array[0]> support.
 
 =item *
 
@@ -728,33 +747,37 @@ new C<0b110011> binary number literals.
 
 =item *
 
-C<pack()> C<Z> asciz, C<q>,C<Q> quads, C<!> native size, C</> counted
+C<syswrite()> length parameter optional.
+
+=item *
+
+C<pack()> new C<Z> asciz, C<q>,C<Q> quads, C<!> native size, C</> counted
 string, C<#> comment
 
 =back
 
-=item 5.005
+=item 5.005 for
 
 =over
 
 =item *
 
-new C<Foo::Bar::> double-colon package name
+new C<Foo::Bar::> double-colon package name quoting
 
 =item *
 
-new C<my ($x, undef, $y) = @values> using C<undef> as a dummy in a
-C<my> list
+new C<my ($x, undef, $y) = @values>, using C<undef> as a dummy in a C<my>
+list
 
 =back
 
-=item 5.004
+=item 5.004 for
 
 =over
 
 =item *
 
-new C<use 5.000> Perl version check through C<use>.  For earlier Perl it can
+new C<use 5.xxx> Perl version check through C<use>.  For earlier Perl it can
 be C<BEGIN { require 5.000 }> etc
 
 =item *
@@ -775,7 +798,7 @@ new C<sysseek> builtin function
 
 =item *
 
-C<pack()> C<w> BER integer
+C<pack()> new C<w> BER integer
 
 =back
 
@@ -830,7 +853,7 @@ C<-w> (or set C<$^W>) or not, as they might desire.
 C<warnings::compat> offers a C<use warnings> for earlier Perl, but it's not
 lexical, instead setting C<$^W> globally.  Doing that from a module is
 probably not a good idea, but in a script it could be an alternative to
-S<C<#!/usr/bin/perl -w>> (as per L<perlrun>).
+S<C<#!/usr/bin/perl -w>> (per L<perlrun>).
 
 =head1 SEE ALSO
 

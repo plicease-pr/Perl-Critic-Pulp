@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 1;
 __END__
@@ -175,6 +175,10 @@ Verbatim paragraphs not expanding CE<lt>E<gt> markup etc.
 =item L<Documentation::RequireLinkedURLs|Perl::Critic::Policy::Documentation::RequireLinkedURLs>
 
 Use C<LE<lt>E<gt>> markup on URLs.
+
+=item L<Documentation::ProhibitAdjacentLinks|Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>
+
+Put commas or some text in between adjacent C<LE<lt>E<gt>> links.
 
 =back
 

@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 55;
+  my $want_version = 56;
   is ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION,
       $want_version, 'VERSION variable');
   is (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,
@@ -58,7 +58,7 @@ SKIP: {
     or skip 'no Critic object created', 1;
 
   my @policies = $critic->policies;
-  diag "got policy count ", scalar(@policies);
+  ### got policy count: scalar(@policies)
   is (scalar(@policies), 1, '1 policy');
 }
 

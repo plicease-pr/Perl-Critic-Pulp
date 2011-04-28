@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 102;
+plan tests => 114;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 55;
+  my $want_version = 56;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -157,6 +157,23 @@ foreach my $data (
                   [ 0, 'use 5.006; exists &foo' ],
                   [ 1, 'use 5.005; exists(&foo)' ],
 
+                  # _Pulp__0b_number
+                  [ 1, 'use 5.005; 0b01101101' ],
+                  [ 0, 'use 5.006; 0b01101101' ],
+
+                  # _Pulp__syswrite_length_optional
+                  [ 1, 'use 5.005; syswrite($fh,$str)' ],
+                  [ 0, 'use 5.006; syswrite($fh,$str)' ],
+                  [ 0, 'use 5.005; syswrite($fh,$str,$length)' ],
+                  [ 0, 'use 5.006; syswrite($fh,$str,$length)' ],
+                  [ 0, 'use 5.005; syswrite($fh,$str,$length,$offset)' ],
+                  [ 0, 'use 5.006; syswrite($fh,$str,$length,$offset)' ],
+                  [ 0, 'use 5.005; syswrite()' ],  # bogus, but unreported
+                  [ 0, 'use 5.006; syswrite()' ],
+                  [ 0, 'use 5.005; syswrite($fh)' ], # bogus, but unreported
+                  [ 0, 'use 5.006; syswrite($fh)' ],
+
+
                   # _Pulp__bareword_double_colon
                   [ ($have_pulp_bareword_double_colon ? 1 : 0),
                     'use 5.004; foo(Foo::Bar::)' ],
@@ -245,9 +262,10 @@ HERE
   # only the Pulp ones, not any Perl::MinimumVersion itself might gain
   @violations = grep {$_->description =~ /^_Pulp_/} @violations;
 
-  foreach my $violation (@violations) {
-    diag ('violation: ', $violation->description);
-  }
+  # foreach my $violation (@violations) {
+  #   diag ('violation: ', $violation->description);
+  # }
+
   my $got_count = scalar @violations;
   is ($got_count, $want_count, $name);
 }

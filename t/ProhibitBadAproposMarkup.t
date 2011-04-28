@@ -29,11 +29,8 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
 
-require Perl::Critic;
-diag "Perl::Critic version ", Perl::Critic->VERSION;
-
 #------------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -45,8 +42,11 @@ is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
 }
 
 #------------------------------------------------------------------------------
+
 require Perl::Critic;
-diag "Perl::Critic version ",Perl::Critic->VERSION;
+diag "Perl::Critic version ", Perl::Critic->VERSION;
+
+
 my $critic = Perl::Critic->new
   ('-profile' => '',
    '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup$');
@@ -101,9 +101,11 @@ foreach my $data (
     }
 
     my @violations = $critic->critique (\$str);
-    foreach (@violations) {
-      diag "violation: ",$_->description;
-    }
+
+    # foreach (@violations) {
+    #   diag "violation: ",$_->description;
+    # }
+
     my $got_count = scalar @violations;
     is ($got_count, $want_count, "str: '$str'");
   }

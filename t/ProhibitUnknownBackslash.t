@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -280,9 +280,11 @@ HERE
 
     foreach my $str ($str, $str . ';') {
       my @violations = $critic->critique (\$str);
-      foreach my $violation (@violations) {
-        diag $violation->description;
-      }
+
+      # foreach my $violation (@violations) {
+      #   diag $violation->description;
+      # }
+
       my $got_count = scalar @violations;
       require Data::Dumper;
       my $testname = 'default: '
@@ -318,9 +320,11 @@ HERE
       diag "str printable: ", Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_printable($str);
 
       my @violations = $critic->critique (\$str);
-      foreach my $violation (@violations) {
-        diag $violation->description;
-      }
+
+      # foreach my $violation (@violations) {
+      #   diag $violation->description;
+      # }
+
       my $got_count = scalar @violations;
       require Data::Dumper;
       my $testname = 'quotemeta: '
@@ -381,9 +385,11 @@ HERE
 
     foreach my $str ($str, $str . ';') {
       my @violations = $critic->critique (\$str);
-      foreach my $violation (@violations) {
-        diag $violation->description;
-      }
+
+      # foreach my $violation (@violations) {
+      #   diag $violation->description;
+      # }
+
       my $got_count = scalar @violations;
       require Data::Dumper;
       my $testname = 'single: '

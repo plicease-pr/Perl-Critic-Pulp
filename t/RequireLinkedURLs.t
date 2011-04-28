@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Policy::Documentation::RequireLinkedURLs::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireLinkedURLs->VERSION,
@@ -126,10 +126,12 @@ foreach my $data (
     }
 
     my @violations = $critic->critique (\$str);
-    foreach (@violations) {
-      diag ("violation: ", $_->description,
-            "\nline_number=", $_->line_number);
-    }
+
+    # foreach (@violations) {
+    #   diag ("violation: ", $_->description,
+    #         "\nline_number=", $_->line_number);
+    # }
+
     my $got_count = scalar @violations;
     is ($got_count, $want_count, "str: '$str'");
   }

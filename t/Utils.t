@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Pulp::Utils;
 
 #-----------------------------------------------------------------------------
-my $want_version = 55;
+my $want_version = 56;
 is ($Perl::Critic::Pulp::Utils::VERSION,$want_version, 'VERSION variable');
 is (Perl::Critic::Pulp::Utils->VERSION, $want_version, 'VERSION class method');
 {
@@ -170,7 +170,7 @@ foreach my $data ([ 'use foo',   undef ],
                 || die "oops, no target statement in '$str'");
     my $inc = $incs->[0] or die "oops, no Include element";
     my $elem = Perl::Critic::Pulp::Utils::include_module_first_arg ($inc);
-    diag "elem class ",ref($elem);
+    #### elem class: ref($elem)
     is ($elem ? "$elem" : undef, $want, "str: $str");
   }
 }

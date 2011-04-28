@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 
 use constant supported_parameters =>

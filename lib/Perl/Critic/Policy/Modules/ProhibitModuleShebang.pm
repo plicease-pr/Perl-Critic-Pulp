@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 use constant supported_parameters =>
   ({ name           => 'allow_bin_false',
@@ -42,16 +42,13 @@ use constant applies_to       => 'PPI::Document';
 # only ever gives one violation
 use constant default_maximum_violations_per_document => 1;
 
-sub prepare_to_scan_document {
-  my ($self, $document) = @_;
-  my $filename = $document->filename;
-  return (defined $filename
-          && $filename =~ /\.pm$/);   # only .pm files
-}
-
 sub violates {
   my ($self, $elem, $document) = @_;
   ### ProhibitModuleShebang elem: $elem->content
+
+  my $filename = $document->filename;
+  (defined $filename && $filename =~ /\.pm$/)
+    or return;  # only .pm files are modules
 
   my $shebang = Perl::Critic::Utils::shebang_line($document)
     || return;  # no #! at all
@@ -103,9 +100,9 @@ anywhere later is allowed, for example in code which generates other code,
     ...
 
 This policy applies only to F<.pm> files.  Anything else, such as C<.pl> or
-C<.t> scripts can have C<#!>, or not, in the usual way.  The F<.pm> filename
-is used because it's hard to distinguish a module from a script just from
-its contents.
+C<.t> scripts can have C<#!>, or not, in the usual way.  Modules are
+identified by the F<.pm> filename because it's hard to distinguish a module
+from a script just by the content.
 
 =head2 Disabling
 

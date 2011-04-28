@@ -91,6 +91,7 @@ lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
 lib/Perl/Critic/Policy/Compatibility/PerlMinimumVersionAndWhy.pm
 lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
 lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitAdjacentLinks.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
@@ -126,6 +127,7 @@ t/NotWithCompare.t
 t/PerlMinimumVersionAndWhy-pmv.t
 t/PerlMinimumVersionAndWhy.t
 t/PodMinimumVersion.t
+t/ProhibitAdjacentLinks.t
 t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
 t/ProhibitEmptyCommas.t
@@ -148,6 +150,7 @@ t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t
 t/Utils.t
 xt/0-META-read.t
+xt/0-no-debug-left-on.t
 xt/0-Test-ConsistentVersion.t
 xt/0-Test-DistManifest.t
 xt/0-Test-Pod.t

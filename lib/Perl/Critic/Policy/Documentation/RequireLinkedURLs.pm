@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# perlcritic -s RequireLinkedURLs RequireLinkedURLs.pm
-# perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
-# perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
-
 package Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 use 5.006;
 use strict;
@@ -31,7 +26,11 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 55;
+# perlcritic -s RequireLinkedURLs RequireLinkedURLs.pm
+# perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
+# perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
+
+our $VERSION = 56;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -52,13 +51,13 @@ sub violates {
     return;
   }
 
-  my $parser = Perl::Critic::Policy::Documentation::RequireLinkedURLs::Parser->new
+  my $parser = Perl::Critic::Pulp::PodParser::RequireLinkedURLs->new
     (policy => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
 
-package Perl::Critic::Policy::Documentation::RequireLinkedURLs::Parser;
+package Perl::Critic::Pulp::PodParser::RequireLinkedURLs;
 use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
@@ -67,14 +66,20 @@ my %command_non_text = (for   => 1,
                         begin => 1,
                         end   => 1,
                         cut   => 1);
-sub command {
+sub command_as_textblock {
   my ($self, $command, $text, $linenum, $paraobj) = @_;
   ### command: $command
   unless ($command_non_text{$command}) {
     $self->textblock ($text, $linenum, $paraobj);
+    # or padded to make the column number right ?
+    # $self->textblock ((' ' x (length($command)+1)) . $text,
+    #                   $linenum,
+    #                   $paraobj);
   }
   return '';
 }
+*command = \&command_as_textblock;
+# *command = \&Perl::Critic::Pulp::PodParser::command_as_textblock;
 
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;

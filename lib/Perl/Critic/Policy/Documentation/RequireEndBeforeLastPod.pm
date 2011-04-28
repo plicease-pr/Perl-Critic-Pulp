@@ -23,10 +23,10 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 use constant supported_parameters => ();
-use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes       => qw(pulp cosmetic);
 use constant applies_to           => 'PPI::Document';
 

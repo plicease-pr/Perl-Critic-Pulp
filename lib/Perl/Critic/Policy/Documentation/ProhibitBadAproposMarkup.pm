@@ -26,22 +26,22 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 55;
+our $VERSION = 56;
 
 use constant supported_parameters => ();
-use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes       => qw(pulp cosmetic);
 use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  my $parser = Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::Parser->new
+  my $parser = Perl::Critic::Pulp::PodParser::ProhibitBadAproposMarkup->new
     (policy => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
 
-package Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::Parser;
+package Perl::Critic::Pulp::PodParser::ProhibitBadAproposMarkup;
 use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
@@ -113,7 +113,7 @@ lines from C<apropos> like
     foo - like the *(C`bar*(C' program
 
 Man's actual formatted output is fine, and the desired text is in there,
-just surrounded by *(C bits.  On that basis this policy is lowest priority
+just surrounded by "*(C" bits.  On that basis this policy is low priority
 and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The NAME section is everything from "=head1 NAME" to the next "=head1".
