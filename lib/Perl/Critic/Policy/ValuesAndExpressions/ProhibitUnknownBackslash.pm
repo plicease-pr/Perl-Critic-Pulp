@@ -26,7 +26,10 @@ use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
 
-our $VERSION = 56;
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+our $VERSION = 57;
 
 use constant DEBUG => 0;
 
@@ -115,6 +118,11 @@ my $quotelike_re = qr/^(?:(q[qrwx]?)  # $1 "q" if present
 # extra explanation for double-quote interpolations
 my %explain = ('%' => '  (hashes are not interpolated)',
                '&' => '  (function calls are not interpolated)',
+               '4' => '  (until Perl 5.6 octal wide chars)',
+               '5' => '  (until Perl 5.6 octal wide chars)',
+               '6' => '  (until Perl 5.6 octal wide chars)',
+               '7' => '  (until Perl 5.6 octal wide chars)',
+               'N' => '  (without "use charnames" in scope)',
               );
 
 sub violates {
@@ -157,26 +165,27 @@ sub violates {
   if (! $single) {
     $known .= _KNOWN;
 
-    # \N and octal chars above \377 are in 5.6 up
-    # consider known if no "use 5.x" at all, or if present and 5.6 up
-    # (so only under explicit "use 5.005" are they not allowed)
+    # Octal chars above \377 are in 5.6 up.
+    # Consider known if no "use 5.x" at all, or if present and 5.6 up,
+    # so only under explicit "use 5.005" or lower are they not allowed.
     my $perlver = $document->highest_explicit_perl_version;
     if (! defined $perlver || $perlver >= 5.006) {
-      $known .= 'N4567';
+      $known .= '4567';
     }
   }
 
-  if (DEBUG) {
-    require Data::Dumper;
-    print "elem: ", ref $elem, "\n";
-    print "  ", Data::Dumper->new([$str],['str'])->Useqq(1)->Dump;
-    print "  ", Data::Dumper->new([$close],['close'])->Useqq(1)->Dump;
-    print "  known: $known\n";
-    my $perlver = $document->highest_explicit_perl_version;
-    print "  perlver ", (defined $perlver ? $perlver : 'undef'), "\n";
-  }
+  ### elem: ref $elem
+  ### $content
+  ### $str
+  ### close char: $close
+  ### $known
+  ### perlver: $document->highest_explicit_perl_version
 
+  my $have_charnames;
+  my $interpolate_var_end = -1;
+  my $interpolate_var_colon;
   my @violations;
+
   while ($str =~ /(\$.                     # $ not at end-of-string
                   |\@[[:alnum:]:'\{\$+-])  # @ forms per toke.c S_scan_const()
                 |(\\+)   # $2 run of backslashes
@@ -184,8 +193,15 @@ sub violates {
     if (defined $1) {
       # $ or @
       unless ($single) {  # no variables in single-quote
+        ### interpolation at: pos($str)
         pos($str) = _pos_after_interpolate_variable ($str,
                                                      pos($str) - length($1));
+        ### ends at: pos($str)
+        if (substr($str,pos($str)-1,1) =~ /(\w)|[]}]/) {
+          $interpolate_var_colon = $1;
+          $interpolate_var_end = pos($str);
+          ### interpolate_var_end set to: $interpolate_var_end
+        }
       }
       next;
     }
@@ -201,24 +217,60 @@ sub violates {
     my $c = substr($str,pos($str),1);
     pos($str)++;
 
-    if ($c eq 'c' && ! $single) {
-      # \cX control char.
-      # If \c is at end-of-string then new $c is '' and pos() will goes past
-      # length($str).  That pos() is ok, the loop regexp gives no-match and
-      # terminates.
-      $c = substr ($str, pos($str)++, 1);
-      if ($c eq '') {
+    if (! $single) {
+      if ($c eq 'N') {
+        if (! defined $have_charnames) {
+          $have_charnames = _charnames_in_scope($elem);
+        }
+        if ($have_charnames) {
+          next;
+        }
+
+      } elsif ($c eq 'c') {
+        # \cX control char.
+        # If \c is at end-of-string then new $c is '' and pos() will goes past
+        # length($str).  That pos() is ok, the loop regexp gives no-match and
+        # terminates.
+        $c = substr ($str, pos($str)++, 1);
+        if ($c eq '') {
+          push @violations,
+            $self->violation ('Control char \\c at end of string', '', $elem);
+          next;
+        }
+        if (index (_CONTROL_KNOWN, $c) >= 0) {
+          next;  # a known escape
+        }
         push @violations,
-          $self->violation ('Control char \\c at end of string', '', $elem);
+          $self->violation ('Unknown control char \\c' . _printable($c),
+                            '', $elem);
         next;
+
+      } elsif ($c eq ':') {
+        if ($interpolate_var_colon) {
+          ### backslash colon, pos: pos($str)
+          ### $interpolate_var_end
+          ### substr: substr ($str, $interpolate_var_end, 2)
+          if (pos($str) == $interpolate_var_end+2
+              || (pos($str) == $interpolate_var_end+4
+                  && substr ($str, $interpolate_var_end, 2) eq '\\:')) {
+            next;
+          }
+        }
+
+      } elsif ($c eq '[' || $c eq '{') {
+        ### backslash bracket, pos: pos($str)
+        ### $interpolate_var_end
+        if (pos($str) == $interpolate_var_end+2) {
+          next;
+        }
+
+      } elsif ($c eq '-') {
+        ### backslash dash: pos($str)
+        if ($str =~ /\G>[[{]/) {
+          ### is for bracket or brace, pos now: pos($str)
+          next;
+        }
       }
-      if (index (_CONTROL_KNOWN, $c) >= 0) {
-        next;  # a known escape
-      }
-      push @violations,
-        $self->violation ('Unknown control char \\c' . _printable($c),
-                          '', $elem);
-      next;
     }
 
     if ($param eq 'quotemeta') {
@@ -236,11 +288,10 @@ sub violates {
       next;
     }
 
-    my $message = 'Unknown backslash \\' . _printable($c);
-    if ($c eq 'N') { $message .= ', until perl 5.6.0'; }
-    if (!$single) { $message .= ($explain{$c} || ''); }
-    push @violations,
-      $self->violation ($message, '', $elem);
+    my $explain = !$single && ($explain{$c} || '');
+    my $message = ('Unknown or unnecessary backslash \\'._printable($c)
+                   . $explain);
+    push @violations, $self->violation ($message, '', $elem);
 
     # would have to take into account HereDoc begins on next line ...
     # _violation_elem_offset ($violation, $elem, pos($str)-2);
@@ -254,7 +305,8 @@ sub violates {
 sub _pos_after_interpolate_variable {
   my ($str, $pos) = @_;
   $str = substr ($str, $pos);
-  if (DEBUG) { print "_pos_after_interpolate_variable\n   $str\n"; }
+  ### _pos_after_interpolate_variable
+  ### $str
 
   require PPI::Document;
   my $doc = PPI::Document->new(\$str);
@@ -308,6 +360,21 @@ sub _printable {
          { $charname{$1} || sprintf('{0x%X}',ord($1)) }e;
   return $c;
 }
+
+# return true if $elem has a 'use charnames' in its lexical scope
+sub _charnames_in_scope {
+  my ($elem) = @_;
+  for (;;) {
+    $elem = $elem->sprevious_sibling || $elem->parent
+      || return 0;
+    if ($elem->isa ('PPI::Statement::Include')
+        && $elem->type eq 'use'
+        && ($elem->module || '') eq 'charnames') {
+      return 1;
+    }
+  }
+}
+
 
 #-----------------------------------------------------------------------------
 # unused bits
@@ -366,7 +433,7 @@ sub _printable {
 1;
 __END__
 
-=for stopwords addon backslashed upcase FS unicode ascii non-ascii ok alnum quotemeta backslashing backticks Ryde
+=for stopwords addon backslashed upcase FS unicode ascii non-ascii ok alnum quotemeta backslashing backticks Ryde coderef
 
 =head1 NAME
 
@@ -404,9 +471,9 @@ Control characters C<\cX> are checked and only the conventional A-Z a-z @ [
 
     print "\c*";       # bad
 
-Perl accepts any C<\c> and does an upcase and xor 0x40, so C<\c*> is the
-letter j, on an ASCII system at least.  But that's quite obscure and likely
-to be a typo or error.
+Perl accepts any C<\c> and does an upcase xor 0x40, so C<\c*> is letter "j",
+at least on an ASCII system.  But that's obscure and likely to be a typo or
+error.
 
 For reference, C<\c\> is the ASCII FS "file separator" and the second
 backslash is not an escape, except for a closing quote character, which it
@@ -417,36 +484,94 @@ considering interpolations).  Thus,
     print " \c\" ";     # bad, control-" is unknown
     print qq[ \c\]  ];  # ok, control-] GS
 
-=head2 Wide Chars
+=head2 Ending Interpolation
 
-C<\N{}> named unicode and C<\777> octal escapes above 255 are new in Perl
-5.6.  They're considered known if the document has a C<use 5.006> or higher,
-or if there's no C<use> version at all.
+A backslashed colon, bracket, brace or dash is allowed after an interpolated
+variable or element to stop interpolation at that point.
 
-    print "\777";            # ok
+    print "$foo\::bar";    # ok, $foo
+    print "@foo\::";       # ok, @foo
+
+    print "$foo[0]\[1]";   # ok, is $foo[0]
+    print "$esc\[1m";      # ok
+
+    print "$foo\{k}";      # ok
+    print "$foo\{k}";      # ok
+    print "$foo{k}\[0]";   # ok, is $foo{k}
+    print "@foo\{1,2}";    # ok, is @foo
+
+    print "$foo\->[0]";    # ok, is $foo
+    print "$foo\->{zz}";   # ok
+
+A single backslash like C<"\::"> is enough for the colon case, but
+backslashing the second too as C<"\:\:"> is quite common and is allowed.
+
+    print "$#foo\:\:bar";  # ok
+
+Only a C<-E<gt>[]> or C<-E<gt>{}> needs a C<\-> to stop interpolation.
+Other cases such as an apparent method call or arrowed coderef call don't
+interpolate and the backslash is treated as unknown since unnecessary.
+
+    print "$coderef\->(123)";        # bad, unnecessary
+    print "Usage: $class\->foo()";   # bad, unnecessary
+
+For reference, the alternative in all the above is to write C<{}> braces
+around the variable or element to delimit from anything following.  Doing so
+may be clearer than backslashing,
+
+    print "${foo}::bar";    # alternatives
+    print "@{foo}::bar";
+    print "$#{foo}th";
+    print "${foo[0]}[1]";   # array element $foo[0]
+
+See L<perltrap/Array and hash brackets during interpolation> for a note on
+backslashing C<[> and C<{>, and L<perlop/Gory details of parsing quoted
+constructs> for the horror story.
+
+=head2 Octal Wide Chars
+
+Octal escapes above C<\400> to C<\777> for wide chars 256 to 511 are new in
+Perl 5.6.  They're considered unknown in 5.005 and earlier (where they end
+up chopped to 8-bits 0 to 255).  Currently if there's no C<use> etc Perl
+version then it's presumed a high octal is intentional and is allowed.
+
+    print "\400";    # ok
 
     use 5.006;
-    print "\N{APOSTROPHE}";  # ok
+    print "\777";    # ok
 
     use 5.005;
-    print "\N{COLON}";       # bad
+    print "\777";    # bad in 5.005 and earlier
 
-The absence of a C<use> is treated as 5.6 because that's most likely,
-especially if you have those escapes intentionally.  But perhaps this will
-change, or be configurable.
+
+=head2 Named Chars
+
+Named chars C<\N{SOME THING}> are added by L<charnames> (new in Perl 5.6)
+and are treated as known if there's a C<use charnames> in the lexical scope.
+
+    {
+      use charnames ':full';
+      print "\N{APOSTROPHE}";  # ok
+    }
+    print "\N{COLON}";         # bad without charnames
+
+A C<\N> without C<charnames> is a compile error in Perl 5.6 or higher so is
+normally seen immediately anyway.
+
+=head2 Other Notes
 
 In the violation messages a non-ascii or non-graphical escaped char is shown
 as hex like C<\{0x263A}>, to ensure the message is printable and
 unambiguous.
 
-=head2 Other Notes
-
 Interpolated C<$foo> or C<@{expr}> variables and expressions are parsed like
-Perl does, so backslashes for refs there are ok, in particular tricks like
+Perl does, so backslashes for refs within are ok, in particular tricks like
 C<${\scalar ...}> are fine (see L<perlfaq4/How do I expand function calls in
 a string?>).
 
     print "this ${\(some()+thing())}";   # ok
+
+=head2 Disabling
 
 As always, if you're not interested in any of this then you can disable
 C<ProhibitUnknownBackslash> from your F<.perlcriticrc> in the usual way (see
@@ -509,8 +634,10 @@ each case treated under the corresponding single/double option.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>, L<perlop/Quote and Quote-like
-Operators>
+L<Perl::Critic>,
+L<Perl::Critic::Pulp>
+
+L<perlop/Quote and Quote-like Operators>
 
 =head1 HOME PAGE
 

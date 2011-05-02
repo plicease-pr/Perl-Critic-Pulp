@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 230;
+use Test::More tests => 288;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 56;
+my $want_version = 57;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash->VERSION, $want_version, 'VERSION class method');
 {
@@ -147,6 +147,51 @@ diag "PPI version ",PPI->VERSION;
   foreach my $data
     (## no critic (RequireInterpolationOfMetachars)
 
+
+     #-------------------
+     # "$foo\::bar" etc
+
+     # not sure this one parses right
+     # [ 0, '  "$foo{\\"key\\"}\\[1]"  ' ],
+     #
+     [ 0, '  "$foo{\'key\'}\\[1]"  ' ],
+     [ 0, '  "$foo{key}\\[1]"  ' ],
+     [ 0, '  "$foo{key}\\{k2}"  ' ],
+     [ 0, '  "$foo{key}{k2}\\{k3}"  ' ],
+     [ 0, '  "$foo{key}{k2}\\[0]"  ' ],
+
+     [ 0, '  "$foo\\->[0]"  ' ],
+     [ 0, '  "$foo\\->{k}"  ' ],
+     [ 1, '  "$foo\\->method"  ' ],
+     [ 1, '  "$coderef\\->(123)"  ' ],
+     [ 1, '  "$foo\\-> [0]"  ' ], # doesn't interpolate with space
+     [ 0, '  "$foo->[0]"  ' ],
+
+     [ 0, '  "$foo\\::bar"  ' ],
+     [ 0, '  "$foo\\:\\:bar"  ' ],
+     [ 0, '  "$foo\\:"  ' ],
+     [ 0, '  "$foo\\:\\:"  ' ],
+     [ 0, '  "$#foo\\:\\:bar"  ' ],
+     [ 0, '  "@foo\\:\\:bar"  ' ],
+
+     [ 0, '  "$foo[0]\\[1]"  ' ],
+     [ 0, '  "$foo[0]\\{key}"  ' ],
+     [ 0, '  "$foo[0][1]\\[2]"  ' ],
+     [ 0, '  "$foo[0][1]\\{key}"  ' ],
+
+     [ 1, '  "\\:"  ' ],
+     [ 1, '  "\\::"  ' ],
+     [ 1, '  "\\::bar"  ' ],
+     [ 2, '  "\\:\\:bar"  ' ],
+     [ 1, '  "foo\\::"  ' ],
+     [ 1, '  "foo\\::bar"  ' ],
+
+     [ 1, '  "\\["  ' ],
+     [ 1, '  "foo\\["  ' ],
+     [ 1, '  "\\{"  ' ],
+     [ 1, '  "foo\\{"  ' ],
+
+     #----------------
      # \cX including \c\
 
      [ 0, '  "\\cA"  ' ],
@@ -161,15 +206,21 @@ diag "PPI version ",PPI->VERSION;
      [ 1, '  "\\c*"  ' ],
      [ 2, '  "\\c1\\c2"  ' ],
 
+     #----------------
      # \c at end-of-string
+
      [ 1, '  "\\c"  ' ],
      [ 1, '  qq X\\cX  ' ],
 
+
+     #----------------
      # control-\ before interpolation
+
      [ 1, q{  qq$\\c\\${\\scalar 123} $  } ],
      [ 0, q{  qq@\\c\\${\\scalar 123} @  } ],
 
 
+     #----------------
 
      [ 0, '  qq{}  ' ],
      [ 0, '  ""  ' ],
@@ -213,11 +264,8 @@ HERE
      #
      [ 1, "qq{\\\374}" ],  # latin-1/unicode u-dieresis
 
-     [ 1, 'use 5.005; "\\N{COLON}"' ],
      [ 1, 'use 5.005; "\\400"' ],
-     [ 0, 'use 5.006; "\\N{COLON}"' ],
      [ 0, 'use 5.006; "\\400"' ],
-     [ 0, '"\\N{COLON}"' ],
      [ 0, '"\\400"' ],
 
      [ 0, 'use 5.005; "\\000"' ],
@@ -241,12 +289,16 @@ HERE
      [ 1, '"\\800"' ],
      [ 1, '"\\900"' ],
 
+     #----------------
      # the various known escapes
+
      [ 0, '  "aa\\t\\n\\r\\f\\b\\a\\ebb"  ' ],
-     [ 0, '  "aa\\033\177\200\377\\xFF\\cJ\\N{COLON}bb"  ' ],
+     [ 0, '  "aa\\033\177\200\377\\xFF\\cJ\\tbb"  ' ],
      [ 0, '  "aa\\Ua\\u\\LX\\l\\Q\\E"  ' ],
 
+     #----------------
      # close of singles and doubles
+
      [ 0, "  'aa\\\\'bb'  " ],
      [ 0, '  q{aa\\}bb}  ' ],
      [ 0, '  q{aa\\}bb}  ' ],
@@ -257,16 +309,26 @@ HERE
      [ 0, '  qx{aa\\n\\}bb}  ' ],
      [ 0, q{  qx'aa\\nbb'  } ],
 
+     #----------------
      # singles ok
+
      [ 0, q{  '\\xFF'  } ],
      [ 0, q{  '\\c*'  } ],
      [ 0, q{  my $pat = '[0-9eE\\.\\-]'  } ],
 
-     [ 1, 'use 5.005;  "\\N{COLON}"  ' ],
      [ 1, 'use 5.005;  "\\777"       ' ],
-     [ 0, 'use 5.006;  "\\N{COLON}"  ' ],
      [ 0, 'use 5.006;  "\\777"       ' ],
 
+     #----------------
+     # \N 
+
+     [ 1, '  "\\N{COLON}"  ' ],
+     [ 0, 'use charnames q{:full};  "\\N{COLON}"  ' ],
+     [ 1, '{ use charnames q{:full}; }  "\\N{COLON}"  ' ],  # not in scope
+
+
+     #----------------
+     # runs of backslashes
 
      [ 0, q{  "\\\\s"  } ],
      [ 1, q{  "\\\\\\s"  } ],
@@ -317,7 +379,8 @@ HERE
     my ($want_count, $str) = @$data;
 
     foreach my $str ($str, $str . ';') {
-      diag "str printable: ", Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_printable($str);
+      # my $printable = Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash::_printable($str);
+      # ### str printable: $printable
 
       my @violations = $critic->critique (\$str);
 

@@ -46,11 +46,22 @@ while (my ($filename, $str) = $l->next) {
   #                 # ([cdghijkmopqsvwyzABCDFGHIJKMNOPRSTVWXYZ456789])
   #                 \n
   #                /sgx) {
-  while ($str =~ /\G\$\w+
+  #
+  # while ($str =~ /\G[$@]\w+
+  #                 (?:::\w+)*
+  #                 \\(:)
+  #                /sgx) {
+
+
+  # \-> \[ \{
+  while ($str =~ /(\\*)
+                  [\$\@]\w+
                   (?:::\w+)*
-                  \\(:)
+                  \\([[{-])
                  /sgx) {
-    my $char = $1;
+    next if length($1) & 1;
+
+    my $char = $2;
     my $pos = pos($str);
 
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);

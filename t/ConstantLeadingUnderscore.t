@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 56;
+my $want_version = 57;
 is ($Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore->VERSION,
