@@ -253,11 +253,16 @@ HERE
     if (-d 't') { $lint_files .= ' t/*.t'; }
     if (-d 'xt') { $lint_files .= ' xt/*.t'; }
 
-    foreach ('examples', 'devel') {
-      my $dir = $_;
-      my $pattern = "$dir/*.pl";
-      if (glob ($pattern)) {
-        $lint_files .= " $pattern";
+    my ($dir, $pattern);
+    foreach $dir ('t', 'xt', 'examples', 'devel') {
+      foreach $pattern ("$dir/*.pl", "$dir/*.pm") {
+        my @glob = glob($pattern);
+        ### $pattern
+        ### @glob
+        if (@glob) {
+          $lint_files .= " $pattern";
+          ### $lint_files
+        }
       }
     }
   }
@@ -272,26 +277,22 @@ HERE
   $post .= <<'HERE';
 pc:
 HERE
-
   # ------ pc: podcoverage ------
   foreach (@{$my_options{'MyMakeMakerExtras_Pod_Coverage'}}) {
-      my $class = $_;
+    my $class = $_;
     # the "." obscures it from MyExtractUse.pm
     $post .= "\t-\$(PERLRUNINST) -e 'use "."Pod::Coverage package=>$class'\n";
   }
-
   # ------ pc: podlinkcheck ------
   $post .= <<'HERE';
 	-podlinkcheck -I lib `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
 HERE
-
   # ------ pc: podchecker ------
   # "podchecker -warnings -warnings" too much reporting every < and >
   $post .= <<'HERE';
 	-podchecker `ls $(LINT_FILES) | grep -v '\.bash$$|\.desktop$$\.png$$|\.xpm$$'`
 	perlcritic $(LINT_FILES)
 HERE
-
   # ------ cpants_lint ------
   $post .= <<'HERE';
 kw:

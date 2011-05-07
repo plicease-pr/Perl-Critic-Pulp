@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 57;
+our $VERSION = 58;
 
 1;
 __END__
@@ -164,21 +164,25 @@ No C<#!> interpreter line in F<.pm> files.
 
 =over
 
+=item L<Documentation::ProhibitAdjacentLinks|Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>
+
+Put commas or some text in between adjacent C<LE<lt>E<gt>> links.
+
 =item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
 
 Avoid CE<lt>E<gt> in NAME section, bad for man's "apropos" output.
 
+=item L<Documentation::ProhibitParagraphTwoDots|Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots>
+
+Don't end paragraph with ".." (stray extra dot).
+
 =item L<Documentation::ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>
 
-Verbatim paragraphs not expanding CE<lt>E<gt> markup etc.
+Verbatim paragraphs not expanding C<CE<lt>E<gt>> etc markup.
 
 =item L<Documentation::RequireLinkedURLs|Perl::Critic::Policy::Documentation::RequireLinkedURLs>
 
 Use C<LE<lt>E<gt>> markup on URLs.
-
-=item L<Documentation::ProhibitAdjacentLinks|Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>
-
-Put commas or some text in between adjacent C<LE<lt>E<gt>> links.
 
 =back
 

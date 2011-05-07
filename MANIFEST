@@ -93,6 +93,7 @@ lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
 lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitAdjacentLinks.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Documentation/RequireLinkedURLs.pm
@@ -134,6 +135,7 @@ t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
 t/ProhibitModuleShebang.t
 t/ProhibitNullStatements.t
+t/ProhibitParagraphTwoDots.t
 t/ProhibitPOSIXimport.t
 t/ProhibitUnixDevNull-load.t
 t/ProhibitUnixDevNull.t

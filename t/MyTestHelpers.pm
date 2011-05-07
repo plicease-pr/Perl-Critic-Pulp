@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this file.  If not, see <http://www.gnu.org/licenses/>.
 
+BEGIN { require 5 }
 package MyTestHelpers;
 use strict;
 use Exporter;
@@ -84,7 +85,7 @@ sub dump {
     MyTestHelpers::diag (Data::Dumper::Dumper ($thing));
   } else {
     MyTestHelpers::diag ("Data::Dumper not available");
-  }    
+  }
 }
 
 #-----------------------------------------------------------------------------
@@ -113,10 +114,11 @@ sub test_weaken_show_leaks {
   MyTestHelpers::dump ($leaks);
 
   my $unfreed = $leaks->unfreed_proberefs;
-  foreach my $proberef (@$unfreed) {
+  my $proberef;
+  foreach $proberef (@$unfreed) {
     MyTestHelpers::diag ("  unfreed ", $proberef);
   }
-  foreach my $proberef (@$unfreed) {
+  foreach $proberef (@$unfreed) {
     MyTestHelpers::diag ("search ", $proberef);
     MyTestHelpers::findrefs($proberef);
   }

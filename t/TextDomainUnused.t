@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Miscellanea::TextDomainUnused;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 57;
+my $want_version = 58;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainUnused::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainUnused->VERSION,
