@@ -21,4 +21,4 @@ use warnings;
 use base 'Exporter';
 our @EXPORT_OK = ('foo');
 # our $VERSION = '1.100_100';
-our $VERSION = 58';
+our $VERSION = 59';

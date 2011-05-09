@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version;
 
-our $VERSION = 58;
+our $VERSION = 59;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version

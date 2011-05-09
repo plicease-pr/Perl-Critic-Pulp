@@ -17,6 +17,9 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 59, May 2011
+    - tests don't die on a deliberately induced version.pm warning
+
 Version 58, May 2011
     - new policy Documentation::ProhibitParagraphTwoDots
 
