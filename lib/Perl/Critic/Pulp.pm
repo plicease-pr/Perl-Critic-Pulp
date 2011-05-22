@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 59;
+our $VERSION = 60;
 
 1;
 __END__

@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 59;
+our $VERSION = 60;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -128,6 +128,7 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_Pulp__delete_array_elem} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__0b_number}         = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__syswrite_length_optional} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__open_my_filehandle} = $v5006;
 
   # 5.005
   my $v5005 = version->new('5.005');
@@ -179,7 +180,7 @@ sub _setup_extra_checks {
 
 sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
   my ($pmv) = @_;
-  ### _Pulp__5010_qr_m_propagate_properly check
+  ### _Pulp__5010_qr_m_propagate_properly() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -198,7 +199,7 @@ sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
 
 sub Perl::MinimumVersion::_Pulp__fat_comma_across_newline {
   my ($pmv) = @_;
-  ### _Pulp__fat_comma_across_newline check
+  ### _Pulp__fat_comma_across_newline() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -244,12 +245,12 @@ sub sprevious_sibling_and_newline {
 #
 sub Perl::MinimumVersion::_Pulp__exists_array_elem {
   my ($pmv) = @_;
-  ### _Pulp__exists_array_elem check
+  ### _Pulp__exists_array_elem() check
   return _exists_or_delete_array_elem ($pmv, 'exists');
 }
 sub Perl::MinimumVersion::_Pulp__delete_array_elem {
   my ($pmv) = @_;
-  ### _Pulp__delete_array_elem check
+  ### _Pulp__delete_array_elem() check
   return _exists_or_delete_array_elem ($pmv, 'delete');
 }
 #use Smart::Comments;
@@ -316,7 +317,7 @@ sub _descend_through_lists {
 #
 sub Perl::MinimumVersion::_Pulp__exists_subr {
   my ($pmv) = @_;
-  ### _Pulp__exists_subr check
+  ### _Pulp__exists_subr() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -336,7 +337,7 @@ sub Perl::MinimumVersion::_Pulp__exists_subr {
 #
 sub Perl::MinimumVersion::_Pulp__0b_number {
   my ($pmv) = @_;
-  ### _Pulp__0b_number check
+  ### _Pulp__0b_number() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -352,7 +353,7 @@ sub Perl::MinimumVersion::_Pulp__0b_number {
 #
 sub Perl::MinimumVersion::_Pulp__syswrite_length_optional {
   my ($pmv) = @_;
-  ### _Pulp__syswrite_length_optional check
+  ### _Pulp__syswrite_length_optional() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -368,13 +369,89 @@ sub Perl::MinimumVersion::_Pulp__syswrite_length_optional {
      });
 }
 
+# open(my $fh,...) auto-creating a handle glob new in 5.6.0
+#
+my %open_func = (open       => 1,
+                 opendir    => 1,
+                 pipe       => 2,
+                 socketpair => 2,
+                 sysopen    => 1,
+                 socket     => 1,
+                 accept     => 1);
+sub Perl::MinimumVersion::_Pulp__open_my_filehandle {
+  my ($pmv) = @_;
+  ### _Pulp__open_my_filehandle() check
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       my ($count, $my, $fh);
+       unless ($elem->isa('PPI::Token::Word')
+               && ($count = $open_func{$elem})
+               && Perl::Critic::Utils::is_function_call($elem)) {
+         return 0;
+       }
+       $my = $elem->snext_sibling;
+
+       # with parens is
+       #   PPI::Token::Word         'open'
+       #    PPI::Structure::List    ( ... )
+       #      PPI::Statement::Variable
+       #       PPI::Token::Word     'my'
+       #       PPI::Token::Symbol   '$fh'
+       #       PPI::Token::Operator         ','
+       #
+       if ($my->isa('PPI::Structure::List')) {
+         $my = $my->schild(0) || return 0;
+       }
+       if ($my->isa('PPI::Statement::Variable')) {
+         $my = $my->schild(0) || return 0;
+       }
+
+       foreach (1 .. $count) {
+         ### my: "$my"
+         if (_is_uninitialized_my($my)) {
+           return 1;
+         }
+         $my = _skip_to_next_arg($my) || last;
+       }
+       return 0;
+     });
+}
+
+sub _is_uninitialized_my {
+  my ($my) = @_;
+  my ($fh, $after);
+  return ($my->isa('PPI::Token::Word')
+          && $my eq 'my'
+          && ($fh = $my->snext_sibling)
+          && $fh->isa('PPI::Token::Symbol')
+          && $fh->symbol_type eq '$'
+          && ! (($after = $fh->snext_sibling)
+                && $after->isa('PPI::Token::Operator')
+                && $after eq '='));
+}
+
+sub _skip_to_next_arg {
+  my ($elem) = @_;
+  for (;;) {
+    my $next = $elem->snext_sibling || return undef;
+    if ($elem->isa('PPI::Token::Operator')
+        && $Perl::Critic::Pulp::Utils::COMMA{$elem}) {
+      return $next;
+    }
+    $elem = $next;
+  }
+}
+
+    
+
 #-----------------------------------------------------------------------------
 # Foo::Bar:: bareword new in 5.005
 # generally a compile-time syntax error in 5.004
 #
 sub Perl::MinimumVersion::_Pulp__bareword_double_colon {
   my ($pmv) = @_;
-  ### _Pulp__bareword_double_colon check
+  ### _Pulp__bareword_double_colon() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -392,7 +469,7 @@ sub Perl::MinimumVersion::_Pulp__bareword_double_colon {
 #
 sub Perl::MinimumVersion::_Pulp__my_list_with_undef {
   my ($pmv) = @_;
-  ### _Pulp__my_list_with_undef check
+  ### _Pulp__my_list_with_undef() check
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -744,6 +821,10 @@ new C<exists &subr>, C<exists $array[0]> and C<delete $array[0]> support.
 =item *
 
 new C<0b110011> binary number literals.
+
+=item *
+
+new C<open(my $fh,...)> etc auto-creation of filehandle.
 
 =item *
 

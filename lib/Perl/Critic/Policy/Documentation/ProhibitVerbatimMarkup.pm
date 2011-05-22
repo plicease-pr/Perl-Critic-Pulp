@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 59;
+our $VERSION = 60;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -143,7 +143,7 @@ of two things,
 
 =item *
 
-You wanted markup -- it should be a plain paragraph not an indented verbatim
+You wanted markup -- it should be a plain paragraph not a verbatim indented
 one.  An C<=over> can be used for indentation if desired.
 
 =item *
@@ -155,7 +155,7 @@ like C<func()> or even C<*bold*> or C<_underline_>.
 
 Don't forget a verbatim paragraph extends to the next blank line and
 includes unindented lines until then (see L<perlpodspec/Pod Definitions>).
-So if you forget the blank the verbatimness continues
+If you forget the blank the verbatimness continues
 
 =for ProhibitVerbatimMarkup allow next
 
@@ -181,14 +181,14 @@ The check for markup is unsophisticated.  Any of the POD specified "IE<lt>"
     S<       # bad
     X<       # bad
     Z<       # bad
-    J<       # bad
+    J<       # bad, for Pod::MultiLang
 
 It's possible a C<E<lt>> might be something mathematical like "XE<lt>Y", but
 in practice spaces S<"X E<lt> Y"> or lower case letters are more common and
 are ok.
 
-Sample debugger output is exempted.  It's uncommon, but also unlikely to
-have meant C<BE<lt>E<gt>> bold.
+Sample debugger output is exempted.  It's uncommon, but not likely to have
+intended C<BE<lt>E<gt>> bold.
 
     DB<123> dump b        # ok
 
@@ -204,10 +204,13 @@ often in documentation for modules which themselves operate on POD markup.
 
         blah blah E<gt> etc
 
-The usual C<## no critic (ProhibitVerbatimMarkup)> works too, though if the
-POD is after an C<__END__> token then C<Perl::Critic> 1.112 is required (and
-the annotation must be before the C<__END__>).  An C<=for> has the advantage
-of being with the exception.
+The usual no critic
+
+    ## no critic (ProhibitVerbatimMarkup)
+
+works too, but if the POD is after an C<__END__> token then C<Perl::Critic>
+1.112 is required, and the annotation must be before the C<__END__>.  An
+C<=for> has the advantage of being with the exception.
 
 As always if you don't care at all about this at all then disable
 C<ProhibitVerbatimMarkup> from your F<.perlcriticrc> in the usual way (see

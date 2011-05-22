@@ -17,6 +17,9 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 60, May 2011
+    - PerlMinimumVersionAndWhy new 5.6 open(my $fh,...)
+
 Version 59, May 2011
     - tests don't die on a deliberately induced version.pm warning
 

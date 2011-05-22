@@ -30,7 +30,7 @@ sub WriteMakefile {
 
   if (exists $opts{'META_MERGE'}) {
     # cf. ExtUtils::MM_Any::metafile_data() default ['t','inc']
-    foreach ('devel', 'examples', 'junk', 'maybe') {
+    foreach ('xt', 'devel', 'examples', 'junk', 'maybe') {
       my $dir = $_;
       if (-d $dir) {
         push @{$opts{'META_MERGE'}->{'no_index'}->{'directory'}}, $dir;

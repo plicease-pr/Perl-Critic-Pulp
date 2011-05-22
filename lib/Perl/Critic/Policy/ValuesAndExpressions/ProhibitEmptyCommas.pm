@@ -24,7 +24,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 59;
+our $VERSION = 60;
 
 
 use constant supported_parameters => ();

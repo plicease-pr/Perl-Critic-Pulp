@@ -58,6 +58,15 @@ devel/h2xs/TestConstFoo.h
 devel/junk/test-more-like.pl
 devel/junk/TestMoreLikeModifiers.pm
 devel/junk/TestMoreLikeModifiers.t
+devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.pm
+devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.t
+devel/lib/Perl/Critic/Policy/CodeLayout/inprogressRequireTrailingCommaAtNewline.pm
+devel/lib/Perl/Critic/Policy/CodeLayout/inprogressRequireTrailingCommaAtNewline.t
+devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
+devel/lib/Perl/Critic/Policy/Documentation/inprogressLinkCommas.pm
+devel/lib/Perl/Critic/Policy/Documentation/inprogressProhibitUnclosedParen.pm
+devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
+devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
 devel/MyLocatePerl.pm
 devel/MyStuff.pm

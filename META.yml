@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Perl-Critic-Pulp
-version:            59
+version:            60
 abstract:           Some add-on policies for Perl::Critic.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -33,10 +33,11 @@ no_index:
     directory:
         - t
         - inc
+        - xt
         - devel
     package:
         - Perl::MinimumVersion
-generated_by:       ExtUtils::MakeMaker version 6.55_02
+generated_by:       ExtUtils::MakeMaker version 6.56
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4

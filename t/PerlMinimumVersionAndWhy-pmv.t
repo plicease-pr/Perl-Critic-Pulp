@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 114;
+plan tests => 137;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 59;
+  my $want_version = 60;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -172,6 +172,35 @@ foreach my $data (
                   [ 0, 'use 5.006; syswrite()' ],
                   [ 0, 'use 5.005; syswrite($fh)' ], # bogus, but unreported
                   [ 0, 'use 5.006; syswrite($fh)' ],
+
+                  # _Pulp__open_my_filehandle
+                  [ 1, 'use 5.005; open my $fh, "foo.txt"' ],
+                  [ 0, 'use 5.006; open my $fh, "foo.txt"' ],
+                  [ 0, 'use 5.006; open FH, "foo.txt"' ],
+
+                  [ 1, 'use 5.005; open(my $fh, "foo.txt")' ],
+                  [ 0, 'use 5.006; open(my $fh, "foo.txt")' ],
+                  [ 0, 'use 5.006; open(FH, "foo.txt")' ],
+
+                  [ 1, 'use 5.005; pipe my $read, my $write' ],
+                  [ 1, 'use 5.005; pipe IN, my $write' ],
+                  [ 1, 'use 5.005; pipe my $read, OUT' ],
+                  [ 0, 'use 5.006; pipe my $read, my $write' ],
+                  [ 0, 'use 5.006; pipe IN, my $write' ],
+                  [ 0, 'use 5.006; pipe my $read, OUT' ],
+                  [ 0, 'use 5.005; pipe IN, OUT' ],
+
+                  [ 1, 'socketpair my $one, my $two' ],
+                  [ 1, 'socketpair ONE, my $two' ],
+                  [ 1, 'socketpair my $one, TWO' ],
+                  [ 0, 'socketpair ONE, TWO' ],
+                  [ 1, 'socketpair func(), my $two' ],
+
+                  [ 0, 'open my $fh = gensym(), "foo.txt"' ],
+                  [ 0, 'open(my $fh = gensym(), "foo.txt")' ],
+                  [ 1, 'pipe my $one, my $two = gensym()' ],
+                  [ 1, 'pipe my $one = gensym(), my $two' ],
+                  [ 0, 'pipe my $one = gensym(), my $two = gensym()' ],
 
 
                   # _Pulp__bareword_double_colon
