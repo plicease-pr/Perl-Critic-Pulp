@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -111,6 +111,8 @@ C<lexgrog> program doesn't expand, resulting in unattractive description
 lines from C<apropos> like
 
     foo - like the *(C`bar*(C' program
+
+=for ProhibitUnbalancedParens allow next
 
 Man's actual formatted output is fine, and the desired text is in there,
 just surrounded by "*(C" bits.  On that basis this policy is low priority

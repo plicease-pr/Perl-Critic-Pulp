@@ -20,29 +20,39 @@
 use 5.005;
 use strict;
 use warnings;
-use Perl6::Slurp;
 
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 my $verbose = 0;
 
+my $hws = qr/\s*(#.*\n)*\s*/;
+
 my $l = MyLocatePerl->new;
-while (my ($filename, $str) = $l->next) {
+OUTER: while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  if ($str =~ /^__END__/m) {
-    substr ($str, $-[0], length($str), '');
-  }
+  while (
+         # = qw()
+         # $str =~ /(=\s*qw$hws[([{])/og
 
-  while ($str =~ /qw\([^)]*#/sg) {
-    my $char = $1;
-    my $pos = pos($str);
+         # plain word @array=[]
+         $str =~ /(\@\w+\s*=\s*[[{])/sg
+
+         # parens )=[ or )={
+         #$str =~ /(\)\s*=\s*[[{])/sg
+
+         # single element string like @ISA='Foo'
+         # $str =~ /(\@\w+\s*=\s*[0-9'"])/sg
+        ) {
+    my $pos = pos($str)-length($1);
 
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    print "$filename:$line:$col: comment in qw\n",
+    print "$filename:$line:$col:\n",
       MyStuff::line_at_pos($str, $pos);
   }
 }

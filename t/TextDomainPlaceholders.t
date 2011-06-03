@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 60;
+my $want_version = 61;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,
@@ -158,12 +158,12 @@ HERE' ],
 
                   # not function calls
                   [ 0, '
-my %funcs = (__x   => 1,
-             __nx  => 1,
-             __xn  => 1,
+  my %funcs = (__x   => 1,
+               __nx  => 1,
+               __xn  => 1,
 
-             __px  => 1,
-             __npx => 1);
+               __px  => 1,
+               __npx => 1);
 ' ],
                   [ 0, 'print $obj->__x' ],
                   [ 0, 'print My::Class->__x' ],
@@ -172,12 +172,14 @@ my %funcs = (__x   => 1,
   my ($want_count, $str) = @$data;
   my @violations = $critic->critique (\$str);
 
-  # foreach (@violations) {
-  #   diag ($_->description);
-  # }
-
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str");
+
+  if ($got_count != $want_count) {
+    foreach (@violations) {
+      diag ($_->description);
+    }
+  }
 }
 
 exit 0;

@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -63,8 +63,8 @@ sub command {
     ### $directive
     if ($directive =~ /^allow next( (\d+))?/) {
       # numbered "allow next 5" means up to that many following verbatims
-      # unnumbered "allow next" means all successive following verbatims
-      $self->{'allow_next'} = (defined $2 ? $2 : -1);
+      # unnumbered "allow next" means one following verbatim
+      $self->{'allow_next'} = (defined $2 ? $2 : 1);
     }
   }
   return '';
@@ -148,8 +148,8 @@ one.  An C<=over> can be used for indentation if desired.
 
 =item *
 
-You wanted verbatim -- drop the markup in favour of some ascii approximation
-like C<func()> or even C<*bold*> or C<_underline_>.
+You wanted verbatim -- replace the markup with an ascii approximation like
+C<func()> or even C<*bold*> or C<_underline_>.
 
 =back
 
@@ -204,6 +204,12 @@ often in documentation for modules which themselves operate on POD markup.
 
         blah blah E<gt> etc
 
+    =for ProhibitVerbatimMarkup allow next 2
+
+        Two verbatims of C<code>
+
+        or B<bold> etc
+
 The usual no critic
 
     ## no critic (ProhibitVerbatimMarkup)
@@ -220,7 +226,8 @@ L<Perl::Critic/CONFIGURATION>),
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
 L<Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>,
 L<Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 

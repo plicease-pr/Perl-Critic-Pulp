@@ -21,12 +21,12 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 1;
 __END__
 
-=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords
+=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical
 
 =head1 NAME
 
@@ -37,16 +37,6 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 This is a collection of add-on policies for C<Perl::Critic>, summarized
 below.  They're under a "pulp" theme plus other themes according to their
 purpose (see L<Perl::Critic/POLICY THEMES>).
-
-Roughly half are code related and half cosmetic.  You can always enable or
-disable the ones you do or don't want.  It's normal to pick and choose
-things reported.  There's a lot of perlcritic policies both built-in and
-add-on and they range from helpful things catching problems through to the
-bizarre or restrictive, and in some cases mutually contradictory!  Many are
-only intended as building blocks for enforcing a house style.  If you try to
-pass everything then you'll give away big parts of the language, so if
-you're not turning off or customizing about half then you're either not
-trying or you're much too easily lead!
 
 =head2 Bugs
 
@@ -71,6 +61,10 @@ Avoid problems with C<< FOO < 123 >>
 =item L<ValuesAndExpressions::NotWithCompare|Perl::Critic::Policy::ValuesAndExpressions::NotWithCompare>
 
 Avoid problems with C<! $x == $y>
+
+=item L<ValuesAndExpressions::ProhibitArrayAssignAref|Perl::Critic::Policy::ValuesAndExpressions::ProhibitArrayAssignAref>
+
+Dubious C<@array=[1,2,3]> array/arrayref assignment.
 
 =item L<ValuesAndExpressions::ProhibitFiletest_f|Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f>
 
@@ -134,6 +128,8 @@ Don't import the whole of C<POSIX>.
 
 =over
 
+=item L<CodeLayout::RequireTrailingCommaAtNewline|Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline>
+
 =item L<CodeLayout::RequireFinalSemicolon|Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon>
 
 Semicolon C<;> on the last statement of a subroutine or block.
@@ -164,6 +160,10 @@ No C<#!> interpreter line in F<.pm> files.
 
 =over
 
+=item L<Documentation::ProhibitUnbalancedParens|Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens>
+
+Unbalanced or mismatched ( ) parens, brackets and braces.
+
 =item L<Documentation::ProhibitAdjacentLinks|Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>
 
 Put commas or some text in between adjacent C<LE<lt>E<gt>> links.
@@ -185,6 +185,32 @@ Verbatim paragraphs not expanding C<CE<lt>E<gt>> etc markup.
 Use C<LE<lt>E<gt>> markup on URLs.
 
 =back
+
+=head2 Selecting
+
+You can always enable or disable the policies you do or don't want (see
+L<Perl::Critic/CONFIGURATION>).  If you haven't already realized, there's a
+wide range of builtin and add-on perlcritic policies ranging from bug
+catching to the bizarre or deliberately restrictive.  You're not meant to
+pass all of them and some may even be mutually contradictory.
+
+The restrictive policies are meant as building blocks for a limited house
+style.  C<ProhibitBarewordDoubleColon> above is an example of this,
+something like C<ProhibitUnlessBlocks> is another.  They're usually a matter
+of personal preference (and non de gustibus disputandum), but following all
+gives away big parts of the language and ends up with very un-typical code.
+
+Some policies are geared a bit towards beginners.
+C<ProhibitUnknownBackslash> above or C<RequireInitializationForLocalVars>
+are along those lines.  If you know what you're doing there may be good
+backslashing the prohibition doesn't know, and local variable initializers
+make no sense for output variables like C<$!> when you get to the level of
+using C<local> to preserve such values.
+
+In general the POD docs are supposed to explain the motivation so you can
+see if you want it or not, but if you're not turning off or drastically
+customizing about half of all policies then you're either not trying or
+you're much too easily lead!
 
 =head1 OTHER NOTES
 

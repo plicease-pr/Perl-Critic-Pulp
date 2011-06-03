@@ -12,6 +12,7 @@ devel/array-delete.pl
 devel/backslash-control.pl
 devel/bareword-colon.pl
 devel/churn-posix.pl
+devel/churn-unbalanced.pl
 devel/churn.pl
 devel/const-autoload.pl
 devel/const-noproto.pl
@@ -21,6 +22,7 @@ devel/empty.pl
 devel/fat-comma.pl
 devel/gettext.pl
 devel/grep-arg-unpack.pl
+devel/grep-array-assign.pl
 devel/grep-array-slice-single.pl
 devel/grep-backslash-control.pl
 devel/grep-backslash.pl
@@ -40,13 +42,16 @@ devel/grep-pack.pl
 devel/grep-para-dots.pl
 devel/grep-pod-blankline.pl
 devel/grep-pod-gt.pl
+devel/grep-pod-verbatim-unindent.pl
 devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
+devel/grep-qw.pl
 devel/grep-shebang-pm.pl
 devel/grep-spelling.pl
 devel/grep-synopsis.pl
 devel/grep-t-print.pl
+devel/grep-test-print.pl
 devel/grep-use-decimal.pl
 devel/grep-use-langinfo.pl
 devel/grep-use-posix.pl
@@ -60,11 +65,8 @@ devel/junk/TestMoreLikeModifiers.pm
 devel/junk/TestMoreLikeModifiers.t
 devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.pm
 devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.t
-devel/lib/Perl/Critic/Policy/CodeLayout/inprogressRequireTrailingCommaAtNewline.pm
-devel/lib/Perl/Critic/Policy/CodeLayout/inprogressRequireTrailingCommaAtNewline.t
 devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
-devel/lib/Perl/Critic/Policy/Documentation/inprogressLinkCommas.pm
-devel/lib/Perl/Critic/Policy/Documentation/inprogressProhibitUnclosedParen.pm
+devel/lib/Perl/Critic/Policy/Documentation/LinkCommas.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
@@ -94,6 +96,7 @@ devel/version_check.pm
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireFinalSemicolon.pm
+lib/Perl/Critic/Policy/CodeLayout/RequireTrailingCommaAtNewline.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantLeadingUnderscore.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantPragmaHash.pm
 lib/Perl/Critic/Policy/Compatibility/Gtk2Constants.pm
@@ -103,6 +106,7 @@ lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitAdjacentLinks.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitUnbalancedParens.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
 lib/Perl/Critic/Policy/Documentation/RequireLinkedURLs.pm
@@ -113,6 +117,7 @@ lib/Perl/Critic/Policy/Modules/ProhibitPOSIXimport.pm
 lib/Perl/Critic/Policy/Modules/ProhibitUseQuotedVersion.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitArrayAssignAref.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitBarewordDoubleColon.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitFiletest_f.pm
@@ -138,6 +143,7 @@ t/PerlMinimumVersionAndWhy-pmv.t
 t/PerlMinimumVersionAndWhy.t
 t/PodMinimumVersion.t
 t/ProhibitAdjacentLinks.t
+t/ProhibitArrayAssignAref.t
 t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
 t/ProhibitEmptyCommas.t
@@ -146,6 +152,7 @@ t/ProhibitModuleShebang.t
 t/ProhibitNullStatements.t
 t/ProhibitParagraphTwoDots.t
 t/ProhibitPOSIXimport.t
+t/ProhibitUnbalancedParens.t
 t/ProhibitUnixDevNull-load.t
 t/ProhibitUnixDevNull.t
 t/ProhibitUnknownBackslash.t
@@ -156,6 +163,7 @@ t/RequireEndBeforeLastPod.t
 t/RequireFinalSemicolon.t
 t/RequireLinkedURLs.t
 t/RequireNumericVersion.t
+t/RequireTrailingCommaAtNewline.t
 t/TextDomainPlaceholders.t
 t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t

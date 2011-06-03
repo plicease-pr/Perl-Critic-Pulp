@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 
 use constant supported_parameters =>
@@ -231,7 +231,8 @@ enable it by adding to your F<.perlcriticrc> file
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>
 
 =head1 HOME PAGE
 

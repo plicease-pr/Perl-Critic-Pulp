@@ -16,9 +16,9 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 package version_check;
-use strict;
-use warnings;
-use base 'Exporter';
-our @EXPORT_OK = ('foo');
-# our $VERSION = '1.100_100';
-our $VERSION = 60';
+# use strict;
+# use warnings;
+# use base 'Exporter';
+# our @EXPORT_OK = ('foo');
+our $VERSION = '1.100_100';
+# our $VERSION = 61';

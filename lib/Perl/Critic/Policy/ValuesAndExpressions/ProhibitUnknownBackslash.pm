@@ -29,7 +29,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant DEBUG => 0;
 
@@ -634,8 +634,8 @@ each case treated under the corresponding single/double option.
 
 =head1 SEE ALSO
 
-L<Perl::Critic>,
-L<Perl::Critic::Pulp>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>
 
 L<perlop/Quote and Quote-like Operators>
 

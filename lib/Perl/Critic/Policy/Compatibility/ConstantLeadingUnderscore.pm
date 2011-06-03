@@ -22,12 +22,12 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
-use version;
+use version ();
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -141,7 +141,7 @@ sub _string_any_vars {
 1;
 __END__
 
-=for stopwords addon multi-constant CPAN perl ok ConstantLeadingUnderscore backports prereqs Ryde
+=for stopwords addon multi-constant multi-constants CPAN perl ok ConstantLeadingUnderscore backports prereqs Ryde subr inlined
 
 =head1 NAME
 

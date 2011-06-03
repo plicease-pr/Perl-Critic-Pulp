@@ -20,31 +20,36 @@
 use 5.005;
 use strict;
 use warnings;
-use Perl6::Slurp;
 
-use lib::abs '.';
+use lib::abs '.', 'lib';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
+use Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens;
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 my $verbose = 0;
 
-my $l = MyLocatePerl->new;
+{
+  package MyParser;
+  use base 'Perl::Critic::Pulp::PodParser::ProhibitUnbalancedParens';
+  sub violation_at_linenum_and_textpos {
+    my ($self, $message, $linenum, $str, $pos) = @_;
+    my $filename = $self->{'filename'};
+    my ($pos_linenum, $column) = MyStuff::pos_to_line_and_column($str,$pos);
+    $linenum += $pos_linenum - 1;
+    print "$filename:$linenum:$column: $message\n";
+  }
+}
+my $parser = MyParser->new;
+
+my $l = MyLocatePerl->new (exclude_t => 1);
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  if ($str =~ /^__END__/m) {
-    substr ($str, $-[0], length($str), '');
-  }
-
-  while ($str =~ /qw\([^)]*#/sg) {
-    my $char = $1;
-    my $pos = pos($str);
-
-    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    print "$filename:$line:$col: comment in qw\n",
-      MyStuff::line_at_pos($str, $pos);
-  }
+  $parser->{'filename'} = $filename;
+  $parser->parse_from_file ($filename);
 }
 
 exit 0;

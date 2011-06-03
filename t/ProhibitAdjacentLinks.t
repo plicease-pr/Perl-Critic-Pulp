@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 60;
+my $want_version = 61;
 is ($Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION,
@@ -100,13 +100,14 @@ foreach my $data
 
   my @violations = $critic->critique (\$str);
 
-  # foreach (@violations) {
-  #   diag ("violation: ", $_->description,
-  #         "\nline_number=", $_->line_number);
-  # }
-
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: '$str'");
+
+  if ($got_count != $want_count) {
+    foreach (@violations) {
+      diag ($_->description);
+    }
+  }
 }
 
 exit 0;

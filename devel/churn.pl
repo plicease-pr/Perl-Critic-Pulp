@@ -30,6 +30,7 @@ use 5.006;
 use strict;
 use warnings;
 use Getopt::Long;
+use lib 'lib','devel/lib';
 use Perl::Critic;
 use Perl::Critic::Utils;
 use Perl::Critic::Violation;
@@ -40,6 +41,12 @@ my $option_t_files = 0;
 GetOptions
   (require_order => 1,
    t => \$option_t_files,
+   unbal => sub {
+     push @option_policies, 'Documentation::inprogressProhibitUnbalancedParens';
+   },
+   aref => sub {
+     push @option_policies, 'ValuesAndExpressions::ProhibitArrayAssignAref';
+   },
    const => sub {
      push @option_policies, 'ValuesAndExpressions::ConstantBeforeLt';
    },
@@ -102,8 +109,8 @@ GetOptions
    testprint => sub {
      push @option_policies, 'TestingAndDebugging::ProhibitTestPrint';
    },
-   commanewline => sub {
-     push @option_policies, 'CodeLayout::RequireTrailingCommasAtNewline';
+   trailing => sub {
+     push @option_policies, 'CodeLayout::RequireTrailingCommaAtNewline';
    },
   );
 

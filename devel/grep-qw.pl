@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2011 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,30 +20,38 @@
 use 5.005;
 use strict;
 use warnings;
-use Perl6::Slurp;
 
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 my $verbose = 0;
 
 my $l = MyLocatePerl->new;
-while (my ($filename, $str) = $l->next) {
+OUTER: while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  if ($str =~ /^__END__/m) {
-    substr ($str, $-[0], length($str), '');
-  }
+  while ($str =~ m%
+                    qw(
+                      \([^)]*\)
+                    |\[[^]]*\]
+                    |\{[^}]*\}
+                    )
+                  %gx
+        ) {
+    my $qw = substr($1,1,-1);
+    my $qwpos = pos($str)-length($1);
 
-  while ($str =~ /qw\([^)]*#/sg) {
-    my $char = $1;
-    my $pos = pos($str);
+    while ($qw =~ /['"]/g) {
+      my $pos = $qwpos + pos($qw)-1;
 
-    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    print "$filename:$line:$col: comment in qw\n",
-      MyStuff::line_at_pos($str, $pos);
+      my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+      print "$filename:$line:$col:\n",
+        MyStuff::line_at_pos($str, $pos);
+    }
   }
 }
 

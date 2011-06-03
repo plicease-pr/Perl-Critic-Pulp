@@ -19,7 +19,7 @@ package Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 use 5.006;
 use strict;
 use warnings;
-use version;
+use version ();
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -70,11 +70,13 @@ sub command_as_textblock {
   my ($self, $command, $text, $linenum, $paraobj) = @_;
   ### command: $command
   unless ($command_non_text{$command}) {
-    $self->textblock ($text, $linenum, $paraobj);
-    # or padded to make the column number right ?
-    # $self->textblock ((' ' x (length($command)+1)) . $text,
-    #                   $linenum,
-    #                   $paraobj);
+    # padded to make the column number right, the leading spaces do no harm
+    # for this policy
+    $self->textblock ((' ' x (length($command)+1)) . $text,
+                      $linenum,
+                      $paraobj);
+
+    # $self->textblock ($text, $linenum, $paraobj);
   }
   return '';
 }
@@ -143,7 +145,7 @@ sub _is_bogus_part {
 1;
 __END__
 
-=for stopwords addon Ryde formatters ProhibitVerbatimMarkup monospaced monospacing
+=for stopwords addon Ryde formatters ProhibitVerbatimMarkup monospaced monospacing clickable
 
 =head1 NAME
 

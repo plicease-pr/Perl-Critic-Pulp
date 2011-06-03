@@ -29,27 +29,37 @@ use MyUniqByMD5;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $compressed_re = qr/\.gz$/;
-my $suffixes_re = qr/\.(t|pm|pl|PL)($compressed_re)?$/o;
-my $suffixes_re_with_pod = qr/\.(t|pm|pl|PL|pod)($compressed_re)?$/o;
-
 # glob => '/usr/share/perl5/Debconf/FrontEnd/*'
+
+my $compressed_re = qr/\.gz$/;
 
 sub new {
   my ($class, %options) = @_;
-  my $re = $suffixes_re;
+
+  my @suffixes = ('t','pm','pl','PL');
   if (delete $options{'include_pod'}) {
-    $re = $suffixes_re_with_pod;
+    push @suffixes, 'pod';
   }
+  if (delete $options{'exclude_t'}) {
+    @suffixes = grep {$_ ne 't'} @suffixes;
+  }
+  if (delete $options{'only_t'}) {
+    @suffixes = ('t');
+  }
+  my $suffixes = join('|',@suffixes);
+  my $suffixes_re = qr/\.($suffixes)($compressed_re)?$/;
+  ### $suffixes
+  ### $suffixes_re
   my $self = $class->SUPER::new (
                                  # globs => ['/bin/*',
                                  #           '/usr/bin/*',
                                  #           '/usr/local/bin/*',
                                  #           '/usr/local/bin2/*'],
-                                 regexp => $re,
+                                 regexp => $suffixes_re,
                                  %options);
   $self->{'uniq_ino'} = MyUniqByInode->new;
   $self->{'uniq_md5'} = MyUniqByMD5->new;
+  $self->{'my_suffixes_re'} = $suffixes_re;
   return $self;
 }
 
@@ -63,6 +73,7 @@ sub next {
     next if $filename =~ m{/DateTime/TimeZone/};  # data .pm's
     next if $filename =~ m{/Date/Manip/TZ/};      # data .pm's
     next if $filename =~ m{/Date/Manip/Offset/};  # data .pm's
+    next if $filename =~ m{/Text/Unidecode/};     # data .pm's
     next if $filename =~ m{/junk.pl};
 
     my $io;
@@ -74,7 +85,7 @@ sub next {
     $io or next;
     $self->{'uniq_ino'}->uniq($filename) or next;  # or $io ???
 
-    my $content = _slurp_if_perl ($filename, $io);
+    my $content = _slurp_if_perl ($self, $filename, $io);
     ### content: $content && "ok"
     next if ! defined $content;
 
@@ -85,11 +96,11 @@ sub next {
 }
 
 sub _slurp_if_perl {
-  my ($filename, $io) = @_;
+  my ($self, $filename, $io) = @_;
   ### slurp: "$io"
 
   my $first = '';
-  if ($filename !~ $suffixes_re) {
+  if ($filename !~ $self->{'my_suffixes_re'}) {
     # file in /bin etc must have #!.../perl
     $io->read($first, 128) or return;
     ### first part: $first

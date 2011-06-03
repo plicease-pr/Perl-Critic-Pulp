@@ -16,10 +16,10 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# perlcritic -s inprogressLinkCommas inprogressLinkCommas.pm
-# perlcritic -s inprogressLinkCommas /usr/share/perl5/MIME/Body.pm /usr/share/perl5/XML/Twig.pm
+# perlcritic -s LinkCommas LinkCommas.pm
+# perlcritic -s LinkCommas /usr/share/perl5/MIME/Body.pm /usr/share/perl5/XML/Twig.pm
 
-package Perl::Critic::Policy::Documentation::inprogressLinkCommas;
+package Perl::Critic::Policy::Documentation::LinkCommas;
 use 5.006;
 use strict;
 use warnings;
@@ -36,16 +36,16 @@ use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  ### inprogressLinkCommas on: $elem->content
+  ### LinkCommas on: $elem->content
 
-  my $parser = Perl::Critic::Pulp::PodParser::inprogressLinkCommas->new
+  my $parser = Perl::Critic::Pulp::PodParser::LinkCommas->new
     (-process_cut_cmd => 1,
      policy       => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
 
-package Perl::Critic::Pulp::PodParser::inprogressLinkCommas;
+package Perl::Critic::Pulp::PodParser::LinkCommas;
 use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
@@ -172,7 +172,7 @@ __END__
 
 =head1 NAME
 
-Perl::Critic::Policy::Documentation::inprogressLinkCommas - avoid comma at end of section
+Perl::Critic::Policy::Documentation::LinkCommas - avoid comma at end of section
 
 =head1 DESCRIPTION
 
@@ -187,10 +187,10 @@ cut and paste.
 
     =head1 AND ANOTHER
 
-If you don't care about this you can disable C<inprogressLinkCommas> from your
+If you don't care about this you can disable C<LinkCommas> from your
 F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
-    [-Documentation::inprogressLinkCommas]
+    [-Documentation::LinkCommas]
 
 =head1 SEE ALSO
 

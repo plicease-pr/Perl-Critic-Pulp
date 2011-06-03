@@ -44,7 +44,7 @@ my $critic = Perl::Critic->new
    '-single-policy' => 'CodeLayout::inprogressProhibitFatCommaAfterNewline');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-     'single policy inprogressProhibitFatCommaAfterNewline');
+      'single policy inprogressProhibitFatCommaAfterNewline');
 
   # my $policy = $p[0];
   # is ($policy->VERSION, $want_version, 'VERSION object method');
@@ -66,11 +66,15 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
   my ($want_count, $str) = @$data;
 
   my @violations = $critic->critique (\$str);
-  foreach (@violations) {
-    diag ($_->description);
-  }
+
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str");
+
+  if ($got_count != $want_count) {
+    foreach (@violations) {
+      diag ($_->description);
+    }
+  }
 }
 
 exit 0;

@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 18;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ require Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 60;
+my $want_version = 61;
 is ($Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION,
@@ -60,6 +60,13 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  [ 0, "=pod\n\n=for ProhibitVerbatimMarkup allow next\n\n    Some C<markup>" ],
+                  [ 1, "=pod\n\n=for ProhibitVerbatimMarkup allow next\n\n    Some C<markup>\n\n    But not B<more>\n" ],
+
+                  [ 0, "=pod\n\n=for ProhibitVerbatimMarkup allow next 2\n\n    Some C<markup>\n\nSome more C<markup>" ],
+                  [ 1, "=pod\n\n=for ProhibitVerbatimMarkup allow next 2\n\n    Some C<markup>\n\nSome more C<markup>\n\n    But not B<a third>\n" ],
+
+
                   [ 1, "=pod\n\n    Some C<markup>" ],
                   [ 1, "=pod\n\n    E<gt>" ],
                   [ 1, "=pod\n\n    J<< something >>" ],
@@ -85,13 +92,14 @@ foreach my $data (
 
     my @violations = $critic->critique (\$str);
 
-    # foreach (@violations) {
-    #   diag ("violation: ", $_->description,
-    #         "\nline_number=", $_->line_number);
-    # }
-
     my $got_count = scalar @violations;
     is ($got_count, $want_count, "str: '$str'");
+
+    if ($got_count != $want_count) {
+      foreach (@violations) {
+        diag ($_->description);
+      }
+    }
   }
 }
 

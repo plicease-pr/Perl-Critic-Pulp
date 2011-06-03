@@ -17,7 +17,7 @@ package Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 use 5.006;
 use strict;
 use warnings;
-use version;
+use version ();
 
 # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
 use PPI 1.208;
@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -431,6 +431,7 @@ sub _is_uninitialized_my {
                 && $after eq '='));
 }
 
+# FIXME: is this enough for prototyped funcalls in the args?
 sub _skip_to_next_arg {
   my ($elem) = @_;
   for (;;) {
@@ -711,7 +712,7 @@ sub _symbol_or_list_symbol {
 1;
 __END__
 
-=for stopwords addon config MinimumVersion Pragma CPAN prereq multi-constant concats
+=for stopwords addon config MinimumVersion Pragma CPAN prereq multi-constant concats pragma endianness filehandle asciz builtin Ryde
 
 =head1 NAME
 

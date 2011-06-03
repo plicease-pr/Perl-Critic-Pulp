@@ -24,7 +24,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 
 use constant supported_parameters => ();
@@ -134,7 +134,8 @@ usual way (see L<Perl::Critic/CONFIGURATION>),
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
 L<Perl::Critic::Policy::CodeLayout::RequireTrailingCommas>,
 L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitCommaSeparatedStatements>,
 L<Perl::Critic::Policy::Tics::ProhibitManyArrows>

@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 60;
+my $want_version = 61;
 is ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION, $want_version, 'VERSION class method');
 {
@@ -73,7 +73,7 @@ my $critic = Perl::Critic->new
    '-single-policy' => '^Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral$');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-     'single policy UnexpandedSpecialLiteral');
+      'single policy UnexpandedSpecialLiteral');
 
   my $policy = $p[0];
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -134,12 +134,14 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
   my ($want_count, $str) = @$data;
   my @violations = $critic->critique (\$str);
 
-  # foreach (@violations) {
-  #   diag ($_->description);
-  # }
-
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str");
+
+  if ($got_count != $want_count) {
+    foreach (@violations) {
+      diag ($_->description);
+    }
+  }
 }
 
 exit 0;

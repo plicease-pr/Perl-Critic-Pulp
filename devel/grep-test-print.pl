@@ -17,12 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-# egrep -nH -ire '[^[a-z-]-[a-ln-z0-9][a-z0-9]*::' /usr/share/perl/5.10
-# /usr/share/perl/5.12/Math/Complex.pm:712:	    -CORE::exp(CORE::log(-$z)/3) :
-# /usr/share/perl/5.12/Math/Complex.pm:1043:	my $v = -CORE::log($alpha + CORE::sqrt($alpha*$alpha-1));
 
-
-# XML::RSS::TimingBot \cm\cj lower case
 
 use 5.005;
 use strict;
@@ -36,31 +31,28 @@ use Text::Tabs ();
 
 my $verbose = 0;
 
-my $l = MyLocatePerl->new;
+my $l = MyLocatePerl->new (only_t => 1);
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  # if ($str =~ /^__END__/m) {
-  #   substr ($str, $-[0], length($str), '');
-  # }
-
+  if ($str =~ /^__END__/m) {
+    substr ($str, $-[0], length($str), '');
+  }
   # strip comments
-  #  $str =~ s/#.*//mg;
+  $str =~ s/#.*//mg;
 
-  while ($str =~ /((^|[^>A-Za-z])\w+
-                    ([ \t]*(\#[^\n]*)?\n)+
-                    [ \t]*=>
-                  )/sgx) {
-    my $pos2 = pos($str);
-    my $pos = $pos2 - length($1);
+  $str =~ /\buse\s+Test::More\b/
+    or next;
+
+  while (
+         $str =~ /(\b(?<!['"])print\b)(?!\s+[A-Z_]+\s+['"])/sg
+        ) {
+    my $pos = pos($str) - length($1);
 
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
     my $s1 = MyStuff::line_at_pos($str, $pos);
-    my $s2 = MyStuff::line_at_pos($str, $pos2);
 
-    # substr($s,0,$col) =~ /q[qx]|"/ or next;
-
-    print "$filename:$line:$col:\n$s1$s2";
+    print "$filename:$line:$col:\n$s1";
   }
 }
 

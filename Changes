@@ -17,6 +17,11 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
+Version 61, June 2011
+    - new policies ProhibitArrayAssignAref, RequireTrailingCommaAtNewline,
+      ProhibitUnbalancedParens
+
 Version 60, May 2011
     - PerlMinimumVersionAndWhy new 5.6 open(my $fh,...)
 

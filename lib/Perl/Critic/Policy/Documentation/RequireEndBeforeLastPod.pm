@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -142,7 +142,8 @@ L<Perl::Critic/CONFIGURATION>),
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
 L<Perl::Critic::Policy::Documentation::RequirePodAtEnd>
 
 =head1 HOME PAGE

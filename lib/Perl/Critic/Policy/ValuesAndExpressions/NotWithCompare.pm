@@ -27,7 +27,7 @@ use Perl::Critic::Utils 1.100 qw(is_perl_builtin
                                  is_perl_builtin_with_no_arguments
                                  precedence_of);
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 
 use constant supported_parameters => ();
@@ -321,7 +321,8 @@ anything else too weird is rare.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>
 
 =head1 HOME PAGE
 

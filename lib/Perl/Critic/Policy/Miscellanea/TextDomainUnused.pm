@@ -24,7 +24,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_function_call);
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -158,7 +158,9 @@ expressions.)
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>, L<Locale::TextDomain>,
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
+L<Locale::TextDomain>,
 L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 
 =head1 HOME PAGE

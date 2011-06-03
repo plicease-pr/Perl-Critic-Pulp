@@ -30,7 +30,7 @@ use Perl::Critic::Utils qw(is_included_module_name
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -267,7 +267,8 @@ strict> picks up anyway when it runs.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>
 
 =head1 HOME PAGE
 

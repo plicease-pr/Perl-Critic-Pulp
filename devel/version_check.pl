@@ -22,7 +22,7 @@ use warnings;
 
 use lib '.';
 use lib 'devel';
-# use version_check 1.1;
+use version_check 1.1;
 
 {
   my $v = version_check->VERSION;

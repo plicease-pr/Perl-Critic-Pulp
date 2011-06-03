@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -225,7 +225,9 @@ their keys clash.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>, L<perldata/"Special Literals">
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
+L<perldata/"Special Literals">
 
 =head1 HOME PAGE
 

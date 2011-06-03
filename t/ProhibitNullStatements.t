@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 60;
+my $want_version = 61;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION, $want_version, 'VERSION class method');
 {
@@ -77,12 +77,14 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
   {
     my @violations = $critic->critique (\$str);
 
-    # foreach (@violations) {
-    #   diag ($_->description);
-    # }
-
     my $got_count = scalar @violations;
     is ($got_count, $want_count, "str: $str");
+
+    if ($got_count != $want_count) {
+      foreach (@violations) {
+        diag ($_->description);
+      }
+    }
   }
 }
 
@@ -98,12 +100,14 @@ foreach my $data ([ 0, ';# a comment' ],
   {
     my @violations = $critic->critique (\$str);
 
-    # foreach (@violations) {
-    #   diag ($_->description);
-    # }
-
     my $got_count = scalar @violations;
     is ($got_count, $want_count, "str: $str");
+
+    if ($got_count != $want_count) {
+      foreach (@violations) {
+        diag ($_->description);
+      }
+    }
   }
 }
 

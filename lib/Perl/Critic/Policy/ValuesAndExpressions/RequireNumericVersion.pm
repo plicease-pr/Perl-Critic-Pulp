@@ -19,7 +19,7 @@ use 5.006;
 use strict;
 use warnings;
 use Scalar::Util;
-use version;
+use version ();
 
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils 'precedence_of';
@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -132,24 +132,26 @@ Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion - $VERSION a p
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It ask you to use a plain number in module C<$VERSION> so that
-version checking within a program will work properly.  This policy is under
-the C<bugs> theme (see L<Perl::Critic/POLICY THEMES>).
+addon.  It ask you to use a plain number in a module C<$VERSION> so that
+Perl's builtin version works.  This policy is under the C<bugs> theme (see
+L<Perl::Critic/POLICY THEMES>).
 
 Any literal number is fine, or a string which is a number, and for Perl 5.10
-up the extra forms of the C<version> module too, but a non-numeric string is
-not allowed.
+up the extra forms of the C<version> module too,
 
-    $VERSION = '1.2alpha';    # bad
     $VERSION = 123;           # ok
     $VERSION = '1.5';         # ok
     $VERSION = 1.200_001;     # ok
     $VERSION = '1.200_001';   # ok for 5.10 up
 
+But a non-numeric string is not allowed,
+
+    $VERSION = '1.2alpha';    # bad
+
 A number is needed for version checking like
 
-    use Foo 1.0;       # Perl's module checking
-    Foo->VERSION(1);   # app runtime check
+    use Foo 1.0;
+    Foo->VERSION(1);
 
 and it's highly desirable so applications can do compares like
 
@@ -163,7 +165,7 @@ end up appearing as a lesser version than intended.
 If you've loaded the C<version.pm> module, then a C<$VERSION> not accepted
 by C<version.pm> will in fact croak
 
-    use version;
+    use version ();
     print "version ",Foo->VERSION,"\n";
     # croaks "Invalid version format ..." if $Foo::VERSION is bad
 
@@ -171,7 +173,7 @@ by C<version.pm> will in fact croak
 
 This policy only looks at C<$VERSION> in modules.  C<$VERSION> in a script
 can be anything, as it won't normally have a C<use> checks etc.  A script
-C<$VERSION> is anything outside any C<package> statement, or under an
+C<$VERSION> is anything outside any C<package> statement scope, or under an
 explicit C<package main>.
 
     package main;
@@ -180,7 +182,7 @@ explicit C<package main>.
 =head2 Underscores in Perl 5.8 and Earlier
 
 In Perl 5.8 and earlier a string like "1.200_333" is truncated to the
-numeric part, ie. 1.200, and thus can fail to satisfy
+numeric part, ie. 1.200, and can thus fail to satisfy
 
     $VERSION = '1.222_333';   # bad
     $VERSION = 1.222_333;     # ok
@@ -188,28 +190,27 @@ numeric part, ie. 1.200, and thus can fail to satisfy
     use Foo 1.222_331;  # unsatisfied by $VERSION='string' form
 
 A number literal with an "_" is allowed.  Underscores in literals are
-stripped out, as described in L<perldata>, but not in the automatic string
-to number conversion and a string like C<$VERSION = '1.222_333'> provokes a
-warning and stops at 1.222.
+stripped out (see L<perldata>), but not in the automatic string to number
+conversion so a string like C<$VERSION = '1.222_333'> provokes a warning and
+stops at 1.222.
 
-On CPAN an underscore in a distribution version number means a developer
-pre-release.  But avoid that in module C<$VERSION> strings for the problems
-above.  The suggestion is to either omit the underscore or make it a number
-literal not a string,
+On CPAN an underscore in a distribution version number is rated a developer
+pre-release.  But don't put it in module C<$VERSION> strings due to the
+problems above.  The suggestion is to either omit the underscore or make it
+a number literal not a string,
 
     $VERSION = 1.002003;      # ok
     $VERSION = 1.002_003;     # ok
 
 If using C<ExtUtils::MakeMaker> then it may be necessary to put an explicit
-C<VERSION> in F<Makefile.PL> to get the underscore in the dist name, rather
-than C<VERSION_FROM> a module file, since C<VERSION_FROM> takes both the
-above to be 1.002003.
+C<VERSION> in F<Makefile.PL> to get the underscore in the dist name, since
+C<VERSION_FROM> a module file takes both the above to be 1.002003.
 
-=head2 C<version> module in Perl 5.10
+=head2 C<version> module in Perl 5.10 up
 
 In Perl 5.10 the C<use> etc module version checks parse C<$VERSION> with the
-C<version.pm> module.  This policy allows C<version> module forms if there's
-an explicit C<use 5.010> or higher in the file.
+C<version.pm> module.  This policy allows the C<version> module forms if
+there's an explicit C<use 5.010> or higher in the file.
 
     use 5.010;
     $VERSION = '1.222_333';   # ok for 5.10
@@ -225,9 +226,9 @@ with say
 
     if (eval { Foo->VERSION(1.234) }) {
 
-or apply C<version-E<gt>new()> to one of the args.  (Could have another
-policy to not explicitly compare C<$VERSION>, or perhaps an option to
-tighten this policy to require numbers even in 5.10?)
+or apply C<version-E<gt>new()> to one of the args.  (Maybe another policy to
+not explicitly compare C<$VERSION>, or perhaps an option to tighten this
+policy to require numbers even in 5.10?)
 
 =head2 Exponential Format
 
@@ -239,9 +240,8 @@ literals are fine.
 
 Exponential strings don't work in Perl 5.10 because they're not recognised
 by the C<version> module (v0.82).  They're fine in Perl 5.8 and earlier, but
-this policy treats such a string as non-numeric in the interests of
-compatibility with later Perl.  Exponentials in versions should be unusual
-anyway.
+in the interests of maximum compatibility this policy treats such a string
+as non-numeric.  Exponentials in versions should be unusual anyway.
 
 =head2 Disabling
 
@@ -253,11 +253,11 @@ F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 =head2 Other Ways to Do It
 
 All the version number stuff with underscores, multi-dots, v-nums, etc is a
-diabolical mess.  And floating point in version checks is asking for
-rounding error trouble (though fine in practice).  A radical simplification
+diabolical mess, and floating point in version checks is asking for rounding
+error trouble (though normally fine in practice).  A radical simplification
 is to just use integer version numbers.
 
-    $VERSION = 42;
+    $VERSION = 123;
 
 If you want sub-versions then increment by 100 say.  Even a YYYYMMDD date is
 a possibility.
@@ -266,7 +266,8 @@ a possibility.
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>
 
 L<Perl::Critic::Policy::Modules::RequireVersionVar>,
 L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitComplexVersion>,

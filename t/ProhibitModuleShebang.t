@@ -29,7 +29,7 @@ use Test::More tests => 15;
 require Perl::Critic::Policy::Modules::ProhibitModuleShebang;
 
 #-----------------------------------------------------------------------------
-my $want_version = 60;
+my $want_version = 61;
 is ($Perl::Critic::Policy::Modules::ProhibitModuleShebang::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitModuleShebang->VERSION,
@@ -81,19 +81,20 @@ foreach my $data ([ 1, 'Foo.pm', '#!/usr/bin/perl -w' ],
               %parameters);
 
   $filename = File::Spec->catdir ($dir, $filename);
-  diag $filename;
+  # diag "filename $filename";
   open my $fh, '>', $filename or die;
   print $fh $str or die;
   close $fh or die;
 
   my @violations = $critic->critique ($filename);
-
-  # foreach (@violations) {
-  #   diag ($_->description);
-  # }
-
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str\n_allow_bin_false=$policy->{'_allow_bin_false'}");
+
+  if ($got_count != $want_count) {
+    foreach (@violations) {
+      diag ($_->description);
+    }
+  }
 
   unlink $filename  or die;
 }

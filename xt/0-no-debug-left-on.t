@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this file.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# cf Test::NoSmartComments which uses Module::ScanDeps.
+
 require 5;
 use strict;
 
@@ -51,9 +54,10 @@ sub check {
 
   @files = grep {m{
                     ^lib/
-                  |^examples/.*\.pl$
+                  |^examples/.*\.p[lm]$
                   |^Makefile.PL$
-                  |t/.*\.t$
+                  |^t/     # .pm's under t too
+                  |^xt/    # though only author tests
                 }x
               } @files;
 
@@ -72,7 +76,9 @@ sub check {
       # only a DEBUG=> a non-zero number is bad, so an expression can copy a
       # debug from another package
       if (/(DEBUG\s*=>\s*[1-9][0-9]*)/
-          || /^[ \t]*((use|no) Smart::Comments)/) {
+          || /^[ \t]*((use|no) Smart::Comments)/
+          || /^[ \t]*(use lib\b.*devel.*)/
+         ) {
         print STDERR "\n$filename:$.: leftover: $_\n";
         $good = 0;
       }

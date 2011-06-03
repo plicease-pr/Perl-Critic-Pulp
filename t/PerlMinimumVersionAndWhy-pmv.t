@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 60;
+  my $want_version = 61;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -240,7 +240,7 @@ HERE
                   # _Pulp__5010_pack_format
                   [ 1, 'use 5.008; unpack ("i<", $bytes)' ],
                   [ 0, 'use 5.010; unpack ("i<", $bytes)' ],
-                  [ 1, 'unpack ("i<", $bytes)', 
+                  [ 1, 'unpack ("i<", $bytes)',
                     { _above_version => version->new('5.8.0') } ],
                   [ 0, 'unpack ("i<", $bytes)',
                     { _above_version => version->new('5.10.0') } ],
@@ -291,12 +291,14 @@ HERE
   # only the Pulp ones, not any Perl::MinimumVersion itself might gain
   @violations = grep {$_->description =~ /^_Pulp_/} @violations;
 
-  # foreach my $violation (@violations) {
-  #   diag ('violation: ', $violation->description);
-  # }
-
   my $got_count = scalar @violations;
   is ($got_count, $want_count, $name);
+
+  if ($got_count != $want_count) {
+    foreach (@violations) {
+      diag ($_->description);
+    }
+  }
 }
 
 exit 0;

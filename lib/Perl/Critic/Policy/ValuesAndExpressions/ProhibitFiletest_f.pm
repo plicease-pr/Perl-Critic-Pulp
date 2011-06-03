@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 60;
+our $VERSION = 61;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -147,8 +147,12 @@ F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>, L<Perl::Critic>, L<perlfunc/open>, L<POSIX/ERRNO>,
-L<Errno>, C<errno(3)>
+L<Perl::Critic::Pulp>,
+L<Perl::Critic>,
+L<perlfunc/open>,
+L<POSIX/ERRNO>,
+L<Errno>,
+L<errno(3)>
 
 =head1 HOME PAGE
 
