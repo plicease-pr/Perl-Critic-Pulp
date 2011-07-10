@@ -35,7 +35,8 @@ MyMakeMakerExtras::WriteMakefile
 
    PREREQ_PM => {
                  # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
-                 'PPI' => '1.208',
+                 # 1.212 for PPI::Token::Quote::Literal literal()
+                 'PPI' => '1.212',
                  'PPI::Document' => 0,
 
                  # 1.082 or some such for new style parameter specs

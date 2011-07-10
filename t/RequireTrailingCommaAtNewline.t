@@ -25,7 +25,7 @@ use Test::More tests => 40;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 61;
+my $want_version = 62;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,

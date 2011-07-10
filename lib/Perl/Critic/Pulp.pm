@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 61;
+our $VERSION = 62;
 
 1;
 __END__
@@ -198,18 +198,19 @@ The restrictive policies are meant as building blocks for a limited house
 style.  C<ProhibitBarewordDoubleColon> above is an example of this,
 something like C<ProhibitUnlessBlocks> is another.  They're usually a matter
 of personal preference (and non de gustibus disputandum), but following all
-gives away big parts of the language and ends up with very un-typical code.
+gives away big parts of the language and will in fact end up with very
+un-typical code.
 
-Some policies are geared a bit towards beginners.
+Some of the restrictive policies are geared towards beginners.
 C<ProhibitUnknownBackslash> above or C<RequireInitializationForLocalVars>
-are along those lines.  If you know what you're doing there may be good
-backslashing the prohibition doesn't know, and local variable initializers
-make no sense for output variables like C<$!> when you get to the level of
-using C<local> to preserve such values.
+are along those lines.  There may be good backslashing the prohibition
+doesn't recognise, and say local variable initializers make no sense for
+output variables like C<$!>, once you get to the level of knowing to use
+C<local> to preserve such values.
 
 In general the POD docs are supposed to explain the motivation so you can
 see if you want it or not, but if you're not turning off or drastically
-customizing about half of all policies then you're either not trying or
+customizing at least half of all policies then you're either not trying or
 you're much too easily lead!
 
 =head1 OTHER NOTES

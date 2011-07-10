@@ -77,6 +77,8 @@ devel/MyUniqByMD5.pm
 devel/name.pod
 devel/not.sh
 devel/notwithcompare.pl
+devel/open-space.pl
+devel/parse-backslash.pl
 devel/perl-minimum.pl
 devel/pod-minimum.pl
 devel/posix-import.pl
@@ -168,6 +170,7 @@ t/TextDomainPlaceholders.t
 t/TextDomainUnused.t
 t/UnexpandedSpecialLiteral.t
 t/Utils.t
+xt/0-file-is-part-of.t
 xt/0-META-read.t
 xt/0-no-debug-left-on.t
 xt/0-Test-ConsistentVersion.t
