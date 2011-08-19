@@ -107,6 +107,7 @@ lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
 lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitAdjacentLinks.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitLinkToSelf.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitUnbalancedParens.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
@@ -150,6 +151,7 @@ t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
 t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
+t/ProhibitLinkToSelf.t
 t/ProhibitModuleShebang.t
 t/ProhibitNullStatements.t
 t/ProhibitParagraphTwoDots.t

@@ -41,6 +41,9 @@ my $option_t_files = 0;
 GetOptions
   (require_order => 1,
    t => \$option_t_files,
+   linkself => sub {
+     push @option_policies, 'Documentation::ProhibitLinkSelf$';
+   },
    unbal => sub {
      push @option_policies, 'Documentation::inprogressProhibitUnbalancedParens';
    },

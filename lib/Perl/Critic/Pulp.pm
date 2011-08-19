@@ -21,12 +21,12 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 62;
+our $VERSION = 63;
 
 1;
 __END__
 
-=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical
+=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical parens de gustibus disputandum backslashing initializers
 
 =head1 NAME
 
@@ -102,7 +102,7 @@ Perl version declared against POD features used.
 
 =item L<Compatibility::ProhibitUnixDevNull|Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull>
 
-Prefer C<File::Spec-E<gt>devnull> over explicit F</dev/null>.
+Prefer C<< File::Spec->devnull >> over explicit F</dev/null>.
 
 =back
 
@@ -166,11 +166,15 @@ Unbalanced or mismatched ( ) parens, brackets and braces.
 
 =item L<Documentation::ProhibitAdjacentLinks|Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>
 
-Put commas or some text in between adjacent C<LE<lt>E<gt>> links.
+Put commas or some text in between adjacent C<< LE<lt>E<gt> >> links.
 
 =item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
 
-Avoid CE<lt>E<gt> in NAME section, bad for man's "apropos" output.
+Avoid C<< CE<lt>E<gt> >> in NAME section, bad for man's "apropos" output.
+
+=item L<Documentation::ProhibitLinkToSelf|Perl::Critic::Policy::Documentation::ProhibitLinkToSelf>
+
+Don't C<< LE<lt>E<gt> >> link to the document itself.
 
 =item L<Documentation::ProhibitParagraphTwoDots|Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots>
 
@@ -178,11 +182,11 @@ Don't end paragraph with ".." (stray extra dot).
 
 =item L<Documentation::ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>
 
-Verbatim paragraphs not expanding C<CE<lt>E<gt>> etc markup.
+Verbatim paragraphs not expanding C<< CE<lt>E<gt> >> etc markup.
 
 =item L<Documentation::RequireLinkedURLs|Perl::Critic::Policy::Documentation::RequireLinkedURLs>
 
-Use C<LE<lt>E<gt>> markup on URLs.
+Use C<< LE<lt>E<gt> >> markup on URLs.
 
 =back
 

@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 13;
 
 use lib 't';
 use MyTestHelpers;
@@ -29,19 +29,19 @@ BEGIN { MyTestHelpers::nowarnings() }
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-require Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks;
+require Perl::Critic::Policy::Documentation::ProhibitLinkToSelf;
 
 
 #------------------------------------------------------------------------------
 my $want_version = 63;
-is ($Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::VERSION,
+is ($Perl::Critic::Policy::Documentation::ProhibitLinkToSelf::VERSION,
     $want_version, 'VERSION variable');
-is (Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION,
+is (Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION,
     $want_version, 'VERSION class method');
 {
-  ok (eval { Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  ok (eval { Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION($check_version); 1 }, "VERSION class check $check_version");
+  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
 
 #------------------------------------------------------------------------------
@@ -49,10 +49,10 @@ require Perl::Critic;
 diag "Perl::Critic version ",Perl::Critic->VERSION;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks$');
+   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitLinkToSelf$');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-      'single policy ProhibitAdjacentLinks');
+      'single policy ProhibitLinkToSelf');
 
   my $policy = $p[0];
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -64,34 +64,55 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
-   [ 0, "=pod\n\nL<One>\n\nL<Two>\n" ],
-   [ 1, "=pod\n\nL<One> L<Two>\n" ],
-   [ 0, "=pod\n\nL<One> and L<Two>\n" ],
-   [ 2, "=pod\n\nL<One>\nL<Two>\nL<Three>\n" ],
-   [ 1, "=pod\n\nblah blah L<One>\t\tL<Two> blah\n" ],
+   [ 1, "
+=head1 NAME
 
-   [ 1, "=pod\n\nL<One> L<One>\n" ],
-   [ 0, "=pod\n\nL<One> L<display|One>\n" ],
-   [ 0, "=pod\n\nL<display|One> L<One>\n" ],
-   [ 0, "=pod\n\nL<display|One> L<xyzzy|One>\n" ],
-   [ 1, "=pod\n\nL<display|One> L<xyzzy|Two>\n" ],
+Foo::Bar - something
 
-   [ 0, "=pod\n\nS<< L<One>\n\nL<Two> >>\n" ],
+L<Foo::Bar>
+" ],
 
-   # from Template::Context, but the # separator is wrong
-   # [ 0, "=pod\n\nL<Template> L<new()|Template#new()>\n" ],
+   [ 1, "
+=head1 NAME
 
-   # from DBIx::Class::Storage::DBI
-   [ 0,
-     "=pod\n\nL<DBI|DBI/ATTRIBUTES_COMMON_TO_ALL_HANDLES> "
-     . "L<connection|DBI/Database_Handle_Attributes>\n" ],
-   [ 1,
-     "=pod\n\nL<DBI/ATTRIBUTES_COMMON_TO_ALL_HANDLES>"
-     . " L<DBI/Database_Handle_Attributes>\n" ],
+Foo::Bar - something
 
-   # from DhMakePerl::PodParser of dh-make-perl
-   [ 0, "=pod\n\nL<Pod::Parser> L<command|Pod::Parser/command>" ],
-   [ 1, "=pod\n\nL<Pod::Parser> L<Pod::Parser/command>" ],
+L<Foo::Bar>
+" ],
+
+   [ 1, "
+=head1 NAME
+
+Foo::Bar - something
+
+=head2 L<Foo::Bar>
+" ],
+
+   [ 1, "
+=head1 NAME
+
+Foo::Bar - something
+
+=head1 SEE ALSO
+
+L<Foo::Bar>
+" ],
+
+   [ 1, "
+=head1 NAME
+
+C<Foo::Bar> - something
+
+L<Foo::Bar>
+" ],
+
+   [ 1, "
+=head1 NAME
+
+Foo::Bar - something
+
+L<foobar|Foo::Bar>
+" ],
 
   ) {
 

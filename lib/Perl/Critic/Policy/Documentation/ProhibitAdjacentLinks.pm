@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 62;
+our $VERSION = 63;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -165,7 +165,7 @@ This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It asks you not to have two adjacent LE<lt>E<gt> sequences in a
 paragraph.  For example,
 
-=for ProhibitVerbatimMarkup allow next
+=for ProhibitVerbatimMarkup allow next 2
 
     =head1 SEE ALSO
 

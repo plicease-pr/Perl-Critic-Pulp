@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 62;
+our $VERSION = 63;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -126,7 +126,7 @@ addon.  It reports POD verbatim paragraphs which contain markup like
 BE<lt>E<gt> or CE<lt>E<gt>.  That markup will appear literally in the
 formatted output where you may have meant fontification.
 
-=for ProhibitVerbatimMarkup allow next
+=for ProhibitVerbatimMarkup allow next 3
 
     =head1 SOME THING
 
@@ -157,7 +157,7 @@ Don't forget a verbatim paragraph extends to the next blank line and
 includes unindented lines until then (see L<perlpodspec/Pod Definitions>).
 If you forget the blank the verbatimness continues
 
-=for ProhibitVerbatimMarkup allow next
+=for ProhibitVerbatimMarkup allow next 2
 
     =pod
 
@@ -198,7 +198,7 @@ If a verbatim paragraph is showing how to write POD markup then you can add
 an C<=for> to tell ProhibitVerbatimMarkup to allow it.  This happens most
 often in documentation for modules which themselves operate on POD markup.
 
-=for ProhibitVerbatimMarkup allow next
+=for ProhibitVerbatimMarkup allow next 5
 
     =for ProhibitVerbatimMarkup allow next
 

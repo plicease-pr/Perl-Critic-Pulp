@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 62;
+my $want_version = 63;
 is ($Perl::Critic::Policy::Documentation::RequireLinkedURLs::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireLinkedURLs->VERSION,
