@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(is_function_call is_method_call);
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 63;
+our $VERSION = 64;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',

@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 63;
+my $want_version = 64;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas->VERSION, $want_version, 'VERSION class method');
 {

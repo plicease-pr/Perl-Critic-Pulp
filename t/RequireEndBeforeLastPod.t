@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 63;
+my $want_version = 64;
 is ($Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod->VERSION,

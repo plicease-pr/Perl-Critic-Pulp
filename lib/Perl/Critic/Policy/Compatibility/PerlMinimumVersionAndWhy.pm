@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 63;
+our $VERSION = 64;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',

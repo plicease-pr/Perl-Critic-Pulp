@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
-our $VERSION = 63;
+our $VERSION = 64;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -106,11 +106,13 @@ sub textblock {
 sub _check_text {
   my ($self, $text, $linenum, $pod_obj) = @_;
   ### _check_text() ...
+  ### $linenum
   return $self->interpolate($text, $linenum);
 }
 
 sub interior_sequence {
   my ($self, $cmd, $text, $pod_obj) = @_;
+  ### interior_sequence() ...
 
   if ($cmd eq 'X') {
     # index entry, no text output, but keep newlines for linenum
@@ -135,7 +137,7 @@ sub interior_sequence {
           : "L<> link to this POD itself, suggest just C<> markup is enough"),
          $linenum, $text, $pos);
     }
-    return $display;
+    return (defined $display ? $display : $name);
   }
   return $text;
 }
