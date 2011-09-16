@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 64;
+our $VERSION = 65;
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -123,7 +123,7 @@ sub _following_expression {
 1;
 __END__
 
-=for stopwords addon toplevel ie CPAN pre-release args exponentials multi-dots v-nums YYYYMMDD Ryde
+=for stopwords addon toplevel ie CPAN pre-release args exponentials multi-dots v-nums YYYYMMDD Ryde builtin
 
 =head1 NAME
 

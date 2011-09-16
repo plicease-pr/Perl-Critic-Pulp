@@ -18,6 +18,7 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+use 5.006;
 use strict;
 use warnings;
 use Test::More tests => 4;
@@ -28,7 +29,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Pulp;
 
-my $want_version = 64;
+my $want_version = 65;
 is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {

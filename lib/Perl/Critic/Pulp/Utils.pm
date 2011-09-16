@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version ();
 
-our $VERSION = 64;
+our $VERSION = 65;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version
@@ -183,7 +183,7 @@ sub elem_in_BEGIN {
 1;
 __END__
 
-=for stopwords perlcritic Ryde
+=for stopwords perlcritic Ryde ie
 
 =head1 NAME
 

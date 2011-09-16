@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 64;
+my $want_version = 65;
 is ($Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion->VERSION,

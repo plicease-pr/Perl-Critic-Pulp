@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(is_function_call is_method_call);
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 64;
+our $VERSION = 65;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -151,6 +151,8 @@ sub _is_preceded_by_array {
 
 1;
 __END__
+
+=for stopwords addon paren Parens hashref boolean Ryde
 
 =head1 NAME
 

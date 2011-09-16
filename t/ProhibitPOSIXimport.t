@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Modules::ProhibitPOSIXimport;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 64;
+my $want_version = 65;
 is ($Perl::Critic::Policy::Modules::ProhibitPOSIXimport::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitPOSIXimport->VERSION,
@@ -169,7 +169,7 @@ foreach my $data
 
   foreach my $str ($str, $str . ';') {
     my @violations = $critic->critique (\$str);
-    
+
     my $got_count = scalar @violations;
     is ($got_count, $want_count, "str: $str");
 

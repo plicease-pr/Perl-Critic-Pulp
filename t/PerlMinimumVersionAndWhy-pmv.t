@@ -38,7 +38,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 137;
+plan tests => 153;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 64;
+  my $want_version = 65;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -67,6 +67,29 @@ diag "pulp magic fix: ",($have_pulp_5010_magic_fix||0);
 
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
+
+                  # _Pulp__var_method_without_parens
+                  [ 1, 'use 5.005; $obj->$method' ],
+                  [ 0, 'use 5.006; $obj->$method' ],
+                  [ 1, 'use 5.005; Foo->$method == 123' ],
+                  [ 0, 'use 5.006; Foo->$method == 123' ],
+                  # parens always ok
+                  [ 0, 'use 5.005; Foo->$method()' ],
+                  [ 0, 'use 5.005; $obj->$method()' ],
+                  [ 0, 'use 5.005; $obj->$method(123)' ],
+
+                  # _Pulp__UNIVERSAL_methods_5004
+                  [ 1, 'require 5; Foo->VERSION' ],
+                  [ 0, 'use 5.004; Foo->VERSION' ],
+                  [ 1, 'require 5; Foo->isa("Bar")' ],
+                  [ 0, 'use 5.004; Foo->isa("Bar")' ],
+                  [ 1, 'require 5; Foo->can("new")' ],
+                  [ 0, 'use 5.004; Foo->can("new")' ],
+
+                  # _Pulp__UNIVERSAL_methods_5004
+                  [ 1, 'require 5; Foo->DOES' ],
+                  [ 1, 'use 5.008; Foo->DOES' ],
+                  [ 0, 'use 5.010; Foo->DOES' ],
 
                   # _Pulp__delete_array_elem
                   [ 1, 'use 5.005; delete $x[0]' ],

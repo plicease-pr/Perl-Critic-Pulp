@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 64;
+our $VERSION = 65;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -129,6 +129,7 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_Pulp__0b_number}         = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__syswrite_length_optional} = $v5006;
   $Perl::MinimumVersion::CHECKS{_Pulp__open_my_filehandle} = $v5006;
+  $Perl::MinimumVersion::CHECKS{_Pulp__var_method_without_parens} = $v5006;
 
   # 5.005
   my $v5005 = version->new('5.005');
@@ -146,6 +147,10 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_Pulp__for_loop_variable_using_my} = $v5004;
   $Perl::MinimumVersion::CHECKS{_Pulp__arrow_coderef_call}         = $v5004;
   $Perl::MinimumVersion::CHECKS{_Pulp__sysseek_builtin}            = $v5004;
+
+  # UNIVERSAL.pm
+  $Perl::MinimumVersion::CHECKS{_Pulp__UNIVERSAL_methods_5004} = $v5004;
+  $Perl::MinimumVersion::CHECKS{_Pulp__UNIVERSAL_methods_5010} = $v5010;
 
   # pack()/unpack()
   $Perl::MinimumVersion::CHECKS{_Pulp__pack_format_5004} = $v5004;
@@ -444,7 +449,29 @@ sub _skip_to_next_arg {
   }
 }
 
-    
+# $obj->$method; omit parens new in 5.6.0
+# previously required parens like $obj->$method();
+#
+sub Perl::MinimumVersion::_Pulp__var_method_without_parens {
+  my ($pmv) = @_;
+  ### _Pulp__var_method_without_parens() ...
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       my $next;
+       if ($elem->isa('PPI::Token::Symbol')
+           && $elem->symbol_type eq '$'
+           && Perl::Critic::Utils::is_method_call($elem)
+           # must be followed by "()" for earlier perl, so if not then it
+           # means 5.6.0 required
+           && ! (($next = $elem->snext_sibling)
+                 && $next->isa('PPI::Structure::List'))) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
 
 #-----------------------------------------------------------------------------
 # Foo::Bar:: bareword new in 5.005
@@ -690,6 +717,43 @@ sub Perl::MinimumVersion::_Pulp__sysseek_builtin {
 
 
 #---------------------------------------------------------------------------
+# UNIVERSAL.pm methods
+#
+{
+  my $methods = { VERSION => 1,
+                  isa     => 1,
+                  can     => 1 };
+  sub Perl::MinimumVersion::_Pulp__UNIVERSAL_methods_5004 {
+    my ($pmv) = @_;
+    ### _Pulp__UNIVERSAL_methods_5004() ...
+    return _any_method($pmv,$methods);
+  }
+}
+{
+  my $methods = { DOES => 1 };
+  sub Perl::MinimumVersion::_Pulp__UNIVERSAL_methods_5010 {
+    my ($pmv) = @_;
+    ### _Pulp__UNIVERSAL_methods_5010() ...
+    return _any_method($pmv,$methods);
+  }
+}
+sub _any_method {
+  my ($pmv, $hash) = @_;
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $hash->{$elem}
+           && Perl::Critic::Utils::is_method_call ($elem)) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+
+
+#---------------------------------------------------------------------------
 # generic
 
 # if $elem is a symbol or a List of a symbol then return that symbol elem,
@@ -791,6 +855,10 @@ C<qr//m>, since "m" modifier doesn't propagate correctly on a C<qr> until
 
 C<pack()> new C<E<lt>> and C<E<gt>> endianness
 
+=item *
+
+new C<UNIVERSAL.pm> method C<DOES()>
+
 =back
 
 =item 5.8 for
@@ -830,6 +898,13 @@ new C<open(my $fh,...)> etc auto-creation of filehandle.
 =item *
 
 C<syswrite()> length parameter optional.
+
+=item *
+
+C<Foo-E<gt>$method> no-args call without parens.
+
+For earlier Perl a no-args call to a method named in a variable must be
+C<Foo-E<gt>$method()>.  The parens are optional in 5.6 up.
 
 =item *
 
@@ -876,11 +951,15 @@ new C<$coderef-E<gt>()> call with C<-E<gt>>
 
 =item *
 
-new C<sysseek> builtin function
+new C<sysseek()> builtin function
 
 =item *
 
 C<pack()> new C<w> BER integer
+
+=item *
+
+new C<UNIVERSAL.pm> with C<VERSION()>, C<isa()> and C<can()> methods
 
 =back
 
@@ -926,16 +1005,21 @@ Pulp additions.  Unknown checks in the list are quietly ignored.
 
 =head1 OTHER NOTES
 
-C<use warnings> is reported as a Perl 5.6 feature since its lexically-scoped
-fine grain warnings control is new in that version.  If targeting earlier
-versions then it's often enough to drop C<use warnings>, make sure your code
-runs cleanly under S<< C<perl -w> >>, and leave it to applications to use
-C<-w> (or set C<$^W>) or not, as they might desire.
+C<use warnings> is reported as a Perl 5.6 feature since the lexically-scoped
+fine grain warnings control it gives is new in that version.  If targeting
+earlier versions then it's often enough to drop C<use warnings>, make sure
+your code runs cleanly under S<< C<perl -w> >>, and leave it to applications
+to use C<-w> (or set C<$^W>) if they desire.
 
 C<warnings::compat> offers a C<use warnings> for earlier Perl, but it's not
 lexical, instead setting C<$^W> globally.  Doing that from a module is
 probably not a good idea, but in a script it could be an alternative to
 S<C<#!/usr/bin/perl -w>> (per L<perlrun>).
+
+The C<UNIVERSAL.pm> methods C<VERSION()>, C<isa()>, C<can()> or C<DOES()>
+might in principle be implemented explicitly by a particular class, but it's
+assumed that's not so and that any call to those requires the respective
+minimum Perl version.
 
 =head1 SEE ALSO
 
@@ -954,7 +1038,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2009, 2010, 2011 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -30,7 +30,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 64;
+our $VERSION = 65;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -110,7 +110,7 @@ This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It checks that the POD features you use don't exceed your target
 Perl version as indicated by C<use 5.008> etc.
 
-=for ProhibitVerbatimMarkup allow next
+=for ProhibitVerbatimMarkup allow next 3
 
     use 5.005;
 

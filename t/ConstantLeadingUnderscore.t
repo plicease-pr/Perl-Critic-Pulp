@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 64;
+my $want_version = 65;
 is ($Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore->VERSION,
@@ -178,7 +178,7 @@ foreach my $data (
 
   my $got_count = scalar @violations;
   is ($got_count, $want_count, "str: $str");
-  
+
   if ($got_count != $want_count) {
     foreach (@violations) {
       diag ($_->description);
