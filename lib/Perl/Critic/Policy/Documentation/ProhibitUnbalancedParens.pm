@@ -35,7 +35,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 65;
+our $VERSION = 66;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -70,9 +70,10 @@ sub command {
       $self->{'allow_next'} = (defined $2 ? $2 : 1);
     }
   }
-  return command_as_textblock(@_);
+  return shift->command_as_textblock(@_);
 }
 
+# ENHANCE-ME: Share this among the various parsing modules ...
 my %command_non_text = (for   => 1,
                         begin => 1,
                         end   => 1,
@@ -243,7 +244,7 @@ in POD text paragraphs,
 
     Blah blah brace }.           # bad
 
-This is only cosmetic and only normally a minor irritant to readability so
+This is only cosmetic and normally only a minor irritant to readability so
 this policy is low priority and under the "cosmetic" theme (see
 L<Perl::Critic/POLICY THEMES>).
 
@@ -259,7 +260,7 @@ Quoted "(" is taken to be describing the char and is not an open or close.
 
     Any of "(" or '[' or "[{]".   # ok
 
-This only applies to quoted parens alone (one or more), not longer quoted
+This only applies to quoted parens alone (one or more), not larger quoted
 text.
 
 =item *
@@ -271,12 +272,12 @@ Item parens
     1) one, 2) two     # ok
 
 Exactly how much is recognised as an "a)" etc is not quite settled.  In the
-current code a "1.5)" is recognised at the start of a paragraph, but only a
+current code a "1.5)" is recognised at the start of a paragraph, but only
 "1)" in the middle.
 
 =item *
 
-Smiley faces are only an "optional" close,
+Smiley faces are an "optional" close,
 
     (Some thing :-).                # ok
 
@@ -286,33 +287,33 @@ Smiley faces are only an "optional" close,
 
 =item *
 
-Sad smiley faces are skipped, ie. are not an opening paren,
+Sad smiley faces are not an opening paren,
 
     :( :-(.     # ok
 
 =item *
 
-Perl variables C<$(> and C<$[> are skipped, ie. not opening parens,
+Perl variables C<$(> and C<$[> are not opening parens,
 
     Default is group $( blah blah.  # ok
 
-C<${> brace is still an open and expected to have a matching close, as it's
-likely to be a deref or delimiter,
+C<${> brace is still an open and expected to have a matching close, because
+it's likely to be a deref or delimiter,
 
     Deref with ${foo()} etc etc.
 
-Such variables or forms will often be in C<CE<lt>E<gt>> markup and skipped
-for that reason per below.
+Variables or expressions like this will often be in C<CE<lt>E<gt>> markup
+and skipped for that reason, per below.
 
 =item *
 
 C<$)> and C<$]> are optional closes, since they might be Perl variables to
-skip, or "$" at the end of a parens,
+skip, or might be "$" at the end of a parens,
 
    blah blah (which in tex is $1\cdot2$).
 
 Perhaps the conditions for these will be restricted a bit, though again
-C<CE<lt>E<gt>> markup around same code like this is probably usual.
+C<CE<lt>E<gt>> markup around sample code like this will be usual.
 
 =item *
 
@@ -322,8 +323,8 @@ Anything in C<CE<lt>E<gt>> code markup is ignored
 
     In code C<anything [ is allowed>.  # ok
 
-Perhaps this will change, though there'd have to be more exceptions in
-C<CE<lt>E<gt>> such as various backslashing.
+Perhaps this will change, though there'd have to be extra exceptions in
+C<CE<lt>E<gt>>, such as various backslashing.
 
 Sometimes a prematurely ending C<CE<lt>E<gt>> may look like an unbalanced
 paren, for example
@@ -334,27 +335,27 @@ paren, for example
 
 =for ProhibitUnbalancedParens allow next
 
-is bad because the C<CE<lt>E<gt>> ends at the C<=E<gt>>, leaving "value)"
-unbalanced plain text.
+This is bad because the C<CE<lt>E<gt>> ends at the C<=E<gt>>, leaving
+"value)" unbalanced plain text.  This is an easy mistake to make.
 
 =item *
 
-C<LE<lt>display|link<gt>> links are treated as the "display" text part.  The
-link target (POD document name and section) can have anything.
+C<LE<lt>display|linkE<gt>> links are processed as the "display" text part.
+The link target (POD document name and section) can have anything.
 
 =back
 
 =head2 Unrecognised Forms
 
-A mathematical half-open range like
+A mathematical half-open range like is not recognised.
 
-    [1,2)             # bad
+    [1,2)             # bad, currently
 
-is not recognised.  Perhaps just numbers like this would be unambiguous, but
-if it's an expression then it's hard to distinguish a parens typo from some
+Perhaps just numbers like this would be unambiguous, but if it's an
+expression then it's hard to distinguish a parens typo from some
 mathematics.  The suggestion for now is an C<=for> per below to flag it as
 an exception.  Another way would be to write S<1 E<lt>= X E<lt> 2>, which
-might be clearer to mathematically unsophisticated readers anyway.
+might be clearer to mathematically unsophisticated readers.
 
 Parens spanning multiple paragraphs are not recognised,
 

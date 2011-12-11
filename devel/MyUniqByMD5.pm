@@ -20,6 +20,7 @@ use strict;
 use warnings;
 use Digest::MD5;
 use Perl6::Slurp;
+use MyUniqByInode;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

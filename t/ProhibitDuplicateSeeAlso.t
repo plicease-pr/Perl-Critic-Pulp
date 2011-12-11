@@ -29,19 +29,19 @@ BEGIN { MyTestHelpers::nowarnings() }
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-require Perl::Critic::Policy::Documentation::ProhibitLinkToSelf;
+require Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso;
 
 
 #------------------------------------------------------------------------------
 my $want_version = 66;
-is ($Perl::Critic::Policy::Documentation::ProhibitLinkToSelf::VERSION,
+is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso::VERSION,
     $want_version, 'VERSION variable');
-is (Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION,
+is (Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION,
     $want_version, 'VERSION class method');
 {
-  ok (eval { Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  ok (eval { Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION($check_version); 1 }, "VERSION class check $check_version");
+  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
 
 #------------------------------------------------------------------------------
@@ -49,10 +49,10 @@ require Perl::Critic;
 diag "Perl::Critic version ",Perl::Critic->VERSION;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitLinkToSelf$');
+   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso$');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-      'single policy ProhibitLinkToSelf');
+      'single policy ProhibitDuplicateSeeAlso');
 
   my $policy = $p[0];
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -64,54 +64,46 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
-   [ 1, "
-=head1 NAME
+   [ 0, "
+=head1 SEE ALSO
 
-Foo::Bar - something
-
-L<Foo::Bar>
+L<Foo>, L<Bar>
 " ],
 
    [ 1, "
-=head1 NAME
+=head1 SEE ALSO
 
-Foo::Bar - something
-
-L<Foo::Bar>
+L<Foo::Bar>, L<Foo::Bar>
 " ],
 
-   [ 1, "
-=head1 NAME
+   [ 0, "
+=head1 SEE ALSO
 
-Foo::Bar - something
-
-=head2 L<Foo::Bar>
+L<Foo::Bar>, L<Foo::Bar/Advanced>
 " ],
 
-   [ 1, "
-=head1 NAME
+   [ 0, "
+=head1 DESCRIPTION
 
-Foo::Bar - something
+Blah L<Foo::Bar>
 
 =head1 SEE ALSO
 
 L<Foo::Bar>
 " ],
 
-   [ 1, "
-=head1 NAME
+   [ 0, "
+=head1 SEE ALSO
 
-C<Foo::Bar> - something
-
-L<Foo::Bar>
+L<perlfunc/alarm>,
+L<perlfunc/kill> 
 " ],
 
-   [ 1, "
-=head1 NAME
+   [ 0, "
+=head1 SEE ALSO
 
-Foo::Bar - something
-
-L<foobar|Foo::Bar>
+L<Foo::One>, L<Foo::Two>
+(C<Foo::Two> runs faster)
 " ],
 
   ) {

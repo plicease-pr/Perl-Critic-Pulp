@@ -36,7 +36,7 @@ my $l = MyLocatePerl->new;
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  while ($str =~ /($adjacent_re)/g) {
+  while ($str =~ /($adjacent_re)/og) {
     my $pos = pos($str);
 
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos-length($1));

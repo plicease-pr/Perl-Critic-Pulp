@@ -16,13 +16,10 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# perlcritic -s ProhibitParagraphTwoDots ProhibitParagraphTwoDots.pm
-# perlcritic -s ProhibitParagraphTwoDots /usr/share/perl5/HTML/FormatText/WithLinks.pm
-
-# Maybe foo.Z<>. to disguise two dots?
+# perlcritic -s ProhibitDuplicateSeeAlso ProhibitDuplicateSeeAlso.pm
 
 
-package Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots;
+package Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso;
 use 5.006;
 use strict;
 use warnings;
@@ -35,27 +32,35 @@ use Perl::Critic::Utils;
 our $VERSION = 66;
 
 use constant supported_parameters => ();
-use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
+use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
 use constant default_themes       => qw(pulp cosmetic);
 use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  ### ProhibitParagraphTwoDots on: $elem->content
+  # ### ProhibitDuplicateSeeAlso on: $elem->content
 
-  my $parser = Perl::Critic::Pulp::PodParser::ProhibitParagraphTwoDots->new
+  my $parser = Perl::Critic::Pulp::PodParser::ProhibitDuplicateSeeAlso->new
     (policy => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
 
-package Perl::Critic::Pulp::PodParser::ProhibitParagraphTwoDots;
+package Perl::Critic::Pulp::PodParser::ProhibitDuplicateSeeAlso;
 use strict;
 use warnings;
 use Pod::ParseLink;
 use base 'Perl::Critic::Pulp::PodParser';
 
-*command = \&command_as_textblock;
+sub command {
+  my ($self, $command, $text, $linenum, $pod_obj) = @_;
+
+  if ($command eq 'head1') {
+    $self->{'in_see_also'} = ($text =~ /^\s*SEE\s+ALSO\b/);
+    ### in_see_also: $self->{'in_see_also'}
+  }
+  return shift->command_as_textblock(@_);
+}
 
 # ENHANCE-ME: Share this among the various parsing modules ...
 my %command_non_text = (for   => 1,
@@ -76,93 +81,98 @@ sub command_as_textblock {
 }
 
 sub textblock {
-  my ($self, $text, $linenum, $pod_para) = @_;
-  ### textblock: "linenum=$linenum"
-
-  my $str = $self->interpolate($text, $linenum);
+  my ($self, $text, $linenum, $pod_obj) = @_;
+  ### textblock(): "linenum=$linenum"
   ### $text
-  ### $str
 
-  if ($str =~ /(?<!\.)(\.\.\s*)$/sg) {
-    $text =~ /(\s*)$/;
-    my $pos = length($text) - length($1); # end of $text
-    ### $pos
-    $self->violation_at_linenum_and_textpos
-      ("Paragraph ends with two dots (stray extra?)", $linenum, $text, $pos);
-  }
+  $self->interpolate($text, $linenum);
   return '';
 }
-sub interior_sequence {
-  my ($self, $cmd, $text, $pod_seq) = @_;
-  if ($cmd eq 'X') {
-    # index entry, no text output, but keep newlines for linenum
-    $text =~ tr/\n//cd;
 
-  } elsif ($cmd eq 'L') {
+sub interior_sequence {
+  my ($self, $cmd, $text, $pod_obj) = @_;
+  ### interior_sequence() ...
+
+  if ($self->{'in_see_also'} && $cmd eq 'L') {
     my ($display, $inferred, $name, $section, $type)
       = Pod::ParseLink::parselink ($text);
-    ### $display
-    ### $inferred
     ### $name
-    return $inferred;  # the display part, or the name part if no display
+    ### $section
+
+    if (defined $name) {
+      if (! defined $section) { $section = ''; }
+
+      (undef, my $linenum) = $pod_obj->file_line;
+      if (defined (my $prev_linenum = $self->{'seen'}->{$name,$section})) {
+
+        $self->violation_at_linenum_and_textpos
+          ("Duplicate SEE ALSO link L<$text> (already at line $prev_linenum)",
+           $linenum, '', 0);
+      } else {
+        $self->{'seen'}->{$name,$section} = $linenum;
+      }
+    }
   }
-  return $text;
+  return '';
 }
 
 1;
 __END__
 
-=for stopwords addon Ryde
+=for stopwords addon Ryde clickable one's formatters filename
 
 =head1 NAME
 
-Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots - don't end a paragraph with two dots
+Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso - don't duplicate LE<lt>E<gt> links in SEE ALSO
 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to end a POD paragraph with two dots,
+addon.  It asks you not to duplicate C<< LE<lt>FooE<gt> >> links in a SEE
+ALSO section.
 
-    Some sentence..                 # bad
+=for ProhibitVerbatimMarkup allow next 3
 
-This is a surprisingly easy typo, but of course is entirely cosmetic and on
-that basis this policy is lowest priority and under the "cosmetic" theme
-(see L<Perl::Critic/POLICY THEMES>).
+    =head1 SEE ALSO
 
-A three or more dot ellipsis is fine,
+    L<Foo::Bar>
 
-    And some more of this ...       # ok
+    L<Foo::Bar>    # bad
 
-Anything within a paragraph is fine,
+The idea is that for readability a given cross-reference should be linked
+just once and a duplicate is likely a leftover from too much cut-and-paste
+etc.  But this is fairly minor matter, so this policy is under the
+C<cosmetic> theme (see L<Perl::Critic/POLICY THEMES>) and low priority.
 
-    Numbers 1 .. 10 are handled.    # ok
+A module can certainly appear more than once in a SEE ALSO, but
+C<< LE<lt>E<gt> >> link just once and anything else C<< CE<lt>E<gt> >>
+markup or plain text.
 
-Only text paragraphs are checked, verbatim paragraphs can end with anything,
+=for ProhibitVerbatimMarkup allow next
 
-    This is an example,
+    L<Foo::One>, L<Foo::Two>
+    (C<Foo::Two> runs faster)     # ok
 
-        example_code (1 ..          # ok
-                      10);
+Links to different parts of a target POD are allowed,
 
-There might be other dubious paragraph endings to pick up, but things like
-";." or ":." can arise from code or smiley faces, so at the moment only two
-dots are bad.
+    L<perlfunc/alarm>,
+    L<perlfunc/kill>     # ok
 
 =head2 Disabling
 
-If you don't care about this you can disable C<ProhibitParagraphTwoDots>
-from your F<.perlcriticrc> in the usual way (see
-L<Perl::Critic/CONFIGURATION>),
+If you don't care about this then you can always disable
+C<ProhibitDuplicateSeeAlso> from your F<.perlcriticrc> file in the usual way
+(see L<Perl::Critic/CONFIGURATION>),
 
-    [-Documentation::ProhibitParagraphTwoDots]
-
-A C<## no critic> directive works in recent C<Perl::Critic>, though
-generally must be before any C<__END__> token.
+    [-Documentation::ProhibitDuplicateSeeAlso]
 
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>,
 L<Perl::Critic>
+
+L<Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>,
+L<Perl::Critic::Policy::Documentation::ProhibitLinkToSelf>
 
 =head1 HOME PAGE
 

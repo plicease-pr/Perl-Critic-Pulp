@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 65;
+our $VERSION = 66;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -62,6 +62,9 @@ use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
 
+*command = \&command_as_textblock;
+
+# ENHANCE-ME: Share this among the various parsing modules ...
 my %command_non_text = (for   => 1,
                         begin => 1,
                         end   => 1,
@@ -80,8 +83,6 @@ sub command_as_textblock {
   }
   return '';
 }
-*command = \&command_as_textblock;
-# *command = \&Perl::Critic::Pulp::PodParser::command_as_textblock;
 
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;

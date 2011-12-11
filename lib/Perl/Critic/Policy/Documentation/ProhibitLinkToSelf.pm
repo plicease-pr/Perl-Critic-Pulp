@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
-our $VERSION = 65;
+our $VERSION = 66;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -73,7 +73,7 @@ sub command {
     $self->{'in_name'}     = ($text =~ /^\s*NAME\b/);
     $self->{'in_see_also'} = ($text =~ /^\s*SEE\s+ALSO\b/);
     ### in_name now: $self->{'in_name'}
-    ### in_see_also now: $self->{'in_name'}
+    ### in_see_also: $self->{'in_see_also'}
   }
 
   unless ($command_non_text{$command}) {

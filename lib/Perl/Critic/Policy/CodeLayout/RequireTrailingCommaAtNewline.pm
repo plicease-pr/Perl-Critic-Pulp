@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(is_function_call is_method_call);
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 65;
+our $VERSION = 66;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -235,6 +235,19 @@ following in your F<.perlcriticrc> file,
     except_function_calls=1
 
 =back
+
+=head1 BUGS
+
+Is a C<return> statement an expression or a list?
+
+    return (1
+            + 2
+            + 3    # should this be ok, or not?
+           );
+
+Strictly speaking it would depend whether the intention in subr is a list
+return or a single value, where there's no way to distinguish.  Perhaps it
+should be allowed if there's just one expression.
 
 =head1 SEE ALSO
 

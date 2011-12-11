@@ -52,9 +52,11 @@ use Fcntl;
     return $t;
   }
   END {
-    print "tempfile $filename sizes ",
-      -s "$filename.pag"," ",
-        -s "$filename.dir","\n";
+    if ($filename) {
+      print "tempfile $filename sizes ",
+        -s "$filename.pag"," ",
+          -s "$filename.dir","\n";
+    }
   }
 }
 

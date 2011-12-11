@@ -26,7 +26,7 @@ use Test::More tests => 40;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 65;
+my $want_version = 66;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,
@@ -58,6 +58,10 @@ my $policy;
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
+                  # FIXME: is a return an expression or a list ?
+                  # [ 0, 'return (123
+                  #               );' ],
 
                   [ 0, '@foo = (     # empty
                                )' ],

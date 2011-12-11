@@ -18,6 +18,7 @@ devel/const-autoload.pl
 devel/const-noproto.pl
 devel/const-post.pl
 devel/constant-underscore.pl
+devel/duplicate-hash-keys.pl
 devel/empty.pl
 devel/fat-comma.pl
 devel/gettext.pl
@@ -34,14 +35,16 @@ devel/grep-exporter.pl
 devel/grep-fat-comma.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
+devel/grep-hash-keys.pl
 devel/grep-import-tag.pl
-devel/grep-linked-urls.pl
-devel/grep-links-adjacent.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
-devel/grep-para-dots.pl
 devel/grep-pod-blankline.pl
+devel/grep-pod-duplicate-see-also.pl
 devel/grep-pod-gt.pl
+devel/grep-pod-linked-urls.pl
+devel/grep-pod-links-adjacent.pl
+devel/grep-pod-para-dots.pl
 devel/grep-pod-verbatim-unindent.pl
 devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl
@@ -69,6 +72,7 @@ devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
 devel/lib/Perl/Critic/Policy/Documentation/LinkCommas.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
+devel/lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitDuplicateHashKeys.pm
 devel/Makefile
 devel/MyLocatePerl.pm
 devel/MyStuff.pm
@@ -107,6 +111,7 @@ lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
 lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitAdjacentLinks.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitDuplicateSeeAlso.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitLinkToSelf.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitUnbalancedParens.pm
@@ -149,6 +154,7 @@ t/ProhibitAdjacentLinks.t
 t/ProhibitArrayAssignAref.t
 t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
+t/ProhibitDuplicateSeeAlso.t
 t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
 t/ProhibitLinkToSelf.t
