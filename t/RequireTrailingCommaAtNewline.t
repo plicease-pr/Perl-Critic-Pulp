@@ -22,11 +22,11 @@ use 5.006;
 use strict;
 use warnings;
 use Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline;
-use Test::More tests => 40;
+use Test::More tests => 42;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 66;
+my $want_version = 67;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,
@@ -59,9 +59,11 @@ my $policy;
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
 
-                  # FIXME: is a return an expression or a list ?
-                  # [ 0, 'return (123
-                  #               );' ],
+                  [ 1, 'return (123,
+                                456
+                                );' ],
+                  [ 0, 'return (123
+                                );' ],
 
                   [ 0, '@foo = (     # empty
                                )' ],

@@ -20,6 +20,28 @@
 use strict;
 use warnings;
 
+# uncomment this to run the ### lines
+use Smart::Comments;
+
+
+use Test::Without::Module 'version::vxs';
+use blib "$ENV{HOME}/perl/version/version-0.88/blib";
+# use version::vxs;
+# use version::vpp;
+
+my $vpp = version::vpp->VERSION;
+### $vpp
+
+{
+  require version;
+  print "version.pm ", version->VERSION, "\n";
+
+  # my $v = version->new('1.234.567');
+  my $v = version->new('1e6');
+  print "v $v\n";
+  print "done\n";
+  exit 0;
+}
 {
   use Perl::Critic::Utils 1.0;
   use Perl::Critic::Utils 1.0 'precedence_of';
@@ -32,14 +54,7 @@ use warnings;
   print ($x > 2);
   exit 0;
 }
-{
-  require version;
-  print "version.pm ", version->VERSION, "\n";
-  my $v = version->new('1.234.567');
-  print "v $v\n";
-  print "done\n";
-  exit 0;
-}
+
 
 {
   require AptPkg::Policy;

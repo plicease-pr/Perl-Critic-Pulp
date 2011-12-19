@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion;
 
 #-----------------------------------------------------------------------------
-my $want_version = 66;
+my $want_version = 67;
 is ($Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion::VERSION,
     $want_version,
     'VERSION variable');
@@ -107,19 +107,27 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
 
 {
   require version;
+  diag "version.pm VERSION ", version->VERSION,
+    "  \@ISA=", join(',',@version::ISA);
+  diag "version::vxs VERSION ", version::vxs->VERSION;
+  diag "version::vpp VERSION ", version::vpp->VERSION;
+
   my $warn;
   my $ret = eval {
     local $SIG{'__WARN__'} = sub { $warn = $_[0] };
     version->new('1e6')
   };
   my $err = $@;
-  # diag "version.pm on 1e6: ", $ret;
-  # diag "version.pm err: ",$err;
-  # diag "version.pm warn: ",$err;
 
   my $version_if_valid = Perl::Critic::Pulp::Utils::version_if_valid('1e6');
   is ($version_if_valid, undef,
       'version.pm rejects 1e6, as claimed in RequireNumericVersion pod');
+
+  if ($version_if_valid) {
+    diag "version.pm on 1e6: ", $ret;
+    diag "version.pm err: ",$err;
+    diag "version.pm warn: ",$warn;
+  }
 }
 
 exit 0;

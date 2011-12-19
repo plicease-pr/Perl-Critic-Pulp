@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 66;
+  my $want_version = 67;
   is ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION,
       $want_version, 'VERSION variable');
   is (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,

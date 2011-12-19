@@ -71,12 +71,16 @@ MyMakeMakerExtras::WriteMakefile
                  # and comes with perl 5.10 anyway too.
                  'version' => 0,
 
+                 'Pod::ParseLink' => 0,
                 },
 
    META_MERGE =>
    { resources =>
      { homepage => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
      },
+     recommends => { 'Perl::MinimumVersion' => 0,
+                   },
+
      optional_features =>
      { maximum_policies =>
        { description => 'Have the policies check as much as possible.',
@@ -88,34 +92,35 @@ MyMakeMakerExtras::WriteMakefile
          requires => { 'Perl::MinimumVersion' => 0,
                      },
        },
-       maximum_devel =>
-       { description => 'Stuff used variously for development.',
-         requires => { 'PPI::Document' => 0,
-                       'Perl::MinimumVersion' => 0,
-                       'Encode' => 0,
-                       'Perl6::Slurp' => 0,
-                       'Regexp::Common' => 0,
-                       'Devel::Mallinfo' => 0,
-                       'IO::Uncompress::AnyInflate' => 0,
-                       'lib::abs' => 0,
-                       'IO::String' => 0,
-                       'Digest::MD5' => 0,
-                       'I18N::Langinfo' => 0,
-                       'Locale::TextDomain' => 0,
-                       'File::Locate' => 0,
-
-                       'File::Locate::Iterator' => 0, # mine
-                       # parts of File::Locate::Iterator
-                       'Iterator::Simple' => 0,
-                       'Iterator::Simple::Locate' => 0,
-                     },
-       },
      },
 
-     # "package Perl::MinimumVersion" hack for fixes there
+     # don't index "package Perl::MinimumVersion" additions there
      no_index => { package => [ 'Perl::MinimumVersion' ] },
    },
 
    MY_NO_HTML => 1,
-   MY_EXTRA_FILE_PART_OF => '|miscbits-el',
   );
+
+
+# maximum_devel =>
+# { description => 'Stuff used variously for development.',
+#   requires => { 'PPI::Document' => 0,
+#                 'Perl::MinimumVersion' => 0,
+#                 'Encode' => 0,
+#                 'Perl6::Slurp' => 0,
+#                 'Regexp::Common' => 0,
+#                 'Devel::Mallinfo' => 0,
+#                 'IO::Uncompress::AnyInflate' => 0,
+#                 'lib::abs' => 0,
+#                 'IO::String' => 0,
+#                 'Digest::MD5' => 0,
+#                 'I18N::Langinfo' => 0,
+#                 'Locale::TextDomain' => 0,
+#                 'File::Locate' => 0,
+#
+#                 'File::Locate::Iterator' => 0, # mine
+#                 # parts of File::Locate::Iterator
+#                 'Iterator::Simple' => 0,
+#                 'Iterator::Simple::Locate' => 0,
+#               },
+# },

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Perl-Critic-Pulp
-version:            66
+version:            67
 abstract:           Some add-on policies for Perl::Critic.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -21,6 +21,7 @@ requires:
     Perl::Critic::Utils::PPI:  0
     Perl::Critic::Violation:  0
     Pod::MinimumVersion:  50
+    Pod::ParseLink:       0
     PPI:                  1.212
     PPI::Document:        0
     Scalar::Util:         0
@@ -42,38 +43,6 @@ meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4
 optional_features:
-    maximum_devel:
-        description:  Stuff used variously for development.
-        requires:
-            Devel::Comments:      0
-            Devel::Mallinfo:      0
-            Digest::MD5:          0
-            Encode:               0
-            File::Locate:         0
-            File::Locate::Iterator:  0
-            I18N::Langinfo:       0
-            IO::String:           0
-            IO::Uncompress::AnyInflate:  0
-            Iterator::Simple:     0
-            Iterator::Simple::Locate:  0
-            lib::abs:             0
-            Locale::TextDomain:   0
-            Parse::CPAN::Meta:    0
-            Perl6::Slurp:         0
-            Perl::MinimumVersion:  0
-            Pod::Simple::HTML:    0
-            PPI::Document:        0
-            Regexp::Common:       0
-            Smart::Comments:      0
-            Test::DistManifest:   0
-            Test::Pod:            1.00
-            Test::Synopsis:       0
-            Test::YAML::Meta:     0.15
-            warnings::unused:     0
-            YAML:                 0
-            YAML::Syck:           0
-            YAML::Tiny:           0
-            YAML::XS:             0
     maximum_policies:
         description:  Have the policies check as much as possible.
         requires:
@@ -82,3 +51,5 @@ optional_features:
         description:  Have "make test" do as much as possible.
         requires:
             Perl::MinimumVersion:  0
+recommends:
+    Perl::MinimumVersion:  0

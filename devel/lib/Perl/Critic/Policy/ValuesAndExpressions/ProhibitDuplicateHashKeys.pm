@@ -30,7 +30,7 @@ use Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 66;
+our $VERSION = 67;
 
 
 use constant supported_parameters => ();
