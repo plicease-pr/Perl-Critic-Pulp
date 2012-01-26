@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 67;
+our $VERSION = 68;
 
 1;
 __END__
@@ -34,9 +34,9 @@ Perl::Critic::Pulp - some add-on perlcritic policies
 
 =head1 DESCRIPTION
 
-This is a collection of add-on policies for C<Perl::Critic>, summarized
-below.  They're under a "pulp" theme plus other themes according to their
-purpose (see L<Perl::Critic/POLICY THEMES>).
+This is a collection of add-on policies for C<Perl::Critic>.  They're under
+a "pulp" theme plus other themes according to their purpose (see
+L<Perl::Critic/POLICY THEMES>).
 
 =head2 Bugs
 
@@ -48,11 +48,11 @@ Check keyword arguments to C<__x>, C<__nx>, etc.
 
 =item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
 
-Don't quote version requirement C<use Foo '1.5'>
+Don't quote a version requirement like C<use Foo '1.5'>
 
 =item L<ValuesAndExpressions::RequireNumericVersion|Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion>
 
-C<$VERSION> a plain number for comparisons and checking.
+C<$VERSION> plain number for comparisons and checking.
 
 =item L<ValuesAndExpressions::ConstantBeforeLt|Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt>
 
@@ -64,7 +64,7 @@ Avoid problems with C<! $x == $y>
 
 =item L<ValuesAndExpressions::ProhibitArrayAssignAref|Perl::Critic::Policy::ValuesAndExpressions::ProhibitArrayAssignAref>
 
-Dubious C<@array=[1,2,3]> array/arrayref assignment.
+Dubious C<@array=[1,2,3]> array/arrayref assignments.
 
 =item L<ValuesAndExpressions::ProhibitFiletest_f|Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f>
 
@@ -72,7 +72,7 @@ Don't use C<-f>.
 
 =item L<ValuesAndExpressions::UnexpandedSpecialLiteral|Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral>
 
-Literal use of C<__PACKAGE__> etc.
+C<__PACKAGE__> etc special words not expanding.
 
 =back
 
@@ -82,15 +82,15 @@ Literal use of C<__PACKAGE__> etc.
 
 =item L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::ConstantPragmaHash>
 
-Perl version for hash style multi-constants.
+Version requirement for hash style multi-constants.
 
 =item L<Compatibility::ConstantLeadingUnderscore|Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore>
 
-Perl version for constants with leading underscore.
+Version requirement for constants with leading underscore.
 
 =item L<Compatibility::Gtk2Constants|Perl::Critic::Policy::Compatibility::Gtk2Constants>
 
-Gtk2 module version for its constants.
+Gtk2 module version requirement for some constants.
 
 =item L<Compatibility::PerlMinimumVersionAndWhy|Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy>
 
@@ -102,7 +102,7 @@ Perl version declared against POD features used.
 
 =item L<Compatibility::ProhibitUnixDevNull|Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull>
 
-Prefer C<< File::Spec->devnull >> over explicit F</dev/null>.
+Prefer C<< File::Spec->devnull >> over F</dev/null>.
 
 =back
 
@@ -112,7 +112,7 @@ Prefer C<< File::Spec->devnull >> over explicit F</dev/null>.
 
 =item L<Documentation::RequireEndBeforeLastPod|Perl::Critic::Policy::Documentation::RequireEndBeforeLastPod>
 
-Put C<__END__> before POD, at end of file.
+Put C<__END__> before POD at end of file.
 
 =item L<Miscellanea::TextDomainUnused|Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
@@ -129,6 +129,8 @@ Don't import the whole of C<POSIX>.
 =over
 
 =item L<CodeLayout::RequireTrailingCommaAtNewline|Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline>
+
+Comma "," at the end of list, if at a newline.
 
 =item L<CodeLayout::RequireFinalSemicolon|Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon>
 
@@ -166,7 +168,7 @@ Unbalanced or mismatched ( ) parens, brackets and braces.
 
 =item L<Documentation::ProhibitAdjacentLinks|Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks>
 
-Put commas or some text in between adjacent C<< LE<lt>E<gt> >> links.
+Put commas or some text between adjacent C<< LE<lt>E<gt> >> links.
 
 =item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
 
@@ -194,26 +196,26 @@ Use C<< LE<lt>E<gt> >> markup on URLs.
 
 You can always enable or disable the policies you do or don't want (see
 L<Perl::Critic/CONFIGURATION>).  If you haven't already realized, there's a
-wide range of builtin and add-on perlcritic policies ranging from bug
-catching to the bizarre or deliberately restrictive.  You're not meant to
-pass all of them and some may even be mutually contradictory.
+wide range of builtin and add-on perlcritic policies ranging from buggy
+practice to the deliberately restrictive or even quite bizarre.  You're not
+meant to pass everything.  Some policies may even be mutually contradictory.
 
 The restrictive policies are meant as building blocks for a limited house
-style.  C<ProhibitBarewordDoubleColon> above is an example of this,
-something like C<ProhibitUnlessBlocks> is another.  They're usually a matter
-of personal preference (and non de gustibus disputandum), but following all
-gives away big parts of the language and will in fact end up with very
-un-typical code.
+style.  For example C<ProhibitBarewordDoubleColon> above, or something like
+C<ProhibitUnlessBlocks> is another.  They're usually a matter of personal
+preference (and non de gustibus disputandum as they say in the classics).
+Trying to follow all of them would give away big parts of the language and
+quite likely end up with very un-typical code.
 
 Some of the restrictive policies are geared towards beginners.
 C<ProhibitUnknownBackslash> above or C<RequireInitializationForLocalVars>
-are along those lines.  There may be good backslashing the prohibition
-doesn't recognise, and say local variable initializers make no sense for
-output variables like C<$!>, once you get to the level of knowing to use
-C<local> to preserve such values.
+are along those lines.  There might for instance be good backslashing the
+prohibition doesn't recognise, or for example local variable initializers
+make no sense for output variables like C<$!> -- once you get to the level
+of knowing to use C<local> to preserve such globals.
 
-In general the POD docs are supposed to explain the motivation so you can
-see if you want it or not, but if you're not turning off or drastically
+In general the POD of each policy is supposed to explain the motivation so
+you can see if you want it or not.  If you're not turning off or drastically
 customizing at least half of all policies then you're either not trying or
 you're much too easily lead!
 
@@ -221,23 +223,25 @@ you're much too easily lead!
 
 In most of the perlcritic documentation, including the Pulp stuff here,
 policy names appear without the full C<Perl::Critic::Policy::...> class
-part.  In Emacs try C<man-completion.el> to have C<M-x man> automatically
-expand a suffix part at point, or C<ffap-perl-module.el> to go to the source
-similarly.
+part.  In Emacs have a look at C<man-completion.el> to make C<M-x man>
+automatically expand a suffix part at point, or C<ffap-perl-module.el> to go
+to the source similarly.
 
     http://user42.tuxfamily.org/man-completion/index.html
 
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
-In perlcritic's output you can ask for %P for the full policy name to copy
-or follow.  Here's a good format you can put in your F<.perlcriticrc>,
-including file:line:column: style Emacs will recognise.
+In perlcritic's output you can ask for %P to see the full policy package
+name to "perldoc" or copy or follow etc.  Here's a good output format you
+can put in your F<.perlcriticrc>.  The file:line:column: part is a style
+Emacs will recognise.
 
     verbose=%f:%l:%c:\n %P\n %m\n
 
-See L<Perl::Critic::Violation> for all the C<%> escapes.  F<perlcritic.el>
-has patterns for Emacs to match the builtin perlcritic formats, but it's
-easier to print file:line:column:.
+See L<Perl::Critic::Violation> for all the available C<%> escapes.
+F<perlcritic.el> which comes with perlcritic has regexp patterns for Emacs
+to recognise the builtin perlcritic formats, but it's easier to print
+"file:line:column:" in the first place.
 
 =head1 SEE ALSO
 
@@ -249,7 +253,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

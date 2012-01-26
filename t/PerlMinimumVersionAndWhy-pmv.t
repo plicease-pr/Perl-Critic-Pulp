@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -49,7 +49,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 67;
+  my $want_version = 68;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -67,6 +67,16 @@ diag "pulp magic fix: ",($have_pulp_5010_magic_fix||0);
 
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
+
+                  # # _Pulp__keys_of_array
+                  # [ 1, 'use 5.010; keys @foo' ],
+                  # [ 0, 'use 5.012; keys @foo' ],
+                  # # _Pulp__values_of_array
+                  # [ 1, 'use 5.010; values @foo' ],
+                  # [ 0, 'use 5.012; values @foo' ],
+                  # # _Pulp__each_of_array
+                  # [ 1, 'use 5.010; each @foo' ],
+                  # [ 0, 'use 5.012; each @foo' ],
 
                   # _Pulp__var_method_without_parens
                   [ 1, 'use 5.005; $obj->$method' ],

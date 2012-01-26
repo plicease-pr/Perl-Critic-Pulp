@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 67;
+our $VERSION = 68;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -178,8 +178,8 @@ object's native fields.  Unexpanded C<__PACKAGE__> like that is a mistake
 you'll probably only make once; after that the irritation of writing extra
 parens or similar will keep it fresh in your mind!
 
-As usual there's more than one way to do it when adding extra data to an
-object.  As a crib here are some ways,
+As usual there's more than one way to do it when associating extra data to
+an object.  As a crib here are some ways,
 
 =over 4
 
@@ -210,7 +210,7 @@ keys.
 
 =item Inside-Out C<Hash::Util::FieldHash>
 
-Similar to HashRef with object as key and any value you want as the data,
+Similar to HashRef with object as key and any value you want as the data
 outside the object, hence the jargon "inside out".  The docs are very hard
 to follow (as of version 1.04), especially if you're not into OOP, but it's
 actually fairly simple.
@@ -235,7 +235,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

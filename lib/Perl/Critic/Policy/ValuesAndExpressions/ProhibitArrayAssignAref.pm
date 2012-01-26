@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -30,7 +30,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 67;
+our $VERSION = 68;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -92,27 +92,27 @@ addon.  It asks you not to assign an anonymous arrayref to an array
 
     @array = [ 1, 2, 3 ];       # bad
 
-The idea is that it's a rather unclear whether an arrayref is intended, or
-might have meant a list like
+The idea is that it's rather unclear whether an arrayref is intended, or
+might have meant to be a list like
 
     @array = ( 1, 2, 3 );
 
-For the chance the C<[]> is a mistake and since it will make anyone reading
-it wonder, this policy is under the "bugs" theme (see L<Perl::Critic/POLICY
-THEMES>).
+This policy is under the "bugs" theme (see L<Perl::Critic/POLICY THEMES>)
+for the chance C<[]> is a mistake, and since even if it's correct it will
+likely make anyone reading it wonder.
 
-It's perfectly good to assign a single arrayref to an array, but put parens
-to make it clear,
+An single arrayref can still be assigned to an array, but with parens to
+make it clear,
 
     @array = ( [1,2,3] );       # ok
 
-Derefs and array and hash slices (see L<perldata/Slices>) are recognised and
-treated likewise,
+Dereferencess or array and hash slices (see L<perldata/Slices>) are
+recognised and treated similarly,
 
-    @$ref = [1,2,3];            # bad to deref
-    @{$ref} = [1,2,3];          # bad to deref
-    @x[1,2,3] = ['a','b','c'];  # bad to array slice
-    @x{'a','b'} = [1,2];        # bad to hash slice
+    @$ref = [1,2,3];            # bad assign to deref
+    @{$ref} = [1,2,3];          # bad assign to deref
+    @x[1,2,3] = ['a','b','c'];  # bad assign to array slice
+    @x{'a','b'} = [1,2];        # bad assign to hash slice
 
 =head2 List Assignment Parens
 
@@ -133,31 +133,31 @@ means
     2;
     3;
 
-Normally the remaining literals in void context provoke a compile time
-warning.
+Normally the remaining literals in void context provoke a warning from Perl
+itself.
 
-An intentional single element assignment is quite common though, as a
+An intentional single element assignment is quite common though as a
 statement, for instance
 
-    @ISA = 'My::Parent::Class';
+    @ISA = 'My::Parent::Class';   # ok
 
-For reference the range operator precedence is high enough,
+And for reference the range operator precedence is high enough,
 
-    @array=1..10;              # fine
+    @array=1..10;                 # ok
 
 though of course parens are needed if concatenating some disjoint ranges
 with the comma operator,
 
-    @array = (1..5, 10..15);   # parens needed
+    @array = (1..5, 10..15);      # parens needed
 
 The C<qw> form gives a list too
 
-    @array = qw(a b c);        # fine
+    @array = qw(a b c);           # ok
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp>,
-L<Perl::Critic>
+L<Perl::Critic>,
+L<Perl::Critic::Pulp>
 
 =head1 HOME PAGE
 
@@ -165,7 +165,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

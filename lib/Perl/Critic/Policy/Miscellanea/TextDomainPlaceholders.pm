@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -26,7 +26,7 @@ use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 67;
+our $VERSION = 68;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -251,7 +251,7 @@ reported.
                $n,
                count => 123);
 
-This is normally a mistake, so this policy is under the C<bugs> theme (see
+This is normally a mistake, so this policy is under the "bugs" theme (see
 L<Perl::Critic/POLICY THEMES>).  An error can easily go unnoticed because
 (as of Locale::TextDomain version 1.16) a placeholder without a
 corresponding arg goes through unexpanded and any extra args are ignored.
@@ -320,7 +320,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

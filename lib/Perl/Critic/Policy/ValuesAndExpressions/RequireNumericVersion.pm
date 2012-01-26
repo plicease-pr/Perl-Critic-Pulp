@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -36,23 +36,15 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 67;
+our $VERSION = 68;
 
 sub violates {
   my ($self, $elem, $document) = @_;
   ### NumericVersion violates()
 
   ### canonical: $elem->canonical
-  $elem->canonical eq '$VERSION' ## no critic (RequireInterpolationOfMetachars)
-    or return;
-
-  {
-    my $package = Perl::Critic::Pulp::Utils::elem_package($elem)
-      || return; # not in a package, not a module $VERSION
-    if ($package->namespace eq 'main') {
-      return; # explicit "package main", not a module $VERSION
-    }
-  }
+  my $package = _symbol_is_mod_VERSION($elem)
+    || return;
 
   my $assign = $elem->snext_sibling || return;
   ### assign: "$assign"
@@ -60,13 +52,13 @@ sub violates {
 
   my $value = $assign->snext_sibling || return;
   ### value: "$value"
+
   if (! $value->isa('PPI::Token::Quote')) {
-    ### an expression not a string
+    ### an expression, or a number, not a string ...
     return;
   }
-
   if (_following_expression ($value)) {
-    ### can't check an expression ...
+    ### can't check an expression (starting with a string) ...
     return;
   }
 
@@ -75,6 +67,10 @@ sub violates {
       || $value->isa ('PPI::Token::Quote::Interpolate')) {
     ### double quote, check only up to an interpolation
     $str =~ s/[\$\@].*//;
+  }
+
+  if (_any_eval_VERSION ($document, $package)) {
+    return;
   }
 
   # float number strings like "1e6" rejected by version.pm
@@ -119,6 +115,58 @@ sub _following_expression {
   return 1;
 }
 
+# $elem is a PPI::Token::Word
+# return its module, such as "Foo::Bar"
+# or if it's in "main" then return undef
+#
+sub _symbol_is_mod_VERSION {
+  my ($elem) = @_;
+
+  # canonical() turns $::VERSION into $main::VERSION
+  $elem->canonical =~ /^\$((\w+::)*)VERSION$/
+    or return undef; # not $VERSION or $Foo::VERSION
+  my $package = substr($1,0,-2);
+
+  if ($package eq '') {
+    # $elem is an unqualified symbol, find containing "package Foo"
+    my $pelem = Perl::Critic::Pulp::Utils::elem_package($elem)
+      || return undef; # not in a package, not a module $VERSION
+    $package = $pelem->namespace;
+  }
+
+  if ($package eq 'main') {
+    return undef; # "package main" or "$main::VERSION", not a module
+  }
+  return $package;
+}
+
+# return true if there's a "$VERSION = eval $VERSION" somewhere in
+# $document, acting on the "$VERSION" of $want_package
+#
+sub _any_eval_VERSION {
+  my ($document, $want_package) = @_;
+
+  my $aref = $document->find('PPI::Token::Symbol') || return 0;
+  foreach my $elem (@$aref) {
+    my $got_package = _symbol_is_mod_VERSION($elem) || next;
+    $got_package eq $want_package || next;
+
+    my $assign = $elem->snext_sibling || next;
+    $assign eq '=' or next;
+
+    my $value = $assign->snext_sibling || next;
+    $value->isa('PPI::Token::Word') || next;
+    $value eq 'eval' or next;
+
+    $value = $value->snext_sibling || next;
+    $value->isa('PPI::Token::Symbol') || next;
+    $got_package = _symbol_is_mod_VERSION($value) || next;
+    $got_package eq $want_package || next;
+
+    return 1;
+  }
+  return 0;
+}
 
 1;
 __END__
@@ -132,38 +180,43 @@ Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion - $VERSION a p
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It ask you to use a plain number in a module C<$VERSION> so that
-Perl's builtin version works.  This policy is under the C<bugs> theme (see
-L<Perl::Critic/POLICY THEMES>).
+addon.  It asks you to use a plain number in a module C<$VERSION> so that
+Perl's builtin version works.
 
-Any literal number is fine, or a string which is a number, and for Perl 5.10
-up the extra forms of the C<version> module too,
+Any literal number is fine, or a string which is a number,
 
     $VERSION = 123;           # ok
     $VERSION = '1.5';         # ok
     $VERSION = 1.200_001;     # ok
-    $VERSION = '1.200_001';   # ok for 5.10 up
 
-But a non-numeric string is not allowed,
+For Perl 5.10 and higher the extra forms of the C<version> module too,
+
+    use 5.010;
+    $VERSION = '1.200_001';   # ok for 5.10 up, version.pm
+
+But a non-number string is not allowed,
 
     $VERSION = '1.2alpha';    # bad
 
-A number is needed for version checking like
+The idea of this requirement is that a plain number is needed for Perl's
+builtin module version checking like the following, and on that basis this
+policy is under the "bugs" theme (see L<Perl::Critic/POLICY THEMES>).
 
     use Foo 1.0;
     Foo->VERSION(1);
 
-and it's highly desirable so applications can do compares like
+A plain number is also highly desirable so applications can do their own
+compares like
 
     if (Foo->VERSION >= 1.234) {
 
-In each case a non-numeric string in C<$VERSION> provokes warnings, and may
-end up appearing as a lesser version than intended.
+In each case if C<$VERSION> is not a number then it provokes warnings, and
+may end up appearing as a lesser version than intended.
 
     Argument "1.2.alpha" isn't numeric in subroutine entry
 
-If you've loaded the C<version.pm> module, then a C<$VERSION> not accepted
-by C<version.pm> will in fact croak
+If you've loaded the C<version.pm> module then a C<$VERSION> not accepted by
+C<version.pm> will in fact croak, which is an unpleasant variant behaviour.
 
     use version ();
     print "version ",Foo->VERSION,"\n";
@@ -172,12 +225,19 @@ by C<version.pm> will in fact croak
 =head2 Scripts
 
 This policy only looks at C<$VERSION> in modules.  C<$VERSION> in a script
-can be anything, as it won't normally have a C<use> checks etc.  A script
-C<$VERSION> is anything outside any C<package> statement scope, or under an
-explicit C<package main>.
+can be anything since it won't normally be part of C<use> checks etc.
+A script C<$VERSION> is anything outside any C<package> statement scope, or
+under an explicit C<package main>.
 
     package main;
     $VERSION = '1.5.prerelease';  # ok, script
+
+    $main::VERSION = 'blah';      # ok, script
+    $::VERSION = 'xyzzy';         # ok, script
+
+A fully-qualified package name is recognised as belonging to a module,
+
+    $Foo::Bar::VERSION = 'xyzzy'; # bad
 
 =head2 Underscores in Perl 5.8 and Earlier
 
@@ -185,30 +245,44 @@ In Perl 5.8 and earlier a string like "1.200_333" is truncated to the
 numeric part, ie. 1.200, and can thus fail to satisfy
 
     $VERSION = '1.222_333';   # bad
+    use Foo 1.222_331;  # not satisfied by $VERSION='string' form
+
+But an actual number literal with an "_" is allowed.  Underscores in
+literals are stripped out (see L<perldata>), but not in the automatic string
+to number conversion so a string like C<$VERSION = '1.222_333'> provokes a
+warning and stops at 1.222.
+
     $VERSION = 1.222_333;     # ok
 
-    use Foo 1.222_331;  # unsatisfied by $VERSION='string' form
+On CPAN an underscore in a distribution version number is rated as a
+developer pre-release.  But don't put it in module C<$VERSION> strings due
+to the problems above.  The suggestion is to include the underscore in the
+distribution filename but either omit it from the C<$VERSION> or make it a
+number literal not a string,
 
-A number literal with an "_" is allowed.  Underscores in literals are
-stripped out (see L<perldata>), but not in the automatic string to number
-conversion so a string like C<$VERSION = '1.222_333'> provokes a warning and
-stops at 1.222.
+    $VERSION = 1.002003;    # ok
+    $VERSION = 1.002_003;   # ok, but not for VERSION_FROM
 
-On CPAN an underscore in a distribution version number is rated a developer
-pre-release.  But don't put it in module C<$VERSION> strings due to the
-problems above.  The suggestion is to either omit the underscore or make it
-a number literal not a string,
+C<ExtUtils::MakeMaker> C<VERSION_FROM> will take the latter as its numeric
+value, ie. "1.002003" not "1.002_003" as the distribution version.  For the
+latter you can either put an explicit C<VERSION> in F<Makefile.PL>
 
-    $VERSION = 1.002003;      # ok
-    $VERSION = 1.002_003;     # ok
+    use ExtUtils::MakeMaker;
+    WriteMakefile (VERSION => '1.002_003');
 
-If using C<ExtUtils::MakeMaker> then it may be necessary to put an explicit
-C<VERSION> in F<Makefile.PL> to get the underscore in the dist name, since
-C<VERSION_FROM> a module file takes both the above to be 1.002003.
+Or you can trick MakeMaker with a string plus C<eval>,
+
+    $VERSION = '1.002_003';    # ok evalled down
+    $VERSION = eval $VERSION;
+
+MakeMaker sees the string "1.002_003" but at runtime the C<eval> crunches it
+down to a plain number 1.002003.  RequireNumericVersion notices such an
+C<eval> and anything in C<$VERSION>.  Something bizarre in C<$VERSION> won't
+be noticed, but that's too unlikely to worry about.
 
 =head2 C<version> module in Perl 5.10 up
 
-In Perl 5.10 the C<use> etc module version checks parse C<$VERSION> with the
+In Perl 5.10 C<use> etc module version checks parse C<$VERSION> with the
 C<version.pm> module.  This policy allows the C<version> module forms if
 there's an explicit C<use 5.010> or higher in the file.
 
@@ -221,21 +295,24 @@ But this is still undesirable, as an application check like
     if (Foo->VERSION >= 1.234) {
 
 gets the raw string from C<$VERSION> and thus a non-numeric warning and
-truncation.  Perhaps applications should let C<UNIVERSAL.pm> do the check
+truncation.  Perhaps applications should let C<UNIVERSAL.pm> do the work
 with say
 
     if (eval { Foo->VERSION(1.234) }) {
 
-or apply C<version-E<gt>new()> to one of the args.  (Maybe another policy to
+or apply C<version-E<gt>new()> to one of the args.  Maybe another policy to
 not explicitly compare C<$VERSION>, or perhaps an option to tighten this
-policy to require numbers even in 5.10?)
+policy to require numbers even in 5.10?
 
 =head2 Exponential Format
 
-Exponential format strings like "1e6" are disallowed.  Exponential number
-literals are fine.
+Exponential format strings like "1e6" are disallowed (except with the
+C<eval> trick above).
 
     $VERSION = '2.125e6';   # bad
+
+Exponential number literals are fine.
+
     $VERSION = 1e6;         # ok
 
 Exponential strings don't work in Perl 5.10 because they're not recognised
@@ -252,15 +329,16 @@ F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
 =head2 Other Ways to Do It
 
-All the version number stuff with underscores, multi-dots, v-nums, etc is a
-diabolical mess, and floating point in version checks is asking for rounding
+The version number system with underscores, multi-dots, v-nums, etc is
+diabolical mess, and each new addition to it just seems to make it worse.
+Even the original floating point in version checks is asking for rounding
 error trouble (though normally fine in practice).  A radical simplification
 is to just use integer version numbers.
 
     $VERSION = 123;
 
-If you want sub-versions then increment by 100 say.  Even a YYYYMMDD date is
-a possibility.
+If you want sub-versions then increment by 100 or some such.  Even a
+YYYYMMDD date is a possibility.
 
     $VERSION = 20110328;
 
@@ -282,7 +360,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

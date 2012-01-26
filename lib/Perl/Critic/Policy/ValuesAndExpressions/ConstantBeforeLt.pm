@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -30,7 +30,7 @@ use Perl::Critic::Utils qw(is_included_module_name
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 67;
+our $VERSION = 68;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -209,7 +209,7 @@ This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It prohibits a bareword before a C<E<lt>> to keep you out of trouble
 with autoloaded or unprototyped constant subs since a C<E<lt>> in that case
 is interpreted as the start of a C<E<lt>..E<gt>> glob or readline instead of
-a less-than.  This policy is under the C<bugs> theme (see
+a less-than.  This policy is under the "bugs" theme (see
 L<Perl::Critic/POLICY THEMES>).
 
     use POSIX;
@@ -276,7 +276,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

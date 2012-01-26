@@ -22,6 +22,7 @@ devel/duplicate-hash-keys.pl
 devel/empty.pl
 devel/fat-comma.pl
 devel/gettext.pl
+devel/grep-ampersand-call.pl
 devel/grep-arg-unpack.pl
 devel/grep-array-assign.pl
 devel/grep-array-slice-single.pl

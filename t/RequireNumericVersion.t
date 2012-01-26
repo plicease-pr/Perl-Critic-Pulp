@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 34;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion;
 
 #-----------------------------------------------------------------------------
-my $want_version = 67;
+my $want_version = 68;
 is ($Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion::VERSION,
     $want_version,
     'VERSION variable');
@@ -64,6 +64,32 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
+                  [ 0, 'package Foo::Bar;
+                        $VERSION = "1.002_003";
+                        $VERSION = eval $VERSION' ],
+                  [ 1, 'package Foo::Bar;
+                        $VERSION = "1.002_003";
+                        package Elsewhere;
+                        $VERSION = eval $VERSION' ],
+                  [ 1, 'package Foo::Bar;
+                        $VERSION = "1.002_003";
+                        $VERSION = eval "something else"' ],
+                  [ 1, 'package Foo::Bar;
+                        $VERSION = "1.002_003";
+                        $VERSION = $VERSION' ],
+
+                  [ 0, 'package Foo::Bar;
+                        $Foo::Bar::VERSION = "1.002_003";
+                        $VERSION = eval $VERSION' ],
+
+                  [ 0, 'package Foo::Bar;
+                        $Foo::Bar::VERSION = "1.002_003";
+                        $Foo::Bar::VERSION = eval $Foo::Bar::VERSION' ],
+
+                  [ 0, '$main::VERSION = "abc"' ],
+                  [ 0, '$::VERSION = "abc"' ],
+                  [ 1, '$Foo::Bar::VERSION = "abc"' ],
 
                   [ 1, 'package Foo; our $VERSION = qq{1e6}' ],
                   [ 1, 'package Foo; use 5.008; $VERSION = qq{1e6}' ],
