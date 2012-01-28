@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 60;
+use Test::More tests => 68;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 68;
+my $want_version = 69;
 is ($Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon->VERSION, $want_version, 'VERSION class method');
 {
@@ -59,11 +59,26 @@ my $critic = Perl::Critic->new
 
 foreach my $data (# no critic (RequireInterpolationOfMetachars)
 
-                  [ 0, "Foo->new({ %args,\n })" ],
+                  [ 0, "map { \$x\n } \@y" ],
+                  [ 0, "map {; q{a},1\n } \@y" ],
+                  [ 0, "map {; q{a},1,q{b},2\n } \@y" ],
+
+                  [ 0, "return \\ { a=>2 \n }" ], # ref to hashref
+
+                  [ 0, "{ a => 1 \n}" ], # hash constructor
+                  [ 1, "{ a,1 \n}" ],     # code block
+                  [ 1, "{; a => 1 \n}" ], # code block
+
+                  # hashrefs
+                  [ 0, "\{ a => 1\n}" ],
+                  [ 0, "\$x = { 1 => 2\n}" ],
+                  [ 0, "\$x = \\{ a=>2,a=>2\n}" ], # ref to hashref
+
+                  [ 0, "Foo->new({ %args,\n})" ],
                   [ 0, "foo({ %args,\n })" ],
-                  [ 1, "sub { %args,\n }" ],
-                  [ 1, "sub foo { %args,\n }" ],
-                  [ 0, "\$x = { %args,\n }" ],
+                  [ 1, "sub { %args,\n}" ],
+                  [ 1, "sub foo { %args,  \n }" ],
+                  [ 0, "\$x = { %args,  \n }" ],
                   [ 0, "bless { 1 => 2\n}, \$_[0];" ],
 
                   # the prototype on first() is not recognised, as yet
@@ -88,8 +103,6 @@ foreach my $data (# no critic (RequireInterpolationOfMetachars)
                   [ 0, "sub foo { return bless { 1 => 2\n}, \$_[0] }" ],
                   [ 0, "sub foo { \$x = bless { 1 => 2\n}, \$_[0] }" ],
                   [ 0, "sub foo { \$x = { 1 => 2\n} }" ],
-                  [ 0, "\$x = { 1 => 2\n}" ],
-                  [ 0, "map { \$x\n } \@y" ],
                   [ 0, "grep { defined\n } \@y" ],
                   [ 1, "sub { defined\n }" ],
 

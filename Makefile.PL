@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -38,6 +38,9 @@ MyMakeMakerExtras::WriteMakefile
                  # 1.212 for PPI::Token::Quote::Literal literal()
                  'PPI' => '1.212',
                  'PPI::Document' => 0,
+                 # actually PPI::Dumper only used in the .t scripts if
+                 # there's an error ...
+                 'PPI::Dumper' => 0,
 
                  # 1.082 or some such for new style parameter specs
                  # 1.084 for highest_explicit_perl_version() method

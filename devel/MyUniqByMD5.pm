@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde.
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde.
 
 # MyUniqByMD5.pm is shared by various distributions.
 #
@@ -41,6 +41,7 @@ sub uniq_file {
 sub uniq_str {
   my ($self, $str) = @_;
   my $key = Digest::MD5::md5 ($str);
+
   ### MyUniqByMD5 key: $key
   ### seen: exists $self->{'seen'}->{$key}
   # if (exists $self->{'seen'}->{$key}) { print "MyUniqByMD5:  suppress\n"; }

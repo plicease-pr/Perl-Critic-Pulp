@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,10 +28,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-# uncomment this to run the ### lines
-#use Smart::Comments;
-
-our $VERSION = 68;
+our $VERSION = 69;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -108,6 +105,12 @@ sub violates {
 
 sub _setup_extra_checks {
 
+  # 5.12.0
+  my $v5012 = version->new('5.012');
+  $Perl::MinimumVersion::CHECKS{_Pulp__keys_of_array}   = $v5012;
+  $Perl::MinimumVersion::CHECKS{_Pulp__values_of_array} = $v5012;
+  $Perl::MinimumVersion::CHECKS{_Pulp__each_of_array}   = $v5012;
+
   # 5.10.0
   my $v5010 = version->new('5.010');
   unless (eval { Perl::MinimumVersion->VERSION(1.28); 1 }) {
@@ -120,6 +123,7 @@ sub _setup_extra_checks {
   # 5.8.0
   my $v5008 = version->new('5.008');
   $Perl::MinimumVersion::CHECKS{_Pulp__fat_comma_across_newline} = $v5008;
+  $Perl::MinimumVersion::CHECKS{_Pulp__eval_line_directive_first_thing} = $v5008;
 
   # 5.6.0
   my $v5006 = version->new('5.006');
@@ -258,7 +262,6 @@ sub Perl::MinimumVersion::_Pulp__delete_array_elem {
   ### _Pulp__delete_array_elem() check
   return _exists_or_delete_array_elem ($pmv, 'delete');
 }
-#use Smart::Comments;
 sub _exists_or_delete_array_elem {
   my ($pmv, $which) = @_;
   ### _exists_or_delete_array_elem()
@@ -305,7 +308,6 @@ sub _arg_is_array_elem {
   ### $ret
   return $ret;
 }
-#no Smart::Comments;
 
 sub _descend_through_lists {
   my ($elem) = @_;
@@ -553,6 +555,8 @@ sub _list_contains_undef {
 
 #-----------------------------------------------------------------------------
 # pack() / unpack()
+#
+# Nothing new in 5.12, nothing new in 5.14.
 
 sub Perl::MinimumVersion::_Pulp__pack_format_5004 {
   my ($pmv) = @_;
@@ -603,7 +607,7 @@ sub _pack_format {
        my $format_arg = $args[0];
        ### format: @$format_arg
 
-       my ($str, $any_vars) = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::_arg_string ($format_arg);
+       my ($str, $any_vars) = Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::_arg_string ($format_arg, $document);
        ### $str
        ### $any_vars
 
@@ -753,6 +757,92 @@ sub _any_method {
 }
 
 
+#------------------------------------------------------------------------------
+# keys @foo, values @foo, each @foo new in 5.12.0
+#
+sub Perl::MinimumVersion::_Pulp__keys_of_array {
+  my ($pmv) = @_;
+  return _keys_etc_of_array ($pmv, 'keys');
+}
+sub Perl::MinimumVersion::_Pulp__values_of_array {
+  my ($pmv) = @_;
+  return _keys_etc_of_array ($pmv, 'values');
+}
+sub Perl::MinimumVersion::_Pulp__each_of_array {
+  my ($pmv) = @_;
+  return _keys_etc_of_array ($pmv, 'each');
+}
+sub _keys_etc_of_array {
+  my ($pmv, $which) = @_;
+  ### _keys_etc_of_array() ...
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       if ($elem->isa('PPI::Token::Word')
+           && $elem eq $which
+           && Perl::Critic::Utils::is_function_call($elem)
+           && _arg_is_array($elem->snext_sibling)) {
+         return 1;
+       } else {
+         return 0;
+       }
+     });
+}
+sub _arg_is_array {
+  my ($elem) = @_;
+  ### _arg_is_array "$elem"
+
+  $elem = _descend_through_lists($elem) || return 0;
+
+  if ($elem->isa('PPI::Token::Symbol')
+      && $elem->raw_type eq '@') {
+    return 1;
+  }
+  if ($elem->isa('PPI::Token::Cast') && $elem eq '@') {
+    return 1;
+  }
+  return 0;
+}
+
+
+#------------------------------------------------------------------------------
+# eval '#line ...' with the #line the very first thing,
+# the #line doesn't take effect until 5.008,
+# in 5.006 need a blank line or something first
+
+{
+  my $initial_line_re = qr/^#[ \t]*line/;
+
+  sub Perl::MinimumVersion::_Pulp__eval_line_directive_first_thing {
+    my ($pmv) = @_;
+    ### _Pulp__eval_line_directive_first_thing() ...
+    $pmv->Document->find_first
+      (sub {
+         my ($document, $elem) = @_;
+         if ($elem->isa('PPI::Token::Word')
+             && $elem eq 'eval'
+             && Perl::Critic::Utils::is_function_call($elem)
+             && ($elem = $elem->snext_sibling)
+             && ($elem = _descend_through_lists($elem))) {
+           ### eval of: "$elem"
+
+           if ($elem->isa('PPI::Token::Quote')) {
+             if ($elem->string =~ $initial_line_re) {
+               return 1;
+             }
+           } elsif ($elem->isa('PPI::Token::HereDoc')) {
+             my ($str) = $elem->heredoc; # first line
+             if ($str =~ $initial_line_re) {
+               return 1;
+             }
+           }
+         }
+         return 0;
+       });
+  }
+}
+
+
 #---------------------------------------------------------------------------
 # generic
 
@@ -826,9 +916,9 @@ L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::Constan
 
 =item *
 
-Module requirements like C<use Errno> are dropped, since you might get a
-back-port from CPAN etc and any need for a module is better expressed in a
-distribution "prereq".
+Module requirements for things like C<use Errno> are dropped, since you
+might get a back-port from CPAN etc and any need for a module is better
+expressed in a distribution "prereq".
 
 But pragma modules like C<use warnings> are still reported.  They're
 normally an interface to a feature new in the Perl version it comes with and
@@ -840,7 +930,17 @@ can't be back-ported.  (See L</OTHER NOTES> below too.)
 
 The following extra checks are added to C<Perl::MinimumVersion>.
 
-=over 4
+=over
+
+=item 5.12 for
+
+=over
+
+=item *
+
+new C<keys @array>, C<values @array> and C<each @array>
+
+=back
 
 =item 5.10 for
 
@@ -853,7 +953,7 @@ C<qr//m>, since "m" modifier doesn't propagate correctly on a C<qr> until
 
 =item *
 
-C<pack()> new C<E<lt>> and C<E<gt>> endianness
+C<pack()> new C<E<lt>> and C<E<gt>> endianness.
 
 =item *
 
@@ -867,10 +967,17 @@ new C<UNIVERSAL.pm> method C<DOES()>
 
 =item *
 
-new C<word [newline] =E<gt>> fat comma quoting across a newline.
+new C<word [newline] =E<gt>> fat comma quoting across a newline
 
 For earlier Perl C<word> ended up a function call.  It's presumed such code
 is meant to quote in the 5.8 style, and thus requires 5.8 or higher.
+
+=item *
+
+C<eval '#line ...'> with C<#line> the very first thing
+
+In earlier Perl a C<#line> as the very first thing in an C<eval> doesn't
+take effect.  Adding a blank line so it's not first is enough.
 
 =item *
 
@@ -885,23 +992,23 @@ group, C<[]> repeat count
 
 =item *
 
-new C<exists &subr>, C<exists $array[0]> and C<delete $array[0]> support.
+new C<exists &subr>, C<exists $array[0]> and C<delete $array[0]>
 
 =item *
 
-new C<0b110011> binary number literals.
+new C<0b110011> binary number literals
 
 =item *
 
-new C<open(my $fh,...)> etc auto-creation of filehandle.
+new C<open(my $fh,...)> etc auto-creation of filehandle
 
 =item *
 
-C<syswrite()> length parameter optional.
+C<syswrite()> length parameter optional
 
 =item *
 
-C<Foo-E<gt>$method> no-args call without parens.
+C<Foo-E<gt>$method> no-args call without parens
 
 For earlier Perl a no-args call to a method named in a variable must be
 C<Foo-E<gt>$method()>.  The parens are optional in 5.6 up.
@@ -1012,9 +1119,9 @@ your code runs cleanly under S<< C<perl -w> >>, and leave it to applications
 to use C<-w> (or set C<$^W>) if they desire.
 
 C<warnings::compat> offers a C<use warnings> for earlier Perl, but it's not
-lexical, instead setting C<$^W> globally.  Doing that from a module is
-probably not a good idea, but in a script it could be an alternative to
-S<C<#!/usr/bin/perl -w>> (per L<perlrun>).
+lexical, instead setting C<$^W> globally.  In a script this might be an
+alternative to S<C<#!/usr/bin/perl -w>> (per L<perlrun>), but in a module
+it's probably not a good idea to change global settings.
 
 The C<UNIVERSAL.pm> methods C<VERSION()>, C<isa()>, C<can()> or C<DOES()>
 might in principle be implemented explicitly by a particular class, but it's
@@ -1038,7 +1145,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

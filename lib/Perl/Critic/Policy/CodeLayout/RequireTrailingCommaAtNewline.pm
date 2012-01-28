@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -22,11 +22,12 @@ use List::Util;
 
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_function_call is_method_call);
+use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 68;
+our $VERSION = 69;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -74,7 +75,7 @@ sub violates {
       ### $newline
       $after = $child;
     } else {
-      if ($newline && ! _elem_is_comma_operator($child)) {
+      if ($newline && ! elem_is_comma_operator($child)) {
         return $self->violation
           ('Put a trailing comma at last of a list ending with a newline',
            '',
@@ -102,7 +103,7 @@ sub _is_list_single_expression {
     my @children = $elem->schildren;
     @children = map { $_->isa('PPI::Statement::Expression')
                         ? ($_->schildren) : ($_)}  @children;
-    if (List::Util::first {_elem_is_comma_operator($_)} @children) {
+    if (List::Util::first {elem_is_comma_operator($_)} @children) {
       ### contains comma operator, so not an expression ...
       return 0;
     }
@@ -130,14 +131,6 @@ sub _is_list_single_expression {
 
   ### no commas, not a call, so is an expression
   return 1;
-}
-
-# $elem is a PPI::Element, return true if it's a comma operator "," or "=>"
-sub _elem_is_comma_operator {
-  my ($elem) = @_;
-  ### _elem_is_comma_operator(): "$elem"
-  return ($elem->isa('PPI::Token::Operator')
-          && $Perl::Critic::Pulp::Utils::COMMA{$elem->content});
 }
 
 sub _is_preceded_by_array {
@@ -312,7 +305,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

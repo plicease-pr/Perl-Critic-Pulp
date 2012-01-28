@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,12 +23,12 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
 use Perl::Critic::Pulp;
-use Perl::Critic::Pulp::Utils;
+use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 68;
+our $VERSION = 69;
 
 use constant supported_parameters =>
   ({ name           => 'allow_indirect_syntax',
@@ -47,7 +47,7 @@ sub violates {
   $elem =~ /::$/ or return;
 
   if ($self->{'_allow_indirect_syntax'}) {
-    if (_word_is_indirect_classname($elem)) {
+    if (_word_is_indirect_call_classname($elem)) {
       return;
     }
   }
@@ -61,13 +61,24 @@ sub violates {
 # $elem is a PPI::Token::Word.
 # Return true if it's the class name in an indirect object syntax method call.
 #
-sub _word_is_indirect_classname {
+sub _word_is_indirect_call_classname {
   my ($elem) = @_;
-  ### _word_is_indirect_classname
+  ### _word_is_indirect_call_classname(): "$elem"
 
-  my $prev = $elem->sprevious_sibling || return 0;
+  my $prev = $elem->sprevious_sibling || do {
+    ### no method preceding, not an indirect call ...
+    return 0;
+  };
   ### prev: ref $prev, $prev->content
-  $prev->isa('PPI::Token::Word') || return 0;
+
+  if (! $prev->isa('PPI::Token::Word')) {
+    ### not a bareword method name preceding, not an indirect call ...
+    return 0;
+  }
+  if ($prev eq 'return') {
+    ### return is never an indirect call ...
+    return 0;
+  }
 
   # What about "foo bar Foo::"?  Assume its function foo and method bar?
   #
@@ -75,17 +86,18 @@ sub _word_is_indirect_classname {
   #   ### prev-prev: ref $prev, $prev->content
   #   if ($prev && $prev->isa('PPI::Token::Word')) { return 0; }
 
-  if (elem_is_comma_operator ($elem->snext_sibling)) { return 0; }
-  return 1;
-}
+  if (my $next = $elem->snext_sibling) {
+    if ($next->isa('PPI::Token::Operator') && $next eq '=>') {
+      # "word1 word2 => ..." is either a function call to word1 or a syntax
+      # error, not an indirect call.  But "word1 word2," can be an indirect
+      # call in a comma operator list
+      #
+      ### fat comma not an indirect ...
+      return 0;
+    }
+  }
 
-# $elem is any PPI::Element.
-# return true if it's a comma operator.
-#
-sub elem_is_comma_operator {
-  my ($elem) = @_;
-  return ($elem->isa('PPI::Token::Operator')
-          && $Perl::Critic::Pulp::Utils::COMMA{$elem});
+  return 1;
 }
 
 1;
@@ -186,7 +198,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011 Kevin Ryde
+Copyright 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 68;
+our $VERSION = 69;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -48,8 +48,8 @@ sub violates {
   my ($self, $elem, $document) = @_;
   ### RequireFinalSemicolon elem: $elem->content
 
-  if (_block_is_hash_constructor($elem)) {
-    ### hash constructor, ok
+  if (_block_is_hash_constructor($elem) != 0) {
+    ### hash constructor, or likely so, stop ...
     return;
   }
 
@@ -113,33 +113,62 @@ sub _elem_statement_no_need_semicolon {
 }
 
 # $elem is a PPI::Structure::Block.
+# return 1 definitely a hash
+#        0 definitely a block
+#       -1 not certain
 #
 # PPI 1.212 tends to be give PPI::Structure::Block for various things which
 # are actually anon hash constructors and ought to be
 # PPI::Structure::Constructor.  For example,
 #
 #     return bless { x => 123 };
+#     return \ { x => 123 };
 #
 # _block_is_hash_constructor() tries to recognise some of those blocks which
 # are actually hash constructors, so as not to apply the final semicolon
 # rule to hash constructors.
 #
-my %word_is_block = (sub => 1,
-                     do => 1);
+my %word_is_block = (sub  => 1,
+                     do   => 1,
+                     map  => 1,
+                     grep => 1);
 sub _block_is_hash_constructor {
   my ($elem) = @_;
   ### _block_is_hash_constructor(): ref($elem), "$elem"
 
+  if (_block_starts_semi($elem)) {
+    ### begins with ";", block is correct ...
+    return 0;
+  }
+
   if (my $prev = $elem->sprevious_sibling) {
     ### prev: ref($prev), "$prev"
-    if (! $prev->isa('PPI::Token::Word')) {
-      ### anything except a word assumed an operator etc so hash constructor
+    if ($prev->isa('PPI::Structure::Condition')) {
+      ### prev condition, block is correct ...
+      return 0;
+    }
+    if ($prev->isa('PPI::Token::Cast')) {
+      if ($prev eq '\\') {
+        ### ref cast, is a hash ...
+        return 1;
+      } else {
+        ### other cast, block is correct (or a variable name) ...
+        return 0;
+      }
+    }
+    if ($prev->isa('PPI::Token::Operator')) {
+      ### prev operator, is a hash ...
       return 1;
     }
+    if (! $prev->isa('PPI::Token::Word')) {
+      ### prev not a word, not sure ...
+      return -1;
+    }
+
     if ($word_is_block{$prev}) {
       # "sub { ... }"
       # "do { ... }"
-      ### do{}/sub{} is a block
+      ### do/sub/map/grep, block is correct ...
       return 0;
     }
 
@@ -147,20 +176,20 @@ sub _block_is_hash_constructor {
       # "bless { ... }"
       # "return { ... }" etc
       # ENHANCE-ME: notice List::Util first{} and other prototyped things
-      ### nothing else preceding assume pessimistically a hash
-      return 1;
+      ### nothing else preceding, likely a hash ...
+      return -1;
     }
     ### prev prev: "$prev"
 
     if ($prev eq 'sub') {
       # "sub foo {}"
-        ### named sub not a hash
+        ### named sub, block is correct ...
         return 0;
     }
     # "word bless { ... }"
     # "word return { ... }" etc
-    ### other word preceding assume pessimistically to be a hash
-    return 1;
+    ### other word preceding, likely a hash ...
+    return -1;
   }
 
   my $parent = $elem->parent || do {
@@ -172,11 +201,38 @@ sub _block_is_hash_constructor {
       && ($parent = $parent->parent)
       && $parent->isa('PPI::Structure::List')) {
     # "func({ %args })"
-    ### in a list, is a hashref
+    ### in a list, is a hashref ...
     return 1;
   }
 
   return 0;
+}
+
+# $elem is a PPI::Structure::Block
+# return true if it starts with a ";"
+#
+sub _block_starts_semi {
+  my ($elem) = @_;
+
+  # note child() not schild() since an initial ";" is not "significant"
+  $elem = $elem->child(0);
+  ### first child: $elem && (ref $elem)."   $elem"
+
+  $elem = _elem_skip_whitespace_and_comments($elem);
+  return ($elem && $elem->isa('PPI::Statement::Null'));
+}
+
+# $elem is a PPI::Element or undef
+# return the next non-whitespace and non-comment after it
+sub _elem_skip_whitespace_and_comments {
+  my ($elem) = @_;
+  while ($elem
+         && ($elem->isa('PPI::Token::Whitespace')
+             || $elem->isa ('PPI::Token::Comment'))) {
+    $elem = $elem->next_sibling;
+    ### next elem: $elem && (ref $elem)."   $elem"
+  }
+  return $elem;
 }
 
 sub _elem_is_semicolon {
@@ -351,7 +407,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011 Kevin Ryde
+Copyright 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

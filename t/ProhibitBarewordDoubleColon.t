@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 31;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 68;
+my $want_version = 69;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon->VERSION, $want_version, 'VERSION class method');
 {
@@ -73,8 +73,26 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   # barewords in hash keys are subject to the same rules
                   [ 1, '$x{Foo::}' ],
 
+                  # indirect calls
+                  [ 0, 'new Foo::', {_allow_indirect_syntax => 1} ],
+                  [ 1, 'new Foo::', {_allow_indirect_syntax => 0} ],
                   [ 0, 'new Foo:: 1,2,3', {_allow_indirect_syntax => 1} ],
                   [ 1, 'new Foo:: 1,2,3', {_allow_indirect_syntax => 0} ],
+
+                  [ 1, 'my $x = Foo::',      {_allow_indirect_syntax => 1} ],
+                  [ 0, 'my $x = Foo',        {_allow_indirect_syntax => 1} ],
+                  [ 1, 'my $x = Foo::Bar::', {_allow_indirect_syntax => 1} ],
+                  [ 0, 'my $x = Foo::Bar',   {_allow_indirect_syntax => 1} ],
+
+                  [ 1, 'Foo::', ],
+                  [ 0, 'Foo',   ],
+                  [ 1, 'Foo::', {_allow_indirect_syntax => 1} ],
+                  [ 0, 'Foo',   {_allow_indirect_syntax => 1} ],
+
+                  [ 1, 'return Foo::', ],
+                  [ 0, 'return Foo',   ],
+                  [ 1, 'return Foo::', {_allow_indirect_syntax => 1} ],
+                  [ 0, 'return Foo',   {_allow_indirect_syntax => 1} ],
 
                   ## use critic
                  ) {

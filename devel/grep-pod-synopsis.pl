@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,6 +17,13 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Usage: perl grep-pod-synopsis.pl
+#
+# Look for SYNOPSIS without any verbatim paragraph.
+#
+# Sometimes C<> on whole ...
+
 use strict;
 use warnings;
 use Perl6::Slurp;
@@ -24,7 +31,6 @@ use Perl6::Slurp;
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 my $verbose = 0;
 

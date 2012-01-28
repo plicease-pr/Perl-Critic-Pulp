@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010 Kevin Ryde
+# Copyright 2010, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,46 +21,56 @@ use 5.010;
 use strict;
 use warnings;
 
-{ package main::foo; sub x {} }
-{ package main::foo::bar; sub y {} }
-{
-  $, = ' ';
-  # print %main::;
-  my $stash = \%main::;
-  # print keys %$stash;
-  print $stash->{foo::}//'undef',"\n";
+sub noop { }
 
-  $stash = \%main::foo::;
-  print keys %$stash,"\n";
-  print $stash->{bar::}//'undef',"\n";
+{ package blah; sub x { print "method x runs\n" } }
+{
+  # sub x { print "function x runs\n" }
+  x blah => noop();
   exit 0;
 }
 
-sub make {
-  return "make: @_";
-}
-
-{
-  package Math;
-  sub Complex { return "foo"; }
-}
-{
-  my $c = make Math::Complex 1, 2;
-  print $c,"\n";
-}
-require Math::Complex;
-{
-  my $c = make Math::Complex:: 3,4;
-  print $c,"\n";
-}
-
-print $Math::{'Complex::'},"\n";
-print $Math::{Complex::},"\n";
-
-{
-  package Foo::Bar::Quux;
-  sub blah { return "blah"; }
-}
-print $Foo::{'Bar::Quux::'}||'undef',"\n";
-print $Foo::Bar::{'Quux::'},"\n";
-print $Foo::Bar::{'Quux'}||'undef',"\n";
+# { package main::foo; sub x {} }
+# { package main::foo::bar; sub y {} }
+# 
+# {
+#   $, = ' ';
+#   # print %main::;
+#   my $stash = \%main::;
+#   # print keys %$stash;
+#   print $stash->{foo::}//'undef',"\n";
+# 
+#   $stash = \%main::foo::;
+#   print keys %$stash,"\n";
+#   print $stash->{bar::}//'undef',"\n";
+#   exit 0;
+# }
+# 
+# sub make {
+#   return "make: @_";
+# }
+# 
+# {
+#   package Math;
+#   sub Complex { return "foo"; }
+# }
+# {
+#   my $c = make Math::Complex 1, 2;
+#   print $c,"\n";
+# }
+# require Math::Complex;
+# {
+#   my $c = make Math::Complex:: 3,4;
+#   print $c,"\n";
+# }
+# 
+# print $Math::{'Complex::'},"\n";
+# print $Math::{Complex::},"\n";
+# 
+# {
+#   package Foo::Bar::Quux;
+#   sub blah { return "blah"; }
+# }
+# print $Foo::{'Bar::Quux::'}||'undef',"\n";
+# print $Foo::Bar::{'Quux::'},"\n";
+# print $Foo::Bar::{'Quux'}||'undef',"\n";

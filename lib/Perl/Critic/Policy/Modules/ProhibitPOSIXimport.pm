@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,11 +28,9 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 68;
+our $VERSION = 69;
 
-use constant DEBUG => 0;
 use constant _ALLOWED_CALL_COUNT => 15;
-
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -54,7 +52,7 @@ sub violates {
 
   return unless ($elem->module||'') eq 'POSIX';  # "use POSIX"
   return unless (_inc_exporter_imports_type($elem) eq 'default');
-  return if _is_in_package_main($elem);          # within main ok
+  return if _elem_is_in_package_main($elem);     # within main ok
   return if _count_posix_calls($document) >= _ALLOWED_CALL_COUNT;
 
   return $self->violation
@@ -95,7 +93,7 @@ sub _inc_exporter_imports_type {
 # return true if PPI $elem is within the "package main", either an explicit
 # "package main" or main as the default when no "package" statement at all
 #
-sub _is_in_package_main {
+sub _elem_is_in_package_main {
   my ($elem) = @_;
   my $package = Perl::Critic::Pulp::Utils::elem_package($elem)
     || return 1; # no package statement
@@ -106,15 +104,16 @@ sub _is_in_package_main {
 sub _parse_args {
   my @first = split_nodes_on_comma (@_);
   ### first split: scalar(@first)
-  if (DEBUG) {
-    require PPI::Dumper;
-    foreach my $aref (@first) {
-      print "  aref:\n";
-      foreach my $elem (@$aref) {
-        PPI::Dumper->new($elem)->print;
-      }
-    }
-  }
+
+  # if (DEBUG) {
+  #   require PPI::Dumper;
+  #   foreach my $aref (@first) {
+  #     print "  aref:\n";
+  #     foreach my $elem (@$aref) {
+  #       PPI::Dumper->new($elem)->print;
+  #     }
+  #   }
+  # }
 
   my @ret;
   while (@first) {
@@ -142,15 +141,16 @@ sub _parse_args {
   }
 
   ### final ret: scalar(@ret)
-  if (DEBUG) {
-    require PPI::Dumper;
-    foreach my $aref (@ret) {
-      print "  aref:\n";
-      foreach my $elem (@$aref) {
-        PPI::Dumper->new($elem)->print;
-      }
-    }
-  }
+  # if (DEBUG) {
+  #   require PPI::Dumper;
+  #   foreach my $aref (@ret) {
+  #     print "  aref:\n";
+  #     foreach my $elem (@$aref) {
+  #       PPI::Dumper->new($elem)->print;
+  #     }
+  #   }
+  # }
+
   return @ret;
 }
 
@@ -322,7 +322,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

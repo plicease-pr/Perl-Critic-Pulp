@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -30,7 +30,9 @@ use 5.006;
 use strict;
 use warnings;
 use Getopt::Long;
+
 use lib 'lib','devel/lib';
+
 use Perl::Critic;
 use Perl::Critic::Utils;
 use Perl::Critic::Violation;
@@ -41,6 +43,9 @@ my $option_t_files = 0;
 GetOptions
   (require_order => 1,
    t => \$option_t_files,
+   duphashkeys => sub {
+     push @option_policies, 'ValuesAndExpressions::ProhibitDuplicateHashKeys';
+   },
    linkself => sub {
      push @option_policies, 'Documentation::ProhibitLinkSelf$';
    },

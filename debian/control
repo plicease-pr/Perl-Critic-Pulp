@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -36,9 +36,9 @@ Bugs: mailto:user42@zip.com.au
 
 Package: libperl-critic-pulp-perl
 Architecture: all
-Depends: perl (>= 5.6), libperl-critic-perl (>= 1.084), libppi-perl (>= 1.212), pod-minimumversion (>= 50), libversion-perl | perl (>= 5.10), libio-string-perl (>= 1.02), liblist-moreutils-perl, libscalar-list-utils-perl | perl-modules (>= 5.8), ${perl:Depends}, ${misc:Depends}
+Depends: perl (>= 5.6), libperl-critic-perl (>= 1.100), libppi-perl (>= 1.212), pod-minimumversion (>= 50), libversion-perl | perl (>= 5.10), libio-string-perl (>= 1.02), liblist-moreutils-perl (>= 0.24), libscalar-list-utils-perl | perl-modules (>= 5.8), ${perl:Depends}, ${misc:Depends}
 Recommends: libperl-minimumversion-perl
 Description: Some add-on policies for perlcritic
- This is about 25 further policies for perlcritic, checking for
+ This is about 30 further policies for perlcritic, checking for
  miscellaneous bugs, compatibility, efficiency, and cosmetics.
  See the Perl::Critic::Pulp man page for the full list.

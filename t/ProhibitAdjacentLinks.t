@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 68;
+my $want_version = 69;
 is ($Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION,

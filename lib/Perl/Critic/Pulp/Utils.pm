@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version ();
 
-our $VERSION = 68;
+our $VERSION = 69;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version
@@ -30,6 +30,7 @@ our @EXPORT_OK = qw(parameter_parse_version
                     include_module_version
                     elem_package
                     elem_in_BEGIN
+                    elem_is_comma_operator
                     %COMMA);
 
 our %COMMA = (','  => 1,
@@ -180,6 +181,12 @@ sub elem_in_BEGIN {
   return 0;
 }
 
+sub elem_is_comma_operator {
+  my ($elem) = @_;
+  return ($elem->isa('PPI::Token::Operator')
+          && $Perl::Critic::Pulp::Utils::COMMA{$elem});
+}
+
 1;
 __END__
 
@@ -217,6 +224,11 @@ returned, instead its containing package.
 
 Return true if C<$elem> (a C<PPI::Element>) is within a C<BEGIN> block
 (ie. a C<PPI::Statement::Scheduled> of type "BEGIN").
+
+=item C<$bool = Perl::Critic::Pulp::Utils::elem_is_comma_operator ($elem)>
+
+Return true if C<$elem> (a C<PPI::Element>) is a comma operator
+(C<PPI::Token::Operator>), either "," or "=>'.
 
 =cut
 
@@ -277,6 +289,19 @@ C<$self-E<gt>throw_parameter_value_exception>.
 
 =back
 
+=head1 EXPORTS
+
+Nothing is exported by default, but the functions can be requested in usual
+C<Exporter> style,
+
+    use Perl::Critic::Pulp::Utils 'elem_in_BEGIN';
+    if (elem_in_BEGIN($elem)) {
+      # ...
+    }
+
+There's no C<:all> tag since this module is meant as a grab-bag of functions
+and importing as-yet unknown things would be asking for name clashes.
+
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>,
@@ -289,7 +314,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

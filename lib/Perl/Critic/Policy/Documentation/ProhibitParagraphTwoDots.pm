@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -32,7 +32,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 68;
+our $VERSION = 69;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -123,30 +123,30 @@ Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots - don't end a para
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 addon.  It asks you not to end a POD paragraph with two dots,
 
-    Some sentence..                 # bad
+    Some thing..                    # bad
 
 This is a surprisingly easy typo, but of course is entirely cosmetic and on
 that basis this policy is lowest priority and under the "cosmetic" theme
 (see L<Perl::Critic/POLICY THEMES>).
 
-A three or more dot ellipsis is fine,
+Three or more dots as an ellipsis is fine,
 
     And some more of this ...       # ok
 
-Anything within a paragraph is fine,
+and anything within a paragraph is fine,
 
     Numbers 1 .. 10 are handled.    # ok
 
-Only text paragraphs are checked, verbatim paragraphs can end with anything,
+Only text paragraphs are checked, verbatim paragraphs can end with anything
+at all
 
     This is an example,
 
         example_code (1 ..          # ok
-                      10);
 
-There might be other dubious paragraph endings to pick up, but things like
-";." or ":." can arise from code or smiley faces, so at the moment only two
-dots are bad.
+There might be other dubious paragraph endings this policy could pick up,
+but things like ";." or ":." can arise from code or smiley faces, so at the
+moment only two dots are bad.
 
 =head2 Disabling
 
@@ -156,8 +156,9 @@ L<Perl::Critic/CONFIGURATION>),
 
     [-Documentation::ProhibitParagraphTwoDots]
 
-A C<## no critic> directive works in recent C<Perl::Critic>, though
-generally must be before any C<__END__> token.
+A C<## no critic> directive works in new enough C<Perl::Critic>, but if you
+have an C<__END__> token then any C<no critic> generally must be before
+that.
 
 =head1 SEE ALSO
 
@@ -170,7 +171,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

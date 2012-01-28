@@ -53,11 +53,6 @@ my $count;
   exit 0;
 }
 
-# regexp for qualified name Foo::Bar::quux
-# this must hide in Regexp::Common somewhere surely?
-my $word;
-BEGIN { $word = qr/[_[:alpha:]](?:[_:[:alnum:]]*[_[:alnum:]])?/o; }
-
 sub file {
   my ($filename, $str) = @_;
 
@@ -69,16 +64,11 @@ sub file {
     substr ($str, $-[0], length($str), '');
   }
 
-  while ($str =~ /(\bdefined\s*(?:\s|\(+)|')?(\\+)?\&$word\s*(.)/sgo) {
-    next if defined $1;
-    next if defined $2;
+  while ($str =~ /\beval(\s*[\'\"]|\s+q.)#[ \t]*line/sgo) {
     my $pos = pos($str);
 
-    my $after = $3;
-    next if $after =~ /[;(]/;
-
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    print "$filename:$line:$col: ampersand call no parens '$after'\n",
+    print "$filename:$line:$col: eval #line\n",
       MyStuff::line_at_pos($str, $pos);
   }
 }

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -16,10 +16,10 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# perlcritic -s LinkCommas LinkCommas.pm
-# perlcritic -s LinkCommas /usr/share/perl5/MIME/Body.pm /usr/share/perl5/XML/Twig.pm
+# perlcritic -s ProhibitFinalLinkComma ProhibitFinalLinkComma.pm
+# perlcritic -s ProhibitFinalLinkComma /usr/share/perl5/MIME/Body.pm /usr/share/perl5/XML/Twig.pm
 
-package Perl::Critic::Policy::Documentation::LinkCommas;
+package Perl::Critic::Policy::Documentation::ProhibitFinalLinkComma;
 use 5.006;
 use strict;
 use warnings;
@@ -36,16 +36,16 @@ use constant applies_to           => 'PPI::Document';
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  ### LinkCommas on: $elem->content
+  ### ProhibitFinalLinkComma on: $elem->content
 
-  my $parser = Perl::Critic::Pulp::PodParser::LinkCommas->new
+  my $parser = Perl::Critic::Pulp::PodParser::ProhibitFinalLinkComma->new
     (-process_cut_cmd => 1,
      policy       => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
 
-package Perl::Critic::Pulp::PodParser::LinkCommas;
+package Perl::Critic::Pulp::PodParser::ProhibitFinalLinkComma;
 use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
@@ -172,7 +172,7 @@ __END__
 
 =head1 NAME
 
-Perl::Critic::Policy::Documentation::LinkCommas - avoid comma at end of section
+Perl::Critic::Policy::Documentation::ProhibitFinalLinkComma - avoid comma at end of section
 
 =head1 DESCRIPTION
 
@@ -187,14 +187,14 @@ cut and paste.
 
     =head1 AND ANOTHER
 
-If you don't care about this you can disable C<LinkCommas> from your
-F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
+If you don't care about this you can disable C<ProhibitFinalLinkComma> from
+your F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
-    [-Documentation::LinkCommas]
+    [-Documentation::ProhibitFinalLinkComma]
 
 =head1 SEE ALSO
 
-L<Perl::Critic::Pulp> L<Perl::Critic>,
+L<Perl::Critic::Pulp>, L<Perl::Critic>,
 
 =cut
 
@@ -204,7 +204,7 @@ L<Perl::Critic::Pulp> L<Perl::Critic>,
 # 
 # =head1 COPYRIGHT
 # 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 # 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

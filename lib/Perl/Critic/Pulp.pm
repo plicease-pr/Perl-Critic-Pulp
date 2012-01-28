@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 68;
+our $VERSION = 69;
 
 1;
 __END__
@@ -65,6 +65,10 @@ Avoid problems with C<! $x == $y>
 =item L<ValuesAndExpressions::ProhibitArrayAssignAref|Perl::Critic::Policy::ValuesAndExpressions::ProhibitArrayAssignAref>
 
 Dubious C<@array=[1,2,3]> array/arrayref assignments.
+
+=item L<ValuesAndExpressions::ProhibitDuplicateHashKeys|Perl::Critic::Policy::ValuesAndExpressions::ProhibitDuplicateHashKeys>
+
+Duplicate literal keys C<%h = (xyz=E<gt>123, xyz=E<gt>456)>.
 
 =item L<ValuesAndExpressions::ProhibitFiletest_f|Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f>
 

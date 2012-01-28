@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,22 +17,22 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Usage: perl grep-arg-unpack.pl
+#
+# Look for "sub { my ($foo); ... }" missing the @_ in the unpack.
+# Usually some variant unpacking or local vars.
+
 use 5.006;
 use strict;
 use warnings;
-use Perl6::Slurp;
 
-# look for "use Foo .5" etc, with the version number not starting with a digit
+use lib::abs '.';
+use MyLocatePerl;
+use MyStuff;
 
-
-my @files = ($0, split /\n/, `locate \\*.t \\*.pm \\*.pl`);
-
-print scalar(@files),"\n";
-foreach my $filename (@files) {
-  my $str = eval { Perl6::Slurp::slurp ($filename) }
-    || do { # print "Cannot read $filename: $!\n";
-      next;
-    };
+my $l = MyLocatePerl->new;
+while (my ($filename, $str) = $l->next) {
 
   while ($str =~ /(
                     sub\s+\w*\s*{\s*
@@ -40,10 +40,11 @@ foreach my $filename (@files) {
                   )
                  /gx) {
     my $line = $1;
-    my $pos = pos($str);
-    my $pre = substr ($str, 0, $pos);
-    my $linenum = ($pre =~ tr/\n//) + 1;
-    print "$filename:$linenum:1:  $line\n";
+    my $pos = pos($str) - length($1);
+
+    my ($linenum, $colnum) = MyStuff::pos_to_line_and_column ($str, $pos);
+    print "$filename:$linenum:$colnum:\n",
+      "$line\n";
   }
 }
 

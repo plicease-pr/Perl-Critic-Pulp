@@ -32,6 +32,7 @@ devel/grep-condsub.pl
 devel/grep-constant-underscore.pl
 devel/grep-devnull.pl
 devel/grep-each.pl
+devel/grep-eval-line.pl
 devel/grep-exporter.pl
 devel/grep-fat-comma.pl
 devel/grep-filetest-f.pl
@@ -46,6 +47,8 @@ devel/grep-pod-gt.pl
 devel/grep-pod-linked-urls.pl
 devel/grep-pod-links-adjacent.pl
 devel/grep-pod-para-dots.pl
+devel/grep-pod-section-end-comma.pl
+devel/grep-pod-synopsis.pl
 devel/grep-pod-verbatim-unindent.pl
 devel/grep-pod-verbatim.pl
 devel/grep-qrm.pl
@@ -53,7 +56,6 @@ devel/grep-qw-comment.pl
 devel/grep-qw.pl
 devel/grep-shebang-pm.pl
 devel/grep-spelling.pl
-devel/grep-synopsis.pl
 devel/grep-t-print.pl
 devel/grep-test-print.pl
 devel/grep-use-decimal.pl
@@ -70,10 +72,9 @@ devel/junk/TestMoreLikeModifiers.t
 devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.pm
 devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.t
 devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
-devel/lib/Perl/Critic/Policy/Documentation/LinkCommas.pm
+devel/lib/Perl/Critic/Policy/Documentation/ProhibitFinalLinkComma.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
-devel/lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitDuplicateHashKeys.pm
 devel/Makefile
 devel/MyLocatePerl.pm
 devel/MyStuff.pm
@@ -128,6 +129,7 @@ lib/Perl/Critic/Policy/ValuesAndExpressions/ConstantBeforeLt.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/NotWithCompare.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitArrayAssignAref.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitBarewordDoubleColon.pm
+lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitDuplicateHashKeys.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitEmptyCommas.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitFiletest_f.pm
 lib/Perl/Critic/Policy/ValuesAndExpressions/ProhibitNullStatements.pm
@@ -155,6 +157,7 @@ t/ProhibitAdjacentLinks.t
 t/ProhibitArrayAssignAref.t
 t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
+t/ProhibitDuplicateHashKeys.t
 t/ProhibitDuplicateSeeAlso.t
 t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t

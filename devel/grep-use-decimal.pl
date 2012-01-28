@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,12 +17,18 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Usage: perl grep-use-decimal.pl
+#
+# Look for "use Foo .5" etc, with the version number not starting with a
+# digit.
+#
+
+
 use 5.006;
 use strict;
 use warnings;
 use Perl6::Slurp;
-
-# look for "use Foo .5" etc, with the version number not starting with a digit
 
 
 my @files = ($0, split /\n/, `locate \\*.t \\*.pm \\*.pl`);

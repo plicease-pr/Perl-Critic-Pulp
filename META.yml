@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Perl-Critic-Pulp
-version:            68
+version:            69
 abstract:           Some add-on policies for Perl::Critic.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -24,6 +24,7 @@ requires:
     Pod::ParseLink:       0
     PPI:                  1.212
     PPI::Document:        0
+    PPI::Dumper:          0
     Scalar::Util:         0
     Test::More:           0
     version:              0

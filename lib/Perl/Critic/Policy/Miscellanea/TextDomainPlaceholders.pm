@@ -26,7 +26,10 @@ use Perl::Critic::Utils qw(is_function_call
                            parse_arg_list
                            interpolate);
 
-our $VERSION = 68;
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+our $VERSION = 69;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -84,7 +87,7 @@ sub violates {
     if (! $count_arg
         || do {
           # if it looks like a keyword symbol foo=> or 'foo' etc
-          my ($str, $any_vars) = _arg_word_or_string ($count_arg);
+          my ($str, $any_vars) = _arg_word_or_string ($count_arg, $document);
           ($str =~ /^[[:alpha:]_]\w*$/ && ! $any_vars)
         }) {
       push @violations, $self->violation
@@ -100,7 +103,7 @@ sub violates {
   my %arg_keys;
   while (@args) {
     my $arg = shift @args;
-    my ($str, $any_vars) = _arg_word_or_string ($arg);
+    my ($str, $any_vars) = _arg_word_or_string ($arg, $document);
     $args_any_vars ||= $any_vars;
     ### arg: @$arg
     ### $str
@@ -115,7 +118,7 @@ sub violates {
   my $format_any_vars;
 
   foreach my $format_arg (@format_args) {
-    my ($format_str, $any_vars) = _arg_string ($format_arg);
+    my ($format_str, $any_vars) = _arg_string ($format_arg, $document);
     $format_any_vars ||= $any_vars;
 
     while ($format_str =~ /\{(\w+)\}/g) {
@@ -150,16 +153,23 @@ sub violates {
 }
 
 sub _arg_word_or_string {
-  my ($arg) = @_;
+  my ($arg, $document) = @_;
   if (@$arg == 1 && $arg->[0]->isa('PPI::Token::Word')) {
     return ("$arg->[0]", 0);
   } else {
-    return _arg_string ($arg);
+    return _arg_string ($arg, $document);
   }
 }
 
+# $arg is an arrayref of PPI::Element which are an argument
+# if it's a constant string or "." concat of such then
+# return ($str, $any_vars) where $str is the string content
+# and $any_vars is true if there's any variables to be interpolated in $str
+#
 sub _arg_string {
-  my ($arg) = @_;
+  my ($arg, $document) = @_;
+  ### _arg_string() ...
+
   my @elems = @$arg;
   my $ret = '';
   my $any_vars = 0;
@@ -189,20 +199,41 @@ sub _arg_string {
       $ret .= $str;
 
     } elsif ($elem->isa('PPI::Token::Number')) {
-      # a number can work like a constant string
+      ### number can work like a constant string ...
       $ret .= $elem->content;
 
     } elsif ($elem->isa('PPI::Token::Word')) {
-      if (my $next = $elem->snext_sibling) {
-        if ($next->isa('PPI::Token::Operator') && $next eq '=>') {
-          $ret .= $elem->content;
+      ### word ...
+      my $next;
+      if ($elem eq '__PACKAGE__') {
+        $ret .= _elem_package_name($elem);
+
+      } elsif ($elem eq '__LINE__') {
+        ### logical line: $elem->location->[3]
+        $ret .= $elem->location->[3]; # logical line using any #line directives
+
+      } elsif ($elem eq '__FILE__') {
+        my $filename = _elem_logical_filename($elem,$document);
+        if (! defined $filename) {
+          $filename = 'unknown-filename.pl';
         }
+        ### $filename
+        $ret .= $filename;
+
+      } elsif (($next = $elem->snext_sibling)
+               && $next->isa('PPI::Token::Operator')
+               && $next eq '=>') {
+        ### word quoted by => ...
+        $ret .= $elem->content;
+        last;
+      } else {
+        ### some function call or something ...
+        return ('', 2);
       }
-      last;
 
     } else {
-      # some variable or something
-      return ('', 1);
+      ### some variable or expression or something ...
+      return ('', 2);
     }
 
 
@@ -210,7 +241,7 @@ sub _arg_string {
     my $op = shift @elems;
     if (! ($op->isa('PPI::Token::Operator') && $op eq '.')) {
       # something other than "." concat
-      return ('', 1);
+      return ('', 2);
     }
   }
   return ($ret, $any_vars);
@@ -221,6 +252,59 @@ sub _arg_string {
 sub _string_any_vars {
   my ($str) = @_;
   return ($str =~ /(^|[^\\])(\\\\)*[\$@]/);
+}
+
+# $elem is a PPI::Element
+# Return the name (a string) of its containing package, or "main" if not
+# under any package statement.
+#
+sub _elem_package_name {
+  my ($elem) = @_;
+  if (my $packelem = Perl::Critic::Pulp::Utils::elem_package($elem)) {
+    if (my $name = $packelem->namespace) {
+      return $name;
+    }
+  }
+  return 'main';
+}
+
+# As per perlsyn.pod.  Is this in a module somewhere?
+my $line_directive_re = 
+  qr/^\#   \s*
+     line \s+ (\d+)   \s*
+     (?:\s("?)([^"]+)\g2)? \s*
+     $/xm;
+
+# $elem is a PPI::Element
+
+# Return its logical filename (a string).  This is either  of its containing package, or
+# "main" if not under any package statement.
+#
+sub _elem_logical_filename {
+  my ($elem, $document) = @_;
+  ### _elem_logical_filename(): "$elem"
+
+  my $filename;
+  $document->find_first (sub {
+                           my ($doc, $e) = @_;
+                           # ### comment: (ref $e)."  ".$e->content
+                           if ($e == $elem) {
+                             ### not found before target elem, stop ...
+                             return undef;
+                           }
+                           if ($e->isa('PPI::Token::Comment')
+                               && $e->content =~ $line_directive_re) {
+                             $filename = $3;
+                             ### found line directive: $filename
+                           }
+                           return 0; # continue
+                         });
+  if (defined $filename) {
+    return $filename;
+  } else {
+    ### not found, use document: $document->filename
+    return $document->filename;
+  }
 }
 
 1;
