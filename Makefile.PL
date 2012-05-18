@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
 
@@ -21,10 +21,8 @@ use 5.006;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use lib 'inc';
-use MyMakeMakerExtras;
 
-MyMakeMakerExtras::WriteMakefile
+WriteMakefile
   (NAME         => 'Perl-Critic-Pulp',
    ABSTRACT     => 'Some add-on policies for Perl::Critic.',
    VERSION_FROM => 'lib/Perl/Critic/Pulp.pm',
@@ -80,6 +78,7 @@ MyMakeMakerExtras::WriteMakefile
    META_MERGE =>
    { resources =>
      { homepage => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
+       license  => 'http://www.gnu.org/licenses/gpl.html',
      },
      recommends => { 'Perl::MinimumVersion' => 0,
                    },
@@ -100,8 +99,6 @@ MyMakeMakerExtras::WriteMakefile
      # don't index "package Perl::MinimumVersion" additions there
      no_index => { package => [ 'Perl::MinimumVersion' ] },
    },
-
-   MY_NO_HTML => 1,
   );
 
 

@@ -17,14 +17,17 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-Version 69, January 2011
+Version 70, May 2012
+    - new policy Documentation::RequireFinalCut
+
+Version 69, January 2012
     - new policy ValuesAndExpressions::ProhibitDuplicateHashKeys
     - PerlMinimumVersionAndWhy
       - new keys @array, values @array and each @array are 5.12
       - new eval '#line' with #line the very first thing is 5.8
     - Perl::Critic::Pulp::Utils new elem_is_comma_operator()
 
-Version 68, January 2011
+Version 68, January 2012
     - RequireNumericVersion
       - recognise fully-qualified $Foo::VERSION
       - recognise "$VERSION = eval $VERSION" trick

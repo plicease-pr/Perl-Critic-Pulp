@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitDuplicateHashKeys;
 
 #-----------------------------------------------------------------------------
-my $want_version = 69;
+my $want_version = 70;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitDuplicateHashKeys::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitDuplicateHashKeys->VERSION, $want_version, 'VERSION class method');
 {

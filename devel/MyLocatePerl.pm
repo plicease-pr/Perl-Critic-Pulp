@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde.
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde.
 
 # MyLocatePerl.pm is shared by various distributions.
 #
@@ -49,12 +49,22 @@ sub new {
   my $suffixes_re = qr/\.($suffixes)($compressed_re)?$/;
   ### $suffixes
   ### $suffixes_re
+
+  my $locate_regexp = $suffixes_re;
+  if (defined (my $under_directory = $options{'under_directory'})) {
+    unless ($under_directory =~ m{/$}) {
+      $under_directory .= '/';
+    }
+    $locate_regexp = qr/^\Q$under_directory\E.*$suffixes_re/;
+  }
+  ### $locate_regexp
+
   my $self = $class->SUPER::new (
                                  # globs => ['/bin/*',
                                  #           '/usr/bin/*',
                                  #           '/usr/local/bin/*',
                                  #           '/usr/local/bin2/*'],
-                                 regexp => $suffixes_re,
+                                 regexp => $locate_regexp,
                                  %options);
   $self->{'uniq_ino'} = MyUniqByInode->new;
   $self->{'uniq_md5'} = MyUniqByMD5->new;
@@ -90,6 +100,7 @@ sub next {
 
     $self->{'uniq_md5'}->uniq_str($content) or next;
 
+    ### return: $filename
     return ($filename, $content);
   }
 }

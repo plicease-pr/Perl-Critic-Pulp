@@ -31,6 +31,8 @@ devel/grep-backslash.pl
 devel/grep-condsub.pl
 devel/grep-constant-underscore.pl
 devel/grep-devnull.pl
+devel/grep-dollar-semi.pl
+devel/grep-duplicate-END.pl
 devel/grep-each.pl
 devel/grep-eval-line.pl
 devel/grep-exporter.pl
@@ -43,18 +45,24 @@ devel/grep-makefile-exit.pl
 devel/grep-pack.pl
 devel/grep-pod-blankline.pl
 devel/grep-pod-duplicate-see-also.pl
+devel/grep-pod-final-cut.pl
 devel/grep-pod-gt.pl
+devel/grep-pod-leadingwhite.pl
 devel/grep-pod-linked-urls.pl
 devel/grep-pod-links-adjacent.pl
+devel/grep-pod-no-cut.pl
 devel/grep-pod-para-dots.pl
 devel/grep-pod-section-end-comma.pl
 devel/grep-pod-synopsis.pl
 devel/grep-pod-verbatim-unindent.pl
 devel/grep-pod-verbatim.pl
+devel/grep-printf.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
 devel/grep-qw.pl
+devel/grep-rootdir.pl
 devel/grep-shebang-pm.pl
+devel/grep-shebang-t.pl
 devel/grep-spelling.pl
 devel/grep-t-print.pl
 devel/grep-test-print.pl
@@ -101,8 +109,6 @@ devel/use-quoted.pl
 devel/version.pl
 devel/version_check.pl
 devel/version_check.pm
-inc/my_pod2html
-inc/MyMakeMakerExtras.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireFinalSemicolon.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireTrailingCommaAtNewline.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantLeadingUnderscore.pm
@@ -119,6 +125,7 @@ lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitUnbalancedParens.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
+lib/Perl/Critic/Policy/Documentation/RequireFinalCut.pm
 lib/Perl/Critic/Policy/Documentation/RequireLinkedURLs.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainUnused.pm
@@ -174,6 +181,7 @@ t/ProhibitUseQuotedVersion.t
 t/ProhibitVerbatimMarkup.t
 t/Pulp.t
 t/RequireEndBeforeLastPod.t
+t/RequireFinalCut.t
 t/RequireFinalSemicolon.t
 t/RequireLinkedURLs.t
 t/RequireNumericVersion.t
@@ -190,4 +198,14 @@ xt/0-Test-DistManifest.t
 xt/0-Test-Pod.t
 xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
+xtools/my-check-copyright-years.sh
+xtools/my-check-file-part-of.sh
+xtools/my-check-spelling.sh
+xtools/my-deb.sh
+xtools/my-diff-prev.sh
+xtools/my-kwalitee.sh
+xtools/my-manifest.sh
+xtools/my-pc.sh
+xtools/my-tags.sh
+xtools/my-wunused.sh
 META.yml                                 Module meta-data (added by MakeMaker)

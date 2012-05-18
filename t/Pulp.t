@@ -29,7 +29,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Pulp;
 
-my $want_version = 69;
+my $want_version = 70;
 is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
 {

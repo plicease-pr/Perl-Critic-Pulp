@@ -29,6 +29,8 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+our $VERSION = 70;
+
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
 use constant default_themes       => qw(pulp cosmetic);

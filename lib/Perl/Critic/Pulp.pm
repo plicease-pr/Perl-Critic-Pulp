@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 69;
+our $VERSION = 70;
 
 1;
 __END__
@@ -189,6 +189,10 @@ Don't end paragraph with ".." (stray extra dot).
 =item L<Documentation::ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>
 
 Verbatim paragraphs not expanding C<< CE<lt>E<gt> >> etc markup.
+
+=item L<Documentation::RequireFinalCut|Perl::Critic::Policy::Documentation::RequireFinalCut>
+
+Have a C<=cut> at end of file.
 
 =item L<Documentation::RequireLinkedURLs|Perl::Critic::Policy::Documentation::RequireLinkedURLs>
 
