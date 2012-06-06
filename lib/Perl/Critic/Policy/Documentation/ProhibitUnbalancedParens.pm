@@ -35,7 +35,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 70;
+our $VERSION = 71;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -249,10 +249,33 @@ this policy is low priority and under the "cosmetic" theme (see
 L<Perl::Critic/POLICY THEMES>).
 
 Text and command paragraphs are checked, but verbatim paragraphs can have
-anything.  Not quite every paren must be balanced.  The intention is to be
-forgiving of common or reasonable constructs.  Currently this means,
+anything.  There are some exceptions to paren balancing.  The intention is
+to be forgiving of common or reasonable constructs.  Currently this means,
 
 =over
+
+=item *
+
+Anything in C<CE<lt>E<gt>> code markup is ignored
+
+=for ProhibitVerbatimMarkup allow next
+
+    In code C<anything [ is allowed>.  # ok
+
+Perhaps this will change, though there'd have to be extra exceptions in
+C<CE<lt>E<gt>>, such as various backslashing.
+
+Sometimes a prematurely ending C<CE<lt>E<gt>> may look like an unbalanced
+paren, for example
+
+=for ProhibitVerbatimMarkup allow next
+
+    Call C<foo(key=>value)> ...    # bad
+
+=for ProhibitUnbalancedParens allow next
+
+This is bad because the C<CE<lt>E<gt>> ends at the C<=E<gt>>, leaving
+"value)" unbalanced plain text.  This is an easy mistake to make.
 
 =item *
 
@@ -272,8 +295,8 @@ Item parens
     1) one, 2) two     # ok
 
 Exactly how much is recognised as an "a)" etc is not quite settled.  In the
-current code a "1.5)" is recognised at the start of a paragraph, but only
-"1)" in the middle.
+current code a "1.5)" is recognised at the start of a paragraph, but in the
+middle only "1)" style.
 
 =item *
 
@@ -303,7 +326,7 @@ it's likely to be a deref or delimiter,
     Deref with ${foo()} etc etc.
 
 Variables or expressions like this will often be in C<CE<lt>E<gt>> markup
-and skipped for that reason, per below.
+and skipped for that reason, as described above.
 
 =item *
 
@@ -317,37 +340,14 @@ C<CE<lt>E<gt>> markup around sample code like this will be usual.
 
 =item *
 
-Anything in C<CE<lt>E<gt>> code markup is ignored
-
-=for ProhibitVerbatimMarkup allow next
-
-    In code C<anything [ is allowed>.  # ok
-
-Perhaps this will change, though there'd have to be extra exceptions in
-C<CE<lt>E<gt>>, such as various backslashing.
-
-Sometimes a prematurely ending C<CE<lt>E<gt>> may look like an unbalanced
-paren, for example
-
-=for ProhibitVerbatimMarkup allow next
-
-    Call C<foo(key=>value)> ...    # bad
-
-=for ProhibitUnbalancedParens allow next
-
-This is bad because the C<CE<lt>E<gt>> ends at the C<=E<gt>>, leaving
-"value)" unbalanced plain text.  This is an easy mistake to make.
-
-=item *
-
-C<LE<lt>display|linkE<gt>> links are processed as the "display" text part.
+C<LE<lt>display|linkE<gt>> links are processed with the "display" text part.
 The link target (POD document name and section) can have anything.
 
 =back
 
 =head2 Unrecognised Forms
 
-A mathematical half-open range like is not recognised.
+A mathematical half-open range like the following is not recognised.
 
     [1,2)             # bad, currently
 
@@ -363,9 +363,9 @@ Parens spanning multiple paragraphs are not recognised,
 
     thing.)           # bad
 
-Hopefully this is uncommon, and it may be better style not to be
-parenthetical about something big enough that it runs to multiple paragraphs
-or has a verbatim block in the middle etc.
+Hopefully this is uncommon, and probably better style not to be
+parenthetical about something so big enough that it runs to multiple
+paragraphs or has a verbatim block in the middle etc.
 
 =head2 Disabling
 

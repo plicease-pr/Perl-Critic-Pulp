@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
-our $VERSION = 70;
+our $VERSION = 71;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -55,7 +55,8 @@ use base 'Perl::Critic::Pulp::PodParser';
 my %command_non_text = (for   => 1,
                         begin => 1,
                         end   => 1,
-                        cut   => 1);
+                        # cut => 1, # not seen unless -process_cut_cmd
+                       );
 sub command {
   my ($self, $command, $text, $linenum, $pod_obj) = @_;
 

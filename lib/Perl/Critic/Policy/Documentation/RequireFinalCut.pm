@@ -17,6 +17,7 @@
 
 
 # perlcritic -s RequireFinalCut RequireFinalCut.pm
+# perlcritic -s RequireFinalCut /usr/share/perl5/Class/InsideOut.pm
 
 
 package Perl::Critic::Policy::Documentation::RequireFinalCut;
@@ -29,7 +30,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 70;
+our $VERSION = 71;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -53,13 +54,19 @@ use base 'Perl::Critic::Pulp::PodParser';
 
 sub new {
   my $class = shift;
-  return $class->SUPER::new (last_linenum => 0,
-                             @_);
+  my $self = $class->SUPER::new (@_);
+  $self->parseopts(-process_cut_cmd => 1);
+  return $self;
 }
 
 # Pod::Parser doesn't hold the current line number except in a local
 # variable, so have to note it here for use in end_input().
 #
+sub begin_input {
+  my $self = shift;
+  $self->SUPER::begin_input(@_);
+  $self->{'last_linenum'} = 0;
+}
 sub preprocess_line {
   my ($self, $line, $linenum) = @_;
   ### preprocess_line(): "linenum=$linenum"
@@ -68,14 +75,61 @@ sub preprocess_line {
 }
 
 sub end_input {
-  my ($self) = @_;
-  unless ($self->cutting) {
+  my $self = shift;
+  $self->SUPER::begin_input(@_);
+  if ($self->{'in_pod'}) {
     $self->violation_at_linenum_and_textpos
       ("POD doesn't end with =cut directive",
        $self->{'last_linenum'} + 1, # end of file as the position
        '',
        0);
   }
+}
+
+sub command {
+  my $self = shift;
+  $self->SUPER::command(@_);
+  my ($command, $text, $linenum, $paraobj) = @_;
+  ### $command
+
+  if ($command eq 'cut') {
+    $self->{'in_pod'} = 0;
+
+  } elsif ($command eq 'end' || $command eq 'for') {
+
+  } elsif ($command eq 'pod') {
+    $self->{'in_pod'} = 1;
+
+  } else {
+    unless ($self->{'in_begin'}) {
+      $self->{'in_pod'} = 1;
+    }
+  }
+  ### now in_pod: $self->{'in_pod'}
+  return '';
+}
+
+sub verbatim {
+  my ($self, $text, $linenum, $paraobj) = @_;
+  ### verbatim ...
+
+  # ignore entirely whitespace runs of blank lines
+  return '' if $text =~ /^\s*$/;
+
+  unless ($self->{'in_begin'}) {
+    $self->{'in_pod'} = 1;
+  }
+  return '';
+}
+
+sub textblock {
+  my ($self, $text, $linenum, $paraobj) = @_;
+  ### textblock ...
+
+  unless ($self->{'in_begin'}) {
+    $self->{'in_pod'} = 1;
+  }
+  return '';
 }
 
 1;
@@ -99,21 +153,36 @@ file.
 
     =cut             # ok
 
-The idea is to have a definite end of file indication.  This is just for
-human use since Perl and the POD processors don't require a final C<=cut>.
-On that basis this policy is lowest priority and under the "cosmetic" theme
-(see L<Perl::Critic/POLICY THEMES>).
+The idea is to have a definite end of file indication for human readers.
+Perl and the POD processors don't require a final C<=cut>.  On that basis
+this policy is lowest priority and under the "cosmetic" theme (see
+L<Perl::Critic/POLICY THEMES>).
 
-If there's no POD in the file then a C<=cut> is not required.  After a final
-C<=cut> there can be further code or data.  A C<=cut> is mandatory in this
-case of course.
+If there's no POD in the file then a C<=cut> is not required.  Or if the POD
+is not at the end of file then another C<=cut> at the end is not required.
 
     =head2 About foo
 
     =cut
 
-    sub foo {    # ok
+    sub foo {    # ok, file ends with code not POD
     }
+
+If POD is at end of file but consists only of C<=begin/=end> blocks then a
+C<=cut> is not required, it being reckoned the C<=end> is enough in this
+case.
+
+    =begin wikidoc
+
+    Entire document in wiki style.
+
+    =end wikidoc          # ok, =cut not required
+
+If you've got a mixture of POD and C<=begin> blocks then a C<=cut> is still
+required, but not if the only thing is an C<=begin> presumably destined for
+some other markup system.
+
+=head2 Disabling
 
 If you don't care about a final C<=cut> you can disable C<RequireFinalCut>
 from your F<.perlcriticrc> in the usual way (see

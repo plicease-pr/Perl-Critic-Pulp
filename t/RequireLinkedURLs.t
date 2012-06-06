@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 42;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 70;
+my $want_version = 71;
 is ($Perl::Critic::Policy::Documentation::RequireLinkedURLs::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireLinkedURLs->VERSION,
@@ -63,6 +63,33 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  [ 0, "use 5.008;\n\n=begin comment\n
+http://perl.org/index.html\n" ],
+
+                  # nested
+                  [ 1, "use 5.008;\n\n=begin comment
+\n=begin comment
+\nhttp://perl.org/index.html
+\n=end comment
+\nhttp://perl.org/index.html
+\n=end comment
+\nhttp://perl.org/index.html\n" ],
+
+                  # wikidoc
+                  [ 0, "use 5.008;\n\n=begin wikidoc\n\n[http://perl.org/index.html home]\n" ],
+
+                  # empty
+                  [ 1, "use 5.008;\n\n=begin\n
+http://perl.org/index.html\n" ],
+
+                  # html
+                  [ 0, "use 5.008;\n\n=begin html\n
+<a href=\"http://perl.org/index.html\">perl home</a>
+\n=end html\n" ],
+                  [ 0, "use 5.008;\n\n=begin html blahblah blah\n
+<a href=\"http://perl.org/index.html\">perl home</a>
+\n=end html\n" ],
+
                   # no critic override, but only works if not the last
                   # PPI::Element in the document, or something
                   [ 0,

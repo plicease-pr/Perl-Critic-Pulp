@@ -1,5 +1,5 @@
-libperl-critic-pulp-perl (70-1) unstable; urgency=low
+libperl-critic-pulp-perl (71-1) unstable; urgency=low
 
   * Packaged version.
 
- -- Kevin Ryde <user42@zip.com.au>  Fri, 11 May 2012 08:41:40 +1000
+ -- Kevin Ryde <user42@zip.com.au>  Wed, 16 May 2012 17:31:08 +1000

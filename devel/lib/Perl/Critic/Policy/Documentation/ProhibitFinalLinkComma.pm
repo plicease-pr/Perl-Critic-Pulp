@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 70;
+our $VERSION = 71;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -41,8 +41,7 @@ sub violates {
   ### ProhibitFinalLinkComma on: $elem->content
 
   my $parser = Perl::Critic::Pulp::PodParser::ProhibitFinalLinkComma->new
-    (-process_cut_cmd => 1,
-     policy       => $self);
+    (policy       => $self);
   $parser->parse_from_elem ($elem);
   return $parser->violations;
 }
@@ -54,8 +53,10 @@ use base 'Perl::Critic::Pulp::PodParser';
 
 sub new {
   my $class = shift;
-  return $class->SUPER::new (last => '',
-                      @_);
+  my $self = $class->SUPER::new (last => '',
+                                 @_);
+  $self->parseopts(-process_cut_cmd => 1);
+  return $self;
 }
 
 sub parse_from_filehandle {
@@ -198,27 +199,25 @@ your F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
 L<Perl::Critic::Pulp>, L<Perl::Critic>,
 
-=cut
+=head1 HOME PAGE
 
-# =head1 HOME PAGE
-# 
-# http://user42.tuxfamily.org/perl-critic-pulp/index.html
-# 
-# =head1 COPYRIGHT
-# 
-# Copyright 2010, 2011, 2012 Kevin Ryde
-# 
-# Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation; either version 3, or (at your option) any later
-# version.
-# 
-# Perl-Critic-Pulp is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-# more details.
-# 
-# You should have received a copy of the GNU General Public License along with
-# Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
-# 
-# =cut
+http://user42.tuxfamily.org/perl-critic-pulp/index.html
+
+=head1 COPYRIGHT
+
+Copyright 2010, 2011, 2012 Kevin Ryde
+
+Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Perl-Critic-Pulp is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut

@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 24;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireFinalCut;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 70;
+my $want_version = 71;
 is ($Perl::Critic::Policy::Documentation::RequireFinalCut::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireFinalCut->VERSION,
@@ -64,13 +64,28 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   [ 0, "=pod\n\n=cut\n" ],
+   [ 0, "=cut\n" ],
+
+   [ 0, "=begin foo\n\nsome text\n\n=end foo\n" ],
+   [ 0, "=begin foo\n\nsome text\n\n=end foo\n\n\n\n=begin foo\n\n=end foo\n" ],
+   [ 0, "=begin foo\n\nsome text\n\n=end foo\n\n\t\t\n\n=begin foo\n\n=end foo\n" ],
+   [ 0, "=for foo\n" ],
+   [ 0, "=for foo\n\n=cut\n" ],
+
+   [ 1, "=pod\n\nsome text\n\n=begin foo\n\nsome begin\n\n=end foo\n" ],
+   [ 0, "=pod\n\nsome text\n\n=begin foo\n\nsome begin\n\n=end foo\n\n=cut\n" ],
+   [ 1, "=begin foo\n\nsome begin\n\n=end foo\n\nsome text\n" ],
+   [ 0, "=begin foo\n\nsome begin\n\n=end foo\n\nsome text\n\n=cut\n" ],
+   
+   # unclosed begin
+   [ 0, "=begin foo\n\nsome begin\n" ],
+
    [ 0, "" ],
    [ 0, "print 123" ],
    [ 0, "print 123\n" ],
    [ 0, "=head1 HELLO\n\n=cut\n" ],
    [ 1, "=head1 HELLO\n" ],
-   [ 0, "=cut\n" ],
-   [ 0, "=pod\n\n=cut\n" ],
 
   ) {
 

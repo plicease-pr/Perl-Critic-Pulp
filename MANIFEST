@@ -43,6 +43,7 @@ devel/grep-hash-keys.pl
 devel/grep-import-tag.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
+devel/grep-pod-begin.pl
 devel/grep-pod-blankline.pl
 devel/grep-pod-duplicate-see-also.pl
 devel/grep-pod-final-cut.pl

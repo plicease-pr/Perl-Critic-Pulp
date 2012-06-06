@@ -17,6 +17,10 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 71, June 2012
+    - RequireLinkedURLs - skip "=begin html" etc blocks
+    - RequireFinalCut - cut not required if only =begin foo/=end foo block
+
 Version 70, May 2012
     - new policy Documentation::RequireFinalCut
 

@@ -29,7 +29,7 @@ use Test::More tests => 15;
 require Perl::Critic::Policy::Modules::ProhibitModuleShebang;
 
 #-----------------------------------------------------------------------------
-my $want_version = 70;
+my $want_version = 71;
 is ($Perl::Critic::Policy::Modules::ProhibitModuleShebang::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitModuleShebang->VERSION,

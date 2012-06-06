@@ -22,17 +22,23 @@ use warnings;
 use Perl::Critic::Pulp::Utils;
 use base 'Pod::Parser';
 
-our $VERSION = 70;
+our $VERSION = 71;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-sub new {
-  my $class = shift;
-  ### Pulp-PodParser new()
-  my $self = $class->SUPER::new(@_, violations => []);
+
+# sub new {
+#   my $class = shift;
+#   ### Pulp-PodParser new()
+#   my $self = $class->SUPER::new (@_);
+#   return $self;
+# }
+sub initialize {
+  my ($self) = @_;
+  # empty violations for violations() to return before a parse
+  $self->{'violations'} = [];
   $self->errorsub ('error_handler'); # method name
-  return $self;
 }
 sub error_handler {
   my ($self, $errmsg) = @_;
@@ -71,6 +77,34 @@ sub parse_from_string {
   my $fh = IO::String->new ($str);
   $self->parse_from_filehandle ($fh);
 }
+
+sub begin_pod {
+  my ($self) = @_;
+  $self->{'violations'} = [];
+  $self->{'in_begin'} = '';
+}
+
+sub command {
+  my ($self, $command, $text, $linenum) = @_;
+  if ($command eq 'begin') {
+    push @{$self->{'in_begin_stack'}}, $self->{'in_begin'};
+    if ($text =~ /(\w+)/) {
+      $self->{'in_begin'} = $1;  # first word only
+    } else {
+      $self->{'in_begin'} = '';
+    }
+    ### in_begin: $self->{'in_begin'}
+
+  } elsif ($command eq 'end') {
+    $self->{'in_begin'} = pop @{$self->{'in_begin_stack'}};
+    if (! defined $self->{'in_begin'}) {
+      $self->{'in_begin'} = '';
+    }
+    ### pop to in_begin: $self->{'in_begin'}
+  }
+}
+use constant verbatim => '';
+use constant textblock => '';
 
 sub violation_at_linenum {
   my ($self, $message, $linenum) = @_;
@@ -111,11 +145,6 @@ sub violations {
   my ($self) = @_;
   return @{$self->{'violations'}};
 }
-
-use constant command => '';
-use constant verbatim => '';
-use constant textblock => '';
-
 
 1;
 __END__
