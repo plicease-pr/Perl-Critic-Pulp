@@ -29,6 +29,7 @@ devel/grep-array-slice-single.pl
 devel/grep-backslash-control.pl
 devel/grep-backslash.pl
 devel/grep-condsub.pl
+devel/grep-constant-empty.pl
 devel/grep-constant-underscore.pl
 devel/grep-devnull.pl
 devel/grep-dollar-semi.pl

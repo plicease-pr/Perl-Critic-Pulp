@@ -20,6 +20,8 @@ use 5.006;
 use strict;
 use warnings;
 use base 'File::Locate::Iterator';
+use FindBin;
+use File::Slurp 'slurp';
 use IO::File;
 use IO::Uncompress::AnyInflate;
 use MyUniqByInode;
@@ -74,6 +76,13 @@ sub new {
 
 sub next {
   my ($self) = @_;
+  unless ($self->{'done_script'}) {
+    $self->{'done_script'} = 1;
+    my $filename = File::Spec->catfile ($FindBin::Bin, $FindBin::Script);
+    ### $filename
+    my $content = slurp($filename);
+    return ($filename, $content);
+  }
   for (;;) {
     defined(my $filename = $self->SUPER::next) or return;
     ### consider: $filename

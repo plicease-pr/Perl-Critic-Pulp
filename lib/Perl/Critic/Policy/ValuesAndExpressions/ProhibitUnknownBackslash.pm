@@ -29,7 +29,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 71;
+our $VERSION = 72;
 
 use constant DEBUG => 0;
 
@@ -456,8 +456,8 @@ newline, but perhaps you thought it meant a continuation.
     is a newline";
 
 Perl already warns about unknown escaped alphanumerics like C<\v> under
-C<perl -w> or C<use warnings> (see L<perldiag/Unrecognized escape \\%c
-passed through>).
+C<perl -w> or C<use warnings> (see L<perldiag/Unrecognized escape \%c passed
+through>).
 
     print "\v";        # bad, and provokes Perl warning
 

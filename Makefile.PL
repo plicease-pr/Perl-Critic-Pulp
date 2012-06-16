@@ -97,7 +97,9 @@ WriteMakefile
      },
 
      # don't index "package Perl::MinimumVersion" additions there
-     no_index => { package => [ 'Perl::MinimumVersion' ] },
+     no_index => { package => [ 'Perl::MinimumVersion' ],
+                   directory=>['devel'],
+                 },
    },
   );
 

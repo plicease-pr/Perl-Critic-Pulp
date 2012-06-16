@@ -29,7 +29,7 @@ use Perl::Critic::Utils qw(is_function_call
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 71;
+our $VERSION = 72;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -268,11 +268,12 @@ sub _elem_package_name {
   return 'main';
 }
 
-# As per perlsyn.pod.  Is this in a module somewhere?
+# As per perlsyn.pod, except \2 instead of \g2 since \g only in perl 5.10 up.
+# Is this in a module somewhere?
 my $line_directive_re = 
   qr/^\#   \s*
      line \s+ (\d+)   \s*
-     (?:\s("?)([^"]+)\g2)? \s*
+     (?:\s("?)([^"]+)\2)? \s*
      $/xm;
 
 # $elem is a PPI::Element

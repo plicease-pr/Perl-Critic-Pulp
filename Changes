@@ -17,6 +17,9 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 72, June 2012
+    - TextDomainPlaceholders fix #line regexp plain \2 for perl before 5.10
+
 Version 71, June 2012
     - RequireLinkedURLs - skip "=begin html" etc blocks
     - RequireFinalCut - cut not required if only =begin foo/=end foo block

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Perl-Critic-Pulp
-version:            71
+version:            72
 abstract:           Some add-on policies for Perl::Critic.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -35,6 +35,7 @@ no_index:
     directory:
         - t
         - inc
+        - devel
     package:
         - Perl::MinimumVersion
 generated_by:       ExtUtils::MakeMaker version 6.57_05
