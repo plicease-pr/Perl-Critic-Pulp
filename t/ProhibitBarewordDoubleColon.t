@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 72;
+my $want_version = 73;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon->VERSION, $want_version, 'VERSION class method');
 {

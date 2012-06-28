@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitLinkToSelf;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 72;
+my $want_version = 73;
 is ($Perl::Critic::Policy::Documentation::ProhibitLinkToSelf::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitLinkToSelf->VERSION,

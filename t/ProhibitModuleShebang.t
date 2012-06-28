@@ -22,14 +22,18 @@ use strict;
 use warnings;
 use Test::More tests => 15;
 
-# use lib 't';
-# use MyTestHelpers;
-# BEGIN { MyTestHelpers::nowarnings() }
+use lib 't';
+use MyTestHelpers;
+BEGIN { MyTestHelpers::nowarnings() }
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
 
 require Perl::Critic::Policy::Modules::ProhibitModuleShebang;
 
 #-----------------------------------------------------------------------------
-my $want_version = 72;
+my $want_version = 73;
 is ($Perl::Critic::Policy::Modules::ProhibitModuleShebang::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitModuleShebang->VERSION,
@@ -59,44 +63,39 @@ my $policy;
       "VERSION object check $check_version");
 }
 
-my $dir = File::Temp->newdir;
+#-----------------------------------------------------------------------------
 
-foreach my $data ([ 1, 'Foo.pm', '#!/usr/bin/perl -w' ],
-                  [ 1, 'Foo.pm', '#!perl' ],
+foreach my $data ([ 1, 't/ProhibitModuleShebang/UsrBin.pm' ],
+                  [ 1, 't/ProhibitModuleShebang/MakeMaker.pm' ],
 
-                  [ 0, 'Foo.pm', '#!/bin/false',
+                  [ 0, 't/ProhibitModuleShebang/False.pm',
                     _allow_bin_false => 1 ],
-                  [ 1, 'Foo.pm', '#!/bin/false',
+                  [ 1, 't/ProhibitModuleShebang/False.pm',
                     _allow_bin_false => 0 ],
 
-                  [ 0, 'Foo.pm', "some code()  #!/usr/bin/perl -w" ],
-                  [ 0, 'Foo.pm', "some code()\n#!/usr/bin/perl -w" ],
-                  [ 0, 'Foo.pl', '#!/usr/bin/perl -w' ],
+                  [ 0, 't/ProhibitModuleShebang/SomeCode.pm' ],
+                  [ 0, 't/ProhibitModuleShebang/SomeCodeNewline.pm' ],
+                  [ 0, 't/ProhibitModuleShebang/Script.pl' ],
 
                   ## use critic
                  ) {
-  my ($want_count, $filename, $str, %parameters) = @$data;
+  my ($want_count, $filename, %parameters) = @$data;
   %$policy = (%$policy,
               _allow_bin_false => 1,
               %parameters);
-
-  $filename = File::Spec->catdir ($dir, $filename);
-  # diag "filename $filename";
-  open my $fh, '>', $filename or die;
-  print $fh $str or die;
-  close $fh or die;
+  ### $filename
+  -e $filename or die "Oops, missing $filename";
 
   my @violations = $critic->critique ($filename);
   my $got_count = scalar @violations;
-  is ($got_count, $want_count, "str: $str\n_allow_bin_false=$policy->{'_allow_bin_false'}");
+  is ($got_count, $want_count, "filename: $filename\n_allow_bin_false=$policy->{'_allow_bin_false'}");
 
   if ($got_count != $want_count) {
     foreach (@violations) {
       diag ($_->description);
     }
   }
-
-  unlink $filename  or die;
 }
 
+#-----------------------------------------------------------------------------
 exit 0;

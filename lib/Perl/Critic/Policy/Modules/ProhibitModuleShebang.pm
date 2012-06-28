@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 72;
+our $VERSION = 73;
 
 use constant supported_parameters =>
   ({ name           => 'allow_bin_false',
@@ -90,8 +90,9 @@ similar intro.
 Of course a module works the same with or without, so this policy is low
 priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
-Only the first line of a file is a prospective C<#!> interpreter.  A C<#!>
-anywhere later is allowed, for example in code which generates other code,
+Only the first line of a file is a prospective C<#!> interpreter.
+A C<#!> anywhere later is allowed, for example in code which generates other
+code,
 
     sub foo {
       print <<HERE;
@@ -122,9 +123,9 @@ If true then allow C<#!/bin/false> in module files.
 
     #! /bin/false           <-- ok
 
-This will prevent execution of the code if accidentally run as a script, but
-whether you want this is a personal preference.  Insofar as it indicates a
-module is not a script it accords with ProhibitModuleShebang, but in general
+Such a C<#!> prevents executing the code if accidentally run as a script,
+but whether you want this is a personal preference.  It indicates a module
+is not a script and so accords with ProhibitModuleShebang, but in general
 it's probably unnecessary.
 
 =back

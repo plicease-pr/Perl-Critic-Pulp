@@ -172,6 +172,12 @@ t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
 t/ProhibitLinkToSelf.t
 t/ProhibitModuleShebang.t
+t/ProhibitModuleShebang/False.pm
+t/ProhibitModuleShebang/MakeMaker.pm
+t/ProhibitModuleShebang/Script.pl
+t/ProhibitModuleShebang/SomeCode.pm
+t/ProhibitModuleShebang/SomeCodeNewline.pm
+t/ProhibitModuleShebang/UsrBin.pm
 t/ProhibitNullStatements.t
 t/ProhibitParagraphTwoDots.t
 t/ProhibitPOSIXimport.t

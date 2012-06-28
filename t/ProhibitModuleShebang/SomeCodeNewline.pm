@@ -1,6 +1,9 @@
+some code()
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+
+
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -16,28 +19,3 @@
 #
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
-
-
-use 5.006;
-use strict;
-use warnings;
-use Test::More tests => 4;
-
-use lib 't';
-use MyTestHelpers;
-BEGIN { MyTestHelpers::nowarnings() }
-
-require Perl::Critic::Pulp;
-
-my $want_version = 73;
-is ($Perl::Critic::Pulp::VERSION, $want_version, 'VERSION variable');
-is (Perl::Critic::Pulp->VERSION,  $want_version, 'VERSION class method');
-{
-  ok (eval { Perl::Critic::Pulp->VERSION($want_version); 1 },
-      "VERSION class check $want_version");
-  my $check_version = $want_version + 1000;
-  ok (! eval { Perl::Critic::Pulp->VERSION($check_version); 1 },
-      "VERSION class check $check_version");
-}
-
-exit 0;

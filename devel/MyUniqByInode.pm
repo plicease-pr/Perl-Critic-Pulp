@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011 Kevin Ryde.
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde.
 
 # MyUniqByInode.pm is shared by various distributions.
 #
@@ -19,7 +19,7 @@
 package MyUniqByInode;
 use strict;
 use warnings;
-use File::Temp;
+use File::Temp 0.19; # version 0.19 for newdir()
 use SDBM_File;
 use Fcntl;
 
