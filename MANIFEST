@@ -86,6 +86,7 @@ devel/lib/Perl/Critic/Policy/Documentation/ProhibitFinalLinkComma.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
+devel/MyFileTempDBM.pm
 devel/MyLocatePerl.pm
 devel/MyStuff.pm
 devel/MyUniqByInode.pm

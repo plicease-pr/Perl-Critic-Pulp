@@ -18,37 +18,59 @@
 package MyUniqByMD5;
 use strict;
 use warnings;
+use SDBM_File;
 use Digest::MD5;
-use Perl6::Slurp;
-use MyUniqByInode;
+use MyFileTempDBM;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 sub new {
   my ($class) = @_;
-  return bless { seen => MyUniqByInode::tied_hashref(), # { },
+  my %hash;
+  my $tempdbm = MyFileTempDBM->new;
+  my $filename = $tempdbm->filename;
+  tie %hash, 'SDBM_File',
+    $filename,
+      Fcntl::O_RDWR() | Fcntl::O_CREAT(),
+          0600
+            or die $!;
+  return bless { tempdbm => $tempdbm,
+                 seen => \%hash,
                }, $class;
 }
 
-sub uniq_file {
-  my ($self, $filename_or_fh) = @_;
-  my $str;
-  eval { $str = Perl6::Slurp::slurp($filename_or_fh); 1 } or return 1;
-  return $self->uniq_str ($str);
+sub uniq_filename {
+  my ($self, $filename) = @_;
+  ### uniq_filename(): $filename
+  open my $fh, $filename
+    or return 1;  # error as if unique
+  return $self->uniq_fh ($fh);
+}
+
+sub uniq_fh {
+  my ($self, $fh) = @_;
+  ### uniq_fh(): $fh
+  my $md5obj = Digest::MD5->new;
+  $md5obj->addfile($fh);
+  return $self->uniq_md5 ($md5obj->hexdigest)
 }
 
 sub uniq_str {
   my ($self, $str) = @_;
-  my $key = Digest::MD5::md5 ($str);
+  return $self->uniq_md5 (Digest::MD5::md5 ($str));
+}
 
-  ### MyUniqByMD5 key: $key
-  ### seen: exists $self->{'seen'}->{$key}
-  # if (exists $self->{'seen'}->{$key}) { print "MyUniqByMD5:  suppress\n"; }
+sub uniq_md5 {
+  my ($self, $md5) = @_;
+  ### uniq_md5(): $md5
+
+  ### seen: exists $self->{'seen'}->{$md5}
+  # if (exists $self->{'seen'}->{$md5}) { print "MyUniqByMD5: suppress\n"; }
 
   my $seen = $self->{'seen'};
-  return (! exists $seen->{$key}
-          && ($seen->{$key} = 1));
+  return (! exists $seen->{$md5}
+          && ($seen->{$md5} = 1));
 }
 
 1;
@@ -56,6 +78,7 @@ __END__
 
 package main;
 my $uniq = MyUniqByMD5->new;
-print $uniq->uniq_file('/etc/passwd'),"\n";
-print $uniq->uniq_file('/etc/passwd'),"\n";
+print $uniq->uniq_filename('/etc/passwd'),"\n";
+print $uniq->uniq_filename('/etc/passwd'),"\n";
+exit 0;
 

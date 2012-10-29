@@ -17,6 +17,9 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 74, October 2012
+    - tests RequireNumericVersion skip version.pm 1e6 uncertain quite yet
+
 Version 73, June 2012
     - tests fix for File::Temp in perl pre-5.10
 

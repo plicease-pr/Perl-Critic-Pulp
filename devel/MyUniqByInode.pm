@@ -19,67 +19,62 @@
 package MyUniqByInode;
 use strict;
 use warnings;
-use File::Temp 0.19; # version 0.19 for newdir()
 use SDBM_File;
 use Fcntl;
+use MyFileTempDBM;
 
-# {
-#   package File::Temp::SDBM;
-#   sub new {
-#     
-#       $fh = File::Temp->new (SUFFIX => '.sdbm');
-#   sub DESTROY {
-#     my ($self) = @_;
-#     $self->filename . '.dir';
-#       $self->SUPER::DESTROY;
-#   }
-{
-  my $t;
-  my $dir;
-  my $filename;
-  sub tied_hashref {
-    if (! $t) {
-      my %hash;
-      $dir = File::Temp->newdir;
-      $filename = File::Spec->catfile ($dir->dirname, 'MyUniq.sdbm');
-      print
-        "tempfiles $filename.pag\n",
-        "          $filename.dir\n";
-      tie %hash, 'SDBM_File', $filename,  Fcntl::O_RDWR() | Fcntl::O_CREAT(), 0666
-        or die $!;
-      $t = \%hash;
-    }
-    return $t;
-  }
-  END {
-    if ($filename) {
-      print "tempfile $filename sizes ",
-        -s "$filename.pag"," ",
-          -s "$filename.dir","\n";
-    }
-  }
-}
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 sub new {
   my ($class) = @_;
-  return bless { seen => tied_hashref(), # { },
+  ### new() ...
+  my %hash;
+  my $tempdbm = MyFileTempDBM->new;
+  my $filename = $tempdbm->filename;
+  print
+    "tempfiles $filename.pag\n",
+      "          $filename.dir\n";
+  tie %hash, 'SDBM_File', $filename,
+    Fcntl::O_RDWR() | Fcntl::O_CREAT(), 0600
+        or die $!;
+  return bless { tempdbm => $tempdbm,
+                 hash => \%hash,
                }, $class;
+}
+DESTROY {
+  my ($self) = @_;
+  my $filename = $self->{'tempdbm'}->filename;
+  my $num_keys = scalar(keys %{$self->{'hash'}});
+  print "tempfile $filename $num_keys entries, sizes ",
+    -s "$filename.pag"," ",
+      -s "$filename.dir","\n";
+  system "ls -l $filename.*";
 }
 
 sub uniq {
   my ($self, $filename_or_handle) = @_;
+  ### $filename_or_handle
+  
   my ($dev, $ino)
     = (ref $filename_or_handle && $filename_or_handle->can('stat')
        ? $filename_or_handle->stat
        : stat ($filename_or_handle));
-  if (! defined $dev) { return 1; } # error treated as unique
+  ### $dev
+  ### $ino
+  
+  if (! defined $dev) {
+    # error treated as unique
+    return 1;
+  }
 
   my $key = "$dev,$ino";
   ### $key
-  my $seen = $self->{'seen'};
-  ### seen: exists $seen->{$key}
-  return (! exists $seen->{$key}
-          && ($seen->{$key} = 1));
+
+  my $hash = $self->{'hash'};
+  ### hash: exists $hash->{$key}
+  return (! exists $hash->{$key}
+          && ($hash->{$key} = 1));
 }
 
 # sub stat_dev_ino {
@@ -94,3 +89,14 @@ sub uniq {
 
 1;
 __END__
+
+package main;
+my $u = MyUniqByInode->new;
+### $u
+print $u->uniq('/etc/issue.net'),"\n";
+print $u->uniq('/etc/issue.net'),"\n";
+print $u->uniq('/etc/issue.net'),"\n";
+print $u->uniq('/etc/issue.net'),"\n";
+print "keys ",keys $u->{'hash'},"\n";
+exit 0;
+

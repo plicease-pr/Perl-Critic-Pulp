@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 73;
+our $VERSION = 74;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -187,14 +187,14 @@ addon.  It asks you to put C<LE<lt>E<gt>> markup on URLs in POD text in Perl
 C<LE<lt>E<gt>> markup gives clickable links in C<pod2html> and similar
 formatters, and even in the plain text formatters may give
 C<E<lt>http://...E<gt>> style angles around the URL which is a
-semi-conventional way to delimit from surrounding text, and in particular
+semi-conventional way to delimit from surrounding text and in particular
 from an immediately following comma or period.
 
 Of course this is only cosmetic and on that basis this policy is low
 priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 Only plain text parts of the POD are considered.  Verbatim paragraphs cannot
-have C<LE<lt>E<gt>> markup (and a mistake to put it, as per
+have C<LE<lt>E<gt>> markup (and it's usually a mistake to put it, as per
 L<ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>).
 
     This is verbatim text,
@@ -216,13 +216,11 @@ only applies if there's an explicit C<use 5.008> or higher in the code.
 
 =head2 Bad URLs
 
-Some obviously bogus URLs like C<LE<lt>http://foo.orgE<gt>> are ignored.
+Some obvious dummy URLs like C<LE<lt>http://foo.orgE<gt>> are ignored.
 They're only examples and won't go anywhere as a clickable link.  You might
 like to put C<CE<lt>E<gt>> for a typeface, but C<LE<lt>E<gt>> is not
-required and in fact probably undesirable.
-
-Exactly what's ignored is not quite settled, but currently includes
-variations like
+required by this policy, and in fact is probably undesirable.  Currently
+ignored URLs variations like
 
     http://foo.com
     https://foo.org
@@ -233,13 +231,13 @@ variations like
     http://host:port
     http://...
 
-In the current implementation a URL is anything starting C<http://>,
-C<https://>, C<ftp://>, C<news://> or C<nntp://>.
+A URL is anything starting C<http://>, C<https://>, C<ftp://>, C<news://> or
+C<nntp://>.
 
 =head2 Begin Blocks
 
-Text in an C<=begin html> block is not checked, since of course it should be
-C<E<lt>a href=""E<gt>> etc, not C<LE<lt>E<gt>>.
+Text in an C<=begin html> block is not checked, since it contains HTML and
+so should be C<E<lt>a href=""E<gt>> etc there, not C<LE<lt>E<gt>>.
 
     =begin html
 
@@ -247,8 +245,8 @@ C<E<lt>a href=""E<gt>> etc, not C<LE<lt>E<gt>>.
 
     =end html
 
-Other begins ignored for similar reasons are as follows.  They're probably
-less likely to have URLs anyway.
+Other C<=begin> blocks ignored for similar reasons are as follows.  They're
+probably less likely to have URLs.
 
     comment         programmer's notes only
     latex
@@ -257,14 +255,14 @@ less likely to have URLs anyway.
     tex
     wikidoc         links are [http://...] style
 
-Currently all other C<=begin> forms are examined, which is probably
-excessive, but it's hard to be sure what will or won't be POD markup.  Keys
-beginning ":" are supposed to be POD markup, others would be guesswork.
+Currently all other C<=begin> forms are examined, which may be excessive,
+but it's hard to be sure what will or won't be POD markup.  Keys beginning
+":" are supposed to be POD markup, others are guesswork.
 
 =head2 Disabling
 
 If you don't care about this, if for instance it's hard enough to get your
-programmers to write documentation at all without worrying about markup!,
+programmers to write documentation at all without worrying about markup,
 then disable C<RequireLinkedURLs> from your F<~/.perlcriticrc> file in the
 usual way (see L<Perl::Critic/CONFIGURATION>),
 

@@ -17,6 +17,11 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Look for
+#     use constant foo => ();
+#     use constant foo;
+
 use 5.005;
 use strict;
 use warnings;
