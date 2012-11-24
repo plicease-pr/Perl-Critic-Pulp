@@ -46,6 +46,8 @@ devel/grep-makefile-exit.pl
 devel/grep-pack.pl
 devel/grep-pod-begin.pl
 devel/grep-pod-blankline.pl
+devel/grep-pod-blanknonempty.pl
+devel/grep-pod-command-arg.pl
 devel/grep-pod-duplicate-see-also.pl
 devel/grep-pod-final-cut.pl
 devel/grep-pod-gt.pl

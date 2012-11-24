@@ -17,6 +17,10 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 75, November 2012
+    - ProhibitEmptyCommas fix for [{%a},{}] reported by Mike O'Regan
+      RT#81390
+
 Version 74, October 2012
     - tests RequireNumericVersion skip version.pm 1e6 uncertain quite yet
 

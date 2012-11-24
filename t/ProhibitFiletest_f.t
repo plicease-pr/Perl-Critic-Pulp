@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 74;
+my $want_version = 75;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f->VERSION,

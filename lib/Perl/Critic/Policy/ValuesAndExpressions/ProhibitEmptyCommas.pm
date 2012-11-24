@@ -24,7 +24,10 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 74;
+# uncomment this to run the ### lines
+# use Smart::Comments;
+
+our $VERSION = 75;
 
 
 use constant supported_parameters => ();
@@ -68,6 +71,37 @@ sub violates {
     my $parent = $elem->parent;
     if ($parent->isa('PPI::Statement::Expression')
         && $parent->parent->isa('PPI::Structure::List')
+        && $parent->sprevious_sibling) {
+      return;
+    }
+  }
+
+  # An expression like
+  #
+  #     [{%a},{}]
+  #
+  # is parsed by PPI 1.215 as
+  #
+  #     PPI::Statement
+  #       PPI::Structure::Constructor  	[ ... ]
+  #         PPI::Statement::Compound
+  #           PPI::Structure::Block  	{ ... }
+  #             PPI::Statement
+  #              PPI::Token::Symbol  	'%a'
+  #         PPI::Statement
+  #          PPI::Token::Operator  	','
+  #           PPI::Structure::Constructor  	{ ... }
+  #
+  # so the "{%a}" bit is not an immediate predecessor of the "," operator.
+  # If our $elem has no $prev then also look upwards to see if it's at the
+  # start of an statement which is in a constructor and there's something
+  # preceding in that constructor.
+  #
+  if (! $prev) {
+    my $parent = $elem->parent;
+    ### parent: ref $parent
+    if ($parent->isa('PPI::Statement')
+        && $parent->parent->isa('PPI::Structure::Constructor')
         && $parent->sprevious_sibling) {
       return;
     }

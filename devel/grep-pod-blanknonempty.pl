@@ -18,12 +18,10 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Look for a =command not preceded by a blank line.
+# Look for a line of spaces and tabs in POD.
 #
-# cf Pod::Checker
-#
-# /usr/lib/perl/5.10.1/Compress/Zlib.pm
-# /usr/share/perl/5.10.1/ExtUtils/ParseXS.pm
+# Old formatters treat line of spaces and tabs as non-empty.
+# Eg pod2text of perl 5.004.
 
 use 5.005;
 use strict;
@@ -45,23 +43,20 @@ while (my ($filename, $str) = $l->next) {
   next if ($filename =~ /\/doc\.pl$/);
   next if ($filename =~ /\/junk\.pl$/);
 
-  #   if ($str =~ /^__END__/m) {
-  #     substr ($str, $-[0], length($str), '');
-  #   }
+  my $in_pod = 0;
+  my $linenum = 0;
+  foreach my $line (split /\n/, $str) {
+    $line =~ s/\r$//;
+    $linenum++;
+    if ($line =~ /^=cut/) { $in_pod = 0; next; }
+    if ($line =~ /^=/) { $in_pod = 1; next; }
+    next unless $in_pod;
 
-  while ($str =~ /(([^\n]+)\n=([a-z][a-z0-9]*)[^\n]*)/sg) {
-    my $bad = $1;
-    my $pre = $2;
-    my $cmd = $3;
-    my $pos = pos($str) - length($bad) + length($pre) + 1;
-
-    next if ($cmd eq 'cut');
-    next if ($cmd eq 'pod');
-
-    next if $pre =~ /^\s*$/; # whitespace-only ok
-
-    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    print "$filename:$line:$col: no blank before\n$bad\n";
+    if ($line =~ /^\s+$/) {
+      print "$filename:$linenum:1: blank of whitespace only\n";
+      $line =~ s/([^\021-\177])/'['.ord($1).']'/eg;
+      print "  xx${line}xx ",length($line),"\n";
+    }
   }
 }
 

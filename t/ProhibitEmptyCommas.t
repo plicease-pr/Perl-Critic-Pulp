@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 28;
+use Test::More tests => 34;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 74;
+my $want_version = 75;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitEmptyCommas->VERSION, $want_version, 'VERSION class method');
 {
@@ -58,6 +58,15 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
+                  # as reported by Mike O'Regan
+                  # https://rt.cpan.org/Ticket/Display.html?id=81390
+                  [ 0, '[{%a},{}]' ],
+                  [ 1, '[{%a},,{}]' ],
+                  [ 0, 'my $x = [ { %defaults, a => "b"}, {} ]' ],
+                  [ 0, 'my $x = [ { 1, 2, a => "b"}, {} ]' ],
+                  [ 0, 'my $x = [ { 1, 2, a => "b"},  ]' ],
+                  [ 0, 'my $x = [ { a => "b"},  ]' ],
 
                   # examples from the POD
                   [ 1, "print 'foo',,'bar';" ],
