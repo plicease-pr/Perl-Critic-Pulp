@@ -32,7 +32,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 #use Smart::Comments;
 
 
-our $VERSION = 75;
+our $VERSION = 76;
 
 use constant supported_parameters => ();
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -280,11 +280,11 @@ anonymous hashref.
 
 Writing duplicate literal keys is probably a mistake or too much cut and
 paste, and if the values are different will make it unclear to human readers
-what was meant.  On that basis this policy is only under the "bugs" theme
-and medium severity (see L<Perl::Critic/POLICY THEMES>).
+what was meant.  On that basis this policy is under the "bugs" theme and
+medium severity (see L<Perl::Critic/POLICY THEMES>).
 
 Perl is happy to run code like this.  The value of the last "red" is stored.
-Allowing this at runtime is good since you can give defaults which further
+Doing this at runtime is good since you can give defaults which further
 values from a caller or similar can replace.  For example,
 
     sub new {
@@ -299,7 +299,7 @@ values from a caller or similar can replace.  For example,
 =head2 Expressions
 
 Expressions within a hash list cannot be checked in general.  Some
-concatenations of literals are recognised, though they're probably unusual.
+concatenations of literals are recognised though they're probably unusual.
 
     my %hash = (ab      => 1,
                 'a'.'b' => 2);  # bad
@@ -318,7 +318,7 @@ values.  Fat commas C<=E<gt>> are taken as indicating a key when in doubt.
                 a         => 2,  # guided by =>
                 a         => 3); # bad
 
-A hash substituted in is always an even number of arguments,
+A hash substituted is always an even number of arguments,
 
     my %hash = (a         => 1,
                 %blah,           # even number

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,12 +20,11 @@
 use 5.005;
 use strict;
 use warnings;
-use Perl6::Slurp;
+use Regexp::Common 'comment';
 
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 my $verbose = 0;
 
@@ -33,7 +32,9 @@ my $l = MyLocatePerl->new (regexp => qr/\.pm$/);
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  $str =~ s/#.*$//mg;
+  # strip comments
+  $str =~ s/$RE{comment}{Perl}//og;
+
   next if $str =~ /^[^#]*use\s+(base|parent)\s+(qw)?'Exporter'/m;
   next if $str =~ /^[^#]*(use|require)\s+Exporter/m;
 

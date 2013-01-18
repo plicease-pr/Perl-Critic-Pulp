@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 75;
+my $want_version = 76;
 is ($Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION,

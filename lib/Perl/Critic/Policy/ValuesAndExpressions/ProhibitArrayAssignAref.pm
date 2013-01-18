@@ -30,7 +30,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 75;
+our $VERSION = 76;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -116,16 +116,18 @@ recognised and treated similarly,
 
 =head2 List Assignment Parens
 
-There's no blanket requirement for C<()> parens on an array assignment here
-since it's normal and unambiguous to have a function call or C<grep> etc.
+This policy is not a blanket requirement for C<()> parens on array
+assignments, since it's normal and unambiguous to have a function call or
+C<grep> etc.
 
     @array = foo();
     @array = grep {/\.txt$/} @array;
 
-The only likely problem from lack of parens is that the C<,> comma operator
-has lower precedence than C<=> (see L<perlop>), so something like
+The only likely problem from lack of parens in such cases is that the C<,>
+comma operator has lower precedence than C<=> (see L<perlop>), so something
+like
 
-    @array = 1,2,3;   # not a list
+    @array = 1,2,3;   # oops, not a list
 
 means
 
@@ -136,8 +138,8 @@ means
 Normally the remaining literals in void context provoke a warning from Perl
 itself.
 
-An intentional single element assignment is quite common though as a
-statement, for instance
+An intentional single element assignment is quite common as a statement, for
+instance
 
     @ISA = 'My::Parent::Class';   # ok
 

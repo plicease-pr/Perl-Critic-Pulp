@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 75;
+our $VERSION = 76;
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -54,11 +54,11 @@ sub violates {
   ### value: "$value"
 
   if (! $value->isa('PPI::Token::Quote')) {
-    ### an expression, or a number, not a string ...
+    ### an expression, or a number, not a string, so ok ...
     return;
   }
   if (_following_expression ($value)) {
-    ### can't check an expression (starting with a string) ...
+    ### can't check an expression (though it starts with a string) ...
     return;
   }
 
@@ -73,15 +73,25 @@ sub violates {
     return;
   }
 
-  # float number strings like "1e6" rejected by version.pm
-  # they work in 5.8.x but not in 5.10.x, disallow them always
-  #
   if (! defined(Perl::Critic::Pulp::Utils::version_if_valid($str))) {
     return $self->violation
       ('Non-numeric VERSION string (not recognised by version.pm)',
        '',
        $value);
   }
+
+  # Float number strings like "1e6" are usually rejected by version.pm, but
+  # have seen perl 5.10 and version.pm 0.88 with pure-perl "version::vpp"
+  # accept them.  Not sure why that's so, but explicitly reject to be sure.
+  # Such a string form in fact works in perl 5.8.x but not in 5.10.x.
+  #
+  if ($str =~ /e/i) {
+    return $self->violation
+      ('Non-numeric VERSION string (exponential string like "1e6" no good in perl 5.10 and up)',
+       '',
+       $value);
+  }
+
   my $got_perl = $document->highest_explicit_perl_version;
   if (defined $got_perl && $got_perl >= $perl_510) {
     # for 5.10 up only need to satisfy version.pm
@@ -306,10 +316,14 @@ policy to require numbers even in 5.10?
 
 =head2 Exponential Format
 
-Exponential format strings like "1e6" are disallowed (except with the
-C<eval> trick above).
+Exponential strings like "1e6" are disallowed
 
     $VERSION = '2.125e6';   # bad
+
+Except with the C<eval> trick as per above
+
+    $VERSION = '2.125e6';   # ok
+    $VERSION = eval $VERSION;
 
 Exponential number literals are fine.
 
@@ -332,7 +346,7 @@ F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 The version number system with underscores, multi-dots, v-nums, etc is
 diabolical mess, and each new addition to it just seems to make it worse.
 Even the original floating point in version checks is asking for rounding
-error trouble (though normally fine in practice).  A radical simplification
+error trouble, though normally fine in practice.  A radical simplification
 is to just use integer version numbers.
 
     $VERSION = 123;
@@ -360,7 +374,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

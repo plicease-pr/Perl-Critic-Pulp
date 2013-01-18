@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -22,12 +22,11 @@
 use 5.005;
 use strict;
 use warnings;
-use Perl6::Slurp;
+use Regexp::Common 'comment';
 
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 my $verbose = 0;
 
@@ -38,8 +37,9 @@ while (my ($filename, $str) = $l->next) {
   if ($str =~ /^__END__/m) {
     substr ($str, $-[0], length($str), '');
   }
+
   # strip comments
-  $str =~ s/#.*//mg;
+  $str =~ s/$RE{comment}{Perl}//og;
 
   $str =~ /\buse\s+Test::More\b/
     or next;

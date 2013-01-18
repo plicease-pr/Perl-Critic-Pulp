@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2012 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Perl6::Slurp;
+use Regexp::Common 'comment';
 
 use lib::abs '.';
 use MyLocatePerl;
@@ -37,7 +37,8 @@ while (my ($filename, $str) = $l->next) {
     substr ($str, $-[0], length($str), '');
   }
 
-  $str =~ s/#.*//mg;
+  # strip comments
+  $str =~ s/$RE{comment}{Perl}//og;
 
   while ($str =~ /^([ \t])+(sub [[:alnum:]]|\b(BEGIN|END|CHECK|INIT)\b)/mg) {
     my $pos = pos($str);

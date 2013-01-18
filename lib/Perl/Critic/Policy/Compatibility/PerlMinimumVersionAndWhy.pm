@@ -28,7 +28,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 75;
+our $VERSION = 76;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion;
 
 #-----------------------------------------------------------------------------
-my $want_version = 75;
+my $want_version = 76;
 is ($Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion::VERSION,
     $want_version,
     'VERSION variable');
@@ -65,6 +65,10 @@ my $critic = Perl::Critic->new
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
 
+                  [ 1, 'package Foo; our $VERSION = qq{1e6}' ],
+                  [ 1, 'package Foo; use 5.008; $VERSION = qq{1e6}' ],
+                  [ 1, 'package Foo; use 5.010; $VERSION = qq{1e6}' ],
+
                   [ 0, 'package Foo::Bar;
                         $VERSION = "1.002_003";
                         $VERSION = eval $VERSION' ],
@@ -90,10 +94,6 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
                   [ 0, '$main::VERSION = "abc"' ],
                   [ 0, '$::VERSION = "abc"' ],
                   [ 1, '$Foo::Bar::VERSION = "abc"' ],
-
-                  [ 1, 'package Foo; our $VERSION = qq{1e6}' ],
-                  [ 1, 'package Foo; use 5.008; $VERSION = qq{1e6}' ],
-                  [ 1, 'package Foo; use 5.010; $VERSION = qq{1e6}' ],
 
                   [ 0, 'package Foo; $VERSION = 1' ],
                   [ 0, 'package Foo; $VERSION = 0.123456789' ],

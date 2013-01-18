@@ -60,6 +60,7 @@ devel/grep-pod-section-end-comma.pl
 devel/grep-pod-synopsis.pl
 devel/grep-pod-verbatim-unindent.pl
 devel/grep-pod-verbatim.pl
+devel/grep-pod-X-newline.pl
 devel/grep-printf.pl
 devel/grep-qrm.pl
 devel/grep-qw-comment.pl
