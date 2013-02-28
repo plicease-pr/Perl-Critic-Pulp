@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant _ALLOWED_CALL_COUNT => 15;
 
@@ -238,7 +238,7 @@ sub _count_posix_calls {
 1;
 __END__
 
-=for stopwords POSIX addon kbytes Ryde
+=for stopwords POSIX kbytes Ryde
 
 =head1 NAME
 
@@ -247,7 +247,7 @@ Perl::Critic::Policy::Modules::ProhibitPOSIXimport - don't import the whole of P
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to C<use POSIX> with an import of all the symbols
+add-on.  It asks you not to C<use POSIX> with an import of all the symbols
 from that module if you're only using a few things.
 
     package Foo;
@@ -258,8 +258,8 @@ import adds about 550 symbols to your module and that's about 30 to 40
 kbytes in Perl 5.10 on a 32-bit system, or about 115 kbytes in Perl 5.8.  If
 lots of modules do this it adds up.
 
-As noted in the C<POSIX> docs, the way it exports everything by default is
-an historical accident, not something to encourage.
+As noted in the C<POSIX> module docs, the way it exports everything by
+default is an historical accident, not something to encourage.
 
 =head2 Allowed Forms
 
@@ -270,7 +270,7 @@ memory, at least initially.
     #!/usr/bin/perl
     use POSIX;        # ok
 
-An import of no symbols is allowed and you simply add a C<POSIX::> qualifier
+An import of no symbols is allowed and you then add a C<POSIX::> qualifier
 to each call or constant.  Qualifiers like this can make it clear where the
 function is coming from.
 
@@ -281,8 +281,8 @@ function is coming from.
     if ($! == POSIX::ENOENT())
 
 An import of an explicit set of functions and constants is allowed.  This
-allows short names without the memory penalty of a full import.  It can be
-error-prone to update the imports with what you actually use (see
+allows short names without the memory penalty of a full import.  However it
+can be error-prone to update the imports with what you actually use (see
 C<ProhibitCallsToUndeclaredSubs> for some checking).
 
     package Foo;
@@ -291,10 +291,10 @@ C<ProhibitCallsToUndeclaredSubs> for some checking).
     my $fd = dup(0);
 
 A full import is allowed in a module if there's 15 or more calls to C<POSIX>
-module functions.  This rule will probably change or be configurable in the
-future, but the intention is that a module making heavy use of C<POSIX>
-shouldn't be burdened by a C<POSIX::> on every call or maintaining a list of
-explicit imports.
+module functions.  This rule might change or be configurable in the future,
+but the intention is that a module making heavy use of C<POSIX> shouldn't be
+burdened by a C<POSIX::> on every call or by maintaining a list of explicit
+imports.
 
     package Foo;
     use POSIX;         # ok
@@ -322,7 +322,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

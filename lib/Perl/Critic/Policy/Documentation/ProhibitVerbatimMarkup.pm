@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -113,7 +113,7 @@ sub textblock {
 1;
 __END__
 
-=for stopwords addon Ryde fontification ascii unindented verbatimness ok ProhibitVerbatimMarkup
+=for stopwords Ryde fontification ascii unindented verbatimness ok unexpanded
 
 =head1 NAME
 
@@ -122,7 +122,7 @@ Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup - unexpanded CE<lt>E
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It reports POD verbatim paragraphs which contain markup like
+add-on.  It reports POD verbatim paragraphs which contain markup like
 BE<lt>E<gt> or CE<lt>E<gt>.  That markup will appear literally in the
 formatted output where you may have meant fontification.
 
@@ -195,7 +195,7 @@ intended C<BE<lt>E<gt>> bold.
 =head2 Disabling
 
 If a verbatim paragraph is showing how to write POD markup then you can add
-an C<=for> to tell ProhibitVerbatimMarkup to allow it.  This happens most
+an C<=for> to tell C<ProhibitVerbatimMarkup> to allow it.  This happens most
 often in documentation for modules which themselves operate on POD markup.
 
 =for ProhibitVerbatimMarkup allow next 5
@@ -237,7 +237,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

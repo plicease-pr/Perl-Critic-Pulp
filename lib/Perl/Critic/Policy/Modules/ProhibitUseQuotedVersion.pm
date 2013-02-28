@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version ();
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -69,7 +69,7 @@ sub elem_is_last_of_statement {
 1;
 __END__
 
-=for stopwords addon builtin arg ok Ryde
+=for stopwords builtin arg ok Ryde representable
 
 =head1 NAME
 
@@ -78,7 +78,7 @@ Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion - avoid quoted version n
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to quote a version number string as the sole
+add-on.  It asks you not to quote a version number string as the sole
 argument to a C<use> or C<no> statement.
 
     use Foo::Bar '1.50';      # bad
@@ -131,7 +131,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

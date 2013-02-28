@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -27,7 +27,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -110,7 +110,7 @@ sub elem_is_solo_subscript {
 1;
 __END__
 
-=for stopwords addon filename parens Subhash Concated HashRef OOP Ryde bareword
+=for stopwords filename parens Subhash Concated HashRef OOP Ryde bareword Unexpanded
 
 =head1 NAME
 
@@ -119,7 +119,7 @@ Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral - specials 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It picks up some cases where the special literals C<__FILE__>,
+add-on.  It picks up some cases where the special literals C<__FILE__>,
 C<__LINE__> and C<__PACKAGE__> (see L<perldata/Special Literals>) are used
 with C<< => >> or as a hash subscript and so don't expand to the respective
 filename, line number or package name.
@@ -212,8 +212,8 @@ keys.
 
 Similar to HashRef with object as key and any value you want as the data
 outside the object, hence the jargon "inside out".  The docs are very hard
-to follow (as of version 1.04), especially if you're not into OOP, but it's
-actually fairly simple.
+to follow (as of its version 1.04), especially if you're not into OOP, but
+it's actually fairly simple.
 
 =item C<Scalar::Footnote>
 
@@ -235,7 +235,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

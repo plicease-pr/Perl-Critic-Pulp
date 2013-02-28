@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -57,6 +57,7 @@ sub violates {
   return $parser->violations;
 }
 
+#------------------------------------------------------------------------------
 package Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::Parser;
 use strict;
 use warnings;
@@ -153,7 +154,7 @@ sub textblock {
 1;
 __END__
 
-=for stopwords addon Ryde
+=for stopwords Ryde
 
 =head1 NAME
 
@@ -162,7 +163,7 @@ Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks - consecutive LE<lt>E
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to have two adjacent LE<lt>E<gt> sequences in a
+add-on.  It asks you not to have two adjacent LE<lt>E<gt> sequences in a
 paragraph.  For example,
 
 =for ProhibitVerbatimMarkup allow next 2
@@ -223,7 +224,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

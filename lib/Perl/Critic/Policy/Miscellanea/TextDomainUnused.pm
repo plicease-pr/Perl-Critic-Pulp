@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -24,7 +24,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_function_call);
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -104,7 +104,7 @@ sub _any_strings_locale_textdomain {
 1;
 __END__
 
-=for stopwords addon textdomain perlcritic TextDomainUnused eg TextDomain PPI Ryde
+=for stopwords textdomain perlcritic TextDomainUnused eg TextDomain PPI Ryde
 
 =head1 NAME
 
@@ -113,7 +113,7 @@ Perl::Critic::Policy::Miscellanea::TextDomainUnused - check for Locale::TextDoma
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It reports when you have L<C<Locale::TextDomain>|Locale::TextDomain>
+add-on.  It reports when you have L<C<Locale::TextDomain>|Locale::TextDomain>
 like
 
     use Locale::TextDomain ('MyMessageDomain');
@@ -169,7 +169,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

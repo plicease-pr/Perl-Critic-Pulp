@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -21,12 +21,12 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 1;
 __END__
 
-=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical parens de gustibus disputandum backslashing initializers
+=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical parens de gustibus disputandum backslashing initializers globals
 
 =head1 NAME
 
@@ -38,13 +38,15 @@ This is a collection of add-on policies for C<Perl::Critic>.  They're under
 a "pulp" theme plus other themes according to their purpose (see
 L<Perl::Critic/POLICY THEMES>).
 
+=for my_pod policy_list begin
+
 =head2 Bugs
 
 =over
 
 =item L<Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 
-Check keyword arguments to C<__x>, C<__nx>, etc.
+Check keyword arguments to C<__x()>, C<__nx()>, etc.
 
 =item L<Modules::ProhibitUseQuotedVersion|Perl::Critic::Policy::Modules::ProhibitUseQuotedVersion>
 
@@ -174,6 +176,14 @@ Unbalanced or mismatched ( ) parens, brackets and braces.
 
 Put commas or some text between adjacent C<< LE<lt>E<gt> >> links.
 
+=item L<Documentation::ProhibitDuplicateHeadings|Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings>
+
+Don't duplicate C<=head> headings.
+
+=item L<Documentation::ProhibitDuplicateSeeAlso|Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso>
+
+Don't duplicate C<< LE<lt>E<gt> >> links in SEE ALSO sections.
+
 =item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
 
 Avoid C<< CE<lt>E<gt> >> in NAME section, bad for man's "apropos" output.
@@ -200,55 +210,57 @@ Use C<< LE<lt>E<gt> >> markup on URLs.
 
 =back
 
+=for my_pod policy_list end
+
 =head2 Selecting
 
 You can always enable or disable the policies you do or don't want (see
-L<Perl::Critic/CONFIGURATION>).  If you haven't already realized, there's a
-wide range of builtin and add-on perlcritic policies ranging from buggy
-practice to the deliberately restrictive or even quite bizarre.  You're not
+L<Perl::Critic/CONFIGURATION>).  You may have already realized that there's
+a wide range of builtin and add-on perlcritic policies ranging from buggy
+practice to deliberately restrictive or even quite bizarre.  You're not
 meant to pass everything.  Some policies may even be mutually contradictory.
 
 The restrictive policies are meant as building blocks for a limited house
-style.  For example C<ProhibitBarewordDoubleColon> above, or something like
-C<ProhibitUnlessBlocks> is another.  They're usually a matter of personal
-preference (and non de gustibus disputandum as they say in the classics).
-Trying to follow all of them would give away big parts of the language and
-quite likely end up with very un-typical code.
+style.  For example C<ProhibitBarewordDoubleColon> here, or something like
+C<ProhibitUnlessBlocks>.  They're usually a matter of personal preference,
+and non de gustibus disputandum as they say in the classics.  Trying to
+follow all of them would give away big parts of the language and quite
+likely end up with very un-typical code.
 
 Some of the restrictive policies are geared towards beginners.
-C<ProhibitUnknownBackslash> above or C<RequireInitializationForLocalVars>
-are along those lines.  There might for instance be good backslashing the
+C<ProhibitUnknownBackslash> here or C<RequireInitializationForLocalVars> are
+along those lines.  There might for instance be good backslashing which the
 prohibition doesn't recognise, or for example local variable initializers
-make no sense for output variables like C<$!> -- once you get to the level
-of knowing to use C<local> to preserve such globals.
+make no sense for output variables like C<$!>.  Once you get to the level of
+knowing to use C<local> to preserve such globals at least.
 
 In general the POD of each policy is supposed to explain the motivation so
-you can see if you want it or not.  If you're not turning off or drastically
-customizing at least half of all policies then you're either not trying or
-you're much too easily lead!
+you can see whether you want it or not.  If you're not turning off or
+drastically customizing at least half of all policies then you're either not
+trying or you're much too easily lead!
 
 =head1 OTHER NOTES
 
-In most of the perlcritic documentation, including the Pulp stuff here,
+In most of the perlcritic documentation, including the Pulp add-ons here,
 policy names appear without the full C<Perl::Critic::Policy::...> class
-part.  In Emacs have a look at C<man-completion.el> to make C<M-x man>
-automatically expand a suffix part at point, or C<ffap-perl-module.el> to go
-to the source similarly.
+part.  In Emacs try C<man-completion.el> to make C<M-x man> automatically
+expand a suffix part at point, or C<ffap-perl-module.el> for the same to go
+to the source.
 
     http://user42.tuxfamily.org/man-completion/index.html
 
     http://user42.tuxfamily.org/ffap-perl-module/index.html
 
-In perlcritic's output you can ask for %P to see the full policy package
-name to "perldoc" or copy or follow etc.  Here's a good output format you
-can put in your F<.perlcriticrc>.  The file:line:column: part is a style
+In perlcritic's output you can ask for C<%P> to see the full policy package
+name to run C<perldoc> or copy or follow etc.  Here's a good output format
+you can put in your F<.perlcriticrc>.  The file:line:column: part is a style
 Emacs will recognise.
 
     verbose=%f:%l:%c:\n %P\n %m\n
 
-See L<Perl::Critic::Violation> for all the available C<%> escapes.
+See L<Perl::Critic::Violation> for all available C<%> escapes.
 F<perlcritic.el> which comes with perlcritic has regexp patterns for Emacs
-to recognise the builtin perlcritic formats, but it's easier to print
+to recognise the builtin perlcritic formats, but it's easier to output
 "file:line:column:" in the first place.
 
 =head1 SEE ALSO
@@ -261,7 +273,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

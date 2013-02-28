@@ -17,6 +17,10 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 77, February 2013
+    - new policy Documentation::ProhibitDuplicateHeadings
+    - fix POD parse losing violations across =cut gaps
+
 Version 76, January 2013
     - RequireNumericVersion explicit check for exponential strings "1e6" 
 

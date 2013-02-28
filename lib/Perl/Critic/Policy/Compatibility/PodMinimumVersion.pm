@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -28,9 +28,9 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -98,7 +98,7 @@ sub location {
 1;
 __END__
 
-=for stopwords addon CPAN config Ryde
+=for stopwords CPAN config Ryde
 
 =head1 NAME
 
@@ -107,7 +107,7 @@ Perl::Critic::Policy::Compatibility::PodMinimumVersion - check Perl version decl
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It checks that the POD features you use don't exceed your target
+add-on.  It checks that the POD features you use don't exceed your target
 Perl version as indicated by C<use 5.008> etc.
 
 =for ProhibitVerbatimMarkup allow next 3
@@ -176,7 +176,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

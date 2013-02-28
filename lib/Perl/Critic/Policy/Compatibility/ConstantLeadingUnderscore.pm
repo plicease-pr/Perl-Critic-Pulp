@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use version ();
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -141,7 +141,7 @@ sub _string_any_vars {
 1;
 __END__
 
-=for stopwords addon multi-constant multi-constants CPAN perl ok ConstantLeadingUnderscore backports prereqs Ryde subr inlined
+=for stopwords multi-constant multi-constants CPAN perl ok ConstantLeadingUnderscore backports prereqs Ryde subr inlined
 
 =head1 NAME
 
@@ -150,7 +150,7 @@ Perl::Critic::Policy::Compatibility::ConstantLeadingUnderscore - new enough "con
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks that if you have a constant with a leading underscore,
+add-on.  It asks that if you have a constant with a leading underscore,
 
     use constant _FOO ...  # leading underscore on name
 
@@ -288,7 +288,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

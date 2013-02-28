@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -162,7 +162,7 @@ sub _is_preceded_by_array {
 1;
 __END__
 
-=for stopwords addon paren Parens hashref boolean Ryde
+=for stopwords paren parens Parens hashref boolean Ryde runtime subr
 
 =head1 NAME
 
@@ -171,7 +171,7 @@ Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline - comma at end o
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you to put a comma at the end of a list etc when it ends
+add-on.  It asks you to put a comma at the end of a list etc when it ends
 with a newline,
 
     @array = ($one,
@@ -185,30 +185,30 @@ with a newline,
 This makes no difference to how the code runs, so the policy is under the
 "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
-The idea is to make it easier when editing the code -- you don't have to
-remember to add a comma to a preceding item when extending or cutting and
-pasting lines to re-arrange.
+The idea is to make it easier when editing the code since you don't have to
+remember to add a comma to a preceding item when extending or re-arranging
+lines.
 
 If the closing bracket is on the same line as the last element then no comma
-is required.  It can be be used if desired, but is not required.
+is required.  It can be be present if desired, but is not required.
 
     $hashref = { abc => 123,
                  def => 456 };   # ok
 
 Parens around an expression are not a list, so nothing is demanded in for
-instace
+instance
 
     $foo = (
             1
-            + 2        # ok
+            + 2        # ok, an expression not a list
            );
 
-But a single element paren expression like this is treated as a list when
-it's in an array assignment or a function or method call.
+But a single element paren expression is a list when it's in an array
+assignment or a function or method call.
 
     @foo = (
             1
-            + 2        # bad
+            + 2        # bad, list of one value
            );
             
 
@@ -226,31 +226,16 @@ trailing comma is not required.
             + $y    # ok
             );
 
-Whether such code is a single-value expression, or a list of only one value,
-depends on how the function is specified.  There's nothing much in the text
-(nor even at runtime) which would say for sure.
+Whether such code is a single-value expression or a list of only one value
+depends on how the function is specified.  There's nothing in the text (nor
+even at runtime) which would say for sure.
 
 It's handy to included parens around a single-value expression to make it
 clear some big arithmetic is all part of the return, especially if you can't
-remember precedence levels very well.  And in such an expression a newline
+remember precedence levels very well.  In such an expression a newline
 before the final ")" can help keep a comment together with a term for a cut
-and paste, or not lose a paren if commenting the last line etc.  So for now
-the policy is to be lenient.  Would an option be good though?
-
-=head1 BUGS
-
-Is a C<return> statement an expression or a list?
-
-    return (1
-            + 2
-            + 3    # should this be ok, or not?
-           );
-
-Strictly speaking it would depend whether the intention in subr is a list
-return or a single value, where there's no way to distinguish.  Perhaps it
-should be allowed if there's just one expression.
-
-
+and paste, or not lose a paren if commenting the last line, etc.  So for now
+the policy is lenient.  Would an option be good though?
 
 =head2 Disabling
 
@@ -305,7 +290,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

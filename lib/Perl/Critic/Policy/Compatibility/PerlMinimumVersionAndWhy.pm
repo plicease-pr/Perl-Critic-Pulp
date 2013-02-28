@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -174,7 +174,7 @@ sub _setup_extra_checks {
       (sub {
          $_[1]->isa('PPI::Token::Operator')
            and
-             $MATCHES{_perl_5010_operators}->{$_[1]->content}
+             $MATCHES{_perl_5010_operators}->{$_[1]->content};
            } );
   }
   sub _Pulp__5010_magic__fix {
@@ -182,7 +182,7 @@ sub _setup_extra_checks {
       (sub {
          $_[1]->isa('PPI::Token::Magic')
            and
-             $MATCHES{_perl_5010_magic}->{$_[1]->content}
+             $MATCHES{_perl_5010_magic}->{$_[1]->content};
            } );
   }
 }
@@ -866,7 +866,7 @@ sub _symbol_or_list_symbol {
 1;
 __END__
 
-=for stopwords addon config MinimumVersion Pragma CPAN prereq multi-constant concats pragma endianness filehandle asciz builtin Ryde
+=for stopwords config MinimumVersion Pragma CPAN prereq multi-constant concats pragma endianness filehandle asciz builtin Ryde no-args parens BER lexically-scoped
 
 =head1 NAME
 
@@ -875,7 +875,7 @@ Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy - explicit Perl ve
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It requires that you have an explicit C<use 5.XXX> etc for the Perl
+add-on.  It requires that you have an explicit C<use 5.XXX> etc for the Perl
 syntax features you use, as determined by
 L<C<Perl::MinimumVersion>|Perl::MinimumVersion>.
 
@@ -1145,7 +1145,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

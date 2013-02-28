@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 
 use constant supported_parameters =>
@@ -156,7 +156,7 @@ sub is_perl4_semihash {
 1;
 __END__
 
-=for stopwords addon ie ok boolean Ryde
+=for stopwords ie ok boolean Ryde
 
 =head1 NAME
 
@@ -165,7 +165,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements - disallow em
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It prohibits empty statements, ie. bare C<;> semicolons.  This can
+add-on.  It prohibits empty statements, ie. bare C<;> semicolons.  This can
 be a typo doubling up a semi like
 
     use Foo;;    # bad
@@ -180,7 +180,7 @@ Or a stray left at the end of a control structure like
 An empty statement is completely harmless, so this policy is only under the
 "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).  It's surprisingly
 easy to leave a semi behind when chopping code around, especially when
-changing a statement to a loop or a conditional.
+changing a statement to a loop or conditional.
 
 =head2 Allowed forms
 
@@ -240,7 +240,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

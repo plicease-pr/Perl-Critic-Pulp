@@ -12,7 +12,7 @@
 # print <<HERE ... look at body part
 
 
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -222,7 +222,7 @@ Perl::Critic::Policy::TestingAndDebugging::inprogressProhibitTestPrint - don't u
 
 =head1 DESCRIPTION
 
-This policy is part of the Perl::Critic::Pulp addon.  It asks you not to use
+This policy is part of the Perl::Critic::Pulp add-on.  It asks you not to use
 a raw C<print> in a test script to avoid any chance of confusing the test
 parsers.
 
@@ -286,7 +286,7 @@ L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

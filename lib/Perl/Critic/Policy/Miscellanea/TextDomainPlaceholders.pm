@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -29,7 +29,7 @@ use Perl::Critic::Utils qw(is_function_call
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -270,7 +270,7 @@ sub _elem_package_name {
 
 # As per perlsyn.pod, except \2 instead of \g2 since \g only in perl 5.10 up.
 # Is this in a module somewhere?
-my $line_directive_re = 
+my $line_directive_re =
   qr/^\#   \s*
      line \s+ (\d+)   \s*
      (?:\s("?)([^"]+)\2)? \s*
@@ -311,7 +311,7 @@ sub _elem_logical_filename {
 1;
 __END__
 
-=for stopwords addon args arg Gettext Charset runtime Ryde
+=for stopwords args arg Gettext Charset runtime Ryde unexpanded
 
 =head1 NAME
 
@@ -320,7 +320,7 @@ Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders - check placeholder na
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It checks the placeholder arguments in format strings to the
+add-on.  It checks the placeholder arguments in format strings to the
 following functions from C<Locale::TextDomain>.
 
     __x __nx __xn __px __npx
@@ -389,7 +389,7 @@ noticed by this policy.  For example,
 If the count argument looks like a key then it's reported as a probable
 mistake.  This is not the main aim of this policy but it's done because
 otherwise no violations would be reported at all.  (The next argument would
-be the key, and normally being an expression it would be assumed to fulfil
+be the key, and normally being an expression it would be assumed to fulfill
 the format strings at runtime.)
 
 =head1 SEE ALSO
@@ -405,7 +405,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

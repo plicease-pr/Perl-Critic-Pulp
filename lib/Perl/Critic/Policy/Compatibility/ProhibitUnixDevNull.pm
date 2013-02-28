@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -76,7 +76,7 @@ sub violates {
 1;
 __END__
 
-=for stopwords addon filename backticks Ryde
+=for stopwords filename backticks Ryde
 
 =head1 NAME
 
@@ -85,20 +85,20 @@ Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull - don't use explicit /d
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It ask you to not to use filename F</dev/null> explicitly, but
-instead C<File::Spec-E<gt>devnull> for maximum portability across operating
-systems.
+add-on.  It ask you to not to use filename F</dev/null> explicitly, but
+instead C<File::Spec-E<gt>devnull()> for maximum portability across
+operating systems.
 
 This policy is under the C<maintenance> theme (see
 L<Perl::Critic/POLICY THEMES>) on the basis that even if you're on a Unix
 system now you never know where your code might travel in the future.
 
-C<devnull> is new in C<File::Spec> version 0.8, so you should require that
+C<devnull()> is new in C<File::Spec> version 0.8, so you should require that
 version (it's included in Perl 5.6.0 and up).
 
 The checks for F</dev/null> are unsophisticated.  A violation is reported
-for any string C</dev/null>, possibly with an C<open> style mode part, or a
-C<qw> containing C</dev/null>.
+for any string C</dev/null>, possibly with an C<open> style mode part, or
+any C<qw> containing C</dev/null>.
 
     open my $fh, '< /dev/null';                    # bad
     do_something ("/dev/null");                    # bad
@@ -140,7 +140,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

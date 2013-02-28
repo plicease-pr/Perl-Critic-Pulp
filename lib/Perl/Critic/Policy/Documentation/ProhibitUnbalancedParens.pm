@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -35,7 +35,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -226,7 +226,7 @@ sub interior_sequence_as_displayed_noncode_text {
 1;
 __END__
 
-=for stopwords addon Ryde paren parens ie deref there'd backslashing Parens ProhibitUnbalancedParens
+=for stopwords Ryde paren parens ie deref there'd backslashing Parens
 
 =head1 NAME
 
@@ -235,7 +235,7 @@ Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens - don't leave an o
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It reports unbalanced or mismatched parentheses, brackets and braces
+add-on.  It reports unbalanced or mismatched parentheses, brackets and braces
 in POD text paragraphs,
 
     Blah blah (and something.    # bad
@@ -370,7 +370,7 @@ paragraphs or has a verbatim block in the middle etc.
 =head2 Disabling
 
 If an unbalanced paren is intended you can add an C<=for> to tell
-ProhibitUnbalancedParens to allow it.
+C<ProhibitUnbalancedParens> to allow it.
 
     =for ProhibitUnbalancedParens allow next
 
@@ -414,7 +414,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

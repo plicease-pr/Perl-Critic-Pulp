@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -217,7 +217,7 @@ sub _include_module_version_with_exporter {
 1;
 __END__
 
-=for stopwords Gtk2 addon Ryde
+=for stopwords Gtk2 Ryde
 
 =head1 NAME
 
@@ -226,7 +226,7 @@ Perl::Critic::Policy::Compatibility::Gtk2Constants - new enough Gtk2 version for
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It requires that if you use certain constant subs from
+add-on.  It requires that if you use certain constant subs from
 L<C<Gtk2>|Gtk2> and L<C<Glib>|Glib> then you must explicitly have a C<use>
 of a high enough version of those modules.
 
@@ -313,7 +313,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version ();
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -130,7 +130,7 @@ sub _use_constant_is_multi {
 1;
 __END__
 
-=for stopwords addon multi-constant CPAN perl ok ConstantPragmaHash backports prereqs Ryde
+=for stopwords multi-constant CPAN perl ok ConstantPragmaHash backports prereqs Ryde
 
 =head1 NAME
 
@@ -139,7 +139,7 @@ Perl::Critic::Policy::Compatibility::ConstantPragmaHash - new enough "constant" 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It requires that when you use the hash style multiple constants of
+add-on.  It requires that when you use the hash style multiple constants of
 C<use constant> that you explicitly declare either Perl 5.8 or C<constant>
 1.03 or higher.
 
@@ -231,7 +231,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

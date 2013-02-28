@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -40,7 +40,7 @@ sub violates {
 1;
 __END__
 
-=for stopwords addon seekable filename Ryde
+=for stopwords seekable filename Ryde
 
 =head1 NAME
 
@@ -49,7 +49,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitFiletest_f - don't use the -
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to use the C<-f> file test because doing so is
+add-on.  It asks you not to use the C<-f> file test because doing so is
 usually wrong or unnecessarily restrictive.  On that basis this policy is
 under the "bugs" theme, see L<Perl::Critic/POLICY THEMES>.
 
@@ -78,19 +78,19 @@ processed.
 Char specials and named pipes are perfectly good for reading and writing,
 and char specials can support seeking.  Demanding C<-f> is an unnecessary
 restriction.  You might only ever use ordinary files normally, but there's
-no need to prevent someone else running it on a tape drive, F</dev/null>
-empty, etc.  You always have to test each C<seek()> etc for success anyway,
-and that will tell you if a file is seekable.
+no need to prevent someone else running it on a tape drive, F</dev/null>,
+etc.  You always have to test each C<seek()> etc for success anyway, and
+that will tell you if a file is seekable.
 
     seek HANDLE, 123, 0
       or die "Cannot seek: $!";
 
 =item C<-e> is better than C<-f>
 
-A few inflexible functions or operations may not have a good "file not
-found" behaviour and may force you to check for a file before invoking.
-Using C<-e> is better than C<-f> since as described above it doesn't
-unnecessarily disallow device files.
+A few inflexible functions or operations may not have good "file not found"
+behaviour and may force you to check for a file before invoking.  Using
+C<-e> is better than C<-f> since as described above it doesn't unnecessarily
+disallow device files.
 
     if (-f $filename) {      # bad
       require $filename;
@@ -128,9 +128,10 @@ If you really do want to enquire into the nature of the file, in order to
 only accept ordinary files, then open first and then C<-f> on the handle.
 But that's unusual except for an archiving or backup program.
 
-Incidentally, for error messages C<$!> is normally the best thing to print.
-It can be slightly technical, but its descriptions will at least be familiar
-from other programs and are translated into the user's locale.
+Incidentally, for error message in C<$!> is normally the best thing to
+print.  It can be slightly technical, but its wording will at least be
+familiar from other programs and will be translated into the user's locale
+language.
 
 =back
 
@@ -162,7 +163,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

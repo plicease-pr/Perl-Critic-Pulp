@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -43,6 +43,12 @@ my $option_t_files = 0;
 GetOptions
   (require_order => 1,
    t => \$option_t_files,
+   duphead => sub {
+     push @option_policies, 'Documentation::ProhibitDuplicateHeadings';
+   },
+   ifif => sub {
+     push @option_policies, 'CodeLayout::RequireIfIfNewline';
+   },
    duphashkeys => sub {
      push @option_policies, 'ValuesAndExpressions::ProhibitDuplicateHashKeys';
    },

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -281,7 +281,7 @@ sub _block_is_expression {
 1;
 __END__
 
-=for stopwords addon boolean hashref eg Ryde
+=for stopwords boolean hashref eg Ryde
 
 =head1 NAME
 
@@ -290,7 +290,7 @@ Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon - require a semicolon at
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you to put a semicolon C<;> on the final statement of a
+add-on.  It asks you to put a semicolon C<;> on the final statement of a
 subroutine or block.
 
     sub foo {
@@ -407,7 +407,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -30,7 +30,7 @@ use Perl::Critic::Utils qw(is_included_module_name
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -197,7 +197,7 @@ sub _elem_and_ssiblings {
 1;
 __END__
 
-=for stopwords bareword addon autoloaded unprototyped readline parens ConstantBeforeLt POSIX Bareword filehandle mis-ordering Ryde
+=for stopwords bareword autoloaded unprototyped readline parens ConstantBeforeLt POSIX Bareword filehandle mis-ordering Ryde emphasises prototyped
 
 =head1 NAME
 
@@ -206,7 +206,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt - disallow bareword
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It prohibits a bareword before a C<E<lt>> to keep you out of trouble
+add-on.  It prohibits a bareword before a C<E<lt>> to keep you out of trouble
 with autoloaded or unprototyped constant subs since a C<E<lt>> in that case
 is interpreted as the start of a C<E<lt>..E<gt>> glob or readline instead of
 a less-than.  This policy is under the "bugs" theme (see
@@ -276,7 +276,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

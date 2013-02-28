@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -29,7 +29,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant DEBUG => 0;
 
@@ -433,7 +433,7 @@ sub _charnames_in_scope {
 1;
 __END__
 
-=for stopwords addon backslashed upcase FS unicode ascii non-ascii ok alnum quotemeta backslashing backticks Ryde coderef
+=for stopwords backslashed upcase FS unicode ascii non-ascii ok alnum quotemeta backslashing backticks Ryde coderef alphanumerics arrowed
 
 =head1 NAME
 
@@ -442,7 +442,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitUnknownBackslash - don't use
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It checks for unknown backslash escapes like
+add-on.  It checks for unknown backslash escapes like
 
     print "\*.c";      # bad
 
@@ -621,7 +621,7 @@ means you must write backslashes as C<\\>.
     print 'c:\my\msdos\filename';     # bad under "single=all"
     print 'c:\\my\\msdos\\filename';  # ok
 
-Doubled backslashing like this is correct, and can emphasise that you really
+Doubled backslashing like this is correct, and can emphasize that you really
 did want a backslash, but it's tedious and not easy on the eye and so is
 left only as an option.
 
@@ -645,7 +645,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -22,10 +22,10 @@ use warnings;
 use Perl::Critic::Pulp::Utils;
 use base 'Pod::Parser';
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # sub new {
@@ -36,12 +36,22 @@ our $VERSION = 76;
 # }
 sub initialize {
   my ($self) = @_;
+  ### initialize() ...
+
   # empty violations for violations() to return before a parse
   $self->{'violations'} = [];
+  $self->{'in_begin'} = '';
   $self->errorsub ('error_handler'); # method name
+
+  # Note: The violations list is never cleared.  Might like to do so at the
+  # start of a new a pod document, though this parser is only ever used on a
+  # single document and then discarded.  begin_input() and begin_pod() are
+  # no good as they're invoked for each chunk fed in by parse_from_elem().
 }
+
 sub error_handler {
   my ($self, $errmsg) = @_;
+  ### error_handler() ...
   return 1;  # error handled
 
   # Don't think it's the place of this policy to report pod parse errors.
@@ -58,6 +68,7 @@ sub error_handler {
 sub parse_from_elem {
   my ($self, $elem) = @_;
   ### Pulp-PodParser parse_from_elem(): ref($elem)
+
   my $elems = ($elem->can('find')
                ? $elem->find ('PPI::Token::Pod')
                : [ $elem ])
@@ -76,12 +87,6 @@ sub parse_from_string {
   require IO::String;
   my $fh = IO::String->new ($str);
   $self->parse_from_filehandle ($fh);
-}
-
-sub begin_pod {
-  my ($self) = @_;
-  $self->{'violations'} = [];
-  $self->{'in_begin'} = '';
 }
 
 sub command {
@@ -176,7 +181,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

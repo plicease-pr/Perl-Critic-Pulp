@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -162,7 +162,7 @@ sub _is_bogus_part {
 1;
 __END__
 
-=for stopwords addon Ryde formatters ProhibitVerbatimMarkup monospaced monospacing clickable
+=for stopwords Ryde formatters monospaced monospacing clickable
 
 =head1 NAME
 
@@ -171,7 +171,7 @@ Perl::Critic::Policy::Documentation::RequireLinkedURLs - use LE<lt>E<gt> markup 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you to put C<LE<lt>E<gt>> markup on URLs in POD text in Perl
+add-on.  It asks you to put C<LE<lt>E<gt>> markup on URLs in POD text in Perl
 5.8 and higher.
 
     use 5.008;
@@ -195,7 +195,7 @@ priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 Only plain text parts of the POD are considered.  Verbatim paragraphs cannot
 have C<LE<lt>E<gt>> markup (and it's usually a mistake to put it, as per
-L<ProhibitVerbatimMarkup|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>).
+L<C<ProhibitVerbatimMarkup>|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>).
 
     This is verbatim text,
 
@@ -280,7 +280,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

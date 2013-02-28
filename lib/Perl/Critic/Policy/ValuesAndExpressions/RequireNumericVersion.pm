@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 sub violates {
   my ($self, $elem, $document) = @_;
@@ -181,7 +181,7 @@ sub _any_eval_VERSION {
 1;
 __END__
 
-=for stopwords addon toplevel ie CPAN pre-release args exponentials multi-dots v-nums YYYYMMDD Ryde builtin
+=for stopwords toplevel ie CPAN pre-release args exponentials multi-dots v-nums YYYYMMDD Ryde builtin MakeMaker runtime filename
 
 =head1 NAME
 
@@ -190,7 +190,7 @@ Perl::Critic::Policy::ValuesAndExpressions::RequireNumericVersion - $VERSION a p
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you to use a plain number in a module C<$VERSION> so that
+add-on.  It asks you to use a plain number in a module C<$VERSION> so that
 Perl's builtin version works.
 
 Any literal number is fine, or a string which is a number,
@@ -285,10 +285,10 @@ Or you can trick MakeMaker with a string plus C<eval>,
     $VERSION = '1.002_003';    # ok evalled down
     $VERSION = eval $VERSION;
 
-MakeMaker sees the string "1.002_003" but at runtime the C<eval> crunches it
-down to a plain number 1.002003.  RequireNumericVersion notices such an
-C<eval> and anything in C<$VERSION>.  Something bizarre in C<$VERSION> won't
-be noticed, but that's too unlikely to worry about.
+C<MakeMaker> sees the string "1.002_003" but at runtime the C<eval> crunches
+it down to a plain number 1.002003.  C<RequireNumericVersion> notices such
+an C<eval> and anything in C<$VERSION>.  Something bizarre in C<$VERSION>
+won't be noticed, but that's too unlikely to worry about.
 
 =head2 C<version> module in Perl 5.10 up
 

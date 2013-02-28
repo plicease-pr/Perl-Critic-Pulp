@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 76;
+my $want_version = 77;
 is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION,

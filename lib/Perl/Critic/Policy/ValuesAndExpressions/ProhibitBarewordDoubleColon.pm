@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters =>
   ({ name           => 'allow_indirect_syntax',
@@ -103,7 +103,7 @@ sub _word_is_indirect_call_classname {
 1;
 __END__
 
-=for stopwords barewords addon bareword disambiguates ie ProhibitIndirectSyntax runtime boolean Ryde
+=for stopwords barewords bareword disambiguates ie runtime boolean Ryde
 
 =head1 NAME
 
@@ -112,7 +112,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitBarewordDoubleColon - don't 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to use the double-colon bareword like
+add-on.  It asks you not to use the double-colon bareword like
 
     $class = Foo::Bar::;     # bad
 
@@ -139,22 +139,23 @@ C<Foo>.
 
 Whether you actually want indirect object syntax is a matter for other
 policies, like
-L<ProhibitIndirectSyntax|Perl::Critic::Policy::Objects::ProhibitIndirectSyntax>.
-If you don't want the double-colon bareword then switch to arrow style
+L<C<ProhibitIndirectSyntax>|Perl::Critic::Policy::Objects::ProhibitIndirectSyntax>.
+If you don't want the double-colon bareword then change to arrow style
 C<< Foo::Bar->new($arg,...) >>.
 
 =head2 Double-Colon Advantages
 
-The C<::> bareword is for package names, not general bareword quoting.  If
-there's no such package at compile time a warning is given (see
+The C<::> bareword is for use on package names, not general bareword
+quoting.  If there's no such package at compile time a warning is given (see
 L<perldiag/Bareword "%s" refers to nonexistent package>)
 
-    my $class = No::Such::Package::;  # perl warning
+    my $class = No::Such::Package::;  # Perl warning
 
-This warning can help pick up typos, though it can't know if a package will
-be loaded at runtime and so will fire wrongly in that case.  For reference,
-a warning isn't given for the indirect object syntax, which rather limits
-its benefit.
+This warning can help pick up typos, though it relies on relevant packages
+being loaded at compile-time (ie. C<BEGIN>).  If the package is loaded by a
+C<require> at runtime then the warning fires even though the code runs
+correctly.  For reference, a warning isn't given for the indirect object
+syntax, which rather limits its benefit.
 
 =head2 Disabling
 
@@ -198,7 +199,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

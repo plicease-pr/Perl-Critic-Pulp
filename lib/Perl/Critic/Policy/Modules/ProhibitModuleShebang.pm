@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters =>
   ({ name           => 'allow_bin_false',
@@ -66,7 +66,7 @@ sub violates {
 1;
 __END__
 
-=for stopwords addon filename boolean ProhibitModuleShebang Ryde
+=for stopwords filename boolean Ryde
 
 =head1 NAME
 
@@ -75,14 +75,14 @@ Perl::Critic::Policy::Modules::ProhibitModuleShebang - don't put a #! line at th
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to use a C<#!> interpreter line in a F<.pm> module
+add-on.  It asks you not to use a C<#!> interpreter line in a F<.pm> module
 file.
 
     #!/usr/bin/perl -w      <-- bad
     package Foo;
     ...
 
-This C<#!> does nothing, and might make a reader think it's supposed to be a
+This C<#!> does nothing but might make a reader think it's supposed to be a
 program instead of a module.  Often the C<#!> is a leftover cut and paste
 from a script into a module, perhaps when grabbing a copyright notice or
 similar intro.
@@ -123,10 +123,10 @@ If true then allow C<#!/bin/false> in module files.
 
     #! /bin/false           <-- ok
 
-Such a C<#!> prevents executing the code if accidentally run as a script,
-but whether you want this is a personal preference.  It indicates a module
-is not a script and so accords with ProhibitModuleShebang, but in general
-it's probably unnecessary.
+Such a C<#!> prevents executing the code if accidentally run as a script.
+Whether you want this is a personal preference.  It indicates a module is
+not a script and so accords with C<ProhibitModuleShebang>, but in general it's
+probably unnecessary.
 
 =back
 
@@ -140,7 +140,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

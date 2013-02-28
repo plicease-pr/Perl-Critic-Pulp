@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -30,7 +30,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -79,7 +79,7 @@ sub violates {
 1;
 __END__
 
-=for stopwords addon Ryde arrayref parens Derefs
+=for stopwords Ryde arrayref parens Derefs Dereferences
 
 =head1 NAME
 
@@ -88,7 +88,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitArrayAssignAref - don't assi
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It asks you not to assign an anonymous arrayref to an array
+add-on.  It asks you not to assign an anonymous arrayref to an array
 
     @array = [ 1, 2, 3 ];       # bad
 
@@ -101,13 +101,13 @@ This policy is under the "bugs" theme (see L<Perl::Critic/POLICY THEMES>)
 for the chance C<[]> is a mistake, and since even if it's correct it will
 likely make anyone reading it wonder.
 
-An single arrayref can still be assigned to an array, but with parens to
-make it clear,
+A single arrayref can still be assigned to an array, but with parens to make
+it clear,
 
     @array = ( [1,2,3] );       # ok
 
-Dereferencess or array and hash slices (see L<perldata/Slices>) are
-recognised and treated similarly,
+Dereferences or array and hash slices (see L<perldata/Slices>) are
+recognised as an array target and treated similarly,
 
     @$ref = [1,2,3];            # bad assign to deref
     @{$ref} = [1,2,3];          # bad assign to deref
@@ -117,11 +117,11 @@ recognised and treated similarly,
 =head2 List Assignment Parens
 
 This policy is not a blanket requirement for C<()> parens on array
-assignments, since it's normal and unambiguous to have a function call or
-C<grep> etc.
+assignments.  It's normal and unambiguous to have a function call or C<grep>
+etc without parens.
 
-    @array = foo();
-    @array = grep {/\.txt$/} @array;
+    @array = foo();                    # ok
+    @array = grep {/\.txt$/} @array;   # ok
 
 The only likely problem from lack of parens in such cases is that the C<,>
 comma operator has lower precedence than C<=> (see L<perlop>), so something
@@ -145,10 +145,10 @@ instance
 
 And for reference the range operator precedence is high enough,
 
-    @array=1..10;                 # ok
+    @array = 1..10;               # ok
 
-though of course parens are needed if concatenating some disjoint ranges
-with the comma operator,
+But of course parens are needed if concatenating some disjoint ranges with
+the comma operator,
 
     @array = (1..5, 10..15);      # parens needed
 
@@ -167,7 +167,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

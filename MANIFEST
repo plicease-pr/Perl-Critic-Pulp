@@ -41,6 +41,7 @@ devel/grep-fat-comma.pl
 devel/grep-filetest-f.pl
 devel/grep-foreach-splice.pl
 devel/grep-hash-keys.pl
+devel/grep-if-if.pl
 devel/grep-import-tag.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
@@ -51,6 +52,8 @@ devel/grep-pod-command-arg.pl
 devel/grep-pod-duplicate-see-also.pl
 devel/grep-pod-final-cut.pl
 devel/grep-pod-gt.pl
+devel/grep-pod-head-down2.pl
+devel/grep-pod-head-duplicate.pl
 devel/grep-pod-leadingwhite.pl
 devel/grep-pod-linked-urls.pl
 devel/grep-pod-links-adjacent.pl
@@ -82,13 +85,16 @@ devel/h2xs/TestConstFoo.h
 devel/junk/test-more-like.pl
 devel/junk/TestMoreLikeModifiers.pm
 devel/junk/TestMoreLikeModifiers.t
-devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.pm
-devel/lib/Perl/Critic/Policy/CodeLayout/inprogressProhibitFatCommaAfterNewline.t
+devel/lib/Perl/Critic/Policy/CodeLayout/ProhibitFatCommaNewline.pm
+devel/lib/Perl/Critic/Policy/CodeLayout/ProhibitFatCommaNewline.t
+devel/lib/Perl/Critic/Policy/CodeLayout/RequireIfIfNewline.pm
+devel/lib/Perl/Critic/Policy/CodeLayout/RequireIfIfNewline.t
 devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitFinalLinkComma.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
+devel/misc.pl
 devel/MyFileTempDBM.pm
 devel/MyLocatePerl.pm
 devel/MyStuff.pm
@@ -125,6 +131,7 @@ lib/Perl/Critic/Policy/Compatibility/PodMinimumVersion.pm
 lib/Perl/Critic/Policy/Compatibility/ProhibitUnixDevNull.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitAdjacentLinks.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitDuplicateHeadings.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitDuplicateSeeAlso.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitLinkToSelf.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
@@ -171,6 +178,7 @@ t/ProhibitArrayAssignAref.t
 t/ProhibitBadAproposMarkup.t
 t/ProhibitBarewordDoubleColon.t
 t/ProhibitDuplicateHashKeys.t
+t/ProhibitDuplicateHeadings.t
 t/ProhibitDuplicateSeeAlso.t
 t/ProhibitEmptyCommas.t
 t/ProhibitFiletest_f.t
@@ -210,6 +218,7 @@ xt/0-Test-DistManifest.t
 xt/0-Test-Pod.t
 xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
+xt/policy-lists.t
 xtools/my-check-copyright-years.sh
 xtools/my-check-file-part-of.sh
 xtools/my-check-spelling.sh

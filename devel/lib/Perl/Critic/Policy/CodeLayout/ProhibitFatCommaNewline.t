@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,42 +17,41 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
+use lib 'devel/lib';
 
 use strict;
 use warnings;
-use Perl::Critic::Policy::CodeLayout::inprogressProhibitFatCommaAfterNewline;
-use Test::More tests => 3;
-
-use_ok ('Perl::Critic::Policy::CodeLayout::inprogressProhibitFatCommaAfterNewline');
+use Perl::Critic::Policy::CodeLayout::ProhibitFatCommaAfterNewline;
+use Test::More tests => 11;
 
 #-----------------------------------------------------------------------------
-# my $want_version = 27;
-# is ($Perl::Critic::Policy::CodeLayout::inprogressProhibitFatCommaAfterNewline::VERSION,
-#     $want_version, 'VERSION variable');
-# is (Perl::Critic::Policy::CodeLayout::inprogressProhibitFatCommaAfterNewline->VERSION,
-#     $want_version, 'VERSION class method');
-# {
-#   ok (eval { Perl::Critic::Policy::CodeLayout::inprogressProhibitFatCommaAfterNewline->VERSION($want_version); 1 }, "VERSION class check $want_version");
-#   my $check_version = $want_version + 1000;
-#   ok (! eval { Perl::Critic::Policy::CodeLayout::inprogressProhibitFatCommaAfterNewline->VERSION($check_version); 1 }, "VERSION class check $check_version");
-# }
+my $want_version = 77;
+is ($Perl::Critic::Policy::CodeLayout::ProhibitFatCommaAfterNewline::VERSION,
+    $want_version, 'VERSION variable');
+is (Perl::Critic::Policy::CodeLayout::ProhibitFatCommaAfterNewline->VERSION,
+    $want_version, 'VERSION class method');
+{
+  ok (eval { Perl::Critic::Policy::CodeLayout::ProhibitFatCommaAfterNewline->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { Perl::Critic::Policy::CodeLayout::ProhibitFatCommaAfterNewline->VERSION($check_version); 1 }, "VERSION class check $check_version");
+}
 
 #-----------------------------------------------------------------------------
 require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => 'CodeLayout::inprogressProhibitFatCommaAfterNewline');
+   '-single-policy' => 'CodeLayout::ProhibitFatCommaAfterNewline');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-      'single policy inprogressProhibitFatCommaAfterNewline');
+      'single policy ProhibitFatCommaAfterNewline');
 
-  # my $policy = $p[0];
-  # is ($policy->VERSION, $want_version, 'VERSION object method');
-  # ok (eval { $policy->VERSION($want_version); 1 },
-  #     "VERSION object check $want_version");
-  # my $check_version = $want_version + 1000;
-  # ok (! eval { $policy->VERSION($check_version); 1 },
-  #     "VERSION object check $check_version");
+  my $policy = $p[0];
+  is ($policy->VERSION, $want_version, 'VERSION object method');
+  ok (eval { $policy->VERSION($want_version); 1 },
+      "VERSION object check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { $policy->VERSION($check_version); 1 },
+      "VERSION object check $check_version");
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)

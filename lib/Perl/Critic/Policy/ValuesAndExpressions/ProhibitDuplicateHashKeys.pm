@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -32,7 +32,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 #use Smart::Comments;
 
 
-our $VERSION = 76;
+our $VERSION = 77;
 
 use constant supported_parameters => ();
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -257,7 +257,7 @@ sub _elem_is_assigned_to_hash {
 1;
 __END__
 
-=for stopwords addon Ryde
+=for stopwords Ryde hashref runtime
 
 =head1 NAME
 
@@ -266,7 +266,7 @@ Perl::Critic::Policy::ValuesAndExpressions::ProhibitDuplicateHashKeys - disallow
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-addon.  It reports duplicate literal hash keys in a hash assignment or
+add-on.  It reports duplicate literal hash keys in a hash assignment or
 anonymous hashref.
 
     my %hash = (red   => 1,
@@ -283,9 +283,9 @@ paste, and if the values are different will make it unclear to human readers
 what was meant.  On that basis this policy is under the "bugs" theme and
 medium severity (see L<Perl::Critic/POLICY THEMES>).
 
-Perl is happy to run code like this.  The value of the last "red" is stored.
-Doing this at runtime is good since you can give defaults which further
-values from a caller or similar can replace.  For example,
+Perl is happy to run code like the above.  The value of the last "red" is
+stored.  Doing this at runtime is good since you can give defaults which
+further values from a caller or similar can replace.  For example,
 
     sub new {
       my $class = shift;
@@ -318,7 +318,7 @@ values.  Fat commas C<=E<gt>> are taken as indicating a key when in doubt.
                 a         => 2,  # guided by =>
                 a         => 3); # bad
 
-A hash substituted is always an even number of arguments,
+A hash substitution is always an even number of arguments,
 
     my %hash = (a         => 1,
                 %blah,           # even number
@@ -351,7 +351,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
