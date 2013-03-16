@@ -14,51 +14,21 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# /usr/share/perl5/Pod/Simple.pm          with return preceding
-# /usr/share/perl5/Tk/AbstractCanvas.pm   two ifs one line
-# 
-# newline or label between all compound statements
+# perlcritic -s ProhibitIfIfSameLine /usr/share/perl5/Pod/Simple.pm
+#    preceded by "return" so actually ok
+# perlcritic -s ProhibitIfIfSameLine /usr/share/perl5/Tk/AbstractCanvas.pm
+#    two ifs one line
 
 
-# ModifierStatement
-# RequireNewlineBetweenStatements
-# RequireNewlineBeforeNonModifierStatement
-# RequireNonModifierStatementNewline
-
-# perlsyn
-#     if EXPR
-#     unless EXPR
-#     while EXPR
-#     until EXPR
-#     when EXPR
-#     for LIST
-#     foreach LIST
-# if (1) {
-# } if (1) {
-# }
-# if (1) {
-# } unless (1) {
-# }
-# if (1) {
-# } while (1) {
-# }
-# if (1) {
-# } until (1) {
-# }
-# if (1) {
-# } for (1) {
-# }
-# if (1) {
-# } foreach (1) {
-# }
-
-package Perl::Critic::Policy::CodeLayout::RequireIfIfNewline;
+package Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine;
 use 5.006;
 use strict;
 use warnings;
+use Perl::Critic::Utils;
+
 use base 'Perl::Critic::Policy';
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -69,15 +39,18 @@ use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp bugs);
 use constant applies_to       => ('PPI::Statement::Compound');
 
-my %type_is_if = (if     => 1,
-                  unless => 1);
+my %compound_type_is_if = (if     => 1,
+                           unless => 1);
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  ### elem: "$elem"
+  ### ProhibitIfIfSameLine elem: "$elem"
+  ### type: $elem->type
 
-  $type_is_if{$elem->type}
-    or return;   # some other compound such as "while"
+  unless (_compound_statement_is_if($elem)) {
+    ### not an "if" ...
+    return;
+  }
 
   if (_elems_any_separator ($elem->child(0), $elem->schild(0))) {
     ### leading whitespace in elem itself, so ok ...
@@ -85,20 +58,37 @@ sub violates {
   }
 
   my $prev = $elem->sprevious_sibling || return;
-  ($prev->isa('PPI::Statement::Compound') && $type_is_if{$prev->type})
-    or return;
+  unless ($prev->isa('PPI::Statement::Compound')
+          && $compound_type_is_if{$prev->type}) {
+    ### not preceded by an "if", so ok ...
+    return;
+  }
 
   if (_elems_any_separator ($prev->next_sibling, $elem)) {
-    ### whitespace after prev, so ok ...
+    ### newlines after previous statement, so ok ...
     return;
   }
 
   return $self->violation
-    ('Put a newline in "} if (x)" so it doesn\'t look like \"elsif\" might have been intended',
+    ('Put a newline in "} if (x)" so it doesn\'t look like possible \"elsif\"',
      '',
      $elem);
 }
 
+# $elem is a PPI::Statement::Compound
+# Return true if it's an "if" statement.
+# Note this is not simply $elem->type eq "if", since type "if" includes
+# "unless" statements, but _compound_statement_is_if() is true only on "if"
+# statements.
+#
+sub _compound_statement_is_if {
+  my ($elem) = @_;
+  return (($elem->schild(0)||'') eq 'if');
+}
+
+# Return true if there is a suitable separator in $from or its following
+# elements up to $to, but not including $to.
+#
 sub _elems_any_separator {
   my ($from, $to) = @_;
   for (;;) {
@@ -116,15 +106,17 @@ sub _elems_any_separator {
 1;
 __END__
 
+=for stopwords Ryde
+
 =head1 NAME
 
-Perl::Critic::Policy::CodeLayout::RequireIfIfNewline - newline between consecutive if statements
+Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine - don't put if after if on same line
 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-add-on.  It asks you to put a newline before a statement which would look
-like a statement modifier.
+add-on.  It asks you to not to write an C<if> statement on the same line as
+a preceding C<if>.
 
     if ($x) {
       ...
@@ -132,21 +124,21 @@ like a statement modifier.
       ...
     }
 
-The idea is that the layout C<} if () {> looks like it was meant to be
-C<elsif>.
-
     if ($x) {
       ...
-    } elsif ($y) {    # was it meant to be "elsif" like this ?
+    } elsif ($y) {    # was "elsif" intended ?
       ...
     }
 
-An C<if> or C<elsif> may have a subtly different meaning and on that basis
-this policy is under the "bugs" theme and medium severity (see
-L<Perl::Critic/POLICY THEMES>).
+The idea is that an C<if> in the layout of an C<elsif> may be either a
+mistake or will be confusing to a human reader.  On that basis this policy
+is under the "bugs" theme and medium severity (see L<Perl::Critic/POLICY
+THEMES>).
 
-An C<unless> statement is the same, since Perl allows C<elsif> with
-C<unless>, though whether writing that is a good idea is another matter.
+=head2 Unless
+
+An C<unless...if> is treated the same.  Perl allows C<unless ... elsif> and
+so the same potential confusion with an C<elsif> layout arises.
 
     unless ($x) {
       ...
@@ -156,37 +148,47 @@ C<unless>, though whether writing that is a good idea is another matter.
 
     unless ($x) {
       ...
-    } elsif ($y) {    # was it meant to be "elsif" like this ?
+    } elsif ($y) {    # maybe meant to be "elsif" like this ?
       ...
     }
 
-Two C<if> statements written on the same line will trigger the policy.
-Perhaps there should be an option for this, or an exception for the
-preceding statement being all one line, or some such.
-
-    if (1) { one; } if (2) { two; }      # bad
+Whether C<unless ... elsif> is a good idea at all is another matter.
+Sometimes it suits a combination of conditions.
 
 =head2 Statement Modifiers
 
 This policy only applies to a statement followed by a statement.  An C<if>
-etc as a "statement modifier" is allowed, and in fact putting a modifier on
-the same line is generally clearest.
+as a statement modifier is not affected.  It's usual to put that on the same
+line as the statement it modifies.
 
     do {
       ...
     } if ($x);        # ok, statement modifier
 
+=head2 All One Line
+
+Two C<if> statements written on the same line will trigger the policy.
+
+    if(1){one;}   if(2){two;}      # bad
+
+Perhaps there could be an exception or option when both statements are
+entirely on the one line, or some such, for code which is trying to be
+compact.
+
 =head2 Disabling
 
-If you don't care about this then you can disable
-C<RequireIfIfNewline> from your F<.perlcriticrc> in the usual
-way (see L<Perl::Critic/CONFIGURATION>),
+As always if you don't care about this then you can disable
+C<ProhibitIfIfSameLine> from your F<.perlcriticrc> (see
+L<Perl::Critic/CONFIGURATION>),
 
-    [-CodeLayout::RequireIfIfNewline]
+    [-CodeLayout::ProhibitIfIfSameLine]
 
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>, L<Perl::Critic>
+
+L<Perl::Critic::Policy::ControlStructures::ProhibitCascadingIfElse>,
+L<Perl::Critic::Policy::ControlStructures::ProhibitUnlessBlocks>
 
 =head1 HOME PAGE
 

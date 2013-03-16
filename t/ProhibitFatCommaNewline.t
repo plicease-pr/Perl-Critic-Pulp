@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2013 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,33 +17,35 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-use lib 'devel/lib';
-
 use strict;
 use warnings;
-use Perl::Critic::Policy::CodeLayout::RequireIfIfNewline;
-use Test::More tests => 23;
+use Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline;
+use Test::More tests => 15;
+
+use lib 't';
+use MyTestHelpers;
+BEGIN { MyTestHelpers::nowarnings() }
 
 #-----------------------------------------------------------------------------
-my $want_version = 77;
-is ($Perl::Critic::Policy::CodeLayout::RequireIfIfNewline::VERSION,
+my $want_version = 78;
+is ($Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline::VERSION,
     $want_version, 'VERSION variable');
-is (Perl::Critic::Policy::CodeLayout::RequireIfIfNewline->VERSION,
+is (Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline->VERSION,
     $want_version, 'VERSION class method');
 {
-  ok (eval { Perl::Critic::Policy::CodeLayout::RequireIfIfNewline->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  ok (eval { Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Perl::Critic::Policy::CodeLayout::RequireIfIfNewline->VERSION($check_version); 1 }, "VERSION class check $check_version");
+  ok (! eval { Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
 
 #-----------------------------------------------------------------------------
 require Perl::Critic;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => 'CodeLayout::RequireIfIfNewline');
+   '-single-policy' => 'CodeLayout::ProhibitFatCommaNewline');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-      'single policy RequireIfIfNewline');
+      'single policy ProhibitFatCommaNewline');
 
   my $policy = $p[0];
   is ($policy->VERSION, $want_version, 'VERSION object method');
@@ -54,33 +56,18 @@ my $critic = Perl::Critic->new
       "VERSION object check $check_version");
 }
 
-foreach my $data (
-                  [ 0, "if (1) { } ; ; ; if (2) { }" ],
-                  [ 1, "
-if (1) {
-} if (2) {
-}
-" ],
-                  [ 1, "unless (1) { } if (2) { }" ],
-                  [ 0, "if (1) { } unless (2) { }" ],
-                  [ 0, "unless (1) { } unless (2) { }" ],
-                  [ 1, "
-if (1) {
-} else {
-} if (2) {
-}" ],
+foreach my $data (## no critic (RequireInterpolationOfMetachars)
 
-                  [ 0, "do { } if (2);" ],
+                  [ 1, "my \@x = (print\n=>123)" ],
+                  [ 1, "my \@x = (-print\n=>123)" ],
+                  [ 1, "my \@x = (print # comment\n # comment \n=>123)" ],
 
-                  [ 0, "while (0) {} if (2) {}" ],
-                  [ 0, "until (1) {} if (2) {}" ],
-                  [ 0, "for (1) {} if (2) {}" ],
-                  [ 0, "foreach (1) {} if (2) {}" ],
+                  [ 1, "my \@x = (foo\n=>123)" ],
+                  [ 1, "my \@x = (-foo\n=>123)" ],
+                  [ 1, "use 5.007; my \@x = (foo\n=>123)" ],
+                  [ 0, "use 5.008; my \@x = (foo\n=>123)" ],
 
-                  [ 0, "if (1) {} while (0) {}" ],
-                  [ 0, "if (1) {} until (1) {}" ],
-                  [ 0, "if (1) {} for (1) {}" ],
-                  [ 0, "if (1) {} foreach (1) {}" ],
+                  ## use critic
                  ) {
   my ($want_count, $str) = @$data;
 

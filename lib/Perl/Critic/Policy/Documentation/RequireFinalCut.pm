@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -153,23 +153,23 @@ file.
 
     =cut             # ok
 
-The idea is to have a definite end of file indication for human readers.
-Perl and the POD processors don't require a final C<=cut>.  On that basis
-this policy is lowest priority and under the "cosmetic" theme (see
-L<Perl::Critic/POLICY THEMES>).
+The idea is to have a definite end indication for human readers.  Perl and
+the POD processors don't require a final C<=cut>.  On that basis this policy
+is lowest priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY
+THEMES>).
 
 If there's no POD in the file then a C<=cut> is not required.  Or if the POD
-is not at the end of file then another C<=cut> at the end is not required.
+is not at the end of file then final C<=cut> at the end is not required.
 
     =head2 About foo
 
     =cut
 
-    sub foo {    # ok, file ends with code not POD
-    }
+    sub foo {
+    }              # ok, file ends with code not POD
 
-If POD is at end of file but consists only of C<=begin/=end> blocks then a
-C<=cut> is not required, it being reckoned the C<=end> is enough in this
+If there's POD at end of file but consists only of C<=begin/=end> blocks
+then a C<=cut> is not required.  It's reckoned the C<=end> is enough in this
 case.
 
     =begin wikidoc
@@ -179,8 +179,8 @@ case.
     =end wikidoc          # ok, =cut not required
 
 If you've got a mixture of POD and C<=begin> blocks then a C<=cut> is still
-required, but not if the only thing is an C<=begin> presumably destined for
-some other markup system.
+required.  The special allowance is when the only thing is an C<=begin>
+block, presumably destined for some other markup system.
 
 =head2 Disabling
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2010, 2011 Kevin Ryde
+# Copyright 2008, 2010, 2011, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,6 +21,10 @@
 use strict;
 use warnings;
 use Test::More tests => 32;
+
+use lib 't';
+use MyTestHelpers;
+BEGIN { MyTestHelpers::nowarnings() }
 
 require Perl::Critic::Policy::TestingAndDebugging::inprogressProhibitTestPrint;
 

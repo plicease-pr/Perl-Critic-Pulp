@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -305,8 +305,8 @@ on that basis this policy is low priority and under the "cosmetic" theme
 (see L<Perl::Critic/POLICY THEMES>).
 
 The advantage of a semicolon is that if your add more code you don't have to
-notice the previous line needs a terminator.  It's also more C-like, if you
-consider C-like to be a virtue.
+notice the previous line needs a terminator.  It's also more like the C
+language, if you consider that a virtue.
 
 =head2 Exceptions
 
@@ -314,9 +314,9 @@ By default (see L</CONFIGURATION> below) a semicolon is not required when
 the closing brace is on the same line as the last statement.  This is good
 for constants and one-liners.
 
-    sub foo { 'my-constant-value' }   # ok
+    sub foo { 'my-constant-value' }     # ok
 
-    sub bar { return $x ** 2 }        # ok
+    sub square { return $_[0] ** 2 }    # ok
 
 Nor is a semicolon required in places where the last statement is an
 expression giving a value, which currently means a C<do>, C<grep> or C<map>
@@ -388,10 +388,13 @@ constructor if there might be a function prototype in force, eg.
 
     foo { abc => 123 };
 
-C<PPI> tends to assume it's code, C<RequireFinalSemicolon> instead assumes
-hashref so as to avoid false violations.  Perhaps particular functions with
-prototypes could be recognised, but in general this sort of thing is another
-good reason to avoid prototypes.
+This is normally a hashref, but if C<foo> has a function prototype then it's
+a code block.
+
+C<PPI> tends to assume code.  C<RequireFinalSemicolon> instead assumes
+hashref so as to avoid false violations.  Perhaps particular functions
+taking code blocks could be recognised, but in general this sort of thing is
+another good reason to avoid function prototypes.
 
 =head1 SEE ALSO
 

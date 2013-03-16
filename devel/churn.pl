@@ -43,11 +43,14 @@ my $option_t_files = 0;
 GetOptions
   (require_order => 1,
    t => \$option_t_files,
+   paracomma => sub {
+     push @option_policies, 'Documentation::ProhibitParagraphEndComma$';
+   },
    duphead => sub {
      push @option_policies, 'Documentation::ProhibitDuplicateHeadings';
    },
    ifif => sub {
-     push @option_policies, 'CodeLayout::RequireIfIfNewline';
+     push @option_policies, 'CodeLayout::ProhibitIfIfSameLine';
    },
    duphashkeys => sub {
      push @option_policies, 'ValuesAndExpressions::ProhibitDuplicateHashKeys';
@@ -102,9 +105,6 @@ GetOptions
    },
    semicolon => sub {
      push @option_policies, 'CodeLayout::RequireFinalSemicolon';
-   },
-   cend => sub {
-     push @option_policies, 'Documentation::ProhibitCommaEnd$';
    },
    verb => sub {
      push @option_policies, 'Documentation::ProhibitVerbatimMarkup$';

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -29,19 +29,19 @@ BEGIN { MyTestHelpers::nowarnings() }
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-require Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso;
+require Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma;
 
 
 #------------------------------------------------------------------------------
 my $want_version = 78;
-is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso::VERSION,
+is ($Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma::VERSION,
     $want_version, 'VERSION variable');
-is (Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION,
+is (Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma->VERSION,
     $want_version, 'VERSION class method');
 {
-  ok (eval { Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION($want_version); 1 }, "VERSION class check $want_version");
+  ok (eval { Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma->VERSION($want_version); 1 }, "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION($check_version); 1 }, "VERSION class check $check_version");
+  ok (! eval { Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma->VERSION($check_version); 1 }, "VERSION class check $check_version");
 }
 
 #------------------------------------------------------------------------------
@@ -49,10 +49,10 @@ require Perl::Critic;
 diag "Perl::Critic version ",Perl::Critic->VERSION;
 my $critic = Perl::Critic->new
   ('-profile' => '',
-   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso$');
+   '-single-policy' => '^Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma$');
 { my @p = $critic->policies;
   is (scalar @p, 1,
-      'single policy ProhibitDuplicateSeeAlso');
+      'single policy ProhibitParagraphEndComma');
 
   my $policy = $p[0];
   ok (eval { $policy->VERSION($want_version); 1 },
@@ -64,48 +64,84 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+#------------------------
    [ 0, "
-=head1 SEE ALSO
+=pod
 
-L<Foo>, L<Bar>
+Paragraph.
 " ],
 
+#------------------------
    [ 1, "
-=head1 SEE ALSO
+=pod
 
-L<Foo::Bar>, L<Foo::Bar>
+Paragraph,
 " ],
 
+#------------------------
    [ 0, "
-=head1 SEE ALSO
+=pod
 
-L<Foo::Bar>, L<Foo::Bar/Advanced>
+Paragraph,
+
+    verbatim
 " ],
 
+#------------------------
    [ 0, "
-=head1 DESCRIPTION
+=pod
 
-Blah L<Foo::Bar>
+Paragraph,
 
-=head1 SEE ALSO
+=over
 
-L<Foo::Bar>
+=back
 " ],
 
+#------------------------
+   [ 1, "
+=pod
+
+Across cut still bad,
+
+=cut
+
+=pod
+
+Blah.
+" ],
+
+#------------------------
+   [ 1, "
+=pod
+
+Begin of something else is no good,
+
+=begin HTML
+
+   <p>indent
+
+=end
+
+Blah.
+" ],
+
+#------------------------
    [ 0, "
-=head1 SEE ALSO
+=pod
 
-L<perlfunc/alarm>,
-L<perlfunc/kill> 
+Begin with colon is still verbatim,
+
+=begin :more
+
+   indent
+
+=end
+
+Blah.
 " ],
 
-   [ 0, "
-=head1 SEE ALSO
-
-L<Foo::One>, L<Foo::Two>
-(C<Foo::Two> runs faster)
-" ],
-
+#------------------------
   ) {
 
   my ($want_count, $str) = @$data;

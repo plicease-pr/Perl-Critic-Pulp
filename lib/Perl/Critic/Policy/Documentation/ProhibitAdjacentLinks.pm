@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -176,9 +176,9 @@ paragraph.  For example,
 The idea is adjacent LE<lt>E<gt> like this is probably a missing comma or
 missing text.  It's easy to do in a "SEE ALSO" list.
 
-Of course this is only a very minor typo or readability and on that basis
-this policy is under the "cosmetic" theme (see L<Perl::Critic/POLICY
-THEMES>) and lowest severity.
+This is normally only a very minor typo and on that basis this policy is
+under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>) and lowest
+severity.
 
 =head2 Exceptions
 
@@ -189,11 +189,11 @@ display text,
 
     See L<My::Package> L<new()|My::Package/Contructors> for more.
 
-This hyperlinks both the package name and a function etc within it.
-Precisely when to allow or disallow this sort of thing might want to be
-loosened or tightened in the future.  Adjacent linking is fairly unusual
-though, and too much linking is often not a good thing if the meaning is to
-be clear in plain text too.
+This hyperlinks both the package name and a function etc within it.  Perhaps
+exactly when to allow or disallow this might be loosened or tightened in the
+future.  Adjacent linking is fairly unusual though, and too much linking is
+often not a good thing since the meaning ought to be made clear in plain
+text too.
 
 =head2 Disabling
 
@@ -206,8 +206,8 @@ C<ProhibitAdjacentLinks> from your F<.perlcriticrc> in the usual way
 =head1 BUGS
 
 The column position of the offending adjacency is not worked into the
-violation report yet.  It may need a careful look at the line to see the
-problem, and at the following line when to adjacent links are across a
+violation report.  You may need to look carefully at the line to see the
+problem and at the following line when to adjacent links are across a
 newline.
 
 =head1 SEE ALSO

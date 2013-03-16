@@ -38,7 +38,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 use constant supported_parameters =>
   ({ name           => 'uniqueness',
@@ -263,25 +263,24 @@ commands.
 
     =head1 SOMETHING      # bad, duplicate
 
-Duplication is usually a mistake, perhaps a leftover from a template or too
-much cut-and-paste, or perhaps text in two places which ought to be
+Duplication is usually a mistake, perhaps too much cut-and-paste, or a
+leftover from a template, or perhaps text in two places which ought to be
 together.  On that basis this policy is under the "bugs" theme (see
 L<Perl::Critic/POLICY THEMES>) and medium severity.
 
 =head2 Default Uniqueness
 
-The policy default is to demand that a given heading is unique to its tree
-tree siblings and ancestors, and to the immediately preceding adjacent
-heading irrespective of level.  This is designed to be how human readers
-perceive a scope of headings and subheadings, plus adjacency in case a
-mixture of heading level let a duplicate otherwise go undetected.  For
-example
+The policy default is to demand that a given heading is unique to its
+siblings and ancestors and to the immediately adjacent heading irrespective
+of level.  This is designed to be how human readers perceive the scope of
+headings and subheadings, plus adjacency in case a mixture of heading levels
+would let a duplicate otherwise go undetected.  For example
 
     =head1 Top
 
     =head2 Subhead
 
-    =head3 Top              # bad, duplicates its head1 ancestor
+    =head3 Top              # bad, duplicates its ancestor head1
 
 Or siblings
 
@@ -291,7 +290,7 @@ Or siblings
 
     =head2 Another
 
-    =head2 Down             # bad, duplicates head2 sibling
+    =head2 Down             # bad, duplicates sibling head2
 
 Or adjacent
 
@@ -299,8 +298,8 @@ Or adjacent
 
     =head1 Blah             # bad, duplicates adjacent
 
-A subheading can be repeated as long as its under a different higher
-heading.  The two subheadings are "cousins" rather siblings.  For example
+A subheading can be repeated if it's under a different higher heading.  For
+example the following two "Details" are cousins, so allowed.
 
     =head1 One
 
@@ -316,18 +315,19 @@ Option C<uniqueness=all> (see L</CONFIGURATION> below) applies a stricter
 rule so that all C<=head> names must be unique throughout the document,
 irrespective of levels and structure.
 
-    =head1 Foo
+    =head3 Foo
 
     =head1 Bar
 
     =head3 Foo             # bad
 
 One use for this is to ensure all headings can be reached by an
-C<LE<lt>E<gt>> link.  C<LE<lt>E<gt>> has only the heading name as a target,
-no level or path, so if there's any duplication among the names then only
-the first of each duplicate will be reachable.
+C<LE<lt>E<gt>> link.  An C<LE<lt>E<gt>> only has the heading name, no level
+or path, so if there's any duplication among the names then only the first
+of each duplicate will be reachable.  (The POD browsers usually go to the
+first among duplicates.)
 
-But often this rule is too strict.  It's good to have similar subheadings
+This rule is often too strict.  It can be good to have similar subheadings
 like "Details" as shown above, with no need to make such sub-parts reachable
 by a link.
 
@@ -349,13 +349,14 @@ The uniqueness to be enforced on each heading.  The value is a
 comma-separated list of
 
     default     currently "ancestor,sibling,adjacent"
-    ancestor    parent, grandparent, etc
+    ancestor    don't duplicate parent, grandparent, etc
     sibling     same level and parent
     adjacent    immediately preceding, irrespective of level
     all         all headings
 
-The default is "default" and the intention is to have it a sensible set of
-restrictions, though precisely what it might be could change.
+The default is "default" and the intention is to have default mean a
+sensible set of restrictions, though precisely what it might be could
+change.
 
 For example in your F<.perlcriticrc> file
 

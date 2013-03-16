@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,6 +20,7 @@
 
 # Usage: perl grep-duplicate-END.pl
 #
+# Search for duplicated __END__ tokens.
 
 
 use 5.010;
@@ -36,12 +37,6 @@ use MyStuff;
 my $verbose = 0;
 my $l = MyLocatePerl->new;
 my $count;
-
-{
-  my $filename = 'devel/grep-duplicate-END.pl';
-  my $content = eval { Perl6::Slurp::slurp ($filename) } || next;
-  file ($filename, $content);
-}
 {
   while (my ($filename, $content) = $l->next) {
     file ($filename, $content);

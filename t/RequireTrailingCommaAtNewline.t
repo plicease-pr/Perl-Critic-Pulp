@@ -24,9 +24,13 @@ use warnings;
 use Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline;
 use Test::More tests => 42;
 
+use lib 't';
+use MyTestHelpers;
+BEGIN { MyTestHelpers::nowarnings() }
+
 
 #-----------------------------------------------------------------------------
-my $want_version = 77;
+my $want_version = 78;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,

@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -97,7 +97,7 @@ Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup - don't use CE<lt>
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 add-on.  It asks you not to write CE<lt>E<gt> markup in the NAME section of
-the POD because it comes out badly in man's "apropos" database.  For
+the POD because it comes out badly in the man-db "apropos" database.  For
 example,
 
 =for ProhibitVerbatimMarkup allow next 2

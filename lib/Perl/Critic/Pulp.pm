@@ -21,12 +21,12 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 1;
 __END__
 
-=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical parens de gustibus disputandum backslashing initializers globals
+=for stopwords perlcritic builtin multi-constants Gtk2 Gtk2Constants perlcritic's Ryde barewords un-typical parens de gustibus disputandum backslashing initializers globals add-ons
 
 =head1 NAME
 
@@ -43,6 +43,14 @@ L<Perl::Critic/POLICY THEMES>).
 =head2 Bugs
 
 =over
+
+=item L<CodeLayout::ProhibitFatCommaNewline|Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline>
+
+Avoid newline before C<=E<gt>> not quoting.
+
+=item L<CodeLayout::ProhibitIfIfSameLine|Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine>
+
+Avoid C<} if () {> perhaps meant to be C<elsif>.
 
 =item L<Miscellanea::TextDomainPlaceholders|Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 

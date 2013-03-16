@@ -23,7 +23,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version ();
 
-our $VERSION = 77;
+our $VERSION = 78;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -88,14 +88,14 @@ argument to a C<use> or C<no> statement.
     no Abc::Def 2.000_010;    # ok
 
 The unquoted form uses Perl's builtin module version check (Perl 5.004 up)
-and is always enforced.  The quoted form is passed to the module's C<import>
-and relies on it to do the check.  If there's no C<import> then the quoted
-form is silently ignored.
+and is always enforced.  The quoted form is passed to the module's
+C<import()> and relies on it to do the check.  If there's no C<import()>
+then the quoted form is silently ignored.
 
-L<C<Exporter>|Exporter> as used by many modules provides an C<import> which
-checks a version number arg, so those modules are fine.  But the idea of
-this policy is to do what works always and on that basis is under the "bugs"
-theme (see L<Perl::Critic/POLICY THEMES>).
+L<C<Exporter>|Exporter> as used by many modules provides an C<import()>
+which checks a version number arg, so those modules are fine.  But the idea
+of this policy is to do what works always and on that basis is under the
+"bugs" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The builtin module version check is new in Perl 5.004.  For earlier versions
 both forms behave the same, with the string or number going through to the
@@ -111,9 +111,10 @@ taken to be a module parameters.
 
 If you're a bit nervous about unquoting because floating point version
 numbers are often not exactly representable in binary, well, yes, that's
-true, but in practice it works out ok, either by converting the same way
-everywhere in the program or by treated as a string in the "version" module
-anyway.
+true, but in practice it works, either by converting the same way everywhere
+in the program or by treated as a string to the C<version.pm> module anyway.
+
+=head2 Disabling
 
 If you're confident about the C<import()> in modules you use and prefer the
 string form you can always disable C<ProhibitUseQuotedVersion> from your
@@ -124,6 +125,8 @@ F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>, L<Perl::Critic>
+
+L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitVersionStrings>
 
 =head1 HOME PAGE
 

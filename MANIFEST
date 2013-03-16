@@ -54,6 +54,7 @@ devel/grep-pod-final-cut.pl
 devel/grep-pod-gt.pl
 devel/grep-pod-head-down2.pl
 devel/grep-pod-head-duplicate.pl
+devel/grep-pod-item-bullet.pl
 devel/grep-pod-leadingwhite.pl
 devel/grep-pod-linked-urls.pl
 devel/grep-pod-links-adjacent.pl
@@ -85,12 +86,9 @@ devel/h2xs/TestConstFoo.h
 devel/junk/test-more-like.pl
 devel/junk/TestMoreLikeModifiers.pm
 devel/junk/TestMoreLikeModifiers.t
-devel/lib/Perl/Critic/Policy/CodeLayout/ProhibitFatCommaNewline.pm
-devel/lib/Perl/Critic/Policy/CodeLayout/ProhibitFatCommaNewline.t
-devel/lib/Perl/Critic/Policy/CodeLayout/RequireIfIfNewline.pm
-devel/lib/Perl/Critic/Policy/CodeLayout/RequireIfIfNewline.t
 devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
-devel/lib/Perl/Critic/Policy/Documentation/ProhibitFinalLinkComma.pm
+devel/lib/Perl/Critic/Policy/Documentation/ProhibitParagraphEndComma.pm
+devel/lib/Perl/Critic/Policy/Documentation/ProhibitParagraphEndComma.t
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
@@ -121,6 +119,8 @@ devel/use-quoted.pl
 devel/version.pl
 devel/version_check.pl
 devel/version_check.pm
+lib/Perl/Critic/Policy/CodeLayout/ProhibitFatCommaNewline.pm
+lib/Perl/Critic/Policy/CodeLayout/ProhibitIfIfSameLine.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireFinalSemicolon.pm
 lib/Perl/Critic/Policy/CodeLayout/RequireTrailingCommaAtNewline.pm
 lib/Perl/Critic/Policy/Compatibility/ConstantLeadingUnderscore.pm
@@ -181,7 +181,9 @@ t/ProhibitDuplicateHashKeys.t
 t/ProhibitDuplicateHeadings.t
 t/ProhibitDuplicateSeeAlso.t
 t/ProhibitEmptyCommas.t
+t/ProhibitFatCommaNewline.t
 t/ProhibitFiletest_f.t
+t/ProhibitIfIfSameLine.t
 t/ProhibitLinkToSelf.t
 t/ProhibitModuleShebang.t
 t/ProhibitModuleShebang/False.pm
