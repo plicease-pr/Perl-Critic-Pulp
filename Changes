@@ -17,6 +17,10 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 79, March 2013
+    - fix ProhibitFatCommaNewline load version.pm for perl 5.8, as
+      reported by paul RT#83990
+
 Version 78, March 2013
     - new policies CodeLayout::ProhibitIfIfSameLine,
                    CodeLayout::ProhibitFatCommaNewline

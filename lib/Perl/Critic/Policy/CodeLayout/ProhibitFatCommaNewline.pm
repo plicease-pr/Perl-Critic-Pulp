@@ -37,7 +37,7 @@ use Perl::Critic::Utils;
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
 
-our $VERSION = 78;
+our $VERSION = 79;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -48,6 +48,7 @@ use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp bugs);
 use constant applies_to       => ('PPI::Token::Operator');
 
+use version;
 my $v5008 = version->new('5.008');
 
 sub violates {
