@@ -17,6 +17,12 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 80, July 2013
+    - new policy Documentation::ProhibitParagraphEndComma
+    - tests UnexpandedSpecialLiteral.t don't exercise __PACKAGE__ =>
+      across newline since that might be going to change in Perl 5.20,
+      as reported by Reini Urban RT#87307
+
 Version 79, March 2013
     - fix ProhibitFatCommaNewline load version.pm for perl 5.8, as
       reported by paul RT#83990

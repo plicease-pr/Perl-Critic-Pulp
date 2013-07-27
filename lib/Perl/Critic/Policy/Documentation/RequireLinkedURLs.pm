@@ -19,7 +19,7 @@ package Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 use 5.006;
 use strict;
 use warnings;
-use version ();
+use version (); # but don't import qv()
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;

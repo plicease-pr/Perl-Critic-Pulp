@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -179,8 +179,8 @@ case.
     =end wikidoc          # ok, =cut not required
 
 If you've got a mixture of POD and C<=begin> blocks then a C<=cut> is still
-required.  The special allowance is when the only thing is an C<=begin>
-block, presumably destined for some other markup system.
+required.  The special allowance is when the only text an C<=begin> block,
+presumably destined for some other markup system.
 
 =head2 Disabling
 

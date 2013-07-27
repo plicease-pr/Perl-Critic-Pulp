@@ -32,7 +32,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -164,6 +164,8 @@ that.
 
 L<Perl::Critic::Pulp>,
 L<Perl::Critic>
+
+L<Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma>
 
 =head1 HOME PAGE
 

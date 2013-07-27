@@ -17,7 +17,7 @@ package Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 use 5.006;
 use strict;
 use warnings;
-use version ();
+use version (); # but don't import qv()
 
 # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
 use PPI 1.208;
@@ -28,7 +28,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',

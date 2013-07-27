@@ -19,7 +19,7 @@ use 5.006;
 use strict;
 use warnings;
 use List::Util;
-use version;
+use version (); # but don't import qv()
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_function_call);
 use Perl::Critic::Pulp::Utils;

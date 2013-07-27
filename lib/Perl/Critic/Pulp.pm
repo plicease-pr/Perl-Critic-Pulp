@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 1;
 __END__
@@ -200,6 +200,10 @@ Avoid C<< CE<lt>E<gt> >> in NAME section, bad for man's "apropos" output.
 
 Don't C<< LE<lt>E<gt> >> link to the document itself.
 
+=item L<Documentation::ProhibitParagraphEndComma|Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma>
+
+Don't end paragraph with "," comma.
+
 =item L<Documentation::ProhibitParagraphTwoDots|Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots>
 
 Don't end paragraph with ".." (stray extra dot).
@@ -231,16 +235,16 @@ meant to pass everything.  Some policies may even be mutually contradictory.
 The restrictive policies are meant as building blocks for a limited house
 style.  For example C<ProhibitBarewordDoubleColon> here, or something like
 C<ProhibitUnlessBlocks>.  They're usually a matter of personal preference,
-and non de gustibus disputandum as they say in the classics.  Trying to
+and "non de gustibus disputandum" as they say in the classics.  Trying to
 follow all of them would give away big parts of the language and quite
-likely end up with very un-typical code.
+likely result in very un-typical code.
 
 Some of the restrictive policies are geared towards beginners.
 C<ProhibitUnknownBackslash> here or C<RequireInitializationForLocalVars> are
 along those lines.  There might for instance be good backslashing which the
-prohibition doesn't recognise, or for example local variable initializers
-make no sense for output variables like C<$!>.  Once you get to the level of
-knowing to use C<local> to preserve such globals at least.
+prohibition doesn't recognise, or local variable initializers make no sense
+for output variables like C<$!>, once you get to the level of knowing to use
+C<local> to preserve such globals.
 
 In general the POD of each policy is supposed to explain the motivation so
 you can see whether you want it or not.  If you're not turning off or

@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 40;
+use Test::More tests => 38;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 79;
+my $want_version = 80;
 is ($Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSION, $want_version, 'VERSION class method');
 {
@@ -53,16 +53,21 @@ is (Perl::Critic::Policy::ValuesAndExpressions::UnexpandedSpecialLiteral->VERSIO
   is_deeply (\@h, [ 'Foo__FILE__', 123 ],
              'hash constructor literal on right of a . expression');
 }
-{ my @array = (__PACKAGE__
-               => 123);
-  is_deeply (\@array, [ 'main', 123 ],
-             "fat comma doesn't quote across newline");
-}
-{ my @array = (__PACKAGE__  # and with a comment
-               => 123);
-  is_deeply (\@array, [ 'main', 123 ],
-             "fat comma doesn't quote across comment and newline");
-}
+
+# Perl 5.20 is probably going to quote all builtins across newline, except
+# for __DATA__ and __END__.  That would mean __PACKAGE__ doesn't expand, and
+# ought to be reported as a violation.
+#
+# { my @array = (__PACKAGE__
+#                => 123);
+#   is_deeply (\@array, [ 'main', 123 ],
+#              "fat comma doesn't quote across newline");
+# }
+# { my @array = (__PACKAGE__  # and with a comment
+#                => 123);
+#   is_deeply (\@array, [ 'main', 123 ],
+#              "fat comma doesn't quote across comment and newline");
+# }
 
 
 #------------------------------------------------------------------------------

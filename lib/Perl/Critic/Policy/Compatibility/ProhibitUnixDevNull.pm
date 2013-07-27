@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -85,9 +85,16 @@ Perl::Critic::Policy::Compatibility::ProhibitUnixDevNull - don't use explicit /d
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-add-on.  It ask you to not to use filename F</dev/null> explicitly, but
-instead C<File::Spec-E<gt>devnull()> for maximum portability across
-operating systems.
+add-on.  It ask you to not to use filename
+
+=over
+
+F</dev/null>
+
+=back
+
+explicitly, but instead C<File::Spec-E<gt>devnull()> for maximum portability
+across operating systems.
 
 This policy is under the C<maintenance> theme (see
 L<Perl::Critic/POLICY THEMES>) on the basis that even if you're on a Unix
@@ -97,7 +104,7 @@ C<devnull()> is new in C<File::Spec> version 0.8, so you should require that
 version (it's included in Perl 5.6.0 and up).
 
 The checks for F</dev/null> are unsophisticated.  A violation is reported
-for any string C</dev/null>, possibly with an C<open> style mode part, or
+for any string C</dev/null>, possibly with an C<open> style mode part, and
 any C<qw> containing C</dev/null>.
 
     open my $fh, '< /dev/null';                    # bad
@@ -118,13 +125,13 @@ backticks and C<system>.
     $hi = `echo hi </dev/null`;                    # ok
 
 Whether F</dev/null> is a good idea in such command strings depends what
-sort of shell you reach and how much of Unix it might emulate on a non-Unix
-system.
+sort of shell you reach with that command and how much of Unix it might
+emulate on a non-Unix system.
 
 =head2 Disabling
 
-If you only ever use a system with F</dev/null>, or if everything else you
-write is hopelessly wedded to Unix anyway, then you can disable
+If you only ever use a system with F</dev/null> or if everything else you
+write is hopelessly wedded to Unix anyway then you can disable
 C<ProhibitUnixDevNull> from your F<.perlcriticrc> in the usual way (see
 L<Perl::Critic/CONFIGURATION>),
 

@@ -19,7 +19,7 @@ use 5.006;
 use strict;
 use warnings;
 use Scalar::Util;
-use version ();
+use version (); # but don't import qv()
 
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils 'precedence_of';
@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 sub violates {
   my ($self, $elem, $document) = @_;

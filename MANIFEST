@@ -87,8 +87,6 @@ devel/junk/test-more-like.pl
 devel/junk/TestMoreLikeModifiers.pm
 devel/junk/TestMoreLikeModifiers.t
 devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
-devel/lib/Perl/Critic/Policy/Documentation/ProhibitParagraphEndComma.pm
-devel/lib/Perl/Critic/Policy/Documentation/ProhibitParagraphEndComma.t
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
@@ -134,6 +132,7 @@ lib/Perl/Critic/Policy/Documentation/ProhibitBadAproposMarkup.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitDuplicateHeadings.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitDuplicateSeeAlso.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitLinkToSelf.pm
+lib/Perl/Critic/Policy/Documentation/ProhibitParagraphEndComma.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitUnbalancedParens.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
@@ -193,6 +192,7 @@ t/ProhibitModuleShebang/SomeCode.pm
 t/ProhibitModuleShebang/SomeCodeNewline.pm
 t/ProhibitModuleShebang/UsrBin.pm
 t/ProhibitNullStatements.t
+t/ProhibitParagraphEndComma.t
 t/ProhibitParagraphTwoDots.t
 t/ProhibitPOSIXimport.t
 t/ProhibitUnbalancedParens.t

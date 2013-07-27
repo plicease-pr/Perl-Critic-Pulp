@@ -16,9 +16,15 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# maybe allow comma for
+# =head1 Foo
+# And something,
+# =head2 Item
+
 # perlcritic -s ProhibitParagraphEndComma ProhibitParagraphEndComma.pm
 # perlcritic -s ProhibitParagraphEndComma /usr/share/perl5/IO/Socket/INET6.pm
 # perlcritic -s ProhibitParagraphEndComma /usr/share/perl5/MIME/Body.pm /usr/share/perl5/XML/Twig.pm
+
 
 package Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma;
 use 5.006;
@@ -30,7 +36,8 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
+
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -64,8 +71,10 @@ sub command {
   my ($self, $command, $text, $linenum, $paraobj) = @_;
   ### command(): $command
 
-  # "=begin :foo" means pod markup continues, ignore it.
-  # Any other begin is a new block something and preceding comma not allowed.
+  # "=begin :foo" means pod markup continues.  Ignore the =begin and
+  # continue processing POD within it.  Any other begin is a new block
+  # something and preceding comma not allowed.
+  #
   if ($command eq 'for'
       || $command eq 'pod'
       || ($command eq 'begin' && $text =~ /^\s*:/)
@@ -117,7 +126,6 @@ sub check_last {
   $self->{'last_text'} = '';
 }
 
-## no critic (ProhibitVerbatimMarkup)
 1;
 __END__
 
@@ -139,13 +147,15 @@ add-on.  It asks you not to end a POD paragraph with a comma.
 Usually such a comma is meant to be a full-stop, or perhaps omitted at the
 end of a "SEE ALSO" list
 
+=for ProhibitVerbatimMarkup allow next 2
+
     =head1 SEE ALSO
 
     L<Foo>,
     L<Bar>,          # bad, meant to be omitted?
 
 A paragraph before an C<=over> or a verbatim block can end with a comma,
-that being taken as introducing some quotation or example,
+that being taken as introducing a quotation or example,
 
     For example,     # ok, introduce an example
 
@@ -168,6 +178,8 @@ L<Perl::Critic/CONFIGURATION>),
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>, L<Perl::Critic>
+
+L<Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots>
 
 =head1 HOME PAGE
 

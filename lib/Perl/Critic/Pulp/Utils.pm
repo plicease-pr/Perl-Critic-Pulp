@@ -20,9 +20,9 @@ package Perl::Critic::Pulp::Utils;
 use 5.006;
 use strict;
 use warnings;
-use version ();
+use version (); # but don't import qv()
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version

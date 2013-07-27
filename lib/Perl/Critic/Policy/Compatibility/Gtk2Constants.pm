@@ -19,7 +19,7 @@ use 5.006;
 use strict;
 use warnings;
 use List::Util;
-use version ();
+use version (); # but don't import qv()
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_function_call
                            is_method_call);
@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;

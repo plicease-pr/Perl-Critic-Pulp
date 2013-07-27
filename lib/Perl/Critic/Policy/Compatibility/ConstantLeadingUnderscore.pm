@@ -22,12 +22,12 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
-use version ();
+use version (); # but don't import qv()
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;

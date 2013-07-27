@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 79;
+my $want_version = 80;
 is ($Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma->VERSION,

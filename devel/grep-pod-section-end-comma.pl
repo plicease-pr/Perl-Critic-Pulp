@@ -38,7 +38,8 @@ use MyStuff;
 
 my $verbose = 0;
 
-my $l = MyLocatePerl->new (include_pod => 1);
+my $l = MyLocatePerl->new (include_pod => 1,
+                           under_directory => '/usr/share/perl5');
 my $filename;
 # {
 #   $filename = "$FindBin::Bin/$FindBin::Script";

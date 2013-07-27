@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',

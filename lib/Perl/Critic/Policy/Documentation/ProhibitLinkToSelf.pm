@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -174,14 +174,14 @@ document itself.
 
 The idea is that it doesn't make sense to link to a document from within
 itself.  If rendered as a clickable link then it may suggest there's
-somewhere else to go to read about the module, when in fact you're already
+somewhere else to go to read about the module when in fact you're already
 looking at it.
 
 This is only a minor thing though, so this policy is under the C<cosmetic>
 theme (see L<Perl::Critic/POLICY THEMES>) and low priority.
 
-In ordinary text the is plain C<< CE<lt>E<gt> >> or similar for one's own
-module name,
+In ordinary text the suggestion is plain C<< CE<lt>E<gt> >> or similar for
+one's own module name,
 
 =for ProhibitVerbatimMarkup allow next
 
@@ -203,8 +203,8 @@ better looking output from the formatters too,
 
 For this policy the name of the POD is picked out of the "=head1 NAME"
 section, so doesn't depend on the filename or directory where C<perlcritic>
-is run.  In the current code multiple names can be given in man-page style,
-but not certain yet if that's a good idea.
+is run.  In the current code multiple names can be given in man-page style.
+Not sure if that's a good idea.
 
     =head1 NAME
 
@@ -214,9 +214,9 @@ but not certain yet if that's a good idea.
 
     =head1 DESCRIPTION
 
-Of course it's always possible an C<< LE<lt>E<gt> >> like is right and it's
-the "NAME" part which is wrong.  A violation on the C<< LE<lt>E<gt> >> will
-at least show there's something fishy in the one or the other.
+Of course it's always possible an C<< LE<lt>E<gt> >> is right and it's the
+"NAME" part which is wrong.  A violation on the C<< LE<lt>E<gt> >> will at
+least show there's something fishy in the one or the other.
 
 =head2 Disabling
 
@@ -226,10 +226,10 @@ L<Perl::Critic/CONFIGURATION>),
 
     [-Documentation::ProhibitLinkToSelf]
 
-Some people may like to more or less always put C<< LE<lt>E<gt> >> on module
-names, including in the module's own POD.  For that you may want to disable
-this policy.  Perhaps an option could allow link to self in ordinary link
-but still rate "SEE ALSO" as a typo or unnecessary.
+If you like to almose always put C<< LE<lt>E<gt> >> on module names,
+including in the module's own POD, then disable this policy.  Maybe an
+option in the future could allow links to self in ordinary text but prohibit
+in "SEE ALSO".
 
 =head1 SEE ALSO
 

@@ -31,13 +31,14 @@ package Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline;
 use 5.006;
 use strict;
 use warnings;
+use version (); # but don't import qv()
 use Perl::Critic::Utils;
 
 # 1.084 for Perl::Critic::Document highest_explicit_perl_version()
 use Perl::Critic::Policy 1.084;
 use base 'Perl::Critic::Policy';
 
-our $VERSION = 79;
+our $VERSION = 80;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -48,7 +49,6 @@ use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp bugs);
 use constant applies_to       => ('PPI::Token::Operator');
 
-use version;
 my $v5008 = version->new('5.008');
 
 sub violates {
@@ -128,21 +128,22 @@ This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
 add-on.  It reports a newline between a fat comma and preceding bareword for
 Perl builtins,
 
-    my %h = (caller         # bad
+    my %h = (caller         # bad, builtin called as a function
              => 'abc');
 
-And all words when targeting Perl 5.6 and earlier,
+And for all words when targeting Perl 5.6 and earlier,
 
     use 5.006;
     my %h = (foo            # bad, all words in perl 5.6 and earlier
              => 'def');
 
 When there's a newline between the word and the fat comma like this the word
-executes as a function call (builtins always, user defined in 5.6 and
-earlier), giving its return value rather than a word string.  Such a return
-value is probably not what was intended and on that basis this policy is
-under the "bugs" theme and medium severity (see L<Perl::Critic/POLICY
-THEMES>).
+executes as a function call (builtins always, and also user defined in Perl
+5.6 and earlier), giving its return value rather than a word string.
+
+Such a return value is probably not what was intended and on that basis this
+policy is under the "bugs" theme and medium severity (see
+L<Perl::Critic/POLICY THEMES>).
 
 =head2 Builtins
 
@@ -159,7 +160,7 @@ from some, but others like C<print> will quietly run.
 Dashed builtin names such as C<-print> are also function calls, with a
 negate operator.
 
-    my %h = (-print       # bad, "print" execute and negate result
+    my %h = (-print       # bad, print() call and negate
              => "123");
     # h is key "-1" value "123"
 
@@ -193,10 +194,8 @@ undetected (in 5.6 and earlier still) is an accidental redefinition of a
 constant,
 
     use constant FOO => "blah";
-
     use constant FOO
       => "some value";
-
     # makes a constant subr called blah (in Perl 5.6)
 
 C<constant.pm> might reject some return values from C<FOO()>, eg. a number,
@@ -204,9 +203,9 @@ but a string like "blah" here quietly expands and creates a constant
 C<blah()>.
 
 The difference between Perl 5.6 and later Perl is that in 5.6 the parser
-only looked ahead as far as a newline for a possible quoting C<=E<gt>> fat
-comma.  In Perl 5.8 and later the lookahead continues beyond any newlines
-and comments.  For Perl builtins the behaviour is unchanged though, in all
+only looked as far as a newline for a possible quoting C<=E<gt>> fat comma.
+In Perl 5.8 and later for non-builtins the lookahead continues beyond any
+newlines and comments.  For Perl builtins the behaviour is the same, in all
 versions the lookahead stops at the newline.
 
 =head2 Avoiding Problems
@@ -219,7 +218,7 @@ cases.
 
 If for layout purposes you do want a newline then the suggestion is to give
 a string or perhaps a parenthesized expression since that doesn't rely on
-the C<=E<gt>> fat comma quoting.  You can still use fat comma to emphasize a
+the C<=E<gt>> fat comma quoting.  A fat comma can still emphasize a
 key/value pair.
 
     my %h = ('print'      # ok, string
