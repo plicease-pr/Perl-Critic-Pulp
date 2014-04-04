@@ -34,6 +34,7 @@ devel/grep-constant-underscore.pl
 devel/grep-devnull.pl
 devel/grep-dollar-semi.pl
 devel/grep-duplicate-END.pl
+devel/grep-duplicate-use.pl
 devel/grep-each.pl
 devel/grep-eval-line.pl
 devel/grep-exporter.pl
@@ -50,6 +51,7 @@ devel/grep-pod-blankline.pl
 devel/grep-pod-blanknonempty.pl
 devel/grep-pod-command-arg.pl
 devel/grep-pod-duplicate-see-also.pl
+devel/grep-pod-F.pl
 devel/grep-pod-final-cut.pl
 devel/grep-pod-gt.pl
 devel/grep-pod-head-down2.pl
@@ -58,8 +60,10 @@ devel/grep-pod-item-bullet.pl
 devel/grep-pod-leadingwhite.pl
 devel/grep-pod-linked-urls.pl
 devel/grep-pod-links-adjacent.pl
+devel/grep-pod-markup-gt.pl
 devel/grep-pod-no-cut.pl
 devel/grep-pod-para-dots.pl
+devel/grep-pod-plain-indent.pl
 devel/grep-pod-section-end-comma.pl
 devel/grep-pod-synopsis.pl
 devel/grep-pod-verbatim-unindent.pl
@@ -70,6 +74,7 @@ devel/grep-qrm.pl
 devel/grep-qw-comment.pl
 devel/grep-qw.pl
 devel/grep-rootdir.pl
+devel/grep-shebang-perl.pl
 devel/grep-shebang-pm.pl
 devel/grep-shebang-t.pl
 devel/grep-spelling.pl
@@ -87,6 +92,11 @@ devel/junk/test-more-like.pl
 devel/junk/TestMoreLikeModifiers.pm
 devel/junk/TestMoreLikeModifiers.t
 devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
+devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraClose.pm
+devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraClose.t
+devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraOpen.pm
+devel/lib/Perl/Critic/Policy/Documentation/RequireFilenameMarkup.pm
+devel/lib/Perl/Critic/Policy/Documentation/RequireFilenameMarkup.t
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
@@ -161,6 +171,8 @@ lib/Perl/Critic/Pulp/Utils.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
+META.json
+META.yml
 README
 SIGNATURE
 t/ConstantBeforeLt.t
@@ -231,4 +243,3 @@ xtools/my-manifest.sh
 xtools/my-pc.sh
 xtools/my-tags.sh
 xtools/my-wunused.sh
-META.yml                                 Module meta-data (added by MakeMaker)

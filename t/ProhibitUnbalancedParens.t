@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 78;
+use Test::More tests => 80;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 80;
+my $want_version = 81;
 is ($Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens->VERSION,
@@ -63,6 +63,10 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  # L<> link with markup in display part
+                  [ 0, "=pod\n\nL<< display C<(>|/Section >>\n" ],
+                  [ 1, "=pod\n\nL<display (|/Section>\n" ],
+
                   # mathematical range, not yet special
                   [ 1, "=pod\n\n[0,1)\n" ],
 
@@ -102,7 +106,9 @@ foreach my $data (
                   [ 0, "=pod\n\n(foo\$)\n" ],
                   [ 1, "=pod\n\n\$\$)\n" ],   # $$ not $)
 
-                  # bad link in Config::IniFiles 2.66, but parens are ok
+                  # Bad link in Config::IniFiles 2.66.
+                  # Display and section parts are the wrong way around,
+                  # but the parens are ok.
                   [ 0, "=pod\n\nL</Section|display(-foo=E<gt>1)>\n" ],
 
                   [ 1, "=pod\n\n(\n" ],

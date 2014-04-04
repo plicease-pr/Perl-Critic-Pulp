@@ -22,7 +22,7 @@ use warnings;
 use Perl::Critic::Pulp::Utils;
 use base 'Pod::Parser';
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -93,9 +93,13 @@ sub command {
   my ($self, $command, $text, $linenum) = @_;
   if ($command eq 'begin') {
     push @{$self->{'in_begin_stack'}}, $self->{'in_begin'};
-    if ($text =~ /(\w+)/) {
+    if ($text =~ /^:/) {
+      # "=begin :foo" is ordinary POD
+      $self->{'in_begin'} = '';
+    } elsif ($text =~ /(\w+)/) {
       $self->{'in_begin'} = $1;  # first word only
     } else {
+      # "=begin" with no word chars ...
       $self->{'in_begin'} = '';
     }
     ### in_begin: $self->{'in_begin'}
@@ -149,6 +153,42 @@ sub violation_at_linenum_and_textpos {
 sub violations {
   my ($self) = @_;
   return @{$self->{'violations'}};
+}
+
+#------------------------------------------------------------------------------
+# This not documented yet.  Might prefer to split it out for separate use too.
+#
+# Not sure about padding to make the column right.  Usually good, but
+# perhaps not always.  Maybe should offset a column by examining
+# $paraobj->cmd_prefix() and $paraobj->cmd_name().
+
+{
+  my %command_non_text = (for   => 1,
+                          begin => 1,
+                          end   => 1,
+                          cut   => 1);
+
+  # The parameters are as per the command() method of Pod::Parser.
+  # If $command contains text style markup then call $self->textblock() on
+  # its text.
+  # All commands except =for, =begin, =end and =cut have marked-up text.
+  # Eg. =head2 C<blah blah>
+  #
+  sub command_as_textblock {
+    my ($self, $command, $text, $linenum, $paraobj) = @_;
+    ### command: $command
+    ### $text
+
+    # $text can be undef if =foo with no newline at end-of-file
+    if (defined $text && ! $command_non_text{$command}) {
+      # padded to make the column number right, the leading spaces do no harm
+      # for this policy
+      $self->textblock ((' ' x (length($command)+1)) . $text,
+                        $linenum,
+                        $paraobj);
+    }
+    return '';
+  }
 }
 
 1;

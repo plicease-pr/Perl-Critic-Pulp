@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -66,26 +66,6 @@ sub command {
   my $self = shift;
   $self->SUPER::command(@_);
   $self->command_as_textblock(@_);
-  return '';
-}
-
-# ENHANCE-ME: Share this among the various parsing modules ...
-my %command_non_text = (for   => 1,
-                        begin => 1,
-                        end   => 1,
-                        cut   => 1);
-sub command_as_textblock {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
-  ### command: $command
-  unless ($command_non_text{$command}) {
-    # padded to make the column number right, the leading spaces do no harm
-    # for this policy
-    $self->textblock ((' ' x (length($command)+1)) . $text,
-                      $linenum,
-                      $paraobj);
-
-    # $self->textblock ($text, $linenum, $paraobj);
-  }
   return '';
 }
 

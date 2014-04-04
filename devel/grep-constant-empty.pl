@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,6 +21,11 @@
 # Look for
 #     use constant foo => ();
 #     use constant foo;
+
+
+# cf t/pragma/constant.
+#    use constant UNDEF2	=>	;	# the weird way
+#    use constant 'UNDEF3'		;	# the 'short' way
 
 use 5.005;
 use strict;

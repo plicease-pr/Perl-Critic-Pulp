@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -33,7 +33,9 @@ use Text::Tabs ();
 
 my $verbose = 0;
 
-my $l = MyLocatePerl->new;
+my $l = MyLocatePerl->new (under_directory => '/usr/share/perl5',
+                           # under_directory => '/usr/share/perl/5.14/',
+                          );
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 

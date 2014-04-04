@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -120,6 +120,7 @@ sub textblock {
         ### $obj_text
         ### $display
         ### $name
+        if (! defined $name) { $name = ''; }
 
         if ($last_L
             && ! ($name eq $last_L_name
@@ -174,11 +175,10 @@ paragraph.  For example,
     L<Bar>
 
 The idea is adjacent LE<lt>E<gt> like this is probably a missing comma or
-missing text.  It's easy to do in a "SEE ALSO" list.
+missing text.  It's easy to make this mistake in a "SEE ALSO" list.
 
-This is normally only a very minor typo and on that basis this policy is
-under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>) and lowest
-severity.
+This is normally only very minor and on that basis this policy is under the
+"cosmetic" theme (see L<Perl::Critic/POLICY THEMES>) and lowest severity.
 
 =head2 Exceptions
 
@@ -205,10 +205,9 @@ C<ProhibitAdjacentLinks> from your F<.perlcriticrc> in the usual way
 
 =head1 BUGS
 
-The column position of the offending adjacency is not worked into the
-violation report.  You may need to look carefully at the line to see the
-problem and at the following line when to adjacent links are across a
-newline.
+The column position of the offending adjacency is not included in the
+violation reported.  You may need to look carefully at the line to see the
+problem, and at the following line if the adjacent link is on the next line.
 
 =head1 SEE ALSO
 
@@ -224,7 +223,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

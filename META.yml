@@ -1,55 +1,55 @@
---- #YAML:1.0
-name:               Perl-Critic-Pulp
-version:            80
-abstract:           Some add-on policies for Perl::Critic.
+---
+abstract: 'Some add-on policies for Perl::Critic.'
 author:
-    - Kevin Ryde <user42@zip.com.au>
-license:            gpl
-distribution_type:  module
-configure_requires:
-    ExtUtils::MakeMaker:  0
+  - 'Kevin Ryde <user42@zip.com.au>'
 build_requires:
-    ExtUtils::MakeMaker:  0
-requires:
-    IO::String:           1.02
-    List::MoreUtils:      0.24
-    List::Util:           0
-    perl:                 5.006
-    Perl::Critic:         1.084
-    Perl::Critic::Policy:  1.084
-    Perl::Critic::Utils:  1.100
-    Perl::Critic::Utils::PPI:  0
-    Perl::Critic::Violation:  0
-    Pod::MinimumVersion:  50
-    Pod::ParseLink:       0
-    PPI:                  1.212
-    PPI::Document:        0
-    PPI::Dumper:          0
-    Scalar::Util:         0
-    Test::More:           0
-    version:              0
-resources:
-    homepage:  http://user42.tuxfamily.org/perl-critic-pulp/index.html
-    license:   http://www.gnu.org/licenses/gpl.html
-no_index:
-    directory:
-        - t
-        - inc
-        - devel
-    package:
-        - Perl::MinimumVersion
-generated_by:       ExtUtils::MakeMaker version 6.57_05
+  ExtUtils::MakeMaker: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 1
+generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380'
+license: gpl
 meta-spec:
-    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
-    version:  1.4
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Perl-Critic-Pulp
+no_index:
+  directory:
+    - t
+    - inc
+    - devel
+  package:
+    - Perl::MinimumVersion
 optional_features:
-    maximum_policies:
-        description:  Have the policies check as much as possible.
-        requires:
-            Perl::MinimumVersion:  0
-    maximum_tests:
-        description:  Have "make test" do as much as possible.
-        requires:
-            Perl::MinimumVersion:  0
+  maximum_policies:
+    description: 'Have the policies check as much as possible.'
+    requires:
+      Perl::MinimumVersion: 0
+  maximum_tests:
+    description: "Have \"make test\" do as much as possible."
+    requires:
+      Perl::MinimumVersion: 0
 recommends:
-    Perl::MinimumVersion:  0
+  Perl::MinimumVersion: 0
+requires:
+  IO::String: 1.02
+  List::MoreUtils: 0.24
+  List::Util: 0
+  PPI: 1.212
+  PPI::Document: 0
+  PPI::Dumper: 0
+  Perl::Critic: 1.084
+  Perl::Critic::Policy: 1.084
+  Perl::Critic::Utils: 1.100
+  Perl::Critic::Utils::PPI: 0
+  Perl::Critic::Violation: 0
+  Pod::MinimumVersion: 50
+  Pod::ParseLink: 0
+  Scalar::Util: 0
+  Test::More: 0
+  perl: 5.006
+  version: 0
+resources:
+  homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
+  license: http://www.gnu.org/licenses/gpl.html
+version: 81

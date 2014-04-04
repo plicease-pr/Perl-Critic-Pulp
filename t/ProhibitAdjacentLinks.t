@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 24;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 80;
+my $want_version = 81;
 is ($Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION,
@@ -64,6 +64,11 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   # RT#94318 (Mike O'Regan) was a warning when an internal adjacent to an
+   # external link
+   [ 1, "=pod\n\nL<File::Copy> L</Developer/Tools/GetFileInfo>\n" ],
+   [ 1, "=pod\n\nL</internal> L<xyzzy|Two>\n" ],
+
    [ 0, "=pod\n\nL<One>\n\nL<Two>\n" ],
    [ 1, "=pod\n\nL<One> L<Two>\n" ],
    [ 0, "=pod\n\nL<One> and L<Two>\n" ],

@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireFinalCut;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 80;
+my $want_version = 81;
 is ($Perl::Critic::Policy::Documentation::RequireFinalCut::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireFinalCut->VERSION,

@@ -16,6 +16,9 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Change "12 Jul 2013 23:37:26 -0700" making __PACKAGE__ etc quoted by =>
+# across newline.
+#
 # http://perl5.git.perl.org/perl.git/commit/21791330af556dc082f3ef837d772ba9a4d0b197
 # http://perl5.git.perl.org/perl.git/patch/21791330af556dc082f3ef837d772ba9a4d0b197
 
@@ -31,7 +34,7 @@ use Perl::Critic::Utils qw(is_perl_builtin
                            is_perl_builtin_with_no_arguments
                            precedence_of);
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2013 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -27,10 +27,16 @@ use MyStuff;
 
 my $verbose = 0;
 
-my $l = MyLocatePerl->new (include_pod => 1);
+my $l = MyLocatePerl->new (include_pod => 1,
+                           exclude_t => 1);
 my $p = MyParser->new;
 my $count = 0;
 my $filename;
+# $SIG{__WARN__} = sub {
+#   my ($str) = @_;
+#   print STDERR "$filename:1:\n";
+#   warn $str; # re-throw
+# };
 while (($filename, my $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
   $p->parse_from_string ($str, $filename);
@@ -41,36 +47,30 @@ exit 0;
 
 package MyParser;
 use base 'Perl::Critic::Pulp::PodParser';
-my %command_non_text = (for   => 1,
-                        begin => 1,
-                        end   => 1,
-                        cut   => 1);
-sub command_as_textblock {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
-  ### command: $command
-  unless ($command_non_text{$command}) {
-    $self->textblock ($text, $linenum, $paraobj);
-  }
-  return '';
-}
 sub command {
   my $self = shift;
-  $self->command_as_textblock (@_);
+  return $self->command_as_textblock(@_);
 }
-*command = \&command_as_textblock;
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
 
   # Pod::ParseLink for display part of L<>
 
   # ,.  probably wrong
-  # ;.  doubtful, but maybe some code or :-;. smiley
-  # ;.  doubtful, but maybe some code
   #
-  if ($text =~ /[^.]\.\.\s*$/sg) {
-    print "$filename:$linenum: end with dots\n";
+  if ($text =~ /[^.],\.\s*$/sg) {
+    print "$filename:$linenum: end with comma dot\n";
     $count++;
   }
+
+  # # ,.  probably wrong
+  # # ;.  doubtful, but maybe some code or :-;. smiley
+  # # ;.  doubtful, but maybe some code
+  # #
+  # if ($text =~ /[^.]\.\.\s*$/sg) {
+  #   print "$filename:$linenum: end with dots\n";
+  #   $count++;
+  # }
 
   # $[. is ok
   # :-(. sad face

@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -23,7 +23,10 @@ use Perl::Critic::Utils;
 use Perl::Critic::Pulp::Utils;
 use version (); # but don't import qv()
 
-our $VERSION = 80;
+# uncomment this to run the ### lines
+# use Smart::Comments;
+
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -66,7 +69,9 @@ sub violates {
     ($inc->module||'') eq 'constant' || next;
 
     if (my $ver = Perl::Critic::Pulp::Utils::include_module_version ($inc)) {
-      $ver = version->new ($ver);
+      ### $ver
+      # PPI::Token::Number::Float
+      $ver = version->new ($ver->content);
       if (! defined $modver || $ver > $modver) {
         $modver = $ver;
 
@@ -231,7 +236,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

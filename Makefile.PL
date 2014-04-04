@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -27,7 +27,7 @@ WriteMakefile
    ABSTRACT     => 'Some add-on policies for Perl::Critic.',
    VERSION_FROM => 'lib/Perl/Critic/Pulp.pm',
    AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
-   LICENSE      => 'gpl',
+   LICENSE      => 'gpl_3',
    SIGN         => 1,
    MIN_PERL_VERSION => '5.006',
 

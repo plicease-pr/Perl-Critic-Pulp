@@ -23,7 +23,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Pulp;
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -117,7 +117,7 @@ such but likely some sort of cross-platform check.
     if ($f eq '/dev/null') { ... }                 # ok
     return ($f ne '>/dev/null');                   # ok
 
-"/dev/null" as just part of a string is allowed, including things like
+F</dev/null> as just part of a string is allowed, including things like
 backticks and C<system>.
 
     print "Flames to /dev/null please\n"           # ok

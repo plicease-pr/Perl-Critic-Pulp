@@ -43,6 +43,9 @@ my $option_t_files = 0;
 GetOptions
   (require_order => 1,
    t => \$option_t_files,
+   F => sub {
+     push @option_policies, 'Documentation::RequireFilenameMarkup$';
+   },
    paracomma => sub {
      push @option_policies, 'Documentation::ProhibitParagraphEndComma$';
    },

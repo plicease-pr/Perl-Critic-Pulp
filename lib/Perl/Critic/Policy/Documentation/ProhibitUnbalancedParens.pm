@@ -33,9 +33,9 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -71,24 +71,6 @@ sub command {
     }
   }
   return shift->command_as_textblock(@_);
-}
-
-# ENHANCE-ME: Share this among the various parsing modules ...
-my %command_non_text = (for   => 1,
-                        begin => 1,
-                        end   => 1,
-                        cut   => 1);
-sub command_as_textblock {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
-  ### command: $command
-  unless ($command_non_text{$command}) {
-    # padded to make the column number right, the leading spaces do no harm
-    # for this policy
-    $self->textblock ((' ' x (length($command)+1)) . $text,
-                      $linenum,
-                      $paraobj);
-  }
-  return '';
 }
 
 my %open_to_close = ('(' => ')',
@@ -209,12 +191,14 @@ sub interior_sequence_as_displayed_noncode_text {
   my ($self, $cmd, $text, $pod_seq) = @_;
 
   if ($cmd eq 'X' || $cmd eq 'C') {
-    # keep only the newlines
+    ### $cmd
+    ### X,C keep only the newlines: $text
     $text =~ tr/\n//cd;
 
   } elsif ($cmd eq 'L') {
     my ($display, $inferred, $name, $section, $type)
       = Pod::ParseLink::parselink ($text);
+    ### $text
     ### $display
     ### $inferred
     ### $name

@@ -32,7 +32,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 80;
+our $VERSION = 81;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -55,24 +55,8 @@ use warnings;
 use Pod::ParseLink;
 use base 'Perl::Critic::Pulp::PodParser';
 
-*command = \&command_as_textblock;
-
-# ENHANCE-ME: Share this among the various parsing modules ...
-my %command_non_text = (for   => 1,
-                        begin => 1,
-                        end   => 1,
-                        cut   => 1);
-sub command_as_textblock {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
-  ### command: $command
-  unless ($command_non_text{$command}) {
-    # padded to make the column number right, the leading spaces do no harm
-    # for this policy
-    $self->textblock ((' ' x (length($command)+1)) . $text,
-                      $linenum,
-                      $paraobj);
-  }
-  return '';
+sub command {
+  return shift->command_as_textblock(@_);
 }
 
 sub textblock {
