@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -58,7 +58,9 @@ my %command_non_text = (for   => 1,
                         # cut => 1, # not seen unless -process_cut_cmd
                        );
 sub command {
-  my ($self, $command, $text, $linenum, $pod_obj) = @_;
+  my $self = shift;
+  my ($command, $text, $linenum, $paraobj) = @_;
+  $self->SUPER::command(@_);  # maintain 'in_begin'
 
   # if ($command eq 'for'
   #     && $text =~ /^ProhibitLinkToSelf\b\s*(.*)/) {
@@ -82,18 +84,23 @@ sub command {
     _check_text ($self,
                  (' ' x (length($command)+1)) . $text,
                  $linenum,
-                 $pod_obj);
+                 $paraobj);
   }
 
   return '';
 }
 
 sub textblock {
-  my ($self, $text, $linenum, $pod_obj) = @_;
+  my ($self, $text, $linenum, $paraobj) = @_;
   ### textblock(): "linenum=$linenum"
   ### $text
 
-  my $str = _check_text ($self, $text, $linenum, $pod_obj);
+  # "=begin :foo" is markup, check it.  Other =begin is not markup.
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
+    return '';
+  }
+
+  my $str = _check_text ($self, $text, $linenum, $paraobj);
   ### interpolated: $str
   if ($self->{'in_name'}) {
     if ($str =~ /^\s*([[:word:]:]+)\s*-/) {
@@ -105,14 +112,14 @@ sub textblock {
 }
 
 sub _check_text {
-  my ($self, $text, $linenum, $pod_obj) = @_;
+  my ($self, $text, $linenum, $paraobj) = @_;
   ### _check_text() ...
   ### $linenum
   return $self->interpolate($text, $linenum);
 }
 
 sub interior_sequence {
-  my ($self, $cmd, $text, $pod_obj) = @_;
+  my ($self, $cmd, $text, $paraobj) = @_;
   ### interior_sequence() ...
 
   if ($cmd eq 'X') {
@@ -130,7 +137,7 @@ sub interior_sequence {
       $text =~ /(\s*)$/;
       my $pos = length($text) - length($1); # end of $text
       ### $pos
-      (undef, my $linenum) = $pod_obj->file_line;
+      (undef, my $linenum) = $paraobj->file_line;
 
       $self->violation_at_linenum_and_textpos
         (($self->{'in_see_also'}
@@ -245,7 +252,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 15;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION,
@@ -64,6 +64,26 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   [ 1, "
+=head1 SEE ALSO
+
+L<Foo::Bar>
+
+L<Foo::Bar>
+" ],
+
+   [ 0, "
+=head1 SEE ALSO
+
+L<Foo::Bar>
+
+=begin comment
+
+L<Foo::Bar>
+
+=end comment
+" ],
+
    [ 0, "
 =head1 SEE ALSO
 

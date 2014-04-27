@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 26;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitAdjacentLinks->VERSION,
@@ -64,6 +64,22 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   [ 0, ("=pod\n"
+         . "\n"
+         . "=begin comment\n"
+         . "\n"
+         . "L<One> L<Two>\n"
+         . "\n"
+         . "=end comment\n") ],
+
+   [ 1, ("=pod\n"
+         . "\n"
+         . "=begin :text\n"
+         . "\n"
+         . "L<One> L<Two>\n"
+         . "\n"
+         . "=end :text\n") ],
+
    # RT#94318 (Mike O'Regan) was a warning when an internal adjacent to an
    # external link
    [ 1, "=pod\n\nL<File::Copy> L</Developer/Tools/GetFileInfo>\n" ],

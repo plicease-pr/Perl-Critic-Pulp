@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011, 2013 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -33,7 +33,6 @@ use Perl::Critic::Utils 'is_perl_builtin';
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 # uncomment this to run the ### lines
 # use Smart::Comments;

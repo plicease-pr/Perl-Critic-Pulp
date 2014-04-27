@@ -17,9 +17,20 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 82, April 2014
+    - ProhibitAdjacentLinks, ProhibitLinkToSelf,
+      ProhibitParagraphTwoDots, ProhibitUnbalancedParens,
+      ProhibitVerbatimMarkup, RequireLinkedURLs check =begin blocks
+      only for POD-type ":"
+    - ProhibitBadAproposMarkup check =begin :man and :roff only
+    - ProhibitDuplicateSeeAlso ignore all =begin blocks
+
 Version 81, April 2014
     - ProhibitAdjacentLinks fix warnings when internal and external
       links adjacent, as reported by Mike O'Regan RT#94318
+    - ConstantPragmaHash and ConstantLeadingUnderscore pass ->content
+      to version.pm as it enquires too much into a PPI object ref,
+      per RT#92100 dmacks and ppisar
 
 Version 80, July 2013
     - new policy Documentation::ProhibitParagraphEndComma

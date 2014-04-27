@@ -18,10 +18,7 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Look for a line of spaces and tabs in POD.
-#
-# Old formatters treat line of spaces and tabs as non-empty.
-# Eg pod2text of perl 5.004.
+# Grep for =begin not followed by newline, ie. multi-line command
 
 use 5.005;
 use strict;
@@ -38,25 +35,25 @@ my $l = MyLocatePerl->new (exclude_t => 1,
                            include_pod => 1);
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
+  $str =~ tr/\r//d; # new CRs
 
-  next if ($filename =~ /\/doc\.pl$/);
-  next if ($filename =~ /\/junk\.pl$/);
+  while ($str =~ /(^|\n)(=begin[^\n]*\n[^\n]+)/sg) {
+    my $pos = $-[0];
+    my $lines = $2;
+    my $lastchar = ord(substr($lines,-1,1));
 
-  my $in_pod = 0;
-  my $linenum = 0;
-  foreach my $line (split /\n/, $str) {
-    $line =~ s/\r$//;
-    $linenum++;
-    if ($line =~ /^=cut/) { $in_pod = 0; next; }
-    if ($line =~ /^=/) { $in_pod = 1; next; }
-    next unless $in_pod;
-
-    if ($line =~ /^\s+$/) {
-      print "$filename:$linenum:1: blank of whitespace only\n";
-      $line =~ s/([^\021-\177])/'['.ord($1).']'/eg;
-      print "  xx${line}xx ",length($line),"\n";
-    }
+    my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
+    print "$filename:$line:$col: char=$lastchar\n$lines\n";
   }
 }
 
 exit 0;
+
+=pod
+
+=begin comment
+blah
+
+=end comment
+
+=cut

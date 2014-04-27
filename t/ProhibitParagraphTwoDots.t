@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 34;
+use Test::More tests => 36;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots->VERSION,
@@ -63,6 +63,9 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  [ 0, "=pod\n\n=begin comment\n\n..\n" ],
+                  [ 1, "=pod\n\n=begin :man\n\n..\n" ],
+
                   [ 1, "=pod\n\n..\n" ],
                   [ 1, "=pod\n\nX..\n" ],
                   [ 0, "=pod\n\n...\n" ],

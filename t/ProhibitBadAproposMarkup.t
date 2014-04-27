@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 20;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup;
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup->VERSION,
@@ -63,6 +63,45 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  [ 0,
+                    "=head1 NAME\n"
+                    . "\n"
+                    . "=begin text\n"
+                    . "\n"
+                    . "foo - C<bar>\n"
+                    . "\n"
+                    . "=end text\n"
+                    . "\n"
+                    . "=begin comment\n"
+                    . "\n"
+                    . "foo - C<bar>\n"
+                    . "\n"
+                    . "=end comment\n"
+                    . "\n"
+                    . "=for blah C<bar>\n"
+                  ],
+
+                  [ 1,
+                    "=head1 NAME\n"
+                    . "\n"
+                    . "=begin text\n"
+                    . "\n"
+                    . "foo - C<bar>\n"
+                    . "\n"
+                    . "=end text\n"
+                    . "\n"
+                    . "foo - C<bar>\n"
+                  ],
+
+                  [ 1,
+                    "=head1 NAME\n"
+                    . "\n"
+                    . "=begin :text\n"
+                    . "\n"
+                    . "foo - C<bar>\n"
+                    . "\n"
+                    . "=end :text\n" ],
+
                   # unterminated C< quietly ignored
                   [ 0, "=head1 SOMETHING\n\nC<" ],
 
@@ -71,8 +110,11 @@ foreach my $data (
                   [ 1, "=head1 \tNAME\t \n\nfoo - like C<bar>" ],
 
                   [ 0,
-                    "\n## no critic (ProhibitBadAproposMarkup)\n\n"
-                    . "=head1 NAME\n\nfoo - like C<bar>\n\n"
+                    "\n## no critic (ProhibitBadAproposMarkup)\n"
+                    . "\n"
+                    . "=head1 NAME\n"
+                    . "\n"
+                    . "foo - like C<bar>\n\n"
                     . "=cut\n\n"
                     . "more_code();" ],
 

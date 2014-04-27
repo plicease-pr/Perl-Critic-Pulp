@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 43;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::RequireLinkedURLs::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireLinkedURLs->VERSION,
@@ -63,32 +63,73 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
-                  [ 0, "use 5.008;\n\n=begin comment\n
-http://perl.org/index.html\n" ],
+                  [ 1, "use 5.008;
 
-                  # nested
-                  [ 1, "use 5.008;\n\n=begin comment
-\n=begin comment
-\nhttp://perl.org/index.html
-\n=end comment
-\nhttp://perl.org/index.html
-\n=end comment
-\nhttp://perl.org/index.html\n" ],
+=begin :hidden
+
+http://perl.org/index.html
+
+=end :hidden
+" ],
+
+
+                  # nested begins
+                  [ 1, "use 5.008;
+
+=begin comment
+
+=begin comment
+
+http://perl.org/index.html
+
+=end comment
+
+http://perl.org/index.html
+
+=end comment
+
+http://perl.org/index.html
+" ],
+
+                  [ 0, "use 5.008;
+
+=begin comment
+
+http://perl.org/index.html
+" ],
 
                   # wikidoc
-                  [ 0, "use 5.008;\n\n=begin wikidoc\n\n[http://perl.org/index.html home]\n" ],
+                  [ 0, "use 5.008;
 
-                  # empty
-                  [ 1, "use 5.008;\n\n=begin\n
-http://perl.org/index.html\n" ],
+=begin wikidoc
+
+[http://perl.org/index.html home]
+" ],
+
+                  # empty begin
+                  [ 1, "use 5.008;
+
+=begin
+
+http://perl.org/index.html
+" ],
 
                   # html
-                  [ 0, "use 5.008;\n\n=begin html\n
+                  [ 0, "use 5.008;
+
+=begin html
+
 <a href=\"http://perl.org/index.html\">perl home</a>
-\n=end html\n" ],
-                  [ 0, "use 5.008;\n\n=begin html blahblah blah\n
+
+=end html
+" ],
+                  [ 0, "use 5.008;
+
+=begin html blahblah blah
+
 <a href=\"http://perl.org/index.html\">perl home</a>
-\n=end html\n" ],
+
+=end html\n" ],
 
                   # no critic override, but only works if not the last
                   # PPI::Element in the document, or something

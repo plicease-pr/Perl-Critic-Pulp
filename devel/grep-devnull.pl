@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010 Kevin Ryde
+# Copyright 2009, 2010, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -24,7 +24,6 @@ use Perl6::Slurp;
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 my $verbose = 0;
 

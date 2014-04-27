@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -32,7 +32,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -56,12 +56,19 @@ use Pod::ParseLink;
 use base 'Perl::Critic::Pulp::PodParser';
 
 sub command {
-  return shift->command_as_textblock(@_);
+  my $self = shift;
+  $self->SUPER::command(@_);  # maintain 'in_begin'
+  return $self->command_as_textblock(@_);
 }
 
 sub textblock {
   my ($self, $text, $linenum, $pod_para) = @_;
   ### textblock: "linenum=$linenum"
+
+  # "=begin :foo" is markup, check it.  Other =begin is not markup.
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
+    return '';
+  }
 
   my $str = $self->interpolate($text, $linenum);
   ### $text
@@ -157,7 +164,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

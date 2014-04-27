@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2012, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -18,6 +18,8 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Grep for different types of =begin and =for
+
 use 5.005;
 use strict;
 use warnings;
@@ -26,7 +28,6 @@ use Perl6::Slurp;
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 my $verbose = 0;
 
@@ -37,13 +38,15 @@ my $l = MyLocatePerl->new (exclude_t => 1,
 while (my ($filename, $str) = $l->next) {
   if ($verbose) { print "look at $filename\n"; }
 
-  while ($str =~ /^=begin[ \t]+(.*)/mg) {
-    my $type = $1;
-    next if $seen{$type}++;
+  while ($str =~ /^=(begin|for)[ \t]+([^ \t\r\n]*)/mg) {
+    my $command = $1;
+    my $type = $2;
     my $pos = $-[0];
+    next if $seen{$type}++;
+    next unless $command eq 'begin';
 
     my ($line, $col) = MyStuff::pos_to_line_and_column ($str, $pos);
-    print "$filename:$line:$col: =begin $type\n";
+    print "$filename:$line:$col: =$command $type\n";
   }
 }
 

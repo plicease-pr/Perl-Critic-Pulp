@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2011, 2014 Kevin Ryde
+# Copyright 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -18,62 +18,54 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# various
-# some DB<1> debugger prompts
-
 use 5.005;
 use strict;
 use warnings;
-use Perl6::Slurp;
+use FindBin;
 
-use lib::abs '.';
-use MyLocatePerl;
-use MyStuff;
+# uncomment this to run the ### lines
+use Smart::Comments;
 
-my $verbose = 0;
-
-my $l = MyLocatePerl->new (include_pod => 1);
-while (my ($filename, $str) = $l->next) {
-  if ($verbose) { print "look at $filename\n"; }
-
-  if ($str =~ /^__END__/m) {
-    substr ($str, $-[0], length($str), '');
-  }
-
-  my $parser = MyParser->new;
-  $parser->errorsub(sub{1}); # no error prints
-  $parser->parse_from_string ($str, $filename);
-}
+my $parser = MyParser->new;
+$parser->parse_from_file ("$FindBin::Bin/$FindBin::Script");
+exit 0;
 
 package MyParser;
 use strict;
 use warnings;
-use base 'Pod::Parser';
+use base 'Perl::Critic::Pulp::PodParser';
 
-sub parse_from_string {
-  my ($self, $str, $filename) = @_;
-
-  require IO::String;
-  my $fh = IO::String->new ($str);
-  $self->{_INFILE} = $filename;
-  return $self->parse_from_filehandle ($fh);
-}
 sub command {
+  my ($self, $command, $text, $linenum, $paraobj) = @_;
+  ### command() ...
+  ### $text
   return '';
 }
 sub verbatim {
   my ($self, $text, $linenum, $paraobj) = @_;
-  ### verbatim
-
-  while ($text =~ /([IBCLFSXZ]<)/g) {
-    my $markup = $1;
-    my $filename = $self->{_INFILE};
-    print "$filename:$linenum:1: markup in verbatim: $markup\n";
-  }
+  ### verbatim() ...
+  ### $text
+  return '';
 }
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
+  ### textblock() ...
+  ### $text
   return '';
 }
 
 exit 0;
+
+__END__
+
+=pod
+
+=begin comment
+
+This is a comment.
+
+=end comment
+
+This is pod text
+
+=cut

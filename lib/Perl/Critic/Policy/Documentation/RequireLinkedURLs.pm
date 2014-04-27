@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -24,13 +24,13 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 # perlcritic -s RequireLinkedURLs RequireLinkedURLs.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -41,7 +41,7 @@ my $want_perl = version->new('5.008');
 
 sub violates {
   my ($self, $elem, $document) = @_;
-  ### RequireLinkedURLs violates()
+  ### RequireLinkedURLs violates() ...
 
   my $got_perl = $document->highest_explicit_perl_version;
   ### highest_explicit_perl_version: defined $got_perl && "$got_perl"
@@ -69,20 +69,13 @@ sub command {
   return '';
 }
 
-my %ignore_begin = (comment => 1,
-                    html    => 1,
-                    latex   => 1,
-                    man     => 1,
-                    roff    => 1,
-                    tex     => 1,
-                    wikidoc => 1,
-                   );
-
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
   ### textblock ...
 
-  return '' if $ignore_begin{lc($self->{'in_begin'})};
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
+    return '';
+  }
 
   my $expand = $self->interpolate ($text, $linenum);
 
@@ -170,11 +163,12 @@ C<E<lt>http://...E<gt>> style angles around the URL which is a
 semi-conventional way to delimit from surrounding text and in particular
 from an immediately following comma or period.
 
-Of course this is only cosmetic and on that basis this policy is low
-priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
+This is only cosmetic and on that basis this policy is low priority and
+under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 Only plain text parts of the POD are considered.  Verbatim paragraphs cannot
-have C<LE<lt>E<gt>> markup (and it's usually a mistake to put it, as per
+have C<LE<lt>E<gt>> markup (and it's usually a mistake to put it there, as
+per
 L<C<ProhibitVerbatimMarkup>|Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup>).
 
     This is verbatim text,
@@ -216,28 +210,12 @@ C<nntp://>.
 
 =head2 Begin Blocks
 
-Text in an C<=begin html> block is not checked, since it contains HTML and
-so should be C<E<lt>a href=""E<gt>> etc there, not C<LE<lt>E<gt>>.
+Text in any C<=begin :foo> block is checked since C<:> means POD markup and
+it's likely URLs can be helpfully linked there, even if it's only for some
+particular formatter.
 
-    =begin html
-
-    <a href="http://foo.org/index">home page</a>    # ok
-
-    =end html
-
-Other C<=begin> blocks ignored for similar reasons are as follows.  They're
-probably less likely to have URLs.
-
-    comment         programmer's notes only
-    latex
-    man
-    roff 
-    tex
-    wikidoc         links are [http://...] style
-
-Currently all other C<=begin> forms are examined, which may be excessive,
-but it's hard to be sure what will or won't be POD markup.  Keys beginning
-":" are supposed to be POD markup, others are guesswork.
+Other C<=begin> blocks are ignored since C<LE<lt>E<gt>> there will not
+normally be possible or desirable.
 
 =head2 Disabling
 
@@ -260,7 +238,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

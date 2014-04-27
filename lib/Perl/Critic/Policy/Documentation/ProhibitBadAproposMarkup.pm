@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -24,9 +24,9 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -51,6 +51,7 @@ sub command {
   my ($command, $text, $linenum, $paraobj) = @_;
   ### command: $command
   ### $text
+  $self->SUPER::command(@_);  # maintain 'in_begin'
 
   if ($command eq 'head1') {
     $self->{'in_NAME'} = ($text =~ /^NAME\s*$/ ? 1 : 0);
@@ -61,8 +62,18 @@ sub command {
 
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
-  ### textblock
-  return $self->interpolate ($text, $linenum);
+  ### textblock ...
+  ### in_begin: $self->{'in_begin'}
+  ### $text
+
+  # Pod::Man accept_targets() are man, MAN, roff, ROFF.  Only those =begin
+  # bits are put through to the man page and therefore only those are bad.
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:(man|MAN|roff|ROFF)$/) {
+    return '';
+  }
+
+  $self->interpolate ($text, $linenum);
+  return '';
 }
 
 sub interior_sequence {
@@ -115,13 +126,17 @@ lines from C<apropos> like
 =for ProhibitUnbalancedParens allow next
 
 Man's actual formatted output is fine, and the desired text is in there,
-just surrounded by "*(C" bits.  On that basis this policy is low priority
+just surrounded by C<*(C> bits.  On that basis this policy is low priority
 and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
-The NAME section is everything from "=head1 NAME" to the next "=head1".
+The NAME section is everything from C<=head1 NAME> to the next C<=head1>.
 Other markup like "BE<lt>E<gt>", "IE<lt>E<gt>" and "FE<lt>E<gt>" is allowed
-because C<pod2man> uses builtin "\fB" etc directives for them, which
+because C<pod2man> uses builtin C<\fB> etc directives for them, which
 C<lexgrog> recognises.
+
+C<=begin :man> and C<=begin :roff> blocks are checked since C<Pod::Man>
+processes those.  Other C<=begin> blocks are ignored as they won't appear in
+the roff output.
 
 =head2 Disabling
 
@@ -155,7 +170,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

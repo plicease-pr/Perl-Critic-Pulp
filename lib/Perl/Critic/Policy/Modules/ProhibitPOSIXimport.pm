@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant _ALLOWED_CALL_COUNT => 15;
 
@@ -322,7 +322,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

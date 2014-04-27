@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -35,7 +35,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -59,7 +59,10 @@ use Pod::ParseLink;
 use base 'Perl::Critic::Pulp::PodParser';
 
 sub command {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
+  my $self = shift;
+  my ($command, $text, $linenum, $paraobj) = @_;
+  $self->SUPER::command(@_);  # maintain 'in_begin'
+
   if ($command eq 'for'
       && $text =~ /^ProhibitUnbalancedParens\b\s*(.*)/) {
     my $directive = $1;
@@ -70,7 +73,7 @@ sub command {
       $self->{'allow_next'} = (defined $2 ? $2 : 1);
     }
   }
-  return shift->command_as_textblock(@_);
+  return $self->command_as_textblock(@_);
 }
 
 my %open_to_close = ('(' => ')',
@@ -79,11 +82,15 @@ my %open_to_close = ('(' => ')',
 my %close_to_open = reverse %open_to_close;
 
 sub textblock {
-  my ($self, $text, $linenum, $pod_para) = @_;
+  my ($self, $text, $linenum, $paraobj) = @_;
   ### textblock: "linenum=$linenum"
 
   if (($self->{'allow_next'}||0) > 0) {
     $self->{'allow_next'}--;
+    return '';
+  }
+
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
     return '';
   }
 
@@ -398,7 +405,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

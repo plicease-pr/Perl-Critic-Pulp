@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2012 Kevin Ryde
+# Copyright 2009, 2010, 2012, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -32,7 +32,6 @@ use FindBin;
 use lib::abs '.';
 use MyLocatePerl;
 use MyStuff;
-use Text::Tabs ();
 
 # uncomment this to run the ### lines
 use Smart::Comments;

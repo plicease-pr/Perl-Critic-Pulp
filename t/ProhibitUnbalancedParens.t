@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 80;
+use Test::More tests => 82;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitUnbalancedParens->VERSION,
@@ -63,6 +63,10 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  # =begin non-text
+                  [ 0, "=begin comment\n\n(\n" ],
+                  [ 1, "=begin :comment\n\n(\n" ],
+
                   # L<> link with markup in display part
                   [ 0, "=pod\n\nL<< display C<(>|/Section >>\n" ],
                   [ 1, "=pod\n\nL<display (|/Section>\n" ],

@@ -1,4 +1,4 @@
-# Copyright 2013 Kevin Ryde
+# Copyright 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -38,7 +38,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters =>
   ({ name           => 'uniqueness',
@@ -115,16 +115,10 @@ use strict;
 use warnings;
 use base 'Perl::Critic::Pulp::PodParser';
 
-sub new {
-  my $class = shift;
-  my $self = $class->SUPER::new (@_);
-  return $self;
-}
-
 sub command {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
+  my $self = shift;
+  my ($command, $text, $linenum, $paraobj) = @_;
   ### $command
-  ### v: $self->{'violations'}
 
   if ($command =~ /^head(\d*)$/) {
     my $level = $1 || 0;
@@ -271,8 +265,8 @@ L<Perl::Critic/POLICY THEMES>) and medium severity.
 =head2 Default Uniqueness
 
 The policy default is to demand that a given heading is unique to its
-siblings and ancestors and to the immediately adjacent heading irrespective
-of level.  This is designed to be how human readers perceive the scope of
+ancestors, siblings, and to the immediately adjacent heading irrespective of
+level.  This is designed to be how human readers perceive the scope of
 headings and subheadings, plus adjacency in case a mixture of heading levels
 would let a duplicate otherwise go undetected.  For example
 
@@ -378,7 +372,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2013 Kevin Ryde
+Copyright 2013, 2014 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

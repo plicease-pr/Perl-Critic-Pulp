@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 20;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ require Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 81;
+my $want_version = 82;
 is ($Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitVerbatimMarkup->VERSION,
@@ -60,6 +60,9 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (
+                  [ 0, "=begin comment\n\n    Some C<markup>" ],
+                  [ 1, "=begin :comment\n\n    Some C<markup>" ],
+
                   [ 0, "=pod\n\n=for ProhibitVerbatimMarkup allow next\n\n    Some C<markup>" ],
                   [ 1, "=pod\n\n=for ProhibitVerbatimMarkup allow next\n\n    Some C<markup>\n\n    But not B<more>\n" ],
 

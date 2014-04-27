@@ -46,6 +46,7 @@ devel/grep-if-if.pl
 devel/grep-import-tag.pl
 devel/grep-makefile-exit.pl
 devel/grep-pack.pl
+devel/grep-pod-begin-no-newline.pl
 devel/grep-pod-begin.pl
 devel/grep-pod-blankline.pl
 devel/grep-pod-blanknonempty.pl
@@ -113,6 +114,7 @@ devel/open-space.pl
 devel/parse-backslash.pl
 devel/perl-minimum.pl
 devel/pod-minimum.pl
+devel/podparser.pl
 devel/posix-import.pl
 devel/posix-size.pl
 devel/posix-user.pl

@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 81;
+our $VERSION = 82;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -69,7 +69,10 @@ my %command_non_text = (for   => 1,
                         end   => 1,
                         cut   => 1);
 sub command {
-  my ($self, $command, $text, $linenum, $paraobj) = @_;
+  my $self = shift;
+  my ($command, $text, $linenum, $paraobj) = @_;
+  $self->SUPER::command(@_);  # maintain 'in_begin'
+
   if ($command_non_text{$command}) {
     # skip directives
     return '';
@@ -78,15 +81,15 @@ sub command {
   return '';
 }
 
-sub verbatim {
-  my ($self) = @_;
-  return '';
-}
-
 sub textblock {
   my ($self, $text, $linenum, $pod_para) = @_;
   ### textblock
   ### $text
+
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
+    return '';
+  }
+
   my $expand = $self->interpolate ($text, $linenum);
   ### $expand
   my $ptree = $self->parse_text ($text, $linenum);
