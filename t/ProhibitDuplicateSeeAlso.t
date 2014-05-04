@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 82;
+my $want_version = 83;
 is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitDuplicateSeeAlso->VERSION,

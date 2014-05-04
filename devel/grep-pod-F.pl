@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -18,6 +18,8 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Grep for filenames in POD which don't have F<> or other markup.
+#
 # /usr /opt /tmp /etc c:\
 # exclude NAME section for apropos
 

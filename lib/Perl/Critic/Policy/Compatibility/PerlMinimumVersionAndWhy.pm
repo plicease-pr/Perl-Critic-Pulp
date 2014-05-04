@@ -28,7 +28,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 82;
+our $VERSION = 83;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -119,6 +119,7 @@ sub _setup_extra_checks {
     $Perl::MinimumVersion::CHECKS{_Pulp__5010_operators__fix} = $v5010;
   }
   $Perl::MinimumVersion::CHECKS{_Pulp__5010_qr_m_propagate_properly} = $v5010;
+  $Perl::MinimumVersion::CHECKS{_Pulp__5010_stacked_filetest} = $v5010;
 
   # 5.8.0
   my $v5008 = version->new('5.008');
@@ -189,7 +190,7 @@ sub _setup_extra_checks {
 
 sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
   my ($pmv) = @_;
-  ### _Pulp__5010_qr_m_propagate_properly() check
+  ### _Pulp__5010_qr_m_propagate_properly() check ...
   $pmv->Document->find_first
     (sub {
        my ($document, $elem) = @_;
@@ -200,6 +201,28 @@ sub Perl::MinimumVersion::_Pulp__5010_qr_m_propagate_properly {
        return ($modifiers{'m'} ? 1 : 0);
      });
 }
+
+# new in 5.010 as described in perlfunc.pod
+sub Perl::MinimumVersion::_Pulp__5010_stacked_filetest {
+  my ($pmv) = @_;
+  ### _Pulp__5010_stacked_filetest() check ...
+  $pmv->Document->find_first
+    (sub {
+       my ($document, $elem) = @_;
+       return (_elem_is_filetest_operator($elem)     # -X
+               && ($elem = $elem->snext_sibling)     # has a next sibling
+               && _elem_is_filetest_operator($elem)  # -X
+               ? 1 : 0);
+     });
+}
+# $elem is a PPI::Element
+# Return true if it's a -X operator.
+sub _elem_is_filetest_operator {
+  my ($elem) = @_;
+  return ($elem->isa('PPI::Token::Operator')
+          && $elem =~ /^-./);
+}
+
 
 #-----------------------------------------------------------------------------
 # foo \n => fat comma across newline new in 5.8.0
@@ -950,6 +973,10 @@ new C<keys @array>, C<values @array> and C<each @array>
 
 C<qr//m>, since "m" modifier doesn't propagate correctly on a C<qr> until
 5.10
+
+=item *
+
+C<-e -f -x> stacked filetest operators.
 
 =item *
 

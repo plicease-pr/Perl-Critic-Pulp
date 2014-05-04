@@ -18,6 +18,9 @@
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Tests with Perl::MinimumVersion available.
+
+
 use 5.006;
 use strict;
 use warnings;
@@ -38,7 +41,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 173;
+plan tests => 178;
 
 use lib 't';
 use MyTestHelpers;
@@ -49,7 +52,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 82;
+  my $want_version = 83;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -67,6 +70,13 @@ diag "pulp magic fix: ",($have_pulp_5010_magic_fix||0);
 
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
+
+                  # _Pulp__5010_stacked_filetest
+                  [ 0, 'use 5.008; if (-e "/tmp/foo.txt") { }' ],
+                  [ 1, 'use 5.008; if (-e -x "/tmp/foo.txt") { }' ],
+                  [ 1, 'use 5.008; if (-e -x -f "/tmp/foo.txt") { }' ],
+                  [ 0, 'use 5.010; if (-e -x "/tmp/foo.txt") { }' ],
+                  [ 0, 'use 5.010; if (-e -x -f "/tmp/foo.txt") { }' ],
 
                   # _Pulp__eval_line_directive_first_thing
                   [ 1, 'use 5.006; eval "#line 123"' ],

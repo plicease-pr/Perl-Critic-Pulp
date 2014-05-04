@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 82;
+our $VERSION = 83;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -86,6 +86,7 @@ sub textblock {
   ### textblock
   ### $text
 
+  # process outside =begin, and inside =begin which is ":" markup
   unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
     return '';
   }

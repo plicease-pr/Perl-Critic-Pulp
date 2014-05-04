@@ -31,7 +31,7 @@ require Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 82;
+my $want_version = 83;
 is ($Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders->VERSION,

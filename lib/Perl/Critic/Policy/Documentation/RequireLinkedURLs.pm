@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 82;
+our $VERSION = 83;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -73,6 +73,7 @@ sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
   ### textblock ...
 
+  # process outside =begin, and inside =begin which is ":" markup
   unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
     return '';
   }

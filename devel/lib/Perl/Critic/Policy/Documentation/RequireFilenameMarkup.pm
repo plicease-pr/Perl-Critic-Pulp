@@ -32,7 +32,7 @@ use Pod::Escapes;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 82;
+our $VERSION = 83;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -69,7 +69,9 @@ sub textblock {
     $self->{'allow_next'}--;
     return '';
   }
-  if ($self->{'in_begin'}) {
+
+  # process outside =begin, and inside =begin which is ":" markup
+  unless ($self->{'in_begin'} eq '' || $self->{'in_begin'} =~ /^:/) {
     return '';
   }
 
@@ -148,12 +150,13 @@ add-on.  It asks you to use C<FE<lt>E<gt>> markup on filenames.
     F</usr/bin>    # ok
     C</bin/sh>     # ok
 
-C<FE<lt>E<gt>> makes nice italics in man pages which can help make it clear
-that it's a filename, but otherwise this is a minor matter and on that basis
-this policy is under the "cosmetic" theme (see L<Perl::Critic/POLICY
-THEMES>) and lowest priority.
+C<FE<lt>E<gt>> makes nice italics in man pages which can help show that it's
+a filename.  But this is a minor matter and on that basis this policy is
+under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>) and lowest
+priority.
 
-Filenames are identified by likely candidates starting
+Filenames are identified by likely forms.  Currently words starting as
+follows are considered filenames.  F</usr> and F</etc> are the most common.
 
     /usr
     /bin
@@ -163,12 +166,10 @@ Filenames are identified by likely candidates starting
     /opt         # some proprietary Unix
     C:\          # MS-DOS
 
-F</usr> and F</etc> are the most common.
-
-Any markup satisfies this policy, not just C<FE<lt>E<gt>>.  So if
+Any markup suffices for this policy, not just C<FE<lt>E<gt>>.  So if
 C<CE<lt>E<gt>> suits better because the filename is part of program code
-then that's fine.  All "verbatim" paragraphs are ignored too, since markup
-is not possible there.
+then that's fine.  All "verbatim" paragraphs are ignored, since markup is
+not possible there.
 
 =head2 Disabling
 

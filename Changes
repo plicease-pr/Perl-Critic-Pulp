@@ -17,6 +17,10 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 83, May 2014
+    - PerlMinimumVersionAndWhy new 5.10 -e -x stacked filetest per
+      Kent Fredric RT#95208
+
 Version 82, April 2014
     - ProhibitAdjacentLinks, ProhibitLinkToSelf,
       ProhibitParagraphTwoDots, ProhibitUnbalancedParens,
