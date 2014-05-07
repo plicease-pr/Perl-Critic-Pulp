@@ -97,8 +97,6 @@ devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraClose.pm
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraClose.t
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraOpen.pm
-devel/lib/Perl/Critic/Policy/Documentation/RequireFilenameMarkup.pm
-devel/lib/Perl/Critic/Policy/Documentation/RequireFilenameMarkup.t
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
@@ -150,6 +148,7 @@ lib/Perl/Critic/Policy/Documentation/ProhibitParagraphTwoDots.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitUnbalancedParens.pm
 lib/Perl/Critic/Policy/Documentation/ProhibitVerbatimMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireEndBeforeLastPod.pm
+lib/Perl/Critic/Policy/Documentation/RequireFilenameMarkup.pm
 lib/Perl/Critic/Policy/Documentation/RequireFinalCut.pm
 lib/Perl/Critic/Policy/Documentation/RequireLinkedURLs.pm
 lib/Perl/Critic/Policy/Miscellanea/TextDomainPlaceholders.pm
@@ -218,6 +217,7 @@ t/ProhibitUseQuotedVersion.t
 t/ProhibitVerbatimMarkup.t
 t/Pulp.t
 t/RequireEndBeforeLastPod.t
+t/RequireFilenameMarkup.t
 t/RequireFinalCut.t
 t/RequireFinalSemicolon.t
 t/RequireLinkedURLs.t

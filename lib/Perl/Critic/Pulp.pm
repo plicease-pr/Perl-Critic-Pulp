@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 83;
+our $VERSION = 84;
 
 1;
 __END__
@@ -195,6 +195,10 @@ Don't duplicate C<< LE<lt>E<gt> >> links in SEE ALSO sections.
 =item L<Documentation::ProhibitBadAproposMarkup|Perl::Critic::Policy::Documentation::ProhibitBadAproposMarkup>
 
 Avoid C<< CE<lt>E<gt> >> in NAME section, bad for man's "apropos" output.
+
+=item L<Documentation::RequireFilenameMarkup|Perl::Critic::Policy::Documentation::RequireFilenameMarkup>
+
+Markup /foo filenames.
 
 =item L<Documentation::ProhibitLinkToSelf|Perl::Critic::Policy::Documentation::ProhibitLinkToSelf>
 

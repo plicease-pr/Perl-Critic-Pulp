@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 37;
 
 use lib 't';
 use MyTestHelpers;
@@ -29,12 +29,11 @@ BEGIN { MyTestHelpers::nowarnings() }
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-use lib 'devel/lib';
 require Perl::Critic::Policy::Documentation::RequireFilenameMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 83;
+my $want_version = 84;
 is ($Perl::Critic::Policy::Documentation::RequireFilenameMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireFilenameMarkup->VERSION,
@@ -65,13 +64,29 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   # //foo is not a filename, eg. http://dev.foo.org
+   # perlcritic -s RequireFilenameMarkup /usr/share/perl5/Moo.pm
    [ 0, "=pod\n\nhttp://dev.perl.org/rfc/257.pod" ],
    [ 0, "=pod\n\nL<http://dev.perl.org/rfc/257.pod>" ],
 
+   [ 1, "=pod\n\n(/usr" ],
+   [ 1, "=pod\n\n(/usr)" ],
+   [ 1, "=pod\n\n/usr)" ],
+   [ 0, "=pod\n\n[/usr" ],
+   [ 0, "=pod\n\n{/usr}" ],
+   [ 0, "=pod\n\n</usr>" ],
+
    [ 1, "=pod\n\n/usr" ],
    [ 1, "=pod\n\n/usr\n" ],
+   [ 1, "=pod\n\nBlah /usr\n" ],
+   [ 1, "=pod\n\n/usr blah\n" ],
    [ 0, "=pod\n\nF</usr>\n" ],
    [ 0, "=pod\n\nblah/blah/etcetera\n" ],
+
+   [ 1, "=pod\n\n/usr/share" ],
+   [ 1, "=pod\n\n/usr/share blah" ],
+   [ 1, "=pod\n\nblah /usr/share" ],
+   [ 2, "=pod\n\n/tmp\n/dev" ],
 
    [ 1, "=pod\n\n/bin\n" ],
    [ 0, "=pod\n\nC</bin>\n" ],

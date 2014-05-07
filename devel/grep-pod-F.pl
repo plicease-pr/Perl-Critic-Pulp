@@ -42,6 +42,23 @@ use MyStuff;
 my $verbose = 0;
 ### verbose on: $verbose=1
 
+# my $str = File::Slurp::slurp('/down/el/monk-7/scripts/monk-cddb.pl');
+# print zap_to_first_pod($str);
+# exit 0;
+
+my $l = MyLocatePerl->new (include_pod => 1,
+                           exclude_t => 1,
+                           # under_directory => '/usr/share/perl5',
+                           # under_directory => '/usr/share/perl/5.14.2',
+                          );
+while (my ($filename, $str) = $l->next) {
+  if ($verbose) { print "look at $filename\n"; }
+  process_file ($filename, $str);
+  ### exit: exit()
+}
+
+
+
 sub keep_only_newlines {
   my ($str) = @_;
   $str =~ tr/\n//cd;
@@ -98,7 +115,7 @@ sub zap_non_pod {
   $str = zap_to_first_pod($str);
   $str = zap_after_last_pod($str);
   $str =~ s{(\n\n=cut.*\n)((.*\n)*)(\n^=)}
-    {$1 . keep_only_newlines($2) . $4}emg;
+           {$1 . keep_only_newlines($2) . $4}emg;
   return $str;
 }
 
@@ -108,57 +125,60 @@ sub process_file {
   $str = zap_pod_verbatim($str);
   ### $str
 
+  {
+    while ($str =~ m{(^|[\([:space:]])
+                            (
+                              /(bin|etc|dev|opt|proc|tmp|usr|var)($|[)[:space:]]|/\S*)
+                            |[cC]:\\\S*
+                            )
+                         }mgx) {
+      my $before = $1;
+      my $match = $2;
+      my $pos = $-[2];
+      $match =~ s/[[:space:].,;]+$//;
+
+      my ($linenum, $colnum) = MyStuff::pos_to_line_and_column($str, $pos);
+      print "$filename:$linenum:$colnum: \"$match\"\n   ",
+        MyStuff::line_at_pos($str, $pos);
+    }
+    return;
+  }
+
   # if ($str =~ m{/opt}) {
   #   print $str;
   # }
-
-  while ($str =~ m{([CFBIL]<.*?)?
-                   ((/usr
-                     |(?<!\w)/bin
-                     |(?<!\w)/tmp
-                     |(?<!\w)/dev/
-                     |(?<!\w)/opt # (?!ion)
-                     |(?<!\w|\))/etc(?!etera)
-                     |(?<!\w)[Cc]:\\\w
+  {
+    while ($str =~ m{([CFBIL]<.*?)?
+                     ((/usr
+                       |(?<!\w)/bin
+                       |(?<!\w)/tmp
+                       |(?<!\w)/dev/
+                       |(?<!\w)/opt # (?!ion)
+                         #               |(?<!\w|\))/etc(?!etera)
+                       |(?<!\w)[Cc]:\\\w
+                       )
+                       [^ \t\r\n\f>]*
                      )
-                    [^ \t\r\n\f>]*
-                   )
                   }ogx) {
-    my $markup = $1;
-    my $match = $2;
-    my $pos = $-[2];
-    ### $markup
-    if (defined $markup) {
-      next unless $markup && $markup =~ />/;
+      my $markup = $1;
+      my $match = $2;
+      my $pos = $-[2];
+      ### $markup
+      if (defined $markup) {
+        next unless $markup && $markup =~ />/;
+      }
+      # next if $match =~ /usr/;
+      # next unless $match =~ /dev/;
+      # next unless $match =~ /c:/i;
+      # next unless $match =~ /tmp/;
+      # next unless $match =~ /bin/;
+      # next unless $match =~ /opt/;
+
+      my ($linenum, $colnum) = MyStuff::pos_to_line_and_column($str, $pos);
+      print "$filename:$linenum:$colnum: $match\n   ",
+        MyStuff::line_at_pos($str, $pos);
     }
-
-    # next if $match =~ /usr/;
-    # next unless $match =~ /dev/;
-    # next unless $match =~ /c:/i;
-    # next unless $match =~ /tmp/;
-    # next unless $match =~ /bin/;
-    # next unless $match =~ /opt/;
-
-    my ($linenum, $colnum) = MyStuff::pos_to_line_and_column($str, $pos);
-    print "$filename:$linenum:$colnum: $match\n   ",
-      MyStuff::line_at_pos($str, $pos);
   }
-}
-
-# my $str = File::Slurp::slurp('/down/el/monk-7/scripts/monk-cddb.pl');
-# print zap_to_first_pod($str);
-# exit 0;
-
-
-my $l = MyLocatePerl->new (include_pod => 1,
-                           exclude_t => 1,
-                            under_directory => '/usr/share/perl5',
-                          # under_directory => '/usr/share/perl/5.14.2',
-                          );
-while (my ($filename, $str) = $l->next) {
-  if ($verbose) { print "look at $filename\n"; }
-  process_file ($filename, $str);
-  ### exit: exit()
 }
 
 exit 0;
@@ -176,3 +196,8 @@ Blah F</usr/bin/foo>
 
 Common prefixes
 to use are /usr/local and /opt/perl.
+
+Under /proc
+Under /proc blah.
+Blah /tmp as blah.
+Blah /tmp/foo.txt as blah.

@@ -27,7 +27,7 @@ use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
 #-----------------------------------------------------------------------------
-my $want_version = 83;
+my $want_version = 84;
 is ($Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::ProhibitFatCommaNewline->VERSION,

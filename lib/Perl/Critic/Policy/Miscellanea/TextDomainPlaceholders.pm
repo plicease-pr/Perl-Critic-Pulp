@@ -29,7 +29,7 @@ use Perl::Critic::Utils qw(is_function_call
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 83;
+our $VERSION = 84;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;

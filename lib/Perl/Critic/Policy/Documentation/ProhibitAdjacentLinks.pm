@@ -40,7 +40,7 @@ use Perl::Critic::Utils;
 #    L<Pod::Parser> L<command|Pod::Parser/command>
 #
 
-our $VERSION = 83;
+our $VERSION = 84;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;

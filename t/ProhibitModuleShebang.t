@@ -33,7 +33,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::Modules::ProhibitModuleShebang;
 
 #-----------------------------------------------------------------------------
-my $want_version = 83;
+my $want_version = 84;
 is ($Perl::Critic::Policy::Modules::ProhibitModuleShebang::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::ProhibitModuleShebang->VERSION,

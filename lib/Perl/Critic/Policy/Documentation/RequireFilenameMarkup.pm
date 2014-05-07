@@ -32,7 +32,7 @@ use Pod::Escapes;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 83;
+our $VERSION = 84;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -57,8 +57,9 @@ use base 'Perl::Critic::Pulp::PodParser';
 
 sub command {
   my $self = shift;
+  $self->SUPER::command(@_);  # for $self->{'in_begin'}
   $self->command_as_textblock(@_);
-  return $self->SUPER::command(@_);  # for $self->{'in_begin'}
+  return '';
 }
 
 sub textblock {
@@ -79,22 +80,16 @@ sub textblock {
   ### $text
   ### $interpolated
 
-  while ($interpolated =~ m{(^|\W)
-                            ((/usr
-                              |/bin
-                              |/tmp
-                              |/etc(\W|$)
-                              |/dev(\W|$)
-                              |/opt(\W|$)
-                              |[cC]:\\
-                              )[^ \t\r\n]*)}gx) {
+  while ($interpolated =~ m{(^|[\([:space:]])
+                            (
+                              /(bin|etc|dev|opt|proc|tmp|usr|var)($|[)[:space:]]|/\S*)
+                            |[cC]:\\\S*
+                            )
+                         }mgx) {
     my $before = $1;
     my $match = $2;
+    $match =~ s/[.,;:]+$//;
     my $pos = pos($interpolated) - length($match);
-
-    # //foo is not a filename, eg. http://dev.foo.org
-    # perlcritic -s RequireFilenameMarkup /usr/share/perl5/Moo.pm
-    next if $before eq '/';
 
     $self->violation_at_linenum_and_textpos
       ("Filename without F<> or other markup \"$match\"\n",
@@ -132,16 +127,16 @@ sub interior_sequence {
 1;
 __END__
 
-=for stopwords Ryde paren parens ie deref there'd backslashing Parens
+=for stopwords Ryde filenames filename Filenames
 
 =head1 NAME
 
-Perl::Critic::Policy::Documentation::RequireFilenameMarkup - extra closing ">" after markup
+Perl::Critic::Policy::Documentation::RequireFilenameMarkup - markup /foo filenames
 
 =head1 DESCRIPTION
 
 This policy is part of the L<C<Perl::Critic::Pulp>|Perl::Critic::Pulp>
-add-on.  It asks you to use C<FE<lt>E<gt>> markup on filenames.
+add-on.  It asks you to use C<FE<lt>E<gt>> or other markup on filenames.
 
 =for ProhibitVerbatimMarkup allow next 2
 
@@ -150,26 +145,31 @@ add-on.  It asks you to use C<FE<lt>E<gt>> markup on filenames.
     F</usr/bin>    # ok
     C</bin/sh>     # ok
 
-C<FE<lt>E<gt>> makes nice italics in man pages which can help show that it's
-a filename.  But this is a minor matter and on that basis this policy is
-under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>) and lowest
-priority.
+C<FE<lt>E<gt>> lets the formatters show filenames in a usual way, such as
+italics in man pages.  This can help human readability but is a minor matter
+and on that basis this policy is under the "cosmetic" theme (see
+L<Perl::Critic/POLICY THEMES>) and lowest priority.
 
-Filenames are identified by likely forms.  Currently words starting as
-follows are considered filenames.  F</usr> and F</etc> are the most common.
+Filenames in text are identified by likely forms.  Currently words starting
+as follows are considered filenames.  F</usr> and F</etc> are the most
+common.
 
-    /usr
     /bin
+    /dev      
     /etc
-    /dev
-    /tmp
     /opt         # some proprietary Unix
+    /proc
+    /tmp
+    /usr
+    /var
     C:\          # MS-DOS
 
-Any markup suffices for this policy, not just C<FE<lt>E<gt>>.  So if
-C<CE<lt>E<gt>> suits better because the filename is part of program code
-then that's fine.  All "verbatim" paragraphs are ignored, since markup is
-not possible there.
+Any markup on a filename satisfies this policy.  C<FE<lt>E<gt>> is usual,
+but C<CE<lt>E<gt>> might be used as for instance C<CE<lt>/bin/shE<gt>> to
+show it's a command with path rather than a file as such.
+
+C<=begin> blocks of <:> POD type are checked since they can have markup.
+"Verbatim" paragraphs are ignored since of course they cannot have markup.
 
 =head2 Disabling
 
