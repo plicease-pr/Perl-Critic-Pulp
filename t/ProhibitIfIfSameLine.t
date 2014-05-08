@@ -28,7 +28,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 84;
+my $want_version = 85;
 is ($Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine->VERSION,

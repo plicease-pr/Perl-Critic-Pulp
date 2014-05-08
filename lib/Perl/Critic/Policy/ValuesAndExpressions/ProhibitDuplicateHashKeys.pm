@@ -32,7 +32,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 #use Smart::Comments;
 
 
-our $VERSION = 84;
+our $VERSION = 85;
 
 use constant supported_parameters => ();
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;

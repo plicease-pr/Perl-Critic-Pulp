@@ -43,8 +43,10 @@ requires:
   Perl::Critic::Utils: '1.100'
   Perl::Critic::Utils::PPI: '0'
   Perl::Critic::Violation: '0'
+  Pod::Escapes: '0'
   Pod::MinimumVersion: '50'
   Pod::ParseLink: '0'
+  Pod::Parser: '0'
   Scalar::Util: '0'
   Test::More: '0'
   perl: '5.006'
@@ -52,4 +54,4 @@ requires:
 resources:
   homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
   license: http://www.gnu.org/licenses/gpl.html
-version: '84'
+version: '85'

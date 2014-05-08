@@ -72,6 +72,8 @@ WriteMakefile
                  # and comes with perl 5.10 anyway too.
                  'version' => 0,
 
+                 'Pod::Escapes' => 0,
+                 'Pod::Parser' => 0,
                  'Pod::ParseLink' => 0,
                 },
 

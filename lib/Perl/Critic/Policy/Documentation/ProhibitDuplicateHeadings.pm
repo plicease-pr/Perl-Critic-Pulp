@@ -38,7 +38,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 84;
+our $VERSION = 85;
 
 use constant supported_parameters =>
   ({ name           => 'uniqueness',

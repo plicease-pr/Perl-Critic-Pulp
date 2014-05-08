@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireFilenameMarkup;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 84;
+my $want_version = 85;
 is ($Perl::Critic::Policy::Documentation::RequireFilenameMarkup::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireFilenameMarkup->VERSION,
@@ -64,6 +64,9 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   # E<> is bad too
+   [ 1, "=pod\n\nE<sol>opt\n" ],
+
    # //foo is not a filename, eg. http://dev.foo.org
    # perlcritic -s RequireFilenameMarkup /usr/share/perl5/Moo.pm
    [ 0, "=pod\n\nhttp://dev.perl.org/rfc/257.pod" ],
@@ -102,9 +105,6 @@ foreach my $data
    # Z<> is bad too
    [ 1, "=pod\n\n/dev/nullZ<>\n" ],
    [ 1, "=pod\n\nZ<>/dev/null\n" ],
-
-   # E<> is bad too
-   [ 1, "=pod\n\nE<sol>opt\n" ],
 
   ) {
   my ($want_count, $str) = @$data;

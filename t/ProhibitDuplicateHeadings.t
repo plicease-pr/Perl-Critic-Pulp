@@ -34,7 +34,7 @@ require Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 84;
+my $want_version = 85;
 is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings->VERSION,
