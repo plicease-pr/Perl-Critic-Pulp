@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 85;
+our $VERSION = 86;
 
 use constant supported_parameters =>
   ({ name           => 'allow_indirect_syntax',

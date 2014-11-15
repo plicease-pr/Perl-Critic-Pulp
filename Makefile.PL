@@ -23,10 +23,10 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile
-  (NAME         => 'Perl-Critic-Pulp',
+  (NAME         => 'Perl::Critic::Pulp',
    ABSTRACT     => 'Some add-on policies for Perl::Critic.',
    VERSION_FROM => 'lib/Perl/Critic/Pulp.pm',
-   AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
+   AUTHOR       => 'Kevin Ryde <user42_kevin@yahoo.com.au>',
    LICENSE      => 'gpl_3',
    SIGN         => 1,
    MIN_PERL_VERSION => '5.006',

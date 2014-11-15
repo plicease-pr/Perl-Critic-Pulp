@@ -30,7 +30,7 @@ Section: perl
 Priority: optional
 Build-Depends: cdbs, debhelper (>= 5), libtest-more-perl | perl (>= 5.6.2)
 Maintainer: Kevin Ryde <user42_kevin@yahoo.com.au>
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
 Bugs: mailto:user42_kevin@yahoo.com.au
 

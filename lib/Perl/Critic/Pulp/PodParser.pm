@@ -22,7 +22,7 @@ use warnings;
 use Perl::Critic::Pulp::Utils;
 use base 'Pod::Parser';
 
-our $VERSION = 85;
+our $VERSION = 86;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;

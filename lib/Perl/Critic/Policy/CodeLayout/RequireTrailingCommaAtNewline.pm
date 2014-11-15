@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 85;
+our $VERSION = 86;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -232,10 +232,10 @@ even at runtime) which would say for sure.
 
 It's handy to included parens around a single-value expression to make it
 clear some big arithmetic is all part of the return, especially if you can't
-remember precedence levels very well.  In such an expression a newline
-before the final ")" can help keep a comment together with a term for a cut
-and paste, or not lose a paren if commenting the last line, etc.  So for now
-the policy is lenient.  Would an option be good though?
+remember precedence levels.  In such an expression a newline before the
+final ")" can help keep a comment together with a term for a cut and paste,
+or not lose a paren if commenting the last line, etc.  So for now the policy
+is lenient.  Would an option be good though?
 
 =head2 Disabling
 
@@ -244,13 +244,6 @@ C<RequireTrailingCommaAtNewline> from F<.perlcriticrc> in the usual way (see
 L<Perl::Critic/CONFIGURATION>),
 
     [-CodeLayout::RequireTrailingCommaAtNewline]
-
-=head2 Other Ways to Do It
-
-This policy is a variation of C<CodeLayout::RequireTrailingCommas>.  That
-policy doesn't apply to function calls or hashref constructors, and you may
-find its requirement for a trailing comma in even one-line lists like
-C<@x=(1,2,)> too much.
 
 =head1 CONFIGURATION
 
@@ -283,6 +276,13 @@ following in your F<.perlcriticrc> file,
 L<Perl::Critic::Pulp>,
 L<Perl::Critic>,
 L<Perl::Critic::Policy::CodeLayout::RequireTrailingCommas>
+
+=head2 Other Ways to Do It
+
+This policy is a variation of C<CodeLayout::RequireTrailingCommas>.  That
+policy doesn't apply to function calls or hashref constructors, and you may
+find its requirement for a trailing comma in even one-line lists like
+C<@x=(1,2,)> too much.
 
 =head1 HOME PAGE
 

@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 68;
+use Test::More tests => 69;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 85;
+my $want_version = 86;
 is ($Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon->VERSION, $want_version, 'VERSION class method');
 {
@@ -58,6 +58,13 @@ my $critic = Perl::Critic->new
 }
 
 foreach my $data (# no critic (RequireInterpolationOfMetachars)
+
+                  [ 1, "
+{
+  print <<HERE
+some text
+HERE
+}" ],
 
                   [ 0, "map { \$x\n } \@y" ],
                   [ 0, "map {; q{a},1\n } \@y" ],

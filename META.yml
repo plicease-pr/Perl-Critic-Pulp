@@ -1,13 +1,13 @@
 ---
 abstract: 'Some add-on policies for Perl::Critic.'
 author:
-  - 'Kevin Ryde <user42@zip.com.au>'
+  - 'Kevin Ryde <user42_kevin@yahoo.com.au>'
 build_requires:
   ExtUtils::MakeMaker: '0'
 configure_requires:
   ExtUtils::MakeMaker: '0'
 dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.140640'
+generated_by: 'ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.142690'
 license: gpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -54,4 +54,4 @@ requires:
 resources:
   homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
   license: http://www.gnu.org/licenses/gpl.html
-version: '85'
+version: '86'

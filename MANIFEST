@@ -82,6 +82,7 @@ devel/grep-spelling.pl
 devel/grep-stacked-filetest.pl
 devel/grep-t-print.pl
 devel/grep-test-print.pl
+devel/grep-trailing-comma-heredoc.pl
 devel/grep-use-decimal.pl
 devel/grep-use-langinfo.pl
 devel/grep-use-posix.pl

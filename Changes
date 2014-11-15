@@ -17,6 +17,12 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 87, November 2014
+    - ConstantBeforeLt allow for PPI incompatible change to ->prototype()
+
+Version 86, May 2014
+    - RequireFilenameMarkup
+
 Version 85, May 2014
     - oops forgot Pod::Escapes in PREREQ_PM, per Petr Pisar RT#95440
 

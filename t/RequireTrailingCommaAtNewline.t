@@ -22,7 +22,7 @@ use 5.006;
 use strict;
 use warnings;
 use Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline;
-use Test::More tests => 42;
+use Test::More tests => 43;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 85;
+my $want_version = 86;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,
@@ -62,6 +62,18 @@ my $policy;
 }
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
+
+# PENDING...
+#                   [ 0, "
+# foo(<<HERE
+# some text
+# HERE
+#    );" ],
+
+                  [ 0, "
+foo(<<HERE);
+some text
+HERE" ],
 
                   [ 1, 'return (123,
                                 456

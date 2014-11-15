@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 85;
+our $VERSION = 86;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -308,7 +308,7 @@ The advantage of a semicolon is that if your add more code you don't have to
 notice the previous line needs a terminator.  It's also more like the C
 language, if you consider that a virtue.
 
-=head2 Exceptions
+=head2 Same Line Closing Brace
 
 By default (see L</CONFIGURATION> below) a semicolon is not required when
 the closing brace is on the same line as the last statement.  This is good
@@ -318,9 +318,10 @@ for constants and one-liners.
 
     sub square { return $_[0] ** 2 }    # ok
 
-Nor is a semicolon required in places where the last statement is an
-expression giving a value, which currently means a C<do>, C<grep> or C<map>
-block.
+=head2 Final Value Expression
+
+A semicolon required in places where the last statement is an expression
+giving a value.  This currently means a C<do>, C<grep> or C<map> block.
 
     map { some_thing();
           $_+123             # ok
@@ -331,8 +332,8 @@ block.
       1+2+3                  # ok
     }
 
-However a C<do {} while> or C<do {} until> loop still requires a semicolon
-like ordinary blocks.
+A C<do {} while> or C<do {} until> loop is an ordinary block and so still
+requires a semicolon.
 
     do {
       foo()                  # bad

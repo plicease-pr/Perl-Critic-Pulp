@@ -30,7 +30,7 @@ use Perl::Critic::Utils qw(is_included_module_name
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 85;
+our $VERSION = 86;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -111,7 +111,8 @@ sub _use_constants {
   my ($elem) = @_;
 
   if ($elem->isa ('PPI::Statement::Sub')) {
-    if ($elem->prototype eq '()') {
+    my $prototype = $elem->prototype;
+    if (defined $prototype && $prototype eq '()') {
       if (my $name = $elem->name) {
         return $name;
       }

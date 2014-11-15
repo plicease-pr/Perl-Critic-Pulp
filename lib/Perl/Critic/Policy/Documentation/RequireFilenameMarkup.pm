@@ -21,6 +21,7 @@
 # unmarked /usr/local
 # perlcritic -s RequireFilenameMarkup /usr/share/perl5/XML/Twig.pm
 
+
 package Perl::Critic::Policy::Documentation::RequireFilenameMarkup;
 use 5.006;
 use strict;
@@ -32,7 +33,7 @@ use Pod::Escapes;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 85;
+our $VERSION = 86;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -80,10 +81,14 @@ sub textblock {
   ### $text
   ### $interpolated
 
-  while ($interpolated =~ m{(^|[\([:space:]])
+  while ($interpolated =~ m{(^ | (?<=[\([:space:]]))  # BOL or preceding space
                             (
-                              /(bin|etc|dev|opt|proc|tmp|usr|var)($|[)[:space:]]|/\S*)
-                            |[cC]:\\\S*
+                              /(bin|etc|dev|opt|proc|tmp|usr|var)
+                              ($                 # EOL
+                              |(?=[)[:space:]])  # or following space
+                              |/\S*)             # or /chars
+                            |
+                              [cC]:\\\S*
                             )
                          }mgx) {
     my $before = $1;
@@ -165,8 +170,8 @@ common.
     C:\          # MS-DOS
 
 Any markup on a filename satisfies this policy.  C<FE<lt>E<gt>> is usual,
-but C<CE<lt>E<gt>> might be used as for instance C<CE<lt>/bin/shE<gt>> to
-show it's a command with path rather than a file as such.
+but C<CE<lt>E<gt>> might suit for instance C<CE<lt>/bin/shE<gt>> to show
+it's a command with path rather than a file as such.
 
 C<=begin> blocks of <:> POD type are checked since they can have markup.
 "Verbatim" paragraphs are ignored since of course they cannot have markup.

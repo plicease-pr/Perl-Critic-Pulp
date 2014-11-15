@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013 Kevin Ryde
+# Copyright 2013, 2014 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,6 +20,32 @@
 use 5.004;
 use strict;
 use warnings;
+
+sub foo {
+  my ($self) = @_;
+
+  {
+    use TryCatch;
+    try {
+      print "try\n";
+      die 123;
+    }
+      catch ($err) {
+        print "catch $err\n";
+      }
+  }
+
+  try {
+    print "try\n";
+    die 456;
+  }
+    catch ($err) {
+      print "catch $err\n";
+    };
+}
+foo();
+exit 0;
+
 
 unless (1) {
   print "unless\n";
