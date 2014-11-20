@@ -28,9 +28,9 @@ use Perl::Critic::Utils qw(is_included_module_name
                            split_nodes_on_comma);
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
-our $VERSION = 86;
+our $VERSION = 87;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -112,7 +112,10 @@ sub _use_constants {
 
   if ($elem->isa ('PPI::Statement::Sub')) {
     my $prototype = $elem->prototype;
-    if (defined $prototype && $prototype eq '()') {
+    ### $prototype
+    if (defined $prototype
+        && ($prototype eq ''            # PPI 1.220 up
+            || $prototype eq '()')) {   # PPI pre-1.220
       if (my $name = $elem->name) {
         return $name;
       }

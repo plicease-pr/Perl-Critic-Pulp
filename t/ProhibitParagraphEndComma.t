@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 86;
+my $want_version = 87;
 is ($Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma->VERSION,

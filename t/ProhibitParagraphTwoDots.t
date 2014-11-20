@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 86;
+my $want_version = 87;
 is ($Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitParagraphTwoDots->VERSION,
