@@ -35,7 +35,7 @@ requires:
   IO::String: '1.02'
   List::MoreUtils: '0.24'
   List::Util: '0'
-  PPI: '1.212'
+  PPI: '1.220'
   PPI::Document: '0'
   PPI::Dumper: '0'
   Perl::Critic: '1.084'
@@ -54,4 +54,4 @@ requires:
 resources:
   homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
   license: http://www.gnu.org/licenses/gpl.html
-version: '87'
+version: '88'

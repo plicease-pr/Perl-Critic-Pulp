@@ -21,6 +21,7 @@ package Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
 use 5.006;
 use strict;
 use warnings;
+use PPI 1.220; # for its incompatible change to PPI::Statement::Sub->prototype
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_included_module_name
                            is_method_call
@@ -30,7 +31,7 @@ use Perl::Critic::Utils qw(is_included_module_name
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 87;
+our $VERSION = 88;
 
 #
 # Incidentally "require Foo < 123" is a similar sort of problem in all Perls
@@ -113,9 +114,7 @@ sub _use_constants {
   if ($elem->isa ('PPI::Statement::Sub')) {
     my $prototype = $elem->prototype;
     ### $prototype
-    if (defined $prototype
-        && ($prototype eq ''            # PPI 1.220 up
-            || $prototype eq '()')) {   # PPI pre-1.220
+    if (defined $prototype && $prototype eq '') { # prototype ()
       if (my $name = $elem->name) {
         return $name;
       }

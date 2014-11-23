@@ -36,7 +36,7 @@ use constant applies_to       => ('PPI::Token::Symbol');
 my $perl_510 = version->new('5.10.0');
 my $assignment_precedence = precedence_of('=');
 
-our $VERSION = 87;
+our $VERSION = 88;
 
 sub violates {
   my ($self, $elem, $document) = @_;

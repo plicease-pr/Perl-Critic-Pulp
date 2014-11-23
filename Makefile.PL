@@ -32,9 +32,8 @@ WriteMakefile
    MIN_PERL_VERSION => '5.006',
 
    PREREQ_PM => {
-                 # 1.208 for PPI::Token::QuoteLike::Regexp get_modifiers()
-                 # 1.212 for PPI::Token::Quote::Literal literal()
-                 'PPI' => '1.212',
+                 # 1.220 for its incompatible PPI::Statement::Sub->prototype()
+                 'PPI' => '1.220',
                  'PPI::Document' => 0,
                  # actually PPI::Dumper only used in the .t scripts if
                  # there's an error ...

@@ -64,7 +64,7 @@
             "IO::String" : "1.02",
             "List::MoreUtils" : "0.24",
             "List::Util" : "0",
-            "PPI" : "1.212",
+            "PPI" : "1.220",
             "PPI::Document" : "0",
             "PPI::Dumper" : "0",
             "Perl::Critic" : "1.084",
@@ -90,5 +90,5 @@
          "http://www.gnu.org/licenses/gpl.html"
       ]
    },
-   "version" : "87"
+   "version" : "88"
 }
