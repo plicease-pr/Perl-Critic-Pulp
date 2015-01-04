@@ -124,6 +124,11 @@ devel/qrm.pl
 devel/regexp-balanced.pl
 devel/regexp-string.pl
 devel/TestAutoload.pm
+devel/trailing-comma-heredoc.pl
+devel/try-catch.pl
+devel/try-syntax.pl
+devel/try-tiny.pl
+devel/try.pl
 devel/unknown-backslash.pl
 devel/use-quoted.pl
 devel/version.pl

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013, 2014, 2015 Kevin Ryde
+# Copyright 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,49 +17,48 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-use 5.004;
 use strict;
+use PPI::Document;
+use PPI::Dumper;
 
-use List::Util ();
-print List::Util::first { $_ > 10 } 1 .. 100;
-print "\n";
-
-__END__
-sub foo {
-  my ($self) = @_;
-
-  {
-    use TryCatch;
-    try {
-      print "try\n";
-      die 123;
-    }
-      catch ($err) {
-        print "catch $err\n";
-      }
-  }
-
-  try {
-    print "try\n";
-    die 456;
-  }
-    catch ($err) {
-      print "catch $err\n";
-    };
-}
-foo();
-exit 0;
-
-
-unless (1) {
-  print "unless\n";
-} elsif (2) {
-  print "elsif\n";
+my $whitespace = 1;
+sub ppidump {
+  my ($str) = @_;
+  $str =~ s/\s*$//s;
+  $str =~ s/^\s*//s;
+  my $document  = PPI::Document->new(\$str)
+    or die 'Could not parse code: ', PPI::Document::errstr(), "\n";
+  my $dump = PPI::Dumper->new($document,
+                              whitespace => $whitespace,
+                              locations => 1 );
+  $dump->print;
+  print "\n";
+  print $document->serialize;
+  print "\n";
 }
 
-unless (1) {
-  print "unless\n";
-} if (2) {
-  print "if\n";
-}
-exit 0;
+ppidump("
+foo(<<HERE
+123
+HERE
+);
+");
+
+ppidump("
+foo(<<HERE);
+123
+HERE
+");
+
+ppidump("
+print <<HERE
+123
+HERE
+  ;
+");
+
+ppidump("
+print <<HERE;
+123
+HERE
+");

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -25,9 +25,9 @@ use Perl::Critic::Pulp;
 use Perl::Critic::Pulp::Utils;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
-our $VERSION = 88;
+our $VERSION = 89;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -56,7 +56,7 @@ sub violates {
   my $block_last = $elem->schild(-1) || return;   # if empty
   ### block_last: ref($block_last),$block_last->content
   $block_last->isa('PPI::Statement') || do {
-    ### last in block is not a PPI-Statement
+    ### last in block is not a PPI-Statement ...
     return;
   };
   if (_elem_statement_no_need_semicolon($block_last)) {
@@ -109,8 +109,28 @@ sub _elem_statement_no_need_semicolon {
           || $elem->isa('PPI::Statement::End')    # __END__
           || $elem->isa('PPI::Statement::Null')   # ;
           || $elem->isa('PPI::Statement::UnmatchedBrace') # stray }
+          || _elem_is_try_block($elem)
          );
 }
+
+my %postfix_loops = (while => 1, until => 1);
+
+my %prefix_expressions = (do        => 1,
+                          map       => 1,
+                          grep      => 1,
+
+                          map { $_ => 1, "List::Util::$_" => 1 }
+                          qw(
+                             reduce any all none notall first
+                             pairfirst pairgrep pairmap
+                            ),
+
+                          map { $_ => 1, "List::Pairwise::$_" => 1 }
+                          qw(
+                             mapp map_pairwise grepp grep_pairwise
+                             firstp first_pairwise lastp last_pairwise
+                            ),
+                         );
 
 # $elem is a PPI::Structure::Block.
 # return 1 definitely a hash
@@ -131,13 +151,28 @@ sub _elem_statement_no_need_semicolon {
 my %word_is_block = (sub  => 1,
                      do   => 1,
                      map  => 1,
-                     grep => 1);
+                     grep => 1,
+
+                     # from Try.pm, TryCatch.pm, Try::Tiny prototypes, etc
+                     try     => 1,
+                     catch   => 1,
+                     finally => 1,
+
+                     # List::Util first() etc are not of interest to
+                     # RequireFinalSemicolon but ProhibitDuplicateHashKeys
+                     # shares this code so recognise them for it.
+                     %prefix_expressions,
+                    );
 sub _block_is_hash_constructor {
   my ($elem) = @_;
   ### _block_is_hash_constructor(): ref($elem), "$elem"
 
-  if (_block_starts_semi($elem)) {
-    ### begins with ";", block is correct ...
+  # if (_block_starts_semi($elem)) {
+  #   ### begins with ";", block is correct ...
+  #   return 0;
+  # }
+  if (_block_has_multiple_statements($elem)) {
+    ### contains one or more ";", block is correct ...
     return 0;
   }
 
@@ -209,6 +244,19 @@ sub _block_is_hash_constructor {
 }
 
 # $elem is a PPI::Structure::Block
+# return true if it contains two or more PPI::Statement
+#
+sub _block_has_multiple_statements {
+  my ($elem) = @_;
+  my $count = 0;
+  foreach my $child ($elem->schildren) {
+    $count++;
+    if ($count >= 2) { return 1; }
+  }
+  return 0;
+}
+
+# $elem is a PPI::Structure::Block
 # return true if it starts with a ";"
 #
 sub _block_starts_semi {
@@ -252,10 +300,6 @@ sub _newline_in_following_sibling {
   return 0;
 }
 
-my %postfix_loops = (while => 1, until => 1);
-
-my %prefix_expressions = (do => 1, map => 1, grep => 1);
-
 # $block is a PPI::Structure::Block
 # return true if it's "do{}" expression, and not a "do{}while" or "do{}until"
 # loop
@@ -271,11 +315,89 @@ sub _block_is_expression {
     }
   }
 
-  ### do{} or map{} or grep{}, are expressions
+  ### do, map, grep, etc are expressions ..
   my $prev = $elem->sprevious_sibling;
   return ($prev
           && $prev->isa('PPI::Token::Word')
           && $prefix_expressions{$prev});
+}
+
+# Return true if $elem is a "try" block like
+#     Try.pm                try { } catch {}
+#     TryCatch.pm           try { } catch ($err) {} ... catch {}
+#     Syntax::Feature::Try  try { } catch ($err) {} ... catch {} finally {}
+# The return is true only for the block type "try"s of these three modules.
+# "try" forms from Try::Tiny and its friends are plain subroutine calls
+# rather than blocks.
+#
+sub _elem_is_try_block {
+  my ($elem) = @_;
+  return ($elem->isa('PPI::Statement')
+          && ($elem = $elem->schild(0))
+          && $elem->isa('PPI::Token::Word')
+          && $elem->content eq 'try'
+          && _elem_has_preceding_trycatch($elem));
+}
+
+# return true if $elem is preceded by any of
+#     use Try
+#     use TryCatch
+#     use syntax 'try'
+sub _elem_has_preceding_trycatch {
+  my ($elem) = @_;
+  my $ret = 0;
+  my $document = $elem->top;  # PPI::Document, not Perl::Critic::Document
+  $document->find_first (sub {
+                           my ($doc, $e) = @_;
+                           # ### comment: (ref $e)."  ".$e->content
+                           if ($e == $elem) {
+                             ### not found before target elem, stop ...
+                             return undef;
+                           }
+                           if (_elem_is_use_try($e)) {
+                             ### found "use Try" etc, stop ...
+                             $ret = 1;
+                             return undef;
+                           }
+                           return 0; # continue
+                         });
+  return $ret;
+}
+
+sub _elem_is_use_try {
+  my ($elem) = @_;
+  ($elem->isa('PPI::Statement::Include') && $elem->type eq 'use')
+    or return 0;
+  my $module = $elem->module;
+  return ($module eq 'Try'
+          || $module eq 'TryCatch'
+          || ($module eq 'syntax'
+             && _syntax_has_feature($elem,'try')));
+}
+
+# $elem is a PPI::Statement::Include of "use syntax".
+# Return true if $feature (a string) is among the feature names it imports.
+sub _syntax_has_feature {
+  my ($elem, $feature) = @_;
+  return ((grep {$_ eq $feature} _syntax_feature_list($elem)) > 0);
+}
+
+# $elem is a PPI::Statement::Include of "use syntax".
+# Return a list of the feature names it imports.
+sub _syntax_feature_list {
+  my ($elem) = @_;
+  ### _syntax_feature_list(): $elem && ref $elem
+  my @ret;
+  for ($elem = $elem->schild(2); $elem; $elem = $elem->snext_sibling) {
+    if ($elem->isa('PPI::Token::Word')) {
+      push @ret, $elem->content;
+    } elsif ($elem->isa('PPI::Token::QuoteLike::Words')) {
+      push @ret, $elem->literal;
+    } elsif ($elem->isa('PPI::Token::Quote')) {
+      push @ret, $elem->string;
+    }
+  }
+  return @ret;
 }
 
 1;
@@ -296,17 +418,18 @@ subroutine or block.
     sub foo {
       do_something();      # ok
     }
+
     sub bar {
       do_something()       # bad
     }
 
+The idea is that if your add more code you don't have to notice the previous
+line needs a terminator.  It's also more like the C language, if you
+consider that a virtue.
+
 This is only a matter of style since the code runs the same either way, and
 on that basis this policy is low priority and under the "cosmetic" theme
 (see L<Perl::Critic/POLICY THEMES>).
-
-The advantage of a semicolon is that if your add more code you don't have to
-notice the previous line needs a terminator.  It's also more like the C
-language, if you consider that a virtue.
 
 =head2 Same Line Closing Brace
 
@@ -320,8 +443,8 @@ for constants and one-liners.
 
 =head2 Final Value Expression
 
-A semicolon required in places where the last statement is an expression
-giving a value.  This currently means a C<do>, C<grep> or C<map> block.
+A semicolon is not required in places where the last statement is an
+expression giving a value.
 
     map { some_thing();
           $_+123             # ok
@@ -332,19 +455,67 @@ giving a value.  This currently means a C<do>, C<grep> or C<map> block.
       1+2+3                  # ok
     }
 
-A C<do {} while> or C<do {} until> loop is an ordinary block and so still
-requires a semicolon.
+This currently means
+
+    do grep map                              # builtins
+
+    reduce any all none notall first         # List::Util
+    pairfirst pairgrep pairmap
+
+    mapp map_pairwise grepp grep_pairwise    # List::Pairwise
+    firstp first_pairwise lastp last_pairwise 
+
+The module functions are always treated as expressions.  There's no check
+for whether the respective module is actually in use.  Fully qualified names
+like C<List::Util::first> are recognised too.
+
+C<do {} while> or C<do {} until> loops are ordinary blocks, not expression
+blocks, so still require a semicolon on the last statement inside.
 
     do {
       foo()                  # bad
     } until ($condition);
 
-The last statement of a C<sub{}> is not considered an "expression" like a
-C<do>.  Perhaps there could be an option to excuse all one-statement subs or
-even all subs and have the policy just for nested code and control blocks.
-For now the suggestion is that if a sub is big enough to need a separate
-line for its result expression then write an actual C<return> statement for
-maximum clarity.
+The last statement of a C<sub{}> is not considered an expression.  Perhaps
+there could be an option to excuse all one-statement subs or even all subs
+and have the policy just for nested code and control blocks.  For now the
+suggestion is that if a sub is big enough to need a separate line for its
+result expression then write an actual C<return> statement for maximum
+clarity.
+
+=head2 Try/Catch Blocks
+
+The C<Try>, C<TryCatch> and C<Syntax::Feature::Try> modules all add C<try>
+block forms.  These statements don't require a terminating semicolon (the
+same as an C<if> doesn't).
+
+    use TryCatch;
+    sub foo {
+      try {
+          attempt_something();
+      } catch {
+          error_recovery();
+      } # ok, no semi required here
+    }
+
+The insides of the C<try> and C<catch> are treated the same as other blocks.
+But the C<try> statement itself doesn't require a semicolon.  (See policy
+C<ValuesAndExpressions::ProhibitNullStatements> to notice an unnecessary
+one.)
+
+This exemption is only for the modules with this syntax.  There are other
+try modules such as C<Try::Tiny> and friends where a final semicolon is
+normal and necessary if more code follows (because their C<try> and C<catch>
+are ordinary function calls, prototyped to take code blocks).
+
+    use Try::Tiny;
+    sub foo {
+      try {
+          attempt_something();
+      } catch {
+          error_recovery();
+      } # bad, semi required here
+    }
 
 =head2 Disabling
 
@@ -368,7 +539,7 @@ on the same line as the final statement.
 =item C<except_expression_blocks> (boolean, default true)
 
 If true (the default) then don't demand a semicolon at the end of an
-expression block, which currently means C<do>, C<grep> and C<map>.
+expression block, as described under L</Final Value Expression> above.
 
     # ok under "except_expression_blocks=yes"
     # bad under "except_expression_blocks=no"
@@ -376,9 +547,9 @@ expression block, which currently means C<do>, C<grep> and C<map>.
     map { $_+1 } @array
     grep {defined} @x
 
-In the future this might also apply to C<first> from C<List::Util> and the
-like, probably a hard-coded list of common things and perhaps configurable
-extras.
+The statements and functions for this exception are currently hard coded.
+Maybe in the future they could be configurable, though multi-line
+expressions in this sort of thing tends to be unusual anyway.
 
 =back
 
@@ -387,23 +558,26 @@ extras.
 It's very difficult to distinguish a code block from an anonymous hashref
 constructor if there might be a function prototype in force, eg.
 
-    foo { abc => 123 };
+    foo { abc => 123 };   # hash ref normally
+                          # code block if foo() has prototype
 
-This is normally a hashref, but if C<foo> has a function prototype then it's
-a code block.
-
-C<PPI> tends to assume code.  C<RequireFinalSemicolon> instead assumes
-hashref so as to avoid false violations.  Perhaps particular functions
-taking code blocks could be recognised, but in general this sort of thing is
-another good reason to avoid function prototypes.
+C<PPI> tends to assume code.  C<RequireFinalSemicolon> currently assumes
+hashref so as to avoid false violations.  Any C<try>, C<catch> or C<finally>
+are presumed to be code blocks (the various Try modules).  Perhaps other
+common or particular functions or syntax with code blocks could be
+recognised.  In general this sort of ambiguity is another good reason to
+avoid function prototypes.
 
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>,
 L<Perl::Critic>,
 L<Perl::Critic::Policy::CodeLayout::RequireTrailingCommas>,
+L<Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline>,
 L<Perl::Critic::Policy::Subroutines::RequireFinalReturn>,
 L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements>
+
+L<List::Util>, L<List::Pairwise>
 
 =head1 HOME PAGE
 
@@ -411,7 +585,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -22,7 +22,7 @@ use 5.006;
 use strict;
 use warnings;
 use Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline;
-use Test::More tests => 43;
+use Test::More tests => 51;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 88;
+my $want_version = 89;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,
@@ -63,17 +63,39 @@ my $policy;
 
 foreach my $data (## no critic (RequireInterpolationOfMetachars)
 
-# PENDING...
-#                   [ 0, "
-# foo(<<HERE
-# some text
-# HERE
-#    );" ],
+                  [ 0, 'foo()' ],
+                  [ 0, '$obj->foo()' ],
+                  [ 0, '@array=()' ],
+                  [ 0, 'return()' ],
 
-                  [ 0, "
-foo(<<HERE);
+                  [ 1, '
+foo(<<HERE,
 some text
-HERE" ],
+HERE
+   <<HERE
+some text
+HERE
+   );' ],
+
+                  [ 0, '
+foo($str . <<HERE
+some text
+HERE
+   );' ],
+                  [ 0, '
+foo($str . <<HERE);
+some text
+HERE' ],
+
+                  [ 0, '
+@array = (<<HERE
+some text
+HERE
+);' ],
+                  [ 0, '
+@array = (<<HERE);
+some text
+HERE' ],
 
                   [ 1, 'return (123,
                                 456

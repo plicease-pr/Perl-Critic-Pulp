@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013, 2014, 2015 Kevin Ryde
+# Copyright 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -17,49 +17,10 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-use 5.004;
+# must have "use TryCatch" before the syntax
+
 use strict;
+use TryCatch;
 
-use List::Util ();
-print List::Util::first { $_ > 10 } 1 .. 100;
-print "\n";
-
-__END__
-sub foo {
-  my ($self) = @_;
-
-  {
-    use TryCatch;
-    try {
-      print "try\n";
-      die 123;
-    }
-      catch ($err) {
-        print "catch $err\n";
-      }
-  }
-
-  try {
-    print "try\n";
-    die 456;
-  }
-    catch ($err) {
-      print "catch $err\n";
-    };
-}
-foo();
-exit 0;
-
-
-unless (1) {
-  print "unless\n";
-} elsif (2) {
-  print "elsif\n";
-}
-
-unless (1) {
-  print "unless\n";
-} if (2) {
-  print "if\n";
-}
-exit 0;
+try { print "hi\n" } catch { 456 }
+try { print "hi\n" } catch { 456 }

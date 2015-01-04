@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -42,7 +42,7 @@ my $it = File::Locate::Iterator->new (globs => [# '*.t',
                                                 '*.pm',
                                                 # '*.pl',
                                                ]);
-print "$progname: $it->{'regexp'}\n";
+print "$progname\n";
 my $count = 0;
 
 while (defined (my $filename = $it->next)) {

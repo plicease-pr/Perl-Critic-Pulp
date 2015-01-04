@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 88;
+our $VERSION = 89;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -61,7 +61,7 @@ sub violates {
   ### children: "@children"
 
   if (_is_list_single_expression($elem)) {
-    ### an expression not a list as such
+    ### an expression not a list as such ...
     return;
   }
 
@@ -88,11 +88,18 @@ sub violates {
   return;
 }
 
+# $elem is any PPI::Element
+# Return true if it's a PPI::Structure::List which contains just a single
+# expression.  Any "," or "=>" in the list is multiple expressions, but also
+# the various rules of the policy are applied as to what is list context
+# (array assignments, function calls).
+#
 sub _is_list_single_expression {
   my ($elem) = @_;
   $elem->isa('PPI::Structure::List')
     or return 0;
 
+  my @children = $elem->schildren;
   {
     # eg. PPI::Structure::List
     #       PPI::Statement::Expression
@@ -100,7 +107,6 @@ sub _is_list_single_expression {
     #         PPI::Token::Operator         ','
     # so descend through PPI::Statement::Expression
     #
-    my @children = $elem->schildren;
     @children = map { $_->isa('PPI::Statement::Expression')
                         ? ($_->schildren) : ($_)}  @children;
     if (List::Util::first {elem_is_comma_operator($_)} @children) {
@@ -112,19 +118,25 @@ sub _is_list_single_expression {
   if (my $prev = $elem->sprevious_sibling) {
     if ($prev->isa('PPI::Token::Word')) {
       if ($prev eq 'return') {
-        ### return statement, is an expression ...
+        ### return statement without commas, is reckoned a single expression ...
         return 1;
       }
       if (is_function_call($prev)
           || is_method_call($prev)) {
-        ### function or method call, so not an expression ...
+        ### function or method call ...
+        if ($children[-1] && $children[-1]->isa('PPI::Token::HereDoc')) {
+          return 1;
+        }
         return 0;
       }
 
     } elsif ($prev->isa('PPI::Token::Operator')
              && $prev eq '='
              && _is_preceded_by_array($prev)) {
-      ### array assignment, not an expression ...
+      ### array assignment, not a single expression ...
+      if ($children[-1] && $children[-1]->isa('PPI::Token::HereDoc')) {
+        return 1;
+      }
       return 0;
     }
   }
@@ -182,8 +194,8 @@ with a newline,
               $two,    # ok
              );
 
-This makes no difference to how the code runs, so the policy is under the
-"cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
+This makes no difference to how the code runs, so the policy is low priority
+and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The idea is to make it easier when editing the code since you don't have to
 remember to add a comma to a preceding item when extending or re-arranging
@@ -237,11 +249,43 @@ final ")" can help keep a comment together with a term for a cut and paste,
 or not lose a paren if commenting the last line, etc.  So for now the policy
 is lenient.  Would an option be good though?
 
+=head2 Here Documents
+
+An exception is made for a single expression ending with a here-document.
+This is slightly experimental, and might become an option, but the idea is
+that a newline is necessary for a here-document within parens and so
+shouldn't demand a comma.
+
+    foo(<<HERE      # ok
+    some text
+    HERE
+       );
+
+This style is a little unusual but some people like the whole here-document
+at the place its string result will expand.  If the code is all on one line
+(see L<perlop/E<lt>E<lt>EOF>) then trailing comma considerations don't
+apply.  But both forms work and so are a matter of personal preference.
+
+    foo(<<HERE);
+    some text
+    HERE
+
+Multiple values still require a final comma.  Multiple values suggests a
+list and full commas guards against forgetting to add a comma if extending
+or rearranging.
+
+    foo(<<HERE,
+    one
+    HERE
+        <<HERE      # bad
+    two
+    HERE
+       );
+
 =head2 Disabling
 
-As always if you don't care about this you can disable
-C<RequireTrailingCommaAtNewline> from F<.perlcriticrc> in the usual way (see
-L<Perl::Critic/CONFIGURATION>),
+If you don't care about trailing commas like this you can as always disable
+from F<.perlcriticrc> in the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-CodeLayout::RequireTrailingCommaAtNewline]
 
@@ -290,7 +334,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 88;
+our $VERSION = 89;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -98,6 +98,23 @@ sub violates {
   return @violations;
 }
 
+my $v5010 = version->new('5.010');
+
+# Some controversy:
+#   https://github.com/Perl-Critic/Perl-Critic/issues/270
+#   http://elliotlovesperl.com/2009/05/17/the-problem-with-modernperl/
+#
+sub _highest_explicit_perl_version {
+  my ($document) = @_;
+  my $ver = $document->highest_explicit_perl_version;
+  if (Perl::Critic::Policy::Compatibility::Gtk2Constants::_document_uses_module('Modern::Perl')
+      && $ver < $v5010) {
+    $ver = $v5010;
+  }
+  return $ver;
+}
+
+
 #---------------------------------------------------------------------------
 # Crib note: $document->find_first wanted func returning undef means the
 # element is unwanted and also don't descend into its sub-elements.
@@ -112,7 +129,6 @@ sub _setup_extra_checks {
   $Perl::MinimumVersion::CHECKS{_Pulp__each_of_array}   = $v5012;
 
   # 5.10.0
-  my $v5010 = version->new('5.010');
   unless (eval { Perl::MinimumVersion->VERSION(1.28); 1 }) {
     # fixed in 1.28 up
     $Perl::MinimumVersion::CHECKS{_Pulp__5010_magic__fix}     = $v5010;
@@ -905,9 +921,9 @@ L<C<Perl::MinimumVersion>|Perl::MinimumVersion>.
     use 5.010;       # the // operator is new in perl 5.010
     print $x // $y;  # ok
 
-If you don't have C<Perl::MinimumVersion> then nothing is reported.  Certain
-nasty hacks are used to extract reasons and locations from
-C<Perl::MinimumVersion>.
+If you don't have the C<Perl::MinimumVersion> module then nothing is
+reported.  Certain nasty hacks are used to extract reasons and locations
+from C<Perl::MinimumVersion>.
 
 This policy is under the "compatibility" theme (see L<Perl::Critic/POLICY
 THEMES>).  Its best use is when it picks up things like C<//> or C<qr> which
@@ -916,6 +932,12 @@ are only available in a newer Perl than you meant to target.
 An explicit C<use 5.xxx> can be tedious, but makes it clear what's needed
 (or supposed to be needed) and it gives a good error message if run on an
 older Perl.
+
+As an experiment, C<use Modern::Perl> is taken to mean Perl 5.10.  Though
+there's nothing for its date options (being difficult to relate to Perl
+version numbers).
+
+=head2 Disabling
 
 The config options below let you limit how far back to go.  Or if you don't
 care at all about this sort of thing you can always disable the policy
@@ -940,7 +962,7 @@ L<Compatibility::ConstantPragmaHash|Perl::Critic::Policy::Compatibility::Constan
 =item *
 
 Module requirements for things like C<use Errno> are dropped, since you
-might get a back-port from CPAN etc and any need for a module is better
+might get a back-port from CPAN etc and the need for a module is better
 expressed in a distribution "prereq".
 
 But pragma modules like C<use warnings> are still reported.  They're
@@ -1110,8 +1132,8 @@ of those.
 =item C<above_version> (version string, default none)
 
 Set a minimum version of Perl you always use, so that reports are only about
-things higher than this and higher than the document declares.  The value is
-anything the L<C<version.pm>|version> module understands.
+things higher than this and higher than what the document declares.  The
+value is anything the L<C<version.pm>|version> module can parse.
 
     [Compatibility::PerlMinimumVersionAndWhy]
     above_version = 5.006
@@ -1132,8 +1154,8 @@ This can be used for checks you believe are wrong, or where the
 compatibility matter only affects limited circumstances which you
 understand.
 
-The check names are likely to be a bit of a moving target, especially the
-Pulp additions.  Unknown checks in the list are quietly ignored.
+The check names are likely to be a moving target, especially the Pulp
+additions.  Unknown checks in the list are quietly ignored.
 
 =back
 
@@ -1141,9 +1163,9 @@ Pulp additions.  Unknown checks in the list are quietly ignored.
 
 C<use warnings> is reported as a Perl 5.6 feature since the lexically-scoped
 fine grain warnings control it gives is new in that version.  If targeting
-earlier versions then it's often enough to drop C<use warnings>, make sure
-your code runs cleanly under S<< C<perl -w> >>, and leave it to applications
-to use C<-w> (or set C<$^W>) if they desire.
+earlier versions then it's often enough to drop C<use warnings>, ensure your
+code runs cleanly under S<< C<perl -w> >>, and leave it to applications to
+use C<-w> (or set C<$^W>) if they desire.
 
 C<warnings::compat> offers a C<use warnings> for earlier Perl, but it's not
 lexical, instead setting C<$^W> globally.  In a script this might be an
@@ -1172,7 +1194,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

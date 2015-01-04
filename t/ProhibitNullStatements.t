@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 27;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 88;
+my $want_version = 89;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION, $want_version, 'VERSION class method');
 {
@@ -55,24 +55,31 @@ my $check_version = $want_version + 1000;
 ok (! eval { $policy->VERSION($check_version); 1 },
     "VERSION object check $check_version");
 
-foreach my $data (## no critic (RequireInterpolationOfMetachars)
-                  [ 1, ';' ],
-                  [ 1, 'use Foo;;' ],
-                  [ 1, 'if (1) {};' ],
-                  [ 0, 'for (;;) { }' ],
-                  [ 0, 'map {; $_, 123} @some_list;' ],
-                  [ 0, 'map { ; $_, 123} @some_list;' ],
-                  [ 0, 'map { # fdjks
+foreach my $data
+  (## no critic (RequireInterpolationOfMetachars)
+   [ 1, 'use Try;               sub foo { try { attempt() } catch { recover() }; }' ],
+   [ 1, 'use TryCatch;          sub foo { try { attempt() } catch { recover() }; }' ],
+   [ 1, 'use syntax "try";      sub foo { try { attempt() } catch { recover() }; }' ],
+   [ 0, 'use Try::Tiny;         sub foo { try { attempt() } catch { recover() }; }' ],
+   [ 0, 'use Try::Tiny::Except; sub foo { try { attempt() } catch { recover() }; }' ],
+
+   [ 1, ';' ],
+   [ 1, 'use Foo;;' ],
+   [ 1, 'if (1) {};' ],
+   [ 0, 'for (;;) { }' ],
+   [ 0, 'map {; $_, 123} @some_list;' ],
+   [ 0, 'map { ; $_, 123} @some_list;' ],
+   [ 0, 'map { # fdjks
                               ; $_, 123} @some_list;' ],
-                  [ 1, 'map {;; $_, 123} @some_list;' ],
-                  [ 1, 'map { ; ; $_, 123} @some_list;' ],
-                  [ 1, 'map { ; # fjdk
+   [ 1, 'map {;; $_, 123} @some_list;' ],
+   [ 1, 'map { ; ; $_, 123} @some_list;' ],
+   [ 1, 'map { ; # fjdk
                               ; $_, 123} @some_list;' ],
-                  [ 0, 'grep {# this is a block
+   [ 0, 'grep {# this is a block
                               ;
                               length $_ and $something } @some_list;' ],
-                  ## use critic
-                 ) {
+   ## use critic
+  ) {
   my ($want_count, $str) = @$data;
   {
     my @violations = $critic->critique (\$str);

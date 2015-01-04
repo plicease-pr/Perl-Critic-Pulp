@@ -29,7 +29,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 88;
+our $VERSION = 89;
 
 use constant DEBUG => 0;
 
@@ -523,6 +523,8 @@ may be clearer than backslashing,
     print "@{foo}::bar";
     print "$#{foo}th";
     print "${foo[0]}[1]";   # array element $foo[0]
+
+=for MY_FIXME  this bit of perltrap gone in perl 5.20
 
 See L<perltrap/Array and hash brackets during interpolation> for a note on
 backslashing C<[> and C<{>, and L<perlop/Gory details of parsing quoted

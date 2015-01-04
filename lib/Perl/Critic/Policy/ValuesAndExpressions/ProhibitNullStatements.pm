@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -22,8 +22,9 @@ use strict;
 use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
+use Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon; # for try helpers
 
-our $VERSION = 88;
+our $VERSION = 89;
 
 
 use constant supported_parameters =>
@@ -34,42 +35,50 @@ use constant supported_parameters =>
    });
 use constant default_severity => $Perl::Critic::Utils::SEVERITY_MEDIUM;
 use constant default_themes   => qw(pulp cosmetic);
-use constant applies_to       => 'PPI::Statement::Null';
+use constant applies_to       => ('PPI::Statement::Null', 'PPI::Token::Structure');
 
 sub violates {
   my ($self, $elem, $document) = @_;
 
-  # if allow_perl4_semihash then ";# comment ..." ok
-  if ($self->{'_allow_perl4_semihash'} && is_perl4_semihash($elem)) {
-    return; # ok
-  }
+  if ($elem->isa('PPI::Statement::Null')) {
+    # if allow_perl4_semihash then ";# comment ..." ok
+    if ($self->{'_allow_perl4_semihash'} && _is_perl4_semihash($elem)) {
+      return; # ok
+    }
 
-  # "for (;;)" is ok, like
-  #
-  #   PPI::Structure::ForLoop  	( ... )
-  #     PPI::Statement::Null
-  #       PPI::Token::Structure  	';'
-  #     PPI::Statement::Null
-  #       PPI::Token::Structure  	';'
-  #
-  # or the incompatible change in ppi 1.205
-  #
-  #   PPI::Token::Word         'for'
-  #    PPI::Structure::For     ( ... )
-  #      PPI::Statement::Null
-  #       PPI::Token::Structure        ';'
-  #      PPI::Statement::Null
-  #       PPI::Token::Structure        ';'
+    # "for (;;)" is ok, like
+    #
+    #   PPI::Structure::ForLoop  	( ... )
+    #     PPI::Statement::Null
+    #       PPI::Token::Structure  	';'
+    #     PPI::Statement::Null
+    #       PPI::Token::Structure  	';'
+    #
+    # or the incompatible change in ppi 1.205
+    #
+    #   PPI::Token::Word         'for'
+    #    PPI::Structure::For     ( ... )
+    #      PPI::Statement::Null
+    #       PPI::Token::Structure        ';'
+    #      PPI::Statement::Null
+    #       PPI::Token::Structure        ';'
 
-  my $parent = $elem->parent;
-  if ($parent->isa('PPI::Structure::For')
-      || $parent->isa('PPI::Structure::ForLoop')) {
-    return; # ok
-  }
+    my $parent = $elem->parent;
+    if ($parent->isa('PPI::Structure::For')
+        || $parent->isa('PPI::Structure::ForLoop')) {
+      return; # ok
+    }
 
-  # "map {; ...}" or "grep {; ...}" ok
-  if (is_block_disambiguator ($elem)) {
-    return; # ok
+    # "map {; ...}" or "grep {; ...}" ok
+    if (_is_block_disambiguator ($elem)) {
+      return; # ok
+    }
+  } else {
+    # PPI::Token::Structure
+    if (! _is_end_of_try_block($elem)) {
+      # not a semi at the end of a try {} catch {}; block, ok
+      return;
+    }
   }
 
   # any other PPI::Statement::Null is a bare ";" and is not ok, like
@@ -82,7 +91,16 @@ sub violates {
                            $elem);
 }
 
-# is_block_disambiguator($elem) takes a PPI::Statement::Null $elem and
+# $elem is a PPI::Token::Structure
+# Return true if it's a semicolon ; at the end of a try block of Try.pm,
+# TryCatch.pm or Syntax::Feature::Try and therefore unnecessary.
+sub _is_end_of_try_block {
+  my ($elem) = @_;
+  return ($elem->content eq ';'
+          && Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon::_elem_is_try_block($elem->parent));
+}
+
+# _is_block_disambiguator($elem) takes a PPI::Statement::Null $elem and
 # returns true if it's at the start of a "map {; ...}" or "grep {; ...}"
 #
 # PPI structure like the following, with the Whitespace optional of course,
@@ -96,7 +114,7 @@ sub violates {
 #     PPI::Statement::Null
 #       PPI::Token::Structure   ';'
 #
-sub is_block_disambiguator {
+sub _is_block_disambiguator {
   my ($elem) = @_;
 
   my $block = $elem->parent;
@@ -122,7 +140,7 @@ sub is_block_disambiguator {
   return ($content eq 'map' || $content eq 'grep');
 }
 
-# is_perl4_semihash($elem) takes a PPI::Statement::Null $elem and returns
+# _is_perl4_semihash($elem) takes a PPI::Statement::Null $elem and returns
 # true if it's a Perl 4 style start-of-line ";# comment ..."
 #
 # When at the very start of a document,
@@ -139,7 +157,7 @@ sub is_block_disambiguator {
 #     PPI::Token::Structure       ';'
 #   PPI::Token::Comment   '# hello'
 #
-sub is_perl4_semihash {
+sub _is_perl4_semihash {
   my ($elem) = @_;
 
   # must be at the start of the line
@@ -177,15 +195,15 @@ Or a stray left at the end of a control structure like
       return;
     };           # bad
 
-An empty statement is completely harmless, so this policy is only under the
-"cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).  It's surprisingly
+An empty statement is harmless, so this policy is under the "cosmetic" theme
+(see L<Perl::Critic/POLICY THEMES>) and medium severity.  It's surprisingly
 easy to leave a semi behind when chopping code around, especially when
 changing a statement to a loop or conditional.
 
 =head2 Allowed forms
 
 A C style C<for (;;) { ...}> loop is ok.  Those semicolons are expression
-separators and empties are quite usual.
+separators and empties there are quite usual.
 
     for (;;) {   # ok
       print "infinite loop\n";
@@ -205,7 +223,30 @@ this.)
 
 The C<map> form is much more common than the C<grep>, but both suffer the
 same ambiguity.  C<grep> doesn't normally inspire people to quite such
-wildly convoluted forms as C<map> does.
+convoluted forms as C<map> does.
+
+=head2 Try/Catch Blocks
+
+The C<Try>, C<TryCatch> and C<Syntax::Feature::Try> modules all add new
+C<try> block statement forms.  These statements don't require a terminating
+semicolon (the same as an C<if> doesn't require one).  Any semicolon there
+is reckoned as a null statement.
+
+    use TryCatch;
+    sub foo {
+      try { attempt_something() }
+      catch { error_recovery()  };   # bad
+    }
+
+This doesn't apply to other try modules such as C<Try::Tiny> and friends.
+They're implemented as ordinary function calls (with prototypes), so a
+terminating semicolon is normal for them.
+
+    use Try::Tiny;
+    sub foo {
+      try { attempt_something() }
+      catch { error_recovery()  };   # ok
+    }
 
 =head1 CONFIGURATION
 
@@ -232,7 +273,8 @@ enable it by adding to your F<.perlcriticrc> file
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>,
-L<Perl::Critic>
+L<Perl::Critic>,
+L<Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon>
 
 =head1 HOME PAGE
 
@@ -240,7 +282,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
