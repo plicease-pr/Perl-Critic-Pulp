@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013, 2014 Kevin Ryde
+# Copyright 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -34,7 +34,7 @@ require Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 89;
+my $want_version = 90;
 is ($Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::ProhibitDuplicateHeadings->VERSION,

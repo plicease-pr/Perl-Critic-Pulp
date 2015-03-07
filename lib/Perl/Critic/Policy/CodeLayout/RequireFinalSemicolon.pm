@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 89;
+our $VERSION = 90;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -336,14 +336,14 @@ sub _elem_is_try_block {
           && ($elem = $elem->schild(0))
           && $elem->isa('PPI::Token::Word')
           && $elem->content eq 'try'
-          && _elem_has_preceding_trycatch($elem));
+          && _elem_has_preceding_use_trycatch($elem));
 }
 
 # return true if $elem is preceded by any of
 #     use Try
 #     use TryCatch
 #     use syntax 'try'
-sub _elem_has_preceding_trycatch {
+sub _elem_has_preceding_use_trycatch {
   my ($elem) = @_;
   my $ret = 0;
   my $document = $elem->top;  # PPI::Document, not Perl::Critic::Document
@@ -423,7 +423,7 @@ subroutine or block.
       do_something()       # bad
     }
 
-The idea is that if your add more code you don't have to notice the previous
+The idea is that if you add more code you don't have to notice the previous
 line needs a terminator.  It's also more like the C language, if you
 consider that a virtue.
 
@@ -500,13 +500,19 @@ same as an C<if> doesn't).
 
 The insides of the C<try> and C<catch> are treated the same as other blocks.
 But the C<try> statement itself doesn't require a semicolon.  (See policy
-C<ValuesAndExpressions::ProhibitNullStatements> to notice an unnecessary
-one.)
+C<ValuesAndExpressions::ProhibitNullStatements> to notice one added
+unnecessarily.)
 
-This exemption is only for the modules with this syntax.  There are other
-try modules such as C<Try::Tiny> and friends where a final semicolon is
-normal and necessary if more code follows (because their C<try> and C<catch>
-are ordinary function calls, prototyped to take code blocks).
+C<PPI> doesn't recognise C<try>/C<catch> specifically, so when they don't
+have a final semicolon the next statement runs together and the nature of
+those parts may be lost.  This is likely to upset things like recognition of
+C<for> loops and could potentially make some perlcritic reports go wrong.
+
+The C<try>/C<catch> block exemption here is only for the modules with this
+block syntax.  There are other try modules such as C<Try::Tiny> and friends
+where a final semicolon is normal and necessary if more code follows
+(because their C<try> and C<catch> are ordinary function calls prototyped to
+take code blocks).
 
     use Try::Tiny;
     sub foo {

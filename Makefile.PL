@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2014 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -81,26 +81,27 @@ WriteMakefile
      { homepage => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
        license  => 'http://www.gnu.org/licenses/gpl.html',
      },
+     # don't index "package Perl::MinimumVersion" additions there
+     no_index => { package => [ 'Perl::MinimumVersion' ],
+                   directory=>['devel','xt'],
+                 },
+
      recommends => { 'Perl::MinimumVersion' => 0,
                    },
-
+     prereqs =>
+     { test =>
+       { suggests =>
+         { 'Perl::MinimumVersion' => 0,
+         },
+       },
+     },
      optional_features =>
      { maximum_policies =>
        { description => 'Have the policies check as much as possible.',
          requires => { 'Perl::MinimumVersion' => 0,
                      },
        },
-       maximum_tests =>
-       { description => 'Have "make test" do as much as possible.',
-         requires => { 'Perl::MinimumVersion' => 0,
-                     },
-       },
      },
-
-     # don't index "package Perl::MinimumVersion" additions there
-     no_index => { package => [ 'Perl::MinimumVersion' ],
-                   directory=>['devel'],
-                 },
    },
   );
 

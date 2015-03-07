@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 90;
+use Test::More tests => 91;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 require Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon;
 
 #-----------------------------------------------------------------------------
-my $want_version = 89;
+my $want_version = 90;
 is ($Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon->VERSION, $want_version, 'VERSION class method');
 {
@@ -111,6 +111,11 @@ foreach my $data
    [ 0, "{ a => 1 \n}" ], # hash constructor
    [ 1, "{ a,1 \n}" ],     # code block
    [ 1, "{; a => 1 \n}" ], # code block
+
+   [ 0, "use TryCatch;  sub { try { a => 1 } \n}" ],
+
+   # this is mis-detected as part of the "try"
+   # [ 1, "use TryCatch;  sub { try { a => 1 } foo() \n}" ],
 
    [ 1, "use TryCatch;  try { a => 1 \n}" ], # code block
    [ 1, "use Try::Tiny; catch { a => 1 \n}" ], # code block

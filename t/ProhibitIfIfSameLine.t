@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2013, 2014 Kevin Ryde
+# Copyright 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -28,7 +28,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 89;
+my $want_version = 90;
 is ($Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::ProhibitIfIfSameLine->VERSION,

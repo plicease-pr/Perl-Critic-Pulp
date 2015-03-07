@@ -1,4 +1,4 @@
-# Copyright 2013, 2014 Kevin Ryde
+# Copyright 2013, 2014, 2015 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use Perl::Critic::Utils;
 
 use base 'Perl::Critic::Policy';
 
-our $VERSION = 89;
+our $VERSION = 90;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -196,7 +196,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2013, 2014 Kevin Ryde
+Copyright 2013, 2014, 2015 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

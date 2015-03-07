@@ -24,7 +24,10 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 use Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon; # for try helpers
 
-our $VERSION = 89;
+# uncomment this to run the ### lines
+# use Smart::Comments;
+
+our $VERSION = 90;
 
 
 use constant supported_parameters =>
@@ -41,6 +44,7 @@ sub violates {
   my ($self, $elem, $document) = @_;
 
   if ($elem->isa('PPI::Statement::Null')) {
+
     # if allow_perl4_semihash then ";# comment ..." ok
     if ($self->{'_allow_perl4_semihash'} && _is_perl4_semihash($elem)) {
       return; # ok
@@ -74,7 +78,8 @@ sub violates {
       return; # ok
     }
   } else {
-    # PPI::Token::Structure
+    # PPI::Token::Structure ...
+
     if (! _is_end_of_try_block($elem)) {
       # not a semi at the end of a try {} catch {}; block, ok
       return;
@@ -91,13 +96,37 @@ sub violates {
                            $elem);
 }
 
+my %is_try_catch_keyword = (try => 1,
+                            catch => 1,
+                            finally => 1);
+
 # $elem is a PPI::Token::Structure
-# Return true if it's a semicolon ; at the end of a try block of Try.pm,
-# TryCatch.pm or Syntax::Feature::Try and therefore unnecessary.
+# Return true if it's a semicolon ; at the end of a try/catch block for any
+# Try.pm, TryCatch.pm or Syntax::Feature::Try.  Such a ; is unnecessary.
 sub _is_end_of_try_block {
   my ($elem) = @_;
-  return ($elem->content eq ';'
-          && Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon::_elem_is_try_block($elem->parent));
+
+  ($elem->content eq ';'
+   && Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon::_elem_is_try_block($elem->parent))
+    || return 0;
+
+  # ppidump "try {} foo(123);" gives
+  #     PPI::Statement
+  #       PPI::Token::Word             'try'
+  #       PPI::Structure::Block        { ... }
+  #       PPI::Token::Word             'foo'
+  #       PPI::Structure::List         ( ... )
+  #         PPI::Statement::Expression
+  #           PPI::Token::Number       '123'
+  #       PPI::Token::Structure        ';'
+  for (;;) {
+    $elem = $elem->sprevious_sibling || return 1;
+    $elem->isa('PPI::Structure::Block') || return 0;
+
+    $elem = $elem->sprevious_sibling || return 0;
+    ($elem->isa('PPI::Token::Word') && $is_try_catch_keyword{$elem->content})
+      || return 0;
+  }
 }
 
 # _is_block_disambiguator($elem) takes a PPI::Statement::Null $elem and

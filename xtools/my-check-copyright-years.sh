@@ -2,7 +2,7 @@
 
 # my-check-copyright-years.sh -- check copyright years in dist
 
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # my-check-copyright-years.sh is shared by several distributions.
 #
@@ -67,7 +67,8 @@ do
     | */MathI''mage/ln2.gz | */MathI''mage/pi.gz \
     | *.mo | *.locatedb* | t/samp.* \
     | t/empty.dat | t/*.xpm | t/*.xbm | t/*.jpg | t/*.gif \
-    | t/*.g${MY_HIDE}d)
+    | t/*.g${MY_HIDE}d \
+    | */_whizzy*)
       continue ;;
     *.gz)
       GREP=zgrep

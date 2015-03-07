@@ -28,7 +28,10 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(parse_arg_list);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 89;
+# uncomment this to run the ### lines
+# use Smart::Comments;
+
+our $VERSION = 90;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -66,7 +69,7 @@ sub violates {
 
   my $pmv = Perl::MinimumVersion->new ($document);
   my $config_above_version = $self->{'_above_version'};
-  my $explicit_version = $document->highest_explicit_perl_version;
+  my $explicit_version = _highest_explicit_perl_version($document);
 
   my @violations;
   foreach my $check (sort keys %Perl::MinimumVersion::CHECKS) {
@@ -106,9 +109,11 @@ my $v5010 = version->new('5.010');
 #
 sub _highest_explicit_perl_version {
   my ($document) = @_;
+  ### _highest_explicit_perl_version() ...
   my $ver = $document->highest_explicit_perl_version;
-  if (Perl::Critic::Policy::Compatibility::Gtk2Constants::_document_uses_module('Modern::Perl')
-      && $ver < $v5010) {
+  if ($ver < $v5010
+      && Perl::Critic::Policy::Compatibility::Gtk2Constants::_document_uses_module($document,'Modern::Perl')) {
+    ### increase to 5.010 ...
     $ver = $v5010;
   }
   return $ver;
@@ -933,9 +938,9 @@ An explicit C<use 5.xxx> can be tedious, but makes it clear what's needed
 (or supposed to be needed) and it gives a good error message if run on an
 older Perl.
 
-As an experiment, C<use Modern::Perl> is taken to mean Perl 5.10.  Though
-there's nothing for its date options (being difficult to relate to Perl
-version numbers).
+As an experiment, C<use Modern::Perl> is taken to mean Perl 5.10.  There's
+nothing for its date options (being difficult to relate to Perl version
+numbers).
 
 =head2 Disabling
 

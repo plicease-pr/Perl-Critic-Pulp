@@ -17,7 +17,8 @@
       "directory" : [
          "t",
          "inc",
-         "devel"
+         "devel",
+         "xt"
       ],
       "package" : [
          "Perl::MinimumVersion"
@@ -26,16 +27,6 @@
    "optional_features" : {
       "maximum_policies" : {
          "description" : "Have the policies check as much as possible.",
-         "prereqs" : {
-            "runtime" : {
-               "requires" : {
-                  "Perl::MinimumVersion" : "0"
-               }
-            }
-         }
-      },
-      "maximum_tests" : {
-         "description" : "Have \"make test\" do as much as possible.",
          "prereqs" : {
             "runtime" : {
                "requires" : {
@@ -90,5 +81,5 @@
          "http://www.gnu.org/licenses/gpl.html"
       ]
    },
-   "version" : "89"
+   "version" : "90"
 }

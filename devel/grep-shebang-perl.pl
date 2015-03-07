@@ -1,4 +1,4 @@
-# Copyright 2014 Kevin Ryde
+# Copyright 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -14,6 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Look for perl files with #!perl 
 
 use 5.010;
 use strict;
@@ -33,6 +36,7 @@ my $l = MyLocatePerl->new (exclude_t => 1,
                            #  under_directory => '/usr/share/perl/5.14/',
                            # under_directory => "$ENV{HOME}/p/",
                            # under_directory => "/usr/share/perl5/Wx/DemoHints/",
+                           # under_directory => '/usr/share/doc',
                           );
 my $count;
 

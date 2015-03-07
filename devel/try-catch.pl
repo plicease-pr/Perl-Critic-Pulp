@@ -22,5 +22,9 @@
 use strict;
 use TryCatch;
 
+try { print "hi\n" }
+exit 1;
+
+__END__
 try { print "hi\n" } catch { 456 }
 try { print "hi\n" } catch { 456 }

@@ -18,15 +18,12 @@ no_index:
     - t
     - inc
     - devel
+    - xt
   package:
     - Perl::MinimumVersion
 optional_features:
   maximum_policies:
     description: 'Have the policies check as much as possible.'
-    requires:
-      Perl::MinimumVersion: '0'
-  maximum_tests:
-    description: 'Have "make test" do as much as possible.'
     requires:
       Perl::MinimumVersion: '0'
 recommends:
@@ -54,4 +51,4 @@ requires:
 resources:
   homepage: http://user42.tuxfamily.org/perl-critic-pulp/index.html
   license: http://www.gnu.org/licenses/gpl.html
-version: '89'
+version: '90'

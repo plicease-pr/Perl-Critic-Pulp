@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 49;
+use Test::More tests => 51;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 89;
+my $want_version = 90;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
@@ -47,7 +47,8 @@ is (Perl::Critic::Policy::ValuesAndExpressions::ConstantBeforeLt->VERSION,
 # _use_constants()
 
 require PPI;
-foreach my $data ([ 'use constant' ],
+foreach my $data ([ 'sub y {' ],
+                  [ 'use constant' ],
                   [ 'use constant FOO => 123',
                     'FOO' ],
                   [ 'use constant FOO => 123,456',

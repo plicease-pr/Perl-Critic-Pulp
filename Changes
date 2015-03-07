@@ -17,14 +17,18 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 90, March 2015
+    - PerlMinimumVersionAndWhy actually check Modern::Perl
+    - ProhibitNullStatements beware of extra stuff after try/catch
+
 Version 89, January 2015
     - PerlMinimumVersionAndWhy experiment Modern::Perl meaning 5.10,
-      as proposed by EDAVIS RT#100290
+      as proposed by Ed Avis RT#100290
     - RequireFinalSemicolon recognise try/catch of Try.pm, TryCatch.pm
-      and Syntax::Feature::Try, as proposed by EDAVIS RT#100291.
+      and Syntax::Feature::Try, as proposed by Ed Avis RT#100291.
       Various List::Util functions as expression blocks.
     - RequireTrailingCommaAtNewline exception for single here-documents,
-      as proposed by EDAVIS RT#100292
+      as proposed by Ed Avis RT#100292
     - ProhibitNullStatements report null ; on try/catch, and look
       inside try/catch/finally blocks
 

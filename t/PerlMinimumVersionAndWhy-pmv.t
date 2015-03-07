@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -41,7 +41,7 @@ if (@policies == 0) {
   plan skip_all => "due to policy not initializing";
 }
 
-plan tests => 178;
+plan tests => 180;
 
 use lib 't';
 use MyTestHelpers;
@@ -52,7 +52,7 @@ my $policy = $policies[0];
 diag "Perl::MinimumVersion ", Perl::MinimumVersion->VERSION;
 
 {
-  my $want_version = 89;
+  my $want_version = 90;
   ok (eval { $policy->VERSION($want_version); 1 },
       "VERSION object check $want_version");
   my $check_version = $want_version + 1000;
@@ -70,6 +70,10 @@ diag "pulp magic fix: ",($have_pulp_5010_magic_fix||0);
 
 foreach my $data (
                   ## no critic (RequireInterpolationOfMetachars)
+
+                  # Modern::Perl equivalent to 5.010
+                  [ 0, 'use Modern::Perl;        exists &foo' ],
+                  [ 0, 'use Modern::Perl "2014"; exists &foo' ],
 
                   # _Pulp__5010_stacked_filetest
                   [ 0, 'use 5.008; if (-e "/tmp/foo.txt") { }' ],

@@ -21,7 +21,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 30;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,7 +31,7 @@ require Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 89;
+my $want_version = 90;
 is ($Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements::VERSION, $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::ValuesAndExpressions::ProhibitNullStatements->VERSION, $want_version, 'VERSION class method');
 {
@@ -57,6 +57,15 @@ ok (! eval { $policy->VERSION($check_version); 1 },
 
 foreach my $data
   (## no critic (RequireInterpolationOfMetachars)
+
+   # more stuff afterwards
+   [ 0, 'use TryCatch; try { attempt() } 1;' ],
+   [ 0, 'use TryCatch; try { attempt() } exit 1;' ],
+   [ 1, 'use TryCatch; try { attempt() } catch { foo() } finally { bar () };' ],
+
+   # this one mis-detected as not a "for" loop
+   # [ 1, 'use TryCatch; try { attempt() } catch { foo() } for (1..10) { };' ],
+
    [ 1, 'use Try;               sub foo { try { attempt() } catch { recover() }; }' ],
    [ 1, 'use TryCatch;          sub foo { try { attempt() } catch { recover() }; }' ],
    [ 1, 'use syntax "try";      sub foo { try { attempt() } catch { recover() }; }' ],
