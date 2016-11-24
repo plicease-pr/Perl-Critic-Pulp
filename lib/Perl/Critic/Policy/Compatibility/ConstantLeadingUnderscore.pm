@@ -27,7 +27,7 @@ use version (); # but don't import qv()
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -286,7 +286,7 @@ L<perlsub/Constant Functions>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

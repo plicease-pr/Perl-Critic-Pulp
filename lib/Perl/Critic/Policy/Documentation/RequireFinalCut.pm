@@ -1,4 +1,4 @@
-# Copyright 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -18,6 +18,7 @@
 
 # perlcritic -s RequireFinalCut RequireFinalCut.pm
 # perlcritic -s RequireFinalCut /usr/share/perl5/Class/InsideOut.pm
+# perlcritic -s RequireFinalCut /usr/share/perl5/Lingua/Any/Numbers.pm
 
 
 package Perl::Critic::Policy::Documentation::RequireFinalCut;
@@ -28,9 +29,9 @@ use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -77,10 +78,11 @@ sub preprocess_line {
 sub end_input {
   my $self = shift;
   $self->SUPER::begin_input(@_);
-  if ($self->{'in_pod'}) {
+  if ($self->{'in_pod'}
+     && ! $self->{'saw_cut_in_text'}) {
     $self->violation_at_linenum_and_textpos
       ("POD doesn't end with =cut directive",
-       $self->{'last_linenum'} + 1, # end of file as the position
+       $self->{'last_linenum'} + 1,  # end of file as the position
        '',
        0);
   }
@@ -91,6 +93,7 @@ sub command {
   $self->SUPER::command(@_);
   my ($command, $text, $linenum, $paraobj) = @_;
   ### $command
+  ### $text
 
   if ($command eq 'cut') {
     $self->{'in_pod'} = 0;
@@ -106,6 +109,8 @@ sub command {
     }
   }
   ### now in_pod: $self->{'in_pod'}
+
+  $self->my_notice_cut($text);
   return '';
 }
 
@@ -119,17 +124,25 @@ sub verbatim {
   unless ($self->{'in_begin'}) {
     $self->{'in_pod'} = 1;
   }
+  $self->my_notice_cut($text);
   return '';
 }
 
 sub textblock {
   my ($self, $text, $linenum, $paraobj) = @_;
   ### textblock ...
+  ### $text
 
   unless ($self->{'in_begin'}) {
     $self->{'in_pod'} = 1;
   }
+  $self->my_notice_cut($text);
   return '';
+}
+
+sub my_notice_cut {
+  my ($self, $text) = @_;
+  $self->{'saw_cut_in_text'} = ($text =~ /\n=cut\b[^\n]*/);
 }
 
 1;
@@ -155,11 +168,12 @@ file.
 
 The idea is to have a definite end indication for human readers.  Perl and
 the POD processors don't require a final C<=cut>.  On that basis this policy
-is lowest priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY
+is lowest severity and under the "cosmetic" theme (see L<Perl::Critic/POLICY
 THEMES>).
 
-If there's no POD in the file then a C<=cut> is not required.  Or if the POD
-is not at the end of file then final C<=cut> at the end is not required.
+If there's no POD in the file then a C<=cut> is not required.  Or if the
+file ends with code rather than POD then a C<=cut> after that code is not
+required.
 
     =head2 About foo
 
@@ -178,9 +192,31 @@ case.
 
     =end wikidoc          # ok, =cut not required
 
-If you've got a mixture of POD and C<=begin> blocks then a C<=cut> is still
-required.  The special allowance is when the only text an C<=begin> block,
+If the file ends with a mixture of ordinary POD and C<=begin> blocks then a
+is still required.  The special allowance is when only C<=begin> blocks,
 presumably destined for some other markup system.
+
+=head2 Blank Line
+
+Generally a C<=cut> should have a blank line before it, the same as other
+POD commands.  But Perl execution doesn't enforce that and the same
+looseness is permitted here,
+
+    =pod
+
+    Blah blah blah
+    =cut                  # ok without preceding newline
+
+A check for blanks around POD commands is left to other policies.  The
+C<podchecker> program reports this (L<Pod::Checker>).
+
+=cut
+
+# The POD parsers vary a little in their treatment of this sort of thing.
+# C<Pod::Parser> takes it as part of the paragraph, C<Pod::Simple> takes it as
+# a command but may issue warnings.  
+
+=pod
 
 =head2 Disabling
 
@@ -199,11 +235,11 @@ L<Perl::Critic::Policy::Documentation::RequirePodAtEnd>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

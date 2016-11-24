@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -29,7 +29,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -141,7 +141,7 @@ formatted output where you may have meant fontification.
         # call the C<foo> function      # bad
         &foo();
 
-This is purely cosmetic so this policy is low priority and under the
+This is purely cosmetic so this policy is low severity and under the
 "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).  Normally it means one
 of two things,
 
@@ -149,12 +149,12 @@ of two things,
 
 =item *
 
-You wanted markup -- it should be a plain paragraph not a verbatim indented
+You want markup -- it should be a plain paragraph not a verbatim indented
 one.  An C<=over> can be used for indentation if desired.
 
 =item *
 
-You wanted verbatim -- replace the markup with an ascii approximation like
+You want verbatim -- replace the markup with an ascii approximation like
 C<func()> or perhaps C<*bold*> or C<_underline_>.
 
 =back
@@ -190,10 +190,10 @@ The check for markup is unsophisticated.  Any of the POD specified "IE<lt>"
     J<       # bad, for Pod::MultiLang
 
 It's possible a C<E<lt>> might be something mathematical like "XE<lt>Y", but
-in practice spaces S<"X E<lt> Y"> or lower case letters are more common and
-are ok.
+in practice spaces S<"X E<lt> Y"> or lower case letters are more common (and
+are ok).
 
-C<DBE<lt>E<gt>> style sample Perl debugger output is exempted (see
+C<DBE<lt>1E<gt>> style sample Perl debugger output is exempted (see
 L<perldebug>).  It's uncommon, but not likely to have intended
 C<BE<lt>E<gt>> bold.
 
@@ -222,7 +222,7 @@ The usual no critic works too,
     ## no critic (ProhibitVerbatimMarkup)
 
 But the annotation must be before any C<__END__> token, and if the POD is
-after an C<__END__> token then C<Perl::Critic> 1.112 is required.  An
+after an C<__END__> token then C<Perl::Critic> 1.112 up is required.  An
 C<=for> has the advantage of being together with the exception.
 
 As always if you don't care at all about this at all then disable
@@ -244,7 +244,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters =>
   ({ name           => 'allow_bin_false',
@@ -88,7 +88,7 @@ from a script into a module, perhaps when grabbing a copyright notice or
 similar intro.
 
 Of course a module works the same with or without, so this policy is low
-priority and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
+severity and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 Only the first line of a file is a prospective C<#!> interpreter.
 A C<#!> anywhere later is allowed, for example in code which generates other
@@ -136,11 +136,11 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

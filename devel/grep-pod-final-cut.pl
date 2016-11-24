@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2009, 2010, 2012, 2014 Kevin Ryde
+# Copyright 2009, 2010, 2012, 2014, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,8 +20,8 @@
 
 # Look for __END__ without a pod =cut before it
 #
-# /usr/share/perl/5.14/ExtUtils/MM_BeOS.pm
-# /usr/share/perl/5.14.2/IPC/Cmd.pm
+# /usr/share/perl/5.24/ExtUtils/MM_BeOS.pm
+# /usr/share/perl/5.24/IPC/Cmd.pm
 
 use 5.005;
 use strict;

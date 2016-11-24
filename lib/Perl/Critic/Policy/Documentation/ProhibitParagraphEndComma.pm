@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -36,7 +36,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 
 use constant supported_parameters => ();
@@ -154,8 +154,8 @@ end of a "SEE ALSO" list
     L<Foo>,
     L<Bar>,          # bad, meant to be omitted?
 
-A paragraph before an C<=over> or a verbatim block can end with a comma,
-that being taken as introducing a quotation or example,
+A paragraph before an C<=over> or a verbatim block is allowed to end with a
+comma, that being taken as introducing a quotation or example,
 
     For example,     # ok, introduce an example
 
@@ -187,7 +187,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2013, 2014, 2015 Kevin Ryde
+# Copyright 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -38,7 +38,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters =>
   ({ name           => 'uniqueness',
@@ -259,8 +259,8 @@ commands.
 
 Duplication is usually a mistake, perhaps too much cut-and-paste, or a
 leftover from a template, or perhaps text in two places which ought to be
-together.  On that basis this policy is under the "bugs" theme (see
-L<Perl::Critic/POLICY THEMES>) and medium severity.
+together.  On that basis this policy is medium severity and under the "bugs"
+theme (see L<Perl::Critic/POLICY THEMES>).
 
 =head2 Default Uniqueness
 
@@ -372,7 +372,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2013, 2014, 2015 Kevin Ryde
+Copyright 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

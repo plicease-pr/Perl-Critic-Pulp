@@ -28,7 +28,7 @@ use Perl::Critic::Utils;
 
 use base 'Perl::Critic::Policy';
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -192,7 +192,7 @@ L<Perl::Critic::Policy::ControlStructures::ProhibitUnlessBlocks>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

@@ -31,6 +31,7 @@ devel/grep-backslash.pl
 devel/grep-condsub.pl
 devel/grep-constant-empty.pl
 devel/grep-constant-underscore.pl
+devel/grep-cut-noblank.pl
 devel/grep-devnull.pl
 devel/grep-dollar-semi.pl
 devel/grep-duplicate-END.pl
@@ -84,6 +85,7 @@ devel/grep-t-print.pl
 devel/grep-test-print.pl
 devel/grep-trailing-comma-heredoc.pl
 devel/grep-use-decimal.pl
+devel/grep-use-exporter.pl
 devel/grep-use-langinfo.pl
 devel/grep-use-posix.pl
 devel/grep-use-quoted.pl
@@ -98,6 +100,8 @@ devel/lib/Perl/Critic/Policy/Compatibility/inprogressTestMore.pm
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraClose.pm
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraClose.t
 devel/lib/Perl/Critic/Policy/Documentation/ProhibitMarkupExtraOpen.pm
+devel/lib/Perl/Critic/Policy/Modules/UseExporter.pm
+devel/lib/Perl/Critic/Policy/Modules/UseExporter.t
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/inprogressProhibitTestPrint.pm
 devel/lib/Perl/Critic/Policy/TestingAndDebugging/ProhibitTestPrint.t
 devel/Makefile
@@ -114,6 +118,7 @@ devel/open-space.pl
 devel/parse-backslash.pl
 devel/perl-minimum.pl
 devel/pod-minimum.pl
+devel/pod-simple.pl
 devel/podparser.pl
 devel/posix-import.pl
 devel/posix-size.pl
@@ -126,9 +131,9 @@ devel/regexp-string.pl
 devel/TestAutoload.pm
 devel/trailing-comma-heredoc.pl
 devel/try-catch.pl
+devel/try-pm.pl
 devel/try-syntax.pl
 devel/try-tiny.pl
-devel/try.pl
 devel/unknown-backslash.pl
 devel/use-quoted.pl
 devel/version.pl

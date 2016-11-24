@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -29,7 +29,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant DEBUG => 0;
 
@@ -524,11 +524,8 @@ may be clearer than backslashing,
     print "$#{foo}th";
     print "${foo[0]}[1]";   # array element $foo[0]
 
-=for MY_FIXME  this bit of perltrap gone in perl 5.20
-
-See L<perltrap/Array and hash brackets during interpolation> for a note on
-backslashing C<[> and C<{>, and L<perlop/Gory details of parsing quoted
-constructs> for the horror story.
+The full horror story of backslashing interpolations can be found in
+L<perlop/Gory details of parsing quoted constructs>.
 
 =head2 Octal Wide Chars
 
@@ -647,7 +644,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

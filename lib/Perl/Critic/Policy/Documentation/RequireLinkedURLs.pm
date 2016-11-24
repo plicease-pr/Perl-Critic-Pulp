@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -30,7 +30,7 @@ use Perl::Critic::Utils;
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/AnyEvent/HTTP.pm
 # perlcritic -s RequireLinkedURLs /usr/share/perl5/SVG/Rasterize.pm
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -123,7 +123,7 @@ sub _is_bogus_part {
   my ($part) = @_;
   ### _is_bogus_part(): $part
   return scalar ($part =~ m{^(
-                              (foo|bar|quux|xyzzy)
+                              (foo|bar|quux|xyzzy|example)
                               \.(org|com|co\.[a-z]+)
                               (\.[a-z.]*)?
                             |
@@ -164,7 +164,7 @@ C<E<lt>http://...E<gt>> style angles around the URL which is a
 semi-conventional way to delimit from surrounding text and in particular
 from an immediately following comma or period.
 
-This is only cosmetic and on that basis this policy is low priority and
+This is only cosmetic and on that basis this policy is low severity and
 under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 Only plain text parts of the POD are considered.  Verbatim paragraphs cannot
@@ -191,12 +191,12 @@ only applies if there's an explicit C<use 5.008> or higher in the code.
 
 =head2 Bad URLs
 
-Some obvious dummy URLs like C<LE<lt>http://foo.orgE<gt>> are ignored.
-They're only examples and won't go anywhere as a clickable link.  You might
-like to put C<CE<lt>E<gt>> for a typeface, but C<LE<lt>E<gt>> is not
-required by this policy, and in fact is probably undesirable.  Currently
-ignored URLs variations like
+Some obvious intentional dummy URLs like C<LE<lt>http://example.comE<gt>>
+are ignored.  They're examples and won't go anywhere as a clickable link.
+You might like to put C<CE<lt>E<gt>> on them for a typeface, but that is not
+required by this policy.  Currently ignored URL variations are like
 
+    http://example.com
     http://foo.com
     https://foo.org
     ftp://bar.org.au
@@ -235,11 +235,11 @@ L<Perl::Critic::Policy::Documentation::RequirePodLinksIncludeText>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

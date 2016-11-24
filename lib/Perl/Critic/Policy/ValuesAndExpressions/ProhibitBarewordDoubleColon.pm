@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters =>
   ({ name           => 'allow_indirect_syntax',
@@ -123,7 +123,7 @@ but instead a plain string
 This is intended as a building block for a restricted coding style, or a
 matter of personal preference if you think the C<::> is a bit obscure and
 that it's clearer to write a string when you mean a string.  On that basis
-the policy is lowest priority and under the "cosmetic" theme (see
+the policy is lowest severity and under the "cosmetic" theme (see
 L<Perl::Critic/POLICY THEMES>).
 
 =head2 Indirect Object Syntax
@@ -199,7 +199,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -35,7 +35,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -237,7 +237,7 @@ in POD text paragraphs,
     Blah blah brace }.           # bad
 
 This is only cosmetic and normally only a minor irritant to readability so
-this policy is low priority and under the "cosmetic" theme (see
+this policy is low severity and under the "cosmetic" theme (see
 L<Perl::Critic/POLICY THEMES>).
 
 Text and command paragraphs are checked, but verbatim paragraphs can have
@@ -267,7 +267,8 @@ paren, for example
 =for ProhibitUnbalancedParens allow next
 
 This is bad because the C<CE<lt>E<gt>> ends at the C<=E<gt>>, leaving
-"value)" unbalanced plain text.  This is an easy mistake to make.
+"value)" unbalanced plain text.  This is an easy mistake to make.  (The
+author's C<perl-pod-gt.el> can show warning face on this in Emacs.)
 
 =item *
 
@@ -318,24 +319,28 @@ it's likely to be a deref or delimiter,
     Deref with ${foo()} etc etc.
 
 Variables or expressions like this will often be in C<CE<lt>E<gt>> markup
-and skipped for that reason, as described above.
+and skipped for that reason instead, as described above.
 
 =item *
 
 C<$)> and C<$]> are optional closes, since they might be Perl variables to
 skip, or might be "$" at the end of a parens,
 
-   blah blah (which in tex is $1\cdot2$).
+   blah blah (which in TeX is $1\cdot2$).
 
 Perhaps the conditions for these will be restricted a bit, though again
 C<CE<lt>E<gt>> markup around sample code like this will be usual.
 
 =item *
 
-C<LE<lt>display|linkE<gt>> links are processed with the "display" text part.
+C<LE<lt>display|linkE<gt>> links are processed as the "display" text part.
 The link target (POD document name and section) can have anything.
 
 =back
+
+C<=begin :foo> ... C<=end :foo> sections with a format name ":foo" starting
+with a ":" are POD markup and are processed accordingly.  Other C<=begin>
+sections are skipped.
 
 =head2 Unrecognised Forms
 
@@ -356,8 +361,8 @@ Parens spanning multiple paragraphs are not recognised,
     thing.)           # bad
 
 Hopefully this is uncommon, and probably better style not to be
-parenthetical about something so big enough that it runs to multiple
-paragraphs or has a verbatim block in the middle etc.
+parenthetical about something so big that it runs to multiple paragraphs or
+has a verbatim block in the middle etc.
 
 =head2 Disabling
 
@@ -382,8 +387,8 @@ The usual no critic
 
 works too as a whole-file disable, but the annotation must be before any
 C<__END__> token, and if the POD is after the C<__END__> then
-C<Perl::Critic> 1.112 is required.  Individual C<=for> has the advantage of
-being with an exception.
+C<Perl::Critic> 1.112 up is required.  Individual C<=for> has the advantage
+of being with an exception.
 
 As always if you don't care about this at all you can disable
 C<ProhibitUnbalancedParens> completely from your F<.perlcriticrc> in
@@ -391,14 +396,12 @@ the usual way (see L<Perl::Critic/CONFIGURATION>),
 
     [-Documentation::ProhibitUnbalancedParens]
 
-=head1 BUGS
-
-What should be done for C<=begin> ... C<=end> sections?  Skip probably?
-
 =head1 SEE ALSO
 
 L<Perl::Critic::Pulp>,
 L<Perl::Critic>
+
+L<http://user42.tuxfamily.org/perl-pod-gt/index.html>
 
 =head1 HOME PAGE
 
@@ -406,7 +409,7 @@ http://user42.tuxfamily.org/perl-critic-pulp/index.html
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

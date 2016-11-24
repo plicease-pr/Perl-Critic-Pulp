@@ -2,7 +2,7 @@
 
 # my-deb.sh -- make .deb
 
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
 
 # my-deb.sh is shared by several distributions.
 #
@@ -31,17 +31,18 @@ if test -z "$DISTNAME"; then
   exit 1
 fi
 
-DISTVNAME=`sed -n 's/^DISTVNAME = \(.*\)/\1/p' Makefile`
-if test -z "$DISTVNAME"; then
-  echo "DISTVNAME not found"
-  exit 1
-fi
-
 VERSION=`sed -n 's/^VERSION = \(.*\)/\1/p' Makefile`
 if test -z "$VERSION"; then
   echo "VERSION not found"
   exit 1
 fi
+
+DISTVNAME=`sed -n 's/^DISTVNAME = \(.*\)/\1/p' Makefile`
+if test -z "$DISTVNAME"; then
+  echo "DISTVNAME not found"
+  exit 1
+fi
+DISTVNAME=`echo "$DISTVNAME" | sed "s/[$][(]VERSION[)]/$VERSION/"`
 
 XS_FILES=`sed -n 's/^XS_FILES = \(.*\)/\1/p' Makefile`
 EXE_FILES=`sed -n 's/^EXE_FILES = \(.*\)/\1/p' Makefile`
@@ -54,6 +55,7 @@ fi
 # programs named after the dist, libraries named with "lib"
 # gtk2-ex-splash and wx-perl-podbrowser programs are lib too though
 DEBNAME=`echo $DISTNAME | tr A-Z a-z`
+DEBNAME=`echo $DEBNAME | sed 's/app-//'`
 case "$EXE_FILES" in
 gtk2-ex-splash|wx-perl-podbrowser|'')
   DEBNAME="lib${DEBNAME}-perl" ;;

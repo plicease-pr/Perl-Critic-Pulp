@@ -28,7 +28,10 @@ use Perl::Critic::Utils qw(is_function_call
 use Perl::Critic::Utils::PPI qw(is_ppi_expression_or_generic_statement);
 use Perl::Critic::Pulp::Utils;
 
-our $VERSION = 90;
+# uncomment this to run the ### lines
+# use Smart::Comments;
+
+our $VERSION = 91;
 
 use constant _ALLOWED_CALL_COUNT => 15;
 
@@ -41,8 +44,8 @@ my %posix_function;
 
 sub initialize_if_enabled {
   my ($self, $config) = @_;
-  @posix_function{@POSIX::EXPORT} = ();
-  ### POSIX EXPORT count: scalar(@POSIX::EXPORT)
+  @posix_function{@POSIX::EXPORT} = ();  # hash slice
+  ### POSIX EXPORT count: scalar(keys %posix_function)
   return 1;
 }
 
@@ -104,6 +107,7 @@ sub _elem_is_in_package_main {
 sub _parse_args {
   my @first = split_nodes_on_comma (@_);
   ### first split: scalar(@first)
+  ### @first
 
   # if (DEBUG) {
   #   require PPI::Dumper;
@@ -117,7 +121,7 @@ sub _parse_args {
 
   my @ret;
   while (@first) {
-    my $aref = shift @first;
+    my $aref = shift @first // next;
     if (@$aref == 1) {
       my $elem = $aref->[0];
       if ($elem->isa('PPI::Structure::List')) {
@@ -194,7 +198,7 @@ sub _elem_is_empty_list {
   }
 }
 
-# $aref is an arrayref of PPI elements which are a function argument.
+# $aref is an arrayref of PPI elements which are function arguments.
 # Return true if the argument is a number, including a numeric string.
 #
 # ENHANCE-ME: Do some folding of constant concats or numeric calculations.
@@ -256,7 +260,7 @@ from that module if you're only using a few things.
 The aim is to save some memory, and maybe run a bit faster.  A full C<POSIX>
 import adds about 550 symbols to your module and that's about 30 to 40
 kbytes in Perl 5.10 on a 32-bit system, or about 115 kbytes in Perl 5.8.  If
-lots of modules do this it adds up.
+lots of modules do this then it adds up.
 
 As noted in the C<POSIX> module docs, the way it exports everything by
 default is an historical accident, not something to encourage.
@@ -318,7 +322,7 @@ L<Perl::Critic::Policy::Subroutines::ProhibitCallsToUndeclaredSubs>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

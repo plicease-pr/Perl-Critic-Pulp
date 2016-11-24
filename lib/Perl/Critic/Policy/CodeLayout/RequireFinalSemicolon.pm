@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
@@ -428,7 +428,7 @@ line needs a terminator.  It's also more like the C language, if you
 consider that a virtue.
 
 This is only a matter of style since the code runs the same either way, and
-on that basis this policy is low priority and under the "cosmetic" theme
+on that basis this policy is low severity and under the "cosmetic" theme
 (see L<Perl::Critic/POLICY THEMES>).
 
 =head2 Same Line Closing Brace
@@ -587,11 +587,11 @@ L<List::Util>, L<List::Pairwise>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

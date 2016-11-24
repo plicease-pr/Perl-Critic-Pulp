@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Rydepod
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Rydepod
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -23,7 +23,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -104,7 +104,7 @@ and not merely
     ...
 
 This is primarily a matter of personal preference, so the policy is low
-priority and only under the "cosmetic" theme (see L<Perl::Critic/POLICY
+severity and only under the "cosmetic" theme (see L<Perl::Critic/POLICY
 THEMES>).  An C<__END__> like this has no effect on execution, but it's a
 fairly common convention since it's a good human indication you mean the
 code to end there, and it stops Perl parsing through the POD which may save
@@ -150,11 +150,11 @@ L<Perl::Critic::Policy::Documentation::RequirePodAtEnd>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

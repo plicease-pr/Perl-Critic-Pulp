@@ -29,7 +29,7 @@ use Perl::Critic::Utils qw(is_function_call
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -278,7 +278,8 @@ my $line_directive_re =
 
 # $elem is a PPI::Element
 # Return its logical filename (a string).
-# This is from a "#line" comment directive, or the $document filename if no such.
+# This is from a "#line" comment directive, or the $document filename if no
+# such.
 #
 sub _elem_logical_filename {
   my ($elem, $document) = @_;
@@ -400,7 +401,7 @@ L<Perl::Critic::Policy::Miscellanea::TextDomainUnused>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

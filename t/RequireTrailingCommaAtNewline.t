@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -22,7 +22,7 @@ use 5.006;
 use strict;
 use warnings;
 use Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline;
-use Test::More tests => 51;
+use Test::More tests => 52;
 
 use lib 't';
 use MyTestHelpers;
@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 90;
+my $want_version = 91;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,
@@ -72,6 +72,16 @@ foreach my $data (## no critic (RequireInterpolationOfMetachars)
 foo(<<HERE,
 some text
 HERE
+   <<HERE
+some text
+HERE
+   );' ],
+
+                  [ 1, '
+@a =(<<HERE
+some text
+HERE
+   ,
    <<HERE
 some text
 HERE

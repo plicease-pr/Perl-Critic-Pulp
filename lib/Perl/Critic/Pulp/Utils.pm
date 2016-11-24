@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use version (); # but don't import qv()
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use base 'Exporter';
 our @EXPORT_OK = qw(parameter_parse_version
@@ -310,7 +310,7 @@ L<PPI>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

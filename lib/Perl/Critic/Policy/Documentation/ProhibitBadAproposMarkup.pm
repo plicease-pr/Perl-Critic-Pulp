@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -26,7 +26,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -126,7 +126,7 @@ lines from C<apropos> like
 =for ProhibitUnbalancedParens allow next
 
 Man's actual formatted output is fine, and the desired text is in there,
-just surrounded by C<*(C> bits.  On that basis this policy is low priority
+just surrounded by C<*(C> bits.  On that basis this policy is low severity
 and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The NAME section is everything from C<=head1 NAME> to the next C<=head1>.
@@ -166,11 +166,11 @@ L<man(1)>, L<apropos(1)>, L<lexgrog(1)>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

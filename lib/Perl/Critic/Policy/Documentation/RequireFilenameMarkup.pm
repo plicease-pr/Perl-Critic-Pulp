@@ -1,4 +1,4 @@
-# Copyright 2013, 2014, 2015 Kevin Ryde
+# Copyright 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -33,7 +33,7 @@ use Pod::Escapes;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -152,8 +152,8 @@ add-on.  It asks you to use C<FE<lt>E<gt>> or other markup on filenames.
 
 C<FE<lt>E<gt>> lets the formatters show filenames in a usual way, such as
 italics in man pages.  This can help human readability but is a minor matter
-and on that basis this policy is under the "cosmetic" theme (see
-L<Perl::Critic/POLICY THEMES>) and lowest priority.
+and on that basis this policy is lowest severity and under the "cosmetic"
+theme (see L<Perl::Critic/POLICY THEMES>).
 
 Filenames in text are identified by likely forms.  Currently words starting
 as follows are considered filenames.  F</usr> and F</etc> are the most
@@ -173,8 +173,9 @@ Any markup on a filename satisfies this policy.  C<FE<lt>E<gt>> is usual,
 but C<CE<lt>E<gt>> might suit for instance C<CE<lt>/bin/shE<gt>> to show
 it's a command with path rather than a file as such.
 
-C<=begin> blocks of <:> POD type are checked since they can have markup.
-"Verbatim" paragraphs are ignored since of course they cannot have markup.
+C<=begin :foo> blocks with <:> POD type are checked since they can have
+markup.  "Verbatim" paragraphs are ignored since of course they cannot have
+markup.
 
 =head2 Disabling
 
@@ -191,11 +192,11 @@ L<Perl::Critic>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2013, 2014, 2015 Kevin Ryde
+Copyright 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

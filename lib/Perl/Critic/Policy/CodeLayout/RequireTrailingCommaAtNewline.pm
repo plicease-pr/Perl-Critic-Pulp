@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils 'elem_is_comma_operator';
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters =>
   ({ name           => 'except_function_calls',
@@ -194,7 +194,7 @@ with a newline,
               $two,    # ok
              );
 
-This makes no difference to how the code runs, so the policy is low priority
+This makes no difference to how the code runs, so the policy is low severity
 and under the "cosmetic" theme (see L<Perl::Critic/POLICY THEMES>).
 
 The idea is to make it easier when editing the code since you don't have to
@@ -330,11 +330,11 @@ C<@x=(1,2,)> too much.
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

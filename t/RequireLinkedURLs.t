@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,7 +20,7 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 43;
+use Test::More tests => 46;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,7 +33,7 @@ require Perl::Critic::Policy::Documentation::RequireLinkedURLs;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 90;
+my $want_version = 91;
 is ($Perl::Critic::Policy::Documentation::RequireLinkedURLs::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireLinkedURLs->VERSION,
@@ -182,6 +182,9 @@ http://perl.org/index.html
                   [ 0, "use 5.008;\n\n=pod\n\nhttp://bar.com\n" ],
                   [ 0, "use 5.008;\n\n=pod\n\nhttp://quux.co.nz\n" ],
                   [ 0, "use 5.008;\n\n=pod\n\nhttp://xyzzy.co.uk\n" ],
+                  [ 0, "use 5.008;\n\n=pod\n\nhttp://example.com\n" ],
+                  [ 1, "use 5.008;\n\n=pod\n\nhttp://not-an-example.com\n" ],
+                  [ 1, "use 5.008;\n\n=pod\n\nhttp://not-an-example.com\n" ],
 
                  ) {
   my ($want_count, $str, $pcver) = @$data;

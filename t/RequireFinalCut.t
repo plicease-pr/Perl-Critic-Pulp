@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -20,20 +20,20 @@
 use 5.006;
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 38;
 
 use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 require Perl::Critic::Policy::Documentation::RequireFinalCut;
 
 
 #------------------------------------------------------------------------------
-my $want_version = 90;
+my $want_version = 91;
 is ($Perl::Critic::Policy::Documentation::RequireFinalCut::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Documentation::RequireFinalCut->VERSION,
@@ -64,6 +64,32 @@ my $critic = Perl::Critic->new
 
 foreach my $data
   (
+   # example from Andy Lester RT#118722
+   # =cut ought to have blank line before, but allow without because Perl
+   # will execute it without
+   [ 0, '
+my $x = 199;
+=pod
+blah blah
+=cut
+print "$x\n";
+' ],
+   [ 0, "=pod\n\nSomething\n=cut\n" ],
+   [ 0, "=pod\n\n=cut\n\n" ],
+
+   [ 0, "=pod\n\n=cut blah\n\n" ],
+   [ 0, "=pod blah\nblah\n=cut blah\n\n" ],   
+   [ 0, "=pod blah\nblah\n=cut blah\nblah\n" ],
+   [ 0, "=pod blah\n=cut\n" ],
+   [ 0, "=pod blah\n=cut\nblah" ],
+   [ 0, "=pod blah\n=cut\nblah\nblah" ],
+   [ 1, "=pod =cut\n" ],
+   [ 1, "=pod blah =cut\n" ],
+   [ 1, "=pod blah\nblah =cut\n" ],
+
+   [ 1, "=cut\n\n=head1 H\n" ],
+   [ 0, "=cut\n\ncode()\n" ],
+
    [ 0, "=pod\n\n=cut\n" ],
    [ 0, "=cut\n" ],
 

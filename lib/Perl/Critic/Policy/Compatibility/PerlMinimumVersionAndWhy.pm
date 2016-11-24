@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters =>
   ({ name        => 'above_version',
@@ -934,16 +934,12 @@ This policy is under the "compatibility" theme (see L<Perl::Critic/POLICY
 THEMES>).  Its best use is when it picks up things like C<//> or C<qr> which
 are only available in a newer Perl than you meant to target.
 
-An explicit C<use 5.xxx> can be tedious, but makes it clear what's needed
-(or supposed to be needed) and it gives a good error message if run on an
-older Perl.
-
-As an experiment, C<use Modern::Perl> is taken to mean Perl 5.10.  There's
-nothing for its date options (being difficult to relate to Perl version
-numbers).
+An explicit C<use 5.xxx> can be a little tedious, but has the advantage of
+making it clear what's needed (or supposed to be needed) and it gives a good
+error message if run on an older Perl.
 
 =head2 Disabling
-
+ 
 The config options below let you limit how far back to go.  Or if you don't
 care at all about this sort of thing you can always disable the policy
 completely from your F<~/.perlcriticrc> file in the usual way (see
@@ -1130,6 +1126,23 @@ C<pack()> and C<unpack()> format strings are only checked if they're literal
 strings or here-documents without interpolations, or C<.> operator concats
 of those.
 
+The C<qr//m> report concerns a misfeature fixed in perl 5.10.0 (see
+L<perl5101delta>).  In earlier versions a regexp like C<$re = qr/^x/m>
+within another regexp like C</zz|$re/> loses the C</m> attribute from
+C<$re>, changing the interpretation of the C<^> (and C<$> similarly).  Forms
+like C<(\A|\n)> are a possible workaround, though are uncommon so may be a
+little obscure.  C<RegularExpressions::RequireLineBoundaryMatching> asks for
+C</m> in all cases so if think you want that then you probably want Perl
+5.10 or up for the fix too.
+
+=head2 C<Modern::Perl>
+
+C<use Modern::Perl> is taken to mean Perl 5.10.  This is slightly
+experimental and in principle the actual minimum it implies is forever
+rising, and even now could be more, or depends on it date argument scheme.
+Maybe if could say its actual current desire then an installed version could
+be queried.
+
 =head1 CONFIGURATION
 
 =over 4
@@ -1195,11 +1208,11 @@ L<Perl::Critic::Policy::Modules::RequirePerlVersion>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

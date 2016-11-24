@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -21,7 +21,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 1;
 __END__
@@ -263,9 +263,17 @@ part.  In Emacs try C<man-completion.el> to make C<M-x man> automatically
 expand a suffix part at point, or C<ffap-perl-module.el> for the same to go
 to the source.
 
-    http://user42.tuxfamily.org/man-completion/index.html
+=over
 
-    http://user42.tuxfamily.org/ffap-perl-module/index.html
+=item
+
+L<http://user42.tuxfamily.org/man-completion/index.html>
+
+=item
+
+L<http://user42.tuxfamily.org/ffap-perl-module/index.html>
+
+=back
 
 In perlcritic's output you can ask for C<%P> to see the full policy package
 name to run C<perldoc> or copy or follow etc.  Here's a good output format
@@ -285,11 +293,11 @@ L<Perl::Critic>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

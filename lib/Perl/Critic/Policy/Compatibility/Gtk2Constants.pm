@@ -28,7 +28,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_MEDIUM;
@@ -137,7 +137,8 @@ sub _qualifier_and_basename {
   return ($str =~ /(?:(.*)::)?(.*)/);
 }
 
-# return true if $document has a "use" of $module (string name of a package)
+# return true if $document has a "use" or "require" of $module (string name
+# of a package)
 sub _document_uses_module {
   my ($document, $module) = @_;
 
@@ -309,7 +310,7 @@ L<Perl::Critic::Pulp>, L<Perl::Critic>, L<Gtk2>, L<Glib>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 

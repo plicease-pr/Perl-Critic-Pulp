@@ -1,4 +1,4 @@
-# Copyright 2013, 2014, 2015 Kevin Ryde
+# Copyright 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -33,7 +33,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -126,7 +126,7 @@ The formatters are perfectly happy with this.  They apply code markup to
 "E<lt>foo".  But the idea of this policy is that it's likely to be a
 mistaken double-angle markup, or at least will make a human reader wonder.
 On that basis this policy is under the "bugs" theme (see
-L<Perl::Critic/POLICY THEMES>) but low priority.
+L<Perl::Critic/POLICY THEMES>) but low severity.
 
 If a "<" like this is wanted then it can be escaped with C<EE<lt>ltE<gt>> to
 pass this policy and make it clear "<" is intended and not a double-angle.
@@ -161,11 +161,11 @@ L<Perl::Critic>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2013, 2014, 2015 Kevin Ryde
+Copyright 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

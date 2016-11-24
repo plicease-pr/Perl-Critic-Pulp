@@ -28,6 +28,9 @@ set -x   # echo
 if test -z "$DISTVNAME"; then
   DISTVNAME=`sed -n 's/^DISTVNAME = \(.*\)/\1/p' Makefile`
 fi
+case $DISTVNAME in
+  *\$*) DISTVNAME=`make echo-DISTVNAME` ;;
+esac
 if test -z "$DISTVNAME"; then
   echo "DISTVNAME not set and not in Makefile"
   exit 1
@@ -68,6 +71,9 @@ do
     | *.mo | *.locatedb* | t/samp.* \
     | t/empty.dat | t/*.xpm | t/*.xbm | t/*.jpg | t/*.gif \
     | t/*.g${MY_HIDE}d \
+    | tools/*-oeis-samples.gp \
+    | tools/configurations-gfs-generated.gp \
+    | devel/configurations-t-generated.gp \
     | */_whizzy*)
       continue ;;
     *.gz)

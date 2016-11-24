@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -24,7 +24,7 @@ use warnings;
 use base 'Perl::Critic::Policy';
 use Perl::Critic::Utils qw(is_function_call);
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOW;
@@ -126,7 +126,7 @@ but then don't use any of its functions or variables
     %__ $__
 
 C<Locale::TextDomain> is not needed when not used, but it's also not
-actively harmful so this policy is only low priority and under the
+actively harmful so this policy is only low severity and under the
 C<cosmetic> theme (see L<Perl::Critic/POLICY THEMES>).
 
 The check is good if you've got C<Locale::TextDomain> as boilerplate code in
@@ -165,11 +165,11 @@ L<Perl::Critic::Policy::Miscellanea::TextDomainPlaceholders>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

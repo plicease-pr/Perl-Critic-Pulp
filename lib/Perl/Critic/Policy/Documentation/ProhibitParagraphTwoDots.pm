@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -32,7 +32,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 use constant supported_parameters => ();
 use constant default_severity     => $Perl::Critic::Utils::SEVERITY_LOWEST;
@@ -117,7 +117,7 @@ add-on.  It asks you not to end a POD paragraph with two dots,
     Some thing..                    # bad
 
 This is a surprisingly easy typo, but of course is entirely cosmetic and on
-that basis this policy is lowest priority and under the "cosmetic" theme
+that basis this policy is lowest severity and under the "cosmetic" theme
 (see L<Perl::Critic/POLICY THEMES>).
 
 Three or more dots as an ellipsis is fine,
@@ -128,7 +128,7 @@ and anything within a paragraph is fine,
 
     Numbers 1 .. 10 are handled.    # ok
 
-Only text paragraphs are checked, verbatim paragraphs can end with anything
+Only text paragraphs are checked.  Verbatim paragraphs can end with anything
 at all
 
     This is an example,
@@ -160,11 +160,11 @@ L<Perl::Critic::Policy::Documentation::ProhibitParagraphEndComma>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/perl-critic-pulp/index.html
+L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

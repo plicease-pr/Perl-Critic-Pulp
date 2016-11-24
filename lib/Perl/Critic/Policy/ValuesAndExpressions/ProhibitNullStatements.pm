@@ -27,7 +27,7 @@ use Perl::Critic::Policy::CodeLayout::RequireFinalSemicolon; # for try helpers
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 90;
+our $VERSION = 91;
 
 
 use constant supported_parameters =>
