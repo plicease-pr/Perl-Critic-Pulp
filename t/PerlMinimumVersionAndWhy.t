@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -35,7 +35,7 @@ require Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy;
 
 #------------------------------------------------------------------------------
 {
-  my $want_version = 91;
+  my $want_version = 92;
   is ($Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy::VERSION,
       $want_version, 'VERSION variable');
   is (Perl::Critic::Policy::Compatibility::PerlMinimumVersionAndWhy->VERSION,

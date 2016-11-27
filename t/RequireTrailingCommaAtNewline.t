@@ -30,7 +30,7 @@ BEGIN { MyTestHelpers::nowarnings() }
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 91;
+my $want_version = 92;
 is ($Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::CodeLayout::RequireTrailingCommaAtNewline->VERSION,

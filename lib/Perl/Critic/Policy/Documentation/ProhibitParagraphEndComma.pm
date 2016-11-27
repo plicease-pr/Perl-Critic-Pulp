@@ -36,7 +36,7 @@ use Perl::Critic::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 91;
+our $VERSION = 92;
 
 
 use constant supported_parameters => ();

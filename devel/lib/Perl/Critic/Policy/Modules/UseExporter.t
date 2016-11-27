@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2015 Kevin Ryde
+# Copyright 2015, 2016 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -32,7 +32,7 @@ require Perl::Critic::Policy::Modules::UseExporter;
 
 
 #-----------------------------------------------------------------------------
-my $want_version = 91;
+my $want_version = 92;
 is ($Perl::Critic::Policy::Modules::UseExporter::VERSION,
     $want_version, 'VERSION variable');
 is (Perl::Critic::Policy::Modules::UseExporter->VERSION,

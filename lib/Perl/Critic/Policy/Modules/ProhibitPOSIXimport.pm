@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+# Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 # Perl-Critic-Pulp is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by the
@@ -31,7 +31,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 91;
+our $VERSION = 92;
 
 use constant _ALLOWED_CALL_COUNT => 15;
 
@@ -121,7 +121,8 @@ sub _parse_args {
 
   my @ret;
   while (@first) {
-    my $aref = shift @first // next;
+    my $aref = shift @first;
+    next unless defined $aref;
     if (@$aref == 1) {
       my $elem = $aref->[0];
       if ($elem->isa('PPI::Structure::List')) {
@@ -326,7 +327,7 @@ L<http://user42.tuxfamily.org/perl-critic-pulp/index.html>
 
 =head1 COPYRIGHT
 
-Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015 Kevin Ryde
+Copyright 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Kevin Ryde
 
 Perl-Critic-Pulp is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

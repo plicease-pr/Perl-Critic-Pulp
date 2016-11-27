@@ -17,6 +17,9 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 92, November 2016
+    - ProhibitPOSIXimport oops, don't use // operator, per paul RT#118959
+
 Version 91, November 2016
     - RequireFinalCut allow no blank line before =cut, as reported by
       Andy Lester RT#118722
