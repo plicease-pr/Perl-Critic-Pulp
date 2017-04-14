@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2008, 2009, 2010, 2011, 2012, 2014, 2015 Kevin Ryde
+# Copyright 2008, 2009, 2010, 2011, 2012, 2014, 2015, 2017 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 
@@ -77,7 +77,8 @@ WriteMakefile
                 },
 
    META_MERGE =>
-   { resources =>
+   { 'meta-spec' => { version => 2 },
+     resources =>
      { homepage => 'http://user42.tuxfamily.org/perl-critic-pulp/index.html',
        license  => 'http://www.gnu.org/licenses/gpl.html',
      },
@@ -95,11 +96,16 @@ WriteMakefile
          },
        },
      },
+
      optional_features =>
      { maximum_policies =>
        { description => 'Have the policies check as much as possible.',
-         requires => { 'Perl::MinimumVersion' => 0,
-                     },
+         prereqs =>
+         { runtime =>
+           { requires => { 'Perl::MinimumVersion' => 0,
+                         },
+           },
+         },
        },
      },
    },

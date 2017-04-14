@@ -48,9 +48,6 @@
          }
       },
       "runtime" : {
-         "recommends" : {
-            "Perl::MinimumVersion" : "0"
-         },
          "requires" : {
             "IO::String" : "1.02",
             "List::MoreUtils" : "0.24",
@@ -72,6 +69,11 @@
             "perl" : "5.006",
             "version" : "0"
          }
+      },
+      "test" : {
+         "suggests" : {
+            "Perl::MinimumVersion" : "0"
+         }
       }
    },
    "release_status" : "stable",
@@ -81,6 +83,6 @@
          "http://www.gnu.org/licenses/gpl.html"
       ]
    },
-   "version" : "92",
+   "version" : "93",
    "x_serialization_backend" : "JSON::PP version 2.27300_01"
 }

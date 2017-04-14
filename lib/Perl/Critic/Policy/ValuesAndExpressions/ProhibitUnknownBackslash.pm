@@ -29,7 +29,7 @@ use Perl::Critic::Pulp;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-our $VERSION = 92;
+our $VERSION = 93;
 
 use constant DEBUG => 0;
 

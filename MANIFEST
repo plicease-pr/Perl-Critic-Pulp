@@ -128,6 +128,7 @@ devel/ppi-wide.pl
 devel/qrm.pl
 devel/regexp-balanced.pl
 devel/regexp-string.pl
+devel/string-format.pl
 devel/TestAutoload.pm
 devel/trailing-comma-heredoc.pl
 devel/try-catch.pl
