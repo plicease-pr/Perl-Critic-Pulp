@@ -1,4 +1,6 @@
-# Copyright 2010, 2011, 2016, 2017 Kevin Ryde
+#!/usr/bin/perl -w
+
+# Copyright 2017 Kevin Ryde
 
 # This file is part of Perl-Critic-Pulp.
 #
@@ -15,10 +17,14 @@
 # You should have received a copy of the GNU General Public License along
 # with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
-package version_check;
-# use strict;
-# use warnings;
-# use base 'Exporter';
-# our @EXPORT_OK = ('foo');
-our $VERSION = '94';
-# our $VERSION = 61';
+
+# use charnames automatic in perl 5.16 up
+
+use strict;
+use warnings;
+{
+  use charnames ':full';
+  print "\N{APOSTROPHE}";
+}
+print "\N{COLON}";
+print "\N{EQUALS SIGN}";
