@@ -27,7 +27,7 @@ use Perl::Critic::Pulp::Utils;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
-our $VERSION = 97;
+our $VERSION = 98;
 
 use constant supported_parameters =>
   ({ name           => 'except_same_line',
