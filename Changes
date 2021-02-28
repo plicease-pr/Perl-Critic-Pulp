@@ -17,6 +17,9 @@ with Perl-Critic-Pulp.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 99, February 2021
+    - RequireFinalSemicolon keep the "List" check for PPI 1.220
+
 Version 98, February 2021
     - ProhibitUnknownBackslash new charnames option
 
