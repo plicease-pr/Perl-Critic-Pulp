@@ -18,7 +18,7 @@ package Perl::Critic::Policy::Modules::ProhibitPOSIXimport;
 use 5.006;
 use strict;
 use warnings;
-use List::MoreUtils;
+use List::SomeUtils;
 use POSIX ('abort'); # must import something to initialize @POSIX::EXPORT
 use Scalar::Util;
 
@@ -224,14 +224,14 @@ sub _count_posix_calls {
   # function calls like "dup()", with is_function_call() used to exclude
   # method calls like $x->dup on unrelated objects or classes
   my $aref = $document->find ('PPI::Token::Word') || [];
-  my $count = List::MoreUtils::true
+  my $count = List::SomeUtils::true
     { exists $posix_function{$_->content} && is_function_call($_)
     } @$aref;
   ### count func calls: $count
 
   # symbol references \&dup or calls &dup(6)
   $aref = $document->find ('PPI::Token::Symbol') || [];
-  $count += List::MoreUtils::true
+  $count += List::SomeUtils::true
     { my $symbol = $_->symbol;
       $symbol =~ /^&/ && exists $posix_function{substr($symbol,1)}
     } @$aref;
