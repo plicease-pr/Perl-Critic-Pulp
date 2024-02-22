@@ -54,9 +54,8 @@ WriteMakefile
                  # something newer has more merit though
                  'IO::String' => '1.02',
 
-                 # Also used by Perl::Critic itself.  Maybe should
-                 # require 0.24 for various XS bugfixes.
-                 'List::MoreUtils' => '0.24', # 0.24 for stack growing, maybe
+                 # Also used by Perl::Critic itself.
+                 'List::SomeUtils' => '0.55',
 
                  # Could make this optional, but it doesn't drag in anything
                  # outrageous.

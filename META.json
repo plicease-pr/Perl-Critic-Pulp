@@ -50,7 +50,7 @@
       "runtime" : {
          "requires" : {
             "IO::String" : "1.02",
-            "List::MoreUtils" : "0.24",
+            "List::SomeUtils" : "0.55",
             "List::Util" : "0",
             "PPI" : "1.220",
             "PPI::Document" : "0",
